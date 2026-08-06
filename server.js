@@ -19,9 +19,11 @@ const API_KEY = process.env.GEMINI_API_KEY || '';
 const API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 const MAX_CHARS = 5000;
+
+// نماذج الطبقة المجانية فقط — نموذج Pro يتطلب خطة مدفوعة ويرجع 429 دائماً.
 const ALLOWED_MODELS = new Set([
   'gemini-2.5-flash-preview-tts',
-  'gemini-2.5-pro-preview-tts',
+  'gemini-3.1-flash-tts-preview',
 ]);
 
 const MIME_TYPES = {
@@ -144,8 +146,8 @@ async function handleTts(req, res) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 120_000);
 
-  try {
-    const upstream = await fetch(`${API_BASE}/${model}:generateContent`, {
+  const callGemini = () =>
+    fetch(`${API_BASE}/${model}:generateContent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -163,20 +165,41 @@ async function handleTts(req, res) {
       }),
     });
 
+  try {
+    let upstream = await callGemini();
+
+    // 503 من جيمناي عابر في الغالب — نعيد المحاولة مرة واحدة بعد ثانيتين.
+    if (upstream.status === 503) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      upstream = await callGemini();
+    }
+
     const data = await upstream.json().catch(() => null);
 
     if (!upstream.ok) {
+      if (upstream.status === 429) {
+        return sendJson(res, 429, {
+          error:
+            'تجاوزت حصة الطبقة المجانية. انتظر دقيقة وجرّب مرة ثانية، أو فعّل الفوترة في Google AI Studio.',
+        });
+      }
+      if (upstream.status === 503) {
+        return sendJson(res, 503, {
+          error: 'خدمة جيمناي مشغولة حالياً. جرّب بعد لحظات.',
+        });
+      }
       const message = data?.error?.message || `فشل الطلب (${upstream.status}).`;
-      return sendJson(res, upstream.status === 429 ? 429 : 502, { error: message });
+      return sendJson(res, 502, { error: message });
     }
 
     const part = data?.candidates?.[0]?.content?.parts?.find((p) => p.inlineData);
     if (!part) {
       const blocked = data?.promptFeedback?.blockReason;
+      const reason = data?.candidates?.[0]?.finishReason;
       return sendJson(res, 502, {
         error: blocked
           ? `تم رفض المحتوى من النموذج (${blocked}). جرّب صياغة أخرى.`
-          : 'لم يُرجع النموذج أي صوت. جرّب مرة أخرى.',
+          : `لم يُرجع النموذج أي صوت${reason ? ` (${reason})` : ''}. جرّب نصاً أطول قليلاً أو أعد المحاولة.`,
       });
     }
 

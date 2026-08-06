@@ -269,7 +269,7 @@ function showResult(result, text) {
     `🎤 ${result.voice}`,
     `⏱️ ${result.durationSeconds} ثانية`,
     `📦 ${(result.bytes / 1024 / 1024).toFixed(2)} ميجابايت`,
-    `🧠 ${result.model.includes('pro') ? 'Pro' : 'Flash'}`,
+    `🧠 ${result.model.includes('3.1') ? 'Flash 3.1' : 'Flash 2.5'}`,
   ]
     .map((chip) => `<span>${chip}</span>`)
     .join('');
