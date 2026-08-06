@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صوتك — حوّل نصك إلى صوت حماسي</title>
+  <meta name="description" content="حوّل أي نص عربي إلى تعليق صوتي احترافي بأسلوب سعودي حماسي باستخدام Gemini" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+  </div>
+
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">🎙️</span>
+      <div>
+        <h1>صوتك</h1>
+        <p>حوّل نصك إلى تعليق صوتي حماسي بضغطة واحدة</p>
+      </div>
+    </div>
+    <div class="status" id="status" role="status">
+      <span class="dot"></span><span id="statusText">جاري الفحص…</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ======== لوحة الإدخال ======== -->
+    <section class="card panel-main">
+      <div class="field">
+        <div class="field-head">
+          <label for="text">النص</label>
+          <span class="counter" id="counter">0 / 5000</span>
+        </div>
+        <textarea
+          id="text"
+          rows="8"
+          maxlength="5000"
+          placeholder="اكتب هنا النص اللي تبي تسمعه… مثال: يا هلا والله فيكم! معكم اليوم عرض ما يفوّت، خصومات تصل لخمسين بالمية، ولمدة ثلاثة أيام بس!"
+        ></textarea>
+        <div class="quick-samples">
+          <span>جرّب:</span>
+          <button type="button" class="chip sample" data-sample="ad">إعلان متجر</button>
+          <button type="button" class="chip sample" data-sample="podcast">مقدمة بودكاست</button>
+          <button type="button" class="chip sample" data-sample="promo">عرض محدود</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="style">أسلوب الأداء الصوتي</label>
+          <button type="button" class="link-btn" id="resetStyle">استعادة الافتراضي</button>
+        </div>
+        <div class="presets" id="presets"></div>
+        <textarea id="style" rows="4" class="style-box"></textarea>
+        <p class="hint">هذي التعليمات تُرسل لجيمناي قبل النص، وهي اللي تتحكم بالنبرة والإيقاع والطاقة.</p>
+      </div>
+
+      <div class="row">
+        <div class="field field-half">
+          <label for="model">النموذج</label>
+          <div class="select-wrap">
+            <select id="model">
+              <option value="gemini-2.5-flash-preview-tts">Flash — أسرع (موصى به)</option>
+              <option value="gemini-2.5-pro-preview-tts">Pro — جودة أعلى</option>
+            </select>
+          </div>
+        </div>
+        <div class="field field-half">
+          <label for="voiceSearch">بحث في الأصوات</label>
+          <input id="voiceSearch" type="search" placeholder="اكتب اسم الصوت أو الوصف…" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label>الصوت</label>
+          <span class="counter" id="voiceCount"></span>
+        </div>
+        <div class="voices" id="voices"></div>
+      </div>
+
+      <button id="generate" class="btn-primary">
+        <span class="btn-label">توليد الصوت</span>
+        <span class="spinner" aria-hidden="true"></span>
+      </button>
+      <p class="error" id="error" hidden></p>
+    </section>
+
+    <!-- ======== لوحة النتيجة ======== -->
+    <section class="card panel-side">
+      <h2 class="side-title">النتيجة</h2>
+
+      <div id="empty" class="empty">
+        <div class="empty-icon">🎧</div>
+        <p>ما فيه صوت بعد.<br />اكتب نصك واضغط «توليد الصوت».</p>
+      </div>
+
+      <div id="player" class="player" hidden>
+        <canvas id="viz" class="viz" height="90"></canvas>
+        <audio id="audio" controls></audio>
+        <div class="meta" id="meta"></div>
+        <a id="download" class="btn-ghost" download="sawtak.wav">⬇︎ تحميل الملف (WAV)</a>
+      </div>
+
+      <div class="history-block">
+        <div class="field-head">
+          <h3 class="side-title small">السجل</h3>
+          <button type="button" class="link-btn" id="clearHistory" hidden>مسح</button>
+        </div>
+        <ul class="history" id="history"></ul>
+        <p class="hint" id="historyHint">آخر ٦ عمليات توليد تظهر هنا خلال الجلسة.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    مبني على <strong>Gemini TTS</strong> — المفتاح يبقى على الخادم ولا يصل للمتصفح أبداً.
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
