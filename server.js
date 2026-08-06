@@ -264,7 +264,8 @@ const server = createServer(async (req, res) => {
   return serveStatic(req, res, pathname);
 });
 
-server.listen(PORT, () => {
+// 0.0.0.0 صراحةً — منصات الاستضافة السحابية تتطلب الاستماع على كل الواجهات.
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n  🎙️  صوتك يعمل على  http://localhost:${PORT}`);
   if (!API_KEY) {
     console.log('  ⚠️  تنبيه: GEMINI_API_KEY غير مضبوط — انسخ .env.example إلى .env وأضف مفتاحك.\n');

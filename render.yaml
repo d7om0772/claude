@@ -1,0 +1,14 @@
+# إعداد النشر على Render — https://render.com
+# ارفع المستودع ثم اختر Blueprint وسيقرأ Render هذا الملف تلقائياً.
+services:
+  - type: web
+    name: sawtak
+    runtime: node
+    plan: free
+    buildCommand: echo "لا توجد اعتماديات — لا حاجة لخطوة بناء"
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      # يُضاف يدوياً من لوحة Render — لا يُحفظ في المستودع أبداً.
+      - key: GEMINI_API_KEY
+        sync: false
