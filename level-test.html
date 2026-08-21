@@ -1,0 +1,772 @@
+<title>وش مستواي بالإنجليزي؟</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400..700&display=swap">
+
+<style>
+/* ── tokens ─────────────────────────────────────────────── */
+:root{
+  --ground:#F1F4F1;
+  --surface:#FFFFFF;
+  --surface-2:#E8EEEA;
+  --ink:#16201D;
+  --ink-2:#3B4A45;
+  --muted:#6A7A74;
+  --line:#D5DFD9;
+  --line-strong:#B9C7C0;
+  --accent:#2E6B5E;
+  --accent-ink:#FFFFFF;
+  --accent-soft:#DBE9E3;
+  --signal:#A6552A;
+  --signal-soft:#F3E4D8;
+  --bad:#A33A2A;
+  --bad-soft:#F6E0DC;
+  --shadow:0 1px 2px rgba(22,32,29,.05), 0 10px 26px -14px rgba(22,32,29,.25);
+  --radius:10px;
+  --maxw:820px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1614;
+    --surface:#182220;
+    --surface-2:#202B28;
+    --ink:#E6EDEA;
+    --ink-2:#BECAC5;
+    --muted:#8A9A94;
+    --line:#2A3833;
+    --line-strong:#3C4E48;
+    --accent:#6FBBA5;
+    --accent-ink:#0D1614;
+    --accent-soft:#20332E;
+    --signal:#D48A54;
+    --signal-soft:#2E241B;
+    --bad:#E4826F;
+    --bad-soft:#33201C;
+    --shadow:0 1px 2px rgba(0,0,0,.45), 0 12px 30px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1614;
+  --surface:#182220;
+  --surface-2:#202B28;
+  --ink:#E6EDEA;
+  --ink-2:#BECAC5;
+  --muted:#8A9A94;
+  --line:#2A3833;
+  --line-strong:#3C4E48;
+  --accent:#6FBBA5;
+  --accent-ink:#0D1614;
+  --accent-soft:#20332E;
+  --signal:#D48A54;
+  --signal-soft:#2E241B;
+  --bad:#E4826F;
+  --bad-soft:#33201C;
+  --shadow:0 1px 2px rgba(0,0,0,.45), 0 12px 30px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  direction:rtl;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans Arabic","Segoe UI",system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+.en{direction:ltr;text-align:left;unicode-bidi:isolate;}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+.serif{font-family:"Newsreader",Georgia,serif;}
+
+/* ── shell ──────────────────────────────────────────────── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px 96px;}
+
+/* ── sticky progress ────────────────────────────────────── */
+.bar{
+  position:sticky;top:0;z-index:20;
+  background:var(--ground);
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.bar-in{
+  max-width:var(--maxw);margin:0 auto;padding:10px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.bar-label{font-size:12.5px;color:var(--muted);white-space:nowrap;letter-spacing:.01em;}
+.bar-count{color:var(--ink);font-weight:600;}
+.track{flex:1;height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden;}
+.fill{height:100%;width:0%;background:var(--accent);border-radius:99px;transition:width .35s ease;}
+.clock{font-size:12.5px;color:var(--muted);min-width:52px;text-align:left;}
+
+/* ── header ─────────────────────────────────────────────── */
+header{padding:44px 0 26px;}
+.eyebrow{
+  font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin:0 0 12px;
+}
+h1{
+  font-family:"Newsreader",Georgia,serif;
+  font-size:clamp(34px,6.5vw,50px);
+  line-height:1.15;margin:0 0 14px;font-weight:600;
+  text-wrap:balance;letter-spacing:-.01em;
+}
+.lede{color:var(--ink-2);margin:0;max-width:58ch;}
+
+.rules{
+  margin-top:26px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);
+}
+.rules h2{
+  font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  margin:0 0 12px;font-weight:600;
+}
+.rules ul{margin:0;padding-inline-start:18px;display:flex;flex-direction:column;gap:7px;}
+.rules li{color:var(--ink-2);font-size:14.5px;}
+.rules b{color:var(--ink);font-weight:600;}
+
+/* ── sections ───────────────────────────────────────────── */
+section{margin-top:40px;}
+.sec-head{
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:12px;border-bottom:2px solid var(--ink);margin-bottom:4px;
+}
+.sec-num{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--accent);font-weight:600;}
+.sec-title{font-size:19px;font-weight:600;margin:0;}
+.sec-en{
+  font-family:"Newsreader",Georgia,serif;font-size:15px;color:var(--muted);
+  font-style:italic;direction:ltr;unicode-bidi:isolate;
+}
+.chip{
+  margin-inline-start:auto;font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+  color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);
+  padding:2px 9px;border-radius:99px;white-space:nowrap;letter-spacing:.03em;
+}
+
+/* ── passage ────────────────────────────────────────────── */
+.passage{
+  margin:18px 0 6px;background:var(--surface);border:1px solid var(--line);
+  border-inline-start:3px solid var(--accent);border-radius:var(--radius);
+  padding:20px 22px;box-shadow:var(--shadow);
+  direction:ltr;text-align:left;unicode-bidi:isolate;
+  font-family:"Newsreader",Georgia,serif;font-size:18px;line-height:1.72;color:var(--ink);
+}
+.passage p{margin:0;}
+
+/* ── question card ──────────────────────────────────────── */
+.q{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;margin-top:14px;box-shadow:var(--shadow);
+  transition:border-color .18s ease;
+}
+.q[data-done="1"]{border-color:var(--line-strong);}
+.q-top{display:flex;gap:12px;align-items:flex-start;}
+.q-n{
+  font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  color:var(--muted);padding-top:3px;min-width:24px;font-variant-numeric:tabular-nums;
+}
+.q-body{flex:1;min-width:0;}
+.q-text{margin:0;font-size:16px;line-height:1.65;}
+.q-text.en{font-family:"Newsreader",Georgia,serif;font-size:19px;line-height:1.55;}
+
+.opts{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:7px;}
+.opt{display:block;}
+.opt input{position:absolute;opacity:0;width:0;height:0;}
+.opt-face{
+  display:flex;align-items:center;gap:11px;cursor:pointer;
+  border:1px solid var(--line);border-radius:8px;padding:9px 12px;
+  background:var(--ground);transition:background .15s ease,border-color .15s ease;
+}
+.opt-face:hover{background:var(--surface-2);}
+.opt-key{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  width:20px;height:20px;flex:none;display:grid;place-items:center;
+  border-radius:5px;background:var(--surface-2);color:var(--muted);
+  border:1px solid var(--line);transition:background .15s ease,color .15s ease;
+}
+.opt-val{flex:1;min-width:0;}
+.opt-val.en{font-family:"Newsreader",Georgia,serif;font-size:17px;direction:ltr;text-align:left;unicode-bidi:isolate;}
+.opt input:checked + .opt-face{background:var(--accent-soft);border-color:var(--accent);}
+.opt input:checked + .opt-face .opt-key{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+.opt input:focus-visible + .opt-face{outline:2px solid var(--accent);outline-offset:2px;}
+
+textarea{
+  width:100%;margin-top:12px;resize:vertical;
+  font-family:"Newsreader",Georgia,serif;font-size:17px;line-height:1.6;
+  color:var(--ink);background:var(--ground);
+  border:1px solid var(--line);border-radius:8px;padding:11px 13px;
+  direction:ltr;text-align:left;
+}
+textarea.rtl{direction:rtl;text-align:right;font-family:"IBM Plex Sans Arabic",sans-serif;font-size:15px;}
+textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent);}
+textarea::placeholder{color:var(--muted);opacity:.7;}
+.wc{margin-top:6px;font-size:12px;color:var(--muted);font-family:"IBM Plex Mono",monospace;}
+
+/* ── verdict after submit ───────────────────────────────── */
+.verdict{
+  margin-top:12px;font-size:13.5px;padding:8px 12px;border-radius:7px;
+  display:none;align-items:center;gap:8px;
+}
+.q[data-mark="ok"] .verdict{display:flex;background:var(--accent-soft);color:var(--accent);}
+.q[data-mark="no"] .verdict{display:flex;background:var(--bad-soft);color:var(--bad);}
+.q[data-mark="ok"]{border-color:var(--accent);}
+.q[data-mark="no"]{border-color:var(--bad);}
+.verdict .mono{font-weight:600;}
+
+/* ── actions ────────────────────────────────────────────── */
+.actions{margin-top:36px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+button{
+  font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;
+  border-radius:8px;padding:12px 24px;border:1px solid transparent;
+  transition:transform .12s ease,opacity .15s ease,background .15s ease;
+}
+button:active{transform:translateY(1px);}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.btn-main{background:var(--accent);color:var(--accent-ink);}
+.btn-main:hover{opacity:.9;}
+.btn-ghost{background:transparent;color:var(--muted);border-color:var(--line);font-weight:500;}
+.btn-ghost:hover{background:var(--surface-2);color:var(--ink);}
+.warn{
+  display:none;margin-top:14px;background:var(--signal-soft);color:var(--signal);
+  border:1px solid var(--signal);border-radius:8px;padding:12px 15px;font-size:14px;
+}
+.warn.on{display:block;}
+
+/* ── results ────────────────────────────────────────────── */
+#result{display:none;margin-top:44px;scroll-margin-top:70px;}
+#result.on{display:block;}
+.score-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 24px;box-shadow:var(--shadow);
+}
+.score-row{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;}
+.score-big{
+  font-family:"IBM Plex Mono",monospace;font-size:44px;font-weight:600;
+  color:var(--ink);line-height:1;font-variant-numeric:tabular-nums;
+}
+.score-of{font-family:"IBM Plex Mono",monospace;font-size:20px;color:var(--muted);}
+.score-lvl{
+  margin-inline-start:auto;font-family:"IBM Plex Mono",monospace;font-weight:600;
+  font-size:20px;background:var(--accent);color:var(--accent-ink);
+  padding:5px 16px;border-radius:7px;letter-spacing:.02em;
+}
+
+/* CEFR ladder — rungs are the real scale, filled to the estimate */
+.ladder{display:flex;gap:4px;margin-top:22px;}
+.rung{
+  flex:1;text-align:center;padding:9px 2px;border-radius:6px;
+  background:var(--surface-2);border:1px solid var(--line);
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);
+}
+.rung.reached{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-soft);}
+.rung.here{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600;}
+
+.breakdown{margin-top:24px;display:flex;flex-direction:column;gap:9px;}
+.brow{display:flex;align-items:center;gap:12px;font-size:14px;}
+.brow-name{min-width:150px;color:var(--ink-2);}
+.brow-track{flex:1;height:7px;background:var(--surface-2);border-radius:99px;overflow:hidden;}
+.brow-fill{height:100%;background:var(--accent);border-radius:99px;}
+.brow-num{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);min-width:42px;text-align:left;}
+
+.next{
+  margin-top:24px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);
+}
+.next h3{margin:0 0 8px;font-size:17px;}
+.next p{margin:0 0 14px;color:var(--ink-2);font-size:14.5px;}
+#packet{
+  width:100%;height:230px;font-family:"IBM Plex Mono",monospace;font-size:12px;
+  line-height:1.6;direction:rtl;text-align:right;background:var(--ground);
+  border:1px solid var(--line);border-radius:8px;padding:12px;color:var(--ink);
+}
+.toast{
+  position:fixed;bottom:22px;inset-inline-start:22px;z-index:50;
+  background:var(--ink);color:var(--ground);padding:10px 18px;border-radius:8px;
+  font-size:14px;opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;
+}
+.toast.on{opacity:1;transform:translateY(0);}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important;}
+}
+@media (max-width:560px){
+  .wrap{padding:0 14px 80px;}
+  .q{padding:15px 14px;}
+  .brow-name{min-width:100px;font-size:13px;}
+  .score-lvl{margin-inline-start:0;}
+}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="bar-label">أجبت <span class="bar-count mono" id="cnt">0</span> من <span class="mono">42</span></span>
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <span class="clock mono" id="clock">00:00</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">تحديد المستوى · قبل خطة الـ ٩٩ يوم</p>
+    <h1>وش مستواي بالإنجليزي؟</h1>
+    <p class="lede">٤٢ سؤال تتدرّج من أبسط شي لأصعب شي. النتيجة هي اللي تبني عليها خطة ٢٣ أغسطس ٢٠٢٦ &larr; ٦ يناير ٢٠٢٧.</p>
+
+    <div class="rules">
+      <h2>قبل تبدأ</h2>
+      <ul>
+        <li><b>لا تستخدم ترجمة ولا بحث.</b> الغلط هنا مفيد — يوريني وين بالضبط أبدأ معك.</li>
+        <li>اللي ما تعرفه <b>اتركه فاضي</b>، لا تخمّن عشوائي.</li>
+        <li>أقسام الكتابة أهم من الاختيارات، خذ وقتك فيها واكتب بنفسك حتى لو فيه أخطاء.</li>
+        <li>إجاباتك <b>تنحفظ تلقائياً</b> في المتصفح، تقدر تسكّر وترجع.</li>
+        <li>في الآخر بيطلع لك <b>صندوق نص</b> — انسخه وأرسله لي في المحادثة.</li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="test"></main>
+
+  <div class="actions">
+    <button class="btn-main" id="submit">أنهِ الاختبار واعرض النتيجة</button>
+    <button class="btn-ghost" id="reset">مسح كل الإجابات</button>
+  </div>
+  <div class="warn" id="warn"></div>
+
+  <div id="result">
+    <section>
+      <div class="sec-head">
+        <span class="sec-num">◆</span>
+        <h2 class="sec-title">النتيجة</h2>
+        <span class="sec-en">Your placement</span>
+      </div>
+
+      <div class="score-card" style="margin-top:16px;">
+        <div class="score-row">
+          <span><span class="score-big" id="sc">0</span><span class="score-of"> / 33</span></span>
+          <span class="score-lvl mono" id="lvl">—</span>
+        </div>
+        <div class="ladder" id="ladder"></div>
+        <div class="breakdown" id="breakdown"></div>
+      </div>
+
+      <div class="next">
+        <h3>الخطوة الأخيرة</h3>
+        <p>انسخ النص التالي وألصقه لي في المحادثة — فيه تفصيل إجاباتك وكتابتك، ومنه أبني الخطة على مستواك بالضبط.</p>
+        <textarea id="packet" readonly></textarea>
+        <div class="actions" style="margin-top:14px;">
+          <button class="btn-main" id="copy">انسخ حزمة الإجابات</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.documentElement.setAttribute("dir","rtl");
+document.documentElement.setAttribute("lang","ar");
+
+/* ── data ───────────────────────────────────────────────── */
+var SECTIONS = [
+  {id:"g1", num:"01", ar:"أساسيات القواعد",  en:"Grammar — Foundations", chip:"A1 – A2"},
+  {id:"g2", num:"02", ar:"قواعد متوسطة",     en:"Grammar — Intermediate", chip:"A2 – B1"},
+  {id:"g3", num:"03", ar:"قواعد فوق المتوسط", en:"Grammar — Upper",        chip:"B1 – B2"},
+  {id:"g4", num:"04", ar:"قواعد متقدمة",     en:"Grammar — Advanced",     chip:"B2 – C1"},
+  {id:"v",  num:"05", ar:"المفردات",         en:"Vocabulary",             chip:"B1 – C1"},
+  {id:"r",  num:"06", ar:"القراءة",          en:"Reading",                chip:"B1 – B2"},
+  {id:"w",  num:"07", ar:"الكتابة",          en:"Writing",                chip:"إنتاج حر"},
+  {id:"i",  num:"08", ar:"عنك أنت",          en:"About You",              chip:"غير محسوب"}
+];
+
+var PASSAGE = "Remote work was once a rare perk, offered mainly to senior employees. Today it is standard in many industries. Supporters argue that it saves commuting time and gives workers more control over their schedules. Critics, however, point out that it can blur the line between work and personal life, and that new employees in particular struggle to build relationships with colleagues they never meet in person. Most companies have settled on a compromise: staff come to the office two or three days a week.";
+
+var Q = [
+{n:1,s:"g1",t:"mc",q:"She ___ to school every day.",o:["go","goes","going","gone"],a:1},
+{n:2,s:"g1",t:"mc",q:"There ___ some books on the table.",o:["is","are","be","has"],a:1},
+{n:3,s:"g1",t:"mc",q:"Yesterday I ___ my friend.",o:["call","called","calls","calling"],a:1},
+{n:4,s:"g1",t:"mc",q:"He is taller ___ his brother.",o:["then","that","than","as"],a:2},
+{n:5,s:"g1",t:"mc",q:"I ___ like coffee.",o:["don't","doesn't","am not","not"],a:0},
+{n:6,s:"g1",t:"mc",q:"Where ___ you go last weekend?",o:["do","did","does","are"],a:1},
+{n:7,s:"g1",t:"mc",q:"She is ___ engineer.",o:["a","an","the","(no article)"],a:1},
+
+{n:8,s:"g2",t:"mc",q:"I have lived here ___ 2015.",o:["for","since","from","during"],a:1},
+{n:9,s:"g2",t:"mc",q:"If it rains tomorrow, we ___ at home.",o:["stay","stayed","will stay","would stay"],a:2},
+{n:10,s:"g2",t:"mc",q:"She's the woman ___ helped me.",o:["which","who","whose","what"],a:1},
+{n:11,s:"g2",t:"mc",q:"The letter ___ yesterday.",o:["sent","was sent","is sent","sends"],a:1},
+{n:12,s:"g2",t:"mc",q:"I'm not used to ___ up early.",o:["get","getting","got","gets"],a:1},
+{n:13,s:"g2",t:"mc",q:"He said he ___ tired.",o:["is","was","will be","has been"],a:1},
+{n:14,s:"g2",t:"mc",q:"You ___ smoke here. It's forbidden.",o:["mustn't","don't have to","needn't","couldn't"],a:0},
+
+{n:15,s:"g3",t:"mc",q:"I ___ working here for three years.",o:["am","was","have been","had"],a:2},
+{n:16,s:"g3",t:"mc",q:"By the time we arrived, the movie ___.",o:["started","has started","had started","starts"],a:2},
+{n:17,s:"g3",t:"mc",q:"I'd rather you ___ tell anyone.",o:["don't","didn't","won't","not"],a:1},
+{n:18,s:"g3",t:"mc",q:"___ harder, he would have passed.",o:["If he studied","Had he studied","Should he study","If he study"],a:1},
+{n:19,s:"g3",t:"mc",q:"She's very good ___ dealing with customers.",o:["in","on","at","for"],a:2},
+{n:20,s:"g3",t:"mc",q:"Not only ___ late, but he also forgot the file.",o:["he was","was he","he is","he had"],a:1},
+
+{n:21,s:"g4",t:"mc",q:"Little ___ that he was being watched.",o:["he knew","did he know","he did know","knew he"],a:1},
+{n:22,s:"g4",t:"mc",q:"The proposal was turned ___ by the board.",o:["up","down","over","off"],a:1},
+{n:23,s:"g4",t:"mc",q:"___ all the evidence, the verdict was surprising.",o:["Give","Given","Giving","To give"],a:1},
+{n:24,s:"g4",t:"mc",q:"The manager insisted that the report ___ submitted by Friday.",o:["is","was","be","will be"],a:2},
+
+{n:25,s:"v",t:"mc",ar:"كلمة “reluctant” الأقرب لمعناها:",o:["eager","unwilling","tired","confused"],a:1},
+{n:26,s:"v",t:"mc",ar:"كلمة “meticulous” تعني:",o:["careless","very careful about details","very fast","rude"],a:1},
+{n:27,s:"v",t:"mc",q:"I need to ___ with my emails.",o:["catch up","catch on","catch out","catch in"],a:0},
+{n:28,s:"v",t:"mc",q:"The team is making good ___.",o:["do","progress","progresses","a progress"],a:1},
+{n:29,s:"v",t:"mc",ar:"أي جملة صحيحة؟",o:["I need an information.","I need informations.","I need a piece of information.","I need many information."],a:2},
+{n:30,s:"v",t:"mc",q:"The company is on the ___ of bankruptcy.",o:["edge","verge","border","side"],a:1},
+
+{n:31,s:"r",t:"mc",q:"According to the text, remote work in the past was:",o:["available to everyone","given mostly to senior staff","illegal","unpopular"],a:1},
+{n:32,s:"r",t:"mc",q:"What problem do critics mention for NEW employees?",o:["low salary","too much commuting","difficulty forming relationships","lack of equipment"],a:2},
+{n:33,s:"r",t:"mc",ar:"عبارة “blur the line” في النص تعني الأقرب:",o:["make the difference less clear","draw a strong line","cancel work","increase salaries"],a:0},
+
+{n:34,s:"w",t:"open",ar:"بكلماتك أنت وبالإنجليزي (جملة أو جملتين): وش الحل الوسط اللي وصلت له أغلب الشركات في النص؟",rows:3,ph:"Most companies…"},
+{n:35,s:"w",t:"open",ar:"اكتب ٣–٤ جمل بالإنجليزي عن وش سويت أمس.",rows:5,ph:"Yesterday I…"},
+{n:36,s:"w",t:"open",ar:"اكتب فقرة ٥–٧ جمل بالإنجليزي: تفضّل العمل أو الدراسة من البيت ولا من المكتب؟ وليش؟",rows:8,ph:"I prefer…"},
+
+{n:37,s:"i",t:"mc",ar:"لو واحد كلّمك إنجليزي بسرعة عادية، تفهم كم تقريباً؟",o:["أقل من ٢٥٪","حوالي ٥٠٪","حوالي ٧٥٪","أغلبه"],rtl:true},
+{n:38,s:"i",t:"mc",ar:"تقدر تسوّي مكالمة ٥ دقايق بالإنجليزي بدون ما تتوقف كثير؟",o:["لا أبداً","بصعوبة","نعم غالباً","نعم بسهولة"],rtl:true},
+{n:39,s:"i",t:"mc",ar:"كم دقيقة تقدر تذاكر باليوم بشكل واقعي؟",o:["٢٠ دقيقة","٣٠ دقيقة","٤٥ دقيقة","٦٠ دقيقة أو أكثر"],rtl:true},
+{n:40,s:"i",t:"mc",ar:"وش هدفك الأساسي من الإنجليزي؟",o:["الشغل والمجال المهني","السفر والمحادثة اليومية","اختبار (آيلتس / توفل / ستيب)","الدراسة الأكاديمية"],rtl:true},
+{n:41,s:"i",t:"open",ar:"فيه اختبار أو موعد محدد تحتاج تجهّز له؟ ومتى؟ (لو ما فيه اكتب: لا)",rows:2,ph:"مثال: آيلتس نوفمبر ٢٠٢٦ — أو: لا",rtl:true},
+{n:42,s:"i",t:"mc",ar:"إيش أكثر شي يحرجك حالياً؟",o:["النطق","الكلام والطلاقة","الفهم السماعي","المفردات","الكتابة والقواعد"],rtl:true}
+];
+
+var KEYS = ["a","b","c","d","e"];
+var SCORED = Q.filter(function(x){return x.t==="mc" && x.s!=="i";});
+var TOTAL_SCORED = SCORED.length;
+
+/* ── render ─────────────────────────────────────────────── */
+var host = document.getElementById("test");
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+SECTIONS.forEach(function(sec){
+  var el = document.createElement("section");
+  var html = '<div class="sec-head">'
+    + '<span class="sec-num">'+sec.num+'</span>'
+    + '<h2 class="sec-title">'+sec.ar+'</h2>'
+    + '<span class="sec-en">'+sec.en+'</span>'
+    + '<span class="chip">'+sec.chip+'</span>'
+    + '</div>';
+
+  if(sec.id==="r"){
+    html += '<div class="passage"><p>'+esc(PASSAGE)+'</p></div>';
+  }
+
+  Q.filter(function(x){return x.s===sec.id;}).forEach(function(item){
+    html += '<div class="q" id="q'+item.n+'" data-n="'+item.n+'"><div class="q-top">'
+      + '<span class="q-n">'+item.n+'</span><div class="q-body">';
+
+    if(item.ar){
+      html += '<p class="q-text">'+esc(item.ar)+'</p>';
+    } else {
+      html += '<p class="q-text en serif">'+esc(item.q)+'</p>';
+    }
+
+    if(item.t==="mc"){
+      html += '<ul class="opts">';
+      item.o.forEach(function(opt,i){
+        var id = "q"+item.n+"o"+i;
+        html += '<li class="opt">'
+          + '<input type="radio" name="q'+item.n+'" id="'+id+'" value="'+i+'">'
+          + '<label class="opt-face" for="'+id+'">'
+          + '<span class="opt-key">'+KEYS[i]+'</span>'
+          + '<span class="opt-val'+(item.rtl?"":" en")+'">'+esc(opt)+'</span>'
+          + '</label></li>';
+      });
+      html += '</ul>';
+    } else {
+      html += '<textarea id="t'+item.n+'" rows="'+item.rows+'" class="'+(item.rtl?"rtl":"")+'" placeholder="'+esc(item.ph)+'"></textarea>';
+      if(!item.rtl){ html += '<div class="wc" id="wc'+item.n+'">0 words</div>'; }
+    }
+
+    html += '<div class="verdict"></div></div></div></div>';
+  });
+
+  el.innerHTML = html;
+  host.appendChild(el);
+});
+
+/* ── state ──────────────────────────────────────────────── */
+var STORE = "en-level-test-v1";
+var state = {mc:{}, tx:{}, t0:Date.now(), done:false};
+
+function save(){
+  try{ localStorage.setItem(STORE, JSON.stringify(state)); }catch(e){}
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(STORE);
+    if(!raw) return;
+    var d = JSON.parse(raw);
+    if(d && typeof d === "object"){
+      state.mc = d.mc || {};
+      state.tx = d.tx || {};
+      state.t0 = d.t0 || Date.now();
+    }
+  }catch(e){}
+}
+load();
+
+Q.forEach(function(item){
+  if(item.t==="mc"){
+    var v = state.mc[item.n];
+    if(v !== undefined && v !== null){
+      var r = document.getElementById("q"+item.n+"o"+v);
+      if(r) r.checked = true;
+    }
+  } else {
+    var ta = document.getElementById("t"+item.n);
+    if(ta && state.tx[item.n]) ta.value = state.tx[item.n];
+  }
+});
+
+function words(s){
+  var m = String(s).trim().match(/[A-Za-z؀-ۿ']+/g);
+  return m ? m.length : 0;
+}
+
+function refresh(){
+  var n = 0;
+  Q.forEach(function(item){
+    var card = document.getElementById("q"+item.n);
+    var filled;
+    if(item.t==="mc"){
+      filled = state.mc[item.n] !== undefined && state.mc[item.n] !== null;
+    } else {
+      filled = !!(state.tx[item.n] && state.tx[item.n].trim().length > 1);
+    }
+    if(filled) n++;
+    card.setAttribute("data-done", filled ? "1" : "0");
+  });
+  document.getElementById("cnt").textContent = n;
+  document.getElementById("fill").style.width = (n/Q.length*100)+"%";
+}
+
+host.addEventListener("change", function(e){
+  var t = e.target;
+  if(t.type === "radio"){
+    state.mc[t.name.slice(1)] = parseInt(t.value,10);
+    save(); refresh();
+  }
+});
+host.addEventListener("input", function(e){
+  var t = e.target;
+  if(t.tagName === "TEXTAREA"){
+    var n = t.id.slice(1);
+    state.tx[n] = t.value;
+    var wc = document.getElementById("wc"+n);
+    if(wc) wc.textContent = words(t.value) + " words";
+    save(); refresh();
+  }
+});
+
+Q.forEach(function(item){
+  if(item.t==="open" && !item.rtl){
+    var wc = document.getElementById("wc"+item.n);
+    if(wc) wc.textContent = words(state.tx[item.n]||"") + " words";
+  }
+});
+refresh();
+
+/* ── clock ──────────────────────────────────────────────── */
+function pad(x){ return (x<10?"0":"")+x; }
+function elapsed(){
+  var s = Math.floor((Date.now()-state.t0)/1000);
+  return pad(Math.floor(s/60))+":"+pad(s%60);
+}
+setInterval(function(){
+  if(!state.done) document.getElementById("clock").textContent = elapsed();
+}, 1000);
+
+/* ── scoring ────────────────────────────────────────────── */
+var GROUPS = [
+  {id:"g1", ar:"قواعد أساسية", range:[1,7]},
+  {id:"g2", ar:"قواعد متوسطة", range:[8,14]},
+  {id:"g3", ar:"قواعد فوق المتوسط", range:[15,20]},
+  {id:"g4", ar:"قواعد متقدمة", range:[21,24]},
+  {id:"v",  ar:"المفردات", range:[25,30]},
+  {id:"r",  ar:"القراءة", range:[31,33]}
+];
+var BANDS = ["A1","A2","B1","B2","C1","C2"];
+
+function levelOf(score){
+  if(score <= 8)  return "A1";
+  if(score <= 13) return "A2";
+  if(score <= 19) return "B1";
+  if(score <= 25) return "B2";
+  if(score <= 30) return "C1";
+  return "C2";
+}
+
+function grade(){
+  var total = 0, per = {};
+  GROUPS.forEach(function(g){ per[g.id] = {ok:0, all:0}; });
+  SCORED.forEach(function(item){
+    var chosen = state.mc[item.n];
+    var right = (chosen === item.a);
+    if(right) total++;
+    per[item.s].all++;
+    if(right) per[item.s].ok++;
+    var card = document.getElementById("q"+item.n);
+    card.setAttribute("data-mark", right ? "ok" : "no");
+    var v = card.querySelector(".verdict");
+    if(right){
+      v.innerHTML = '<span>إجابة صحيحة</span>';
+    } else {
+      var pick = (chosen === undefined || chosen === null) ? "بدون إجابة" : KEYS[chosen];
+      v.innerHTML = '<span>الصحيح <span class="mono">'+KEYS[item.a]+'</span> &mdash; '
+        + esc(item.o[item.a]) + ' <span style="opacity:.65">(اخترت: '+esc(pick)+')</span></span>';
+    }
+  });
+  return {total:total, per:per};
+}
+
+function packet(res, lvl, time){
+  var L = [];
+  L.push("=== نتيجة اختبار تحديد مستوى الإنجليزي ===");
+  L.push("الوقت المستغرق: " + time);
+  L.push("النتيجة: " + res.total + " / " + TOTAL_SCORED + "   |   التقدير الأولي: " + lvl);
+  L.push("");
+  L.push("-- التفصيل حسب القسم --");
+  GROUPS.forEach(function(g){
+    L.push(g.ar + ": " + res.per[g.id].ok + "/" + res.per[g.id].all);
+  });
+  L.push("");
+  L.push("-- تفاصيل الاختيارات (الرقم-اختياري / صح أو الصحيح) --");
+  var line = [];
+  SCORED.forEach(function(item){
+    var c = state.mc[item.n];
+    var mine = (c===undefined||c===null) ? "-" : KEYS[c];
+    var mark = (c === item.a) ? "OK" : ("X>" + KEYS[item.a]);
+    line.push(item.n + ":" + mine + " " + mark);
+  });
+  for(var i=0;i<line.length;i+=6){
+    L.push(line.slice(i,i+6).join("   "));
+  }
+  L.push("");
+  L.push("-- الكتابة (بخط يدي بدون ترجمة) --");
+  [34,35,36].forEach(function(n){
+    var q = Q.filter(function(x){return x.n===n;})[0];
+    L.push("["+n+"] " + q.ar);
+    L.push((state.tx[n] || "(فاضي)").trim());
+    L.push("");
+  });
+  L.push("-- معلومات شخصية للخطة --");
+  [37,38,39,40,41,42].forEach(function(n){
+    var q = Q.filter(function(x){return x.n===n;})[0];
+    var ansv;
+    if(q.t === "mc"){
+      var c = state.mc[n];
+      ansv = (c===undefined||c===null) ? "(فاضي)" : q.o[c];
+    } else {
+      ansv = (state.tx[n] || "(فاضي)").trim();
+    }
+    L.push(q.ar + "  ->  " + ansv);
+  });
+  L.push("");
+  L.push("الخطة المطلوبة: من ٢٣/٨/٢٠٢٦ إلى ٧/١/٢٠٢٧ — بدون خميس وجمعة — ٩٩ يوم دراسي.");
+  return L.join("\n");
+}
+
+/* ── submit ─────────────────────────────────────────────── */
+var warnEl = document.getElementById("warn");
+var armed = false;
+
+document.getElementById("submit").addEventListener("click", function(){
+  var missing = [];
+  Q.forEach(function(item){
+    var filled = (item.t==="mc")
+      ? (state.mc[item.n] !== undefined && state.mc[item.n] !== null)
+      : !!(state.tx[item.n] && state.tx[item.n].trim().length > 1);
+    if(!filled) missing.push(item.n);
+  });
+
+  if(missing.length && !armed){
+    armed = true;
+    warnEl.classList.add("on");
+    warnEl.innerHTML = 'باقي <b>'+missing.length+'</b> سؤال بدون إجابة: <span class="mono">'
+      + missing.join(", ") + '</span><br>راجعها، أو اضغط الزر مرة ثانية لو فعلاً ما تعرفها.';
+    return;
+  }
+
+  warnEl.classList.remove("on");
+  state.done = true;
+  var time = elapsed();
+  var res = grade();
+  var lvl = levelOf(res.total);
+
+  document.getElementById("sc").textContent = res.total;
+  document.getElementById("lvl").textContent = lvl;
+
+  var lad = document.getElementById("ladder");
+  var idx = BANDS.indexOf(lvl);
+  lad.innerHTML = BANDS.map(function(b,i){
+    var cls = i < idx ? "rung reached" : (i === idx ? "rung here" : "rung");
+    return '<div class="'+cls+'">'+b+'</div>';
+  }).join("");
+
+  document.getElementById("breakdown").innerHTML = GROUPS.map(function(g){
+    var p = res.per[g.id];
+    var pct = p.all ? Math.round(p.ok/p.all*100) : 0;
+    return '<div class="brow"><span class="brow-name">'+g.ar+'</span>'
+      + '<span class="brow-track"><span class="brow-fill" style="width:'+pct+'%"></span></span>'
+      + '<span class="brow-num">'+p.ok+'/'+p.all+'</span></div>';
+  }).join("");
+
+  document.getElementById("packet").value = packet(res, lvl, time);
+  document.getElementById("result").classList.add("on");
+  document.getElementById("result").scrollIntoView({behavior:"smooth", block:"start"});
+  save();
+});
+
+/* ── copy / reset ───────────────────────────────────────── */
+var toastEl = document.getElementById("toast");
+var toastTimer;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ toastEl.classList.remove("on"); }, 2200);
+}
+
+document.getElementById("copy").addEventListener("click", function(){
+  var ta = document.getElementById("packet");
+  var txt = ta.value;
+  function fallback(){
+    ta.removeAttribute("readonly");
+    ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length);
+    var ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){}
+    ta.setAttribute("readonly","readonly");
+    toast(ok ? "تم النسخ — ألصقه لي في المحادثة" : "حدد النص وانسخه يدوياً");
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){
+      toast("تم النسخ — ألصقه لي في المحادثة");
+    }).catch(fallback);
+  } else {
+    fallback();
+  }
+});
+
+document.getElementById("reset").addEventListener("click", function(){
+  state = {mc:{}, tx:{}, t0:Date.now(), done:false};
+  save();
+  document.querySelectorAll("#test input[type=radio]").forEach(function(r){ r.checked = false; });
+  document.querySelectorAll("#test textarea").forEach(function(t){ t.value = ""; });
+  document.querySelectorAll(".q").forEach(function(c){ c.removeAttribute("data-mark"); });
+  document.querySelectorAll(".wc").forEach(function(w){ w.textContent = "0 words"; });
+  document.getElementById("result").classList.remove("on");
+  warnEl.classList.remove("on");
+  armed = false;
+  refresh();
+  window.scrollTo({top:0, behavior:"smooth"});
+  toast("انمسحت كل الإجابات");
+});
+</script>
