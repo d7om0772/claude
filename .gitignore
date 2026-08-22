@@ -1,0 +1,10 @@
+node_modules/
+out/
+.DS_Store
+*.log
+
+public/fonts/*.woff2
+public/fonts/*.ttf
+public/fonts/*.otf
+public/media/*
+!public/media/.gitkeep

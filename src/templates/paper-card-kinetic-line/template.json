@@ -1,0 +1,22 @@
+{
+  "id": "paper-card-kinetic-line",
+  "name": "Paper Card — Kinetic Line",
+  "nameAr": "الكرت الورقي — السطر الزاحف",
+  "description": "كرت ورقي كريمي على خلفية داكنة. سطر عربي ضخم يزحف أفقياً بمحطة وقوف لكل كلمة وموشن بلر بين النقلات، ثم يختفي بقطع نظيف، ويليه سطر صغير يُبنى كلمة كلمة من الحافة القائدة. مصمَّم للفيديو العمودي القصير.",
+  "category": "kinetic-typography",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "defaultDurationInFrames": 61,
+  "tags": [
+    "arabic",
+    "rtl",
+    "kinetic-typography",
+    "motion-blur",
+    "vertical",
+    "reels",
+    "tiktok",
+    "thmanyah"
+  ],
+  "previewFile": "preview.mp4"
+}

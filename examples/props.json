@@ -1,0 +1,21 @@
+{
+  "headline": "لكن انك تعرف",
+  "subheadline": "ان في احد",
+  "captions": [
+    {
+      "text": "لكن انك تعرف",
+      "startMs": 0,
+      "endMs": 1200
+    },
+    {
+      "text": "ان في احد",
+      "startMs": 1200,
+      "endMs": 2600
+    },
+    {
+      "text": "ينتظرك كل يوم",
+      "startMs": 2600,
+      "endMs": 4000
+    }
+  ]
+}
