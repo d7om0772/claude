@@ -21,6 +21,16 @@ import {
 } from "../templates/paper-karaoke-captions/schema";
 import karaokeMeta from "../templates/paper-karaoke-captions/template.json";
 
+import {
+  Template as StretchTemplate,
+  calculateMetadata as stretchMetadata,
+} from "../templates/card-stretch-reveal/Template";
+import {
+  templateSchema as stretchSchema,
+  defaultProps as stretchDefaults,
+} from "../templates/card-stretch-reveal/schema";
+import stretchMeta from "../templates/card-stretch-reveal/template.json";
+
 /**
  * سجلّ القوالب.
  *
@@ -80,6 +90,13 @@ export const templates: readonly RegisteredTemplate[] = [
     component: KaraokeTemplate,
     defaultProps: karaokeDefaults,
     calculateMetadata: karaokeMetadata,
+  }),
+  defineTemplate({
+    meta: stretchMeta as TemplateMeta,
+    schema: stretchSchema,
+    component: StretchTemplate,
+    defaultProps: stretchDefaults,
+    calculateMetadata: stretchMetadata,
   }),
 ];
 

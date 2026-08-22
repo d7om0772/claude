@@ -27,6 +27,7 @@ import {
   FONT_WEIGHT_BLACK,
   FONT_WEIGHT_MEDIUM,
 } from '../../lib/fonts';
+import { sanitizeSaltIndices } from '../../lib/thmanyah-aesthetics';
 
 /** وزن الكلمة النشطة: Black. الأصل استعمل Black لأن Bold ما يعطي تبايناً كافياً. */
 const WEIGHT_ACTIVE = FONT_WEIGHT_BLACK;
@@ -248,7 +249,18 @@ export const Template: React.FC<TemplateProps> = ({
   const lineHeightPx = fontSize * lineHeightRatio;
   const riseDistancePx = height * riseDistanceRatio;
 
-  const saltSet = useMemo(() => new Set(saltWordIndices), [saltWordIndices]);
+  // تصفية وفق دليل ثمانية: لا في نص طويل، ولا في كلمتين متجاورتين، ولا بكثرة،
+  // ولا على كلمة لا بديل ممتد لحرفها الأخير.
+  const saltSet = useMemo(
+    () =>
+      new Set(
+        sanitizeSaltIndices(
+          resolved.map((caption) => caption.text),
+          saltWordIndices,
+        ),
+      ),
+    [resolved, saltWordIndices],
+  );
 
   return (
     <AbsoluteFill style={{ backgroundColor }}>
