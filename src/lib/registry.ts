@@ -11,6 +11,16 @@ import {
 } from "../templates/paper-card-kinetic-line/schema";
 import paperCardMeta from "../templates/paper-card-kinetic-line/template.json";
 
+import {
+  Template as KaraokeTemplate,
+  calculateTemplateMetadata as karaokeMetadata,
+} from "../templates/paper-karaoke-captions/Template";
+import {
+  templateSchema as karaokeSchema,
+  defaultProps as karaokeDefaults,
+} from "../templates/paper-karaoke-captions/schema";
+import karaokeMeta from "../templates/paper-karaoke-captions/template.json";
+
 /**
  * سجلّ القوالب.
  *
@@ -63,6 +73,13 @@ export const templates: readonly RegisteredTemplate[] = [
     component: PaperCardTemplate,
     defaultProps: paperCardDefaults,
     calculateMetadata: paperCardMetadata,
+  }),
+  defineTemplate({
+    meta: karaokeMeta as TemplateMeta,
+    schema: karaokeSchema,
+    component: KaraokeTemplate,
+    defaultProps: karaokeDefaults,
+    calculateMetadata: karaokeMetadata,
   }),
 ];
 

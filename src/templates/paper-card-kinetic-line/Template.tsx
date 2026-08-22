@@ -5,8 +5,6 @@ import {
   Img,
   OffthreadVideo,
   Sequence,
-  continueRender,
-  delayRender,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
@@ -15,78 +13,12 @@ import { measureText } from "@remotion/layout-utils";
 import { getAudioDurationInSeconds } from "@remotion/media-utils";
 import type { CalculateMetadataFunction } from "remotion";
 import type { Caption, TemplateProps } from "./schema";
-
-/* ────────────────────────────────────────────────────────────────────────────
-   الخطوط
-   خط ثمانية ليس على Google Fonts، لذلك يُحمَّل محلياً من مجلد public عبر
-   FontFace. و delayRender يمنع الرندر قبل جاهزية الخط حتى لا تخرج قياسات
-   measureText خاطئة في أول فريم.
-   ──────────────────────────────────────────────────────────────────────── */
-
-/**
- * خط ثمانية Serif Display عائلة واحدة بوزنين — لا عائلتين منفصلتين:
- * Black‏ (900) للسطر الضخم، و Medium‏ (500) للسطر الصغير والكابشن.
- */
-export const FONT_FAMILY = "Thmanyah Serif Display";
-export const DISPLAY_WEIGHT = "900";
-export const TEXT_WEIGHT = "500";
-
-/**
- * مكدّس احتياطي: لو غاب ملف الخط لأي سبب، النص يظهر بخط عربي بديل بدل
- * أن يتحوّل إلى مربعات فارغة.
- */
-const FALLBACK = `"Noto Naskh Arabic", "Amiri", "Times New Roman", serif`;
-export const FONT_STACK = `"${FONT_FAMILY}", ${FALLBACK}`;
-
-const fontHandle = delayRender("تحميل خط ثمانية");
-
-/**
- * لا نستخدم loadFont من @remotion/fonts هنا عن قصد: عند فشل التحميل يستدعي
- * cancelRender داخلياً، وهذا يُجهض الرندر كله بلا رجعة — فلا ينفع أي catch
- * خارجي. نحمّل عبر FontFace مباشرة ليكون الفشل قابلاً للالتقاط فعلاً.
- */
-const loadLocalFont = async (
-  family: string,
-  file: string,
-  weight: string,
-): Promise<void> => {
-  const url = staticFile(`fonts/${file}`);
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`تعذّر تحميل الخط ${file} (HTTP ${response.status})`);
-  }
-  const face = new FontFace(family, await response.arrayBuffer(), { weight });
-  await face.load();
-  document.fonts.add(face);
-};
-
-export const fontsReady: Promise<boolean> = Promise.all([
-  loadLocalFont(
-    FONT_FAMILY,
-    "thmanyah-serif-display-Black.woff2",
-    DISPLAY_WEIGHT,
-  ),
-  loadLocalFont(
-    FONT_FAMILY,
-    "thmanyah-serif-display-Medium.woff2",
-    TEXT_WEIGHT,
-  ),
-])
-  .then(() => true)
-  .catch((err: unknown) => {
-    // نكمل الرندر بالخط البديل بدل تعليق العملية، مع تحذير واضح في السجل
-    // لأن القياسات ستختلف عن التصميم الأصلي.
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[${"paper-card-kinetic-line"}] تعذّر تحميل خط ثمانية، سيُستخدم خط بديل والضبط سيختلف عن التصميم الأصلي.`,
-      err,
-    );
-    return false;
-  })
-  .then((loaded) => {
-    continueRender(fontHandle);
-    return loaded;
-  });
+import {
+  FONT_STACK,
+  FONT_WEIGHT_BLACK,
+  FONT_WEIGHT_MEDIUM,
+  fontsReady,
+} from "../../lib/fonts";
 
 /* ────────────────────────────────────────────────────────────────────────────
    مساعدات الحركة
@@ -286,7 +218,7 @@ const CaptionLayer: React.FC<{
         style={{
           display: "inline-block",
           fontFamily: FONT_STACK,
-          fontWeight: TEXT_WEIGHT,
+          fontWeight: FONT_WEIGHT_MEDIUM,
           fontSize,
           lineHeight: 1.35,
           color: fontColor,
@@ -377,7 +309,7 @@ export const Template: React.FC<TemplateProps> = ({
         ? layoutLine(
             headline,
             FONT_STACK,
-            DISPLAY_WEIGHT,
+            String(FONT_WEIGHT_BLACK),
             headlineSize,
             headlineWordSpacing,
           )
@@ -391,7 +323,7 @@ export const Template: React.FC<TemplateProps> = ({
         ? layoutLine(
             subheadline,
             FONT_STACK,
-            TEXT_WEIGHT,
+            String(FONT_WEIGHT_MEDIUM),
             subSize,
             headlineWordSpacing,
           )
@@ -560,7 +492,7 @@ export const Template: React.FC<TemplateProps> = ({
                       top: -headlineSize * 0.72,
                       width: word.width,
                       fontFamily: FONT_STACK,
-                      fontWeight: DISPLAY_WEIGHT,
+                      fontWeight: FONT_WEIGHT_BLACK,
                       fontSize: headlineSize,
                       lineHeight: 1.2,
                       color: fontColor,
@@ -608,7 +540,7 @@ export const Template: React.FC<TemplateProps> = ({
                       top: -subSize * 0.72,
                       width: word.width,
                       fontFamily: FONT_STACK,
-                      fontWeight: TEXT_WEIGHT,
+                      fontWeight: FONT_WEIGHT_MEDIUM,
                       fontSize: subSize,
                       lineHeight: 1.2,
                       color: fontColor,

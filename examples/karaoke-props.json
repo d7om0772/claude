@@ -1,0 +1,35 @@
+{
+  "headline": "ارحب البقى انت من اي منطقة",
+  "captions": [
+    {
+      "text": "ارحب",
+      "startMs": 0,
+      "endMs": 450
+    },
+    {
+      "text": "البقى",
+      "startMs": 450,
+      "endMs": 900
+    },
+    {
+      "text": "انت",
+      "startMs": 900,
+      "endMs": 1200
+    },
+    {
+      "text": "من",
+      "startMs": 1200,
+      "endMs": 1450
+    },
+    {
+      "text": "اي",
+      "startMs": 1450,
+      "endMs": 1750
+    },
+    {
+      "text": "منطقة",
+      "startMs": 1750,
+      "endMs": 2400
+    }
+  ]
+}
