@@ -1,13 +1,26 @@
 # الخطوط
 
-ضع هنا ملفي خط ثمانية بهذين الاسمين بالضبط:
-
 ```
-thmanyah-serif-display-Bold.woff2
-thmanyah-serif-text-Medium.woff2
+thmanyah-serif-display-Black.woff2     الوزن 900 — السطر الضخم
+thmanyah-serif-display-Medium.woff2    الوزن 500 — السطر الصغير والكابشن
 ```
 
-المصدر الرسمي: font.thmanyah.com — راجع الرخصة قبل الاستخدام التجاري،
-ولا تُعِد استضافة الملفات علناً (لذلك هي مستثناة في .gitignore).
+عائلة واحدة (`thmanyah serif display`) بوزنين، لا عائلتان منفصلتان.
 
-بدونهما القالب يشتغل لكن بخط بديل، والقياسات تختلف فيختلّ ضبط السطر.
+المصدر الرسمي: font.thmanyah.com — الأصل بصيغة `.otf`، وحُوّل إلى `woff2`
+لتقليل الحجم (٢٤٨ك ← ٧٩ك، و ٢٤٩ك ← ٨٢ك) بلا أي فقد في الشكل.
+
+**الملفات مستثناة من git** احتراماً لرخصة ثمانية التي تمنع إعادة الاستضافة
+العلنية. بدونها القالب يشتغل لكن بخط عربي بديل مع تحذير في السجل، والضبط
+يختلف عن التصميم الأصلي لأن قياسات `measureText` تتغيّر فتنزاح محطات الوقوف.
+
+## إعادة التحويل من otf
+
+```bash
+pip install fonttools brotli
+python3 -c "
+from fontTools.ttLib import TTFont
+f = TTFont('thmanyahserifdisplayBlack.otf'); f.flavor='woff2'
+f.save('public/fonts/thmanyah-serif-display-Black.woff2')
+"
+```

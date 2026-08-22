@@ -23,16 +23,20 @@ import type { Caption, TemplateProps } from "./schema";
    measureText خاطئة في أول فريم.
    ──────────────────────────────────────────────────────────────────────── */
 
-export const DISPLAY_FAMILY = "Thmanyah Serif Display";
-export const TEXT_FAMILY = "Thmanyah Serif Text";
+/**
+ * خط ثمانية Serif Display عائلة واحدة بوزنين — لا عائلتين منفصلتين:
+ * Black‏ (900) للسطر الضخم، و Medium‏ (500) للسطر الصغير والكابشن.
+ */
+export const FONT_FAMILY = "Thmanyah Serif Display";
+export const DISPLAY_WEIGHT = "900";
+export const TEXT_WEIGHT = "500";
 
 /**
  * مكدّس احتياطي: لو غاب ملف الخط لأي سبب، النص يظهر بخط عربي بديل بدل
  * أن يتحوّل إلى مربعات فارغة.
  */
 const FALLBACK = `"Noto Naskh Arabic", "Amiri", "Times New Roman", serif`;
-export const DISPLAY_STACK = `"${DISPLAY_FAMILY}", ${FALLBACK}`;
-export const TEXT_STACK = `"${TEXT_FAMILY}", ${FALLBACK}`;
+export const FONT_STACK = `"${FONT_FAMILY}", ${FALLBACK}`;
 
 const fontHandle = delayRender("تحميل خط ثمانية");
 
@@ -57,8 +61,16 @@ const loadLocalFont = async (
 };
 
 export const fontsReady: Promise<boolean> = Promise.all([
-  loadLocalFont(DISPLAY_FAMILY, "thmanyah-serif-display-Bold.woff2", "700"),
-  loadLocalFont(TEXT_FAMILY, "thmanyah-serif-text-Medium.woff2", "500"),
+  loadLocalFont(
+    FONT_FAMILY,
+    "thmanyah-serif-display-Black.woff2",
+    DISPLAY_WEIGHT,
+  ),
+  loadLocalFont(
+    FONT_FAMILY,
+    "thmanyah-serif-display-Medium.woff2",
+    TEXT_WEIGHT,
+  ),
 ])
   .then(() => true)
   .catch((err: unknown) => {
@@ -273,8 +285,8 @@ const CaptionLayer: React.FC<{
       <span
         style={{
           display: "inline-block",
-          fontFamily: TEXT_STACK,
-          fontWeight: 500,
+          fontFamily: FONT_STACK,
+          fontWeight: TEXT_WEIGHT,
           fontSize,
           lineHeight: 1.35,
           color: fontColor,
@@ -364,8 +376,8 @@ export const Template: React.FC<TemplateProps> = ({
       fontsLoaded
         ? layoutLine(
             headline,
-            DISPLAY_STACK,
-            "700",
+            FONT_STACK,
+            DISPLAY_WEIGHT,
             headlineSize,
             headlineWordSpacing,
           )
@@ -378,8 +390,8 @@ export const Template: React.FC<TemplateProps> = ({
       fontsLoaded && subheadline
         ? layoutLine(
             subheadline,
-            TEXT_STACK,
-            "500",
+            FONT_STACK,
+            TEXT_WEIGHT,
             subSize,
             headlineWordSpacing,
           )
@@ -547,8 +559,8 @@ export const Template: React.FC<TemplateProps> = ({
                       left,
                       top: -headlineSize * 0.72,
                       width: word.width,
-                      fontFamily: DISPLAY_STACK,
-                      fontWeight: 700,
+                      fontFamily: FONT_STACK,
+                      fontWeight: DISPLAY_WEIGHT,
                       fontSize: headlineSize,
                       lineHeight: 1.2,
                       color: fontColor,
@@ -595,8 +607,8 @@ export const Template: React.FC<TemplateProps> = ({
                       left,
                       top: -subSize * 0.72,
                       width: word.width,
-                      fontFamily: TEXT_STACK,
-                      fontWeight: 500,
+                      fontFamily: FONT_STACK,
+                      fontWeight: TEXT_WEIGHT,
                       fontSize: subSize,
                       lineHeight: 1.2,
                       color: fontColor,

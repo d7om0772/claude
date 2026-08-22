@@ -98,9 +98,14 @@
 ```
 public/
   fonts/
-    thmanyah-serif-display-Bold.woff2
-    thmanyah-serif-text-Medium.woff2
+    thmanyah-serif-display-Black.woff2    الوزن 900 — السطر الضخم
+    thmanyah-serif-display-Medium.woff2   الوزن 500 — السطر الصغير والكابشن
 ```
+
+**عائلة واحدة بوزنين، لا عائلتان.** الملفان يحملان نفس العائلة الطباعية
+`thmanyah serif display` (‏`nameID 16`) ويختلفان في `usWeightClass` فقط:
+‏900 و 500. لذلك يُسجَّلان تحت اسم عائلة واحد بوزنين مختلفين، والتفريق بينهما
+عبر `fontWeight` لا عبر اسم العائلة.
 
 **خط ثمانية** — ملكية شركة ثمانية، متاح للاستخدام الشخصي والتجاري من المصدر
 الرسمي `font.thmanyah.com`. راجع رخصته قبل الاستخدام التجاري، ولا تعِد استضافة
