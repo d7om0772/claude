@@ -15,8 +15,14 @@ export const SALT_FINAL_LETTERS = "ئبتثسشصضفقكمنىي";
 /** فوق هذا العدد من الكلمات يُعدّ النص «طويلاً» فتُلغى الأحرف المرسلة كلياً. */
 export const SALT_MAX_WORDS = 8;
 
-/** كلمة مرسلة واحدة لكل هذا العدد من الكلمات — ضابط «لا تُستخدم بكثرة». */
-const SALT_WORDS_PER_ALTERNATE = 4;
+/**
+ * كلمة مرسلة واحدة لكل هذا العدد من الكلمات — ضابط «لا تُستخدم بكثرة».
+ *
+ * الدليل يقول «بكثرة» بلا رقم، والقوالب تقرؤها بكثافات مختلفة: قالب الكاريوكي
+ * يقرؤها واحدة لكل ستّ كلمات، وقالب كشف الكلمات واحدة لكل سطر. لذلك الرقم
+ * افتراضٌ قابل للتجاوز عبر maxPerWords لا حكمٌ مفروض على كل القوالب.
+ */
+export const SALT_DEFAULT_WORDS_PER_ALTERNATE = 4;
 
 /** آخر حرف فعلي في الكلمة، بعد تجاهل الحركات وعلامات الترقيم. */
 const finalLetter = (word: string): string => {
@@ -33,7 +39,7 @@ export const hasSaltAlternate = (word: string): boolean =>
  *
  *   ١. لا تُستخدم في النصوص الطويلة  → أكثر من SALT_MAX_WORDS كلمة ⇒ لا شيء
  *   ٢. لا تُستخدم في كلمتين متجاورتين → تُسقَط الثانية من كل زوج متجاور
- *   ٣. لا تُستخدم بكثرة في الجملة    → سقف واحد لكل أربع كلمات
+ *   ٣. لا تُستخدم بكثرة في الجملة    → سقف واحد لكل maxPerWords كلمة
  *   ٤. لا أثر لها على حرف بلا بديل   → تُسقَط الكلمات غير المشمولة
  *
  * الترتيب مقصود: التجاور يُحسم قبل السقف، فتبقى الكلمة الأسبق دائماً.
@@ -41,6 +47,7 @@ export const hasSaltAlternate = (word: string): boolean =>
 export const sanitizeSaltIndices = (
   words: readonly string[],
   requested: readonly number[],
+  options: { readonly maxPerWords?: number } = {},
 ): number[] => {
   if (words.length > SALT_MAX_WORDS) {
     return [];
@@ -61,7 +68,11 @@ export const sanitizeSaltIndices = (
     }
   }
 
-  const cap = Math.max(1, Math.floor(words.length / SALT_WORDS_PER_ALTERNATE));
+  const perAlternate = Math.max(
+    1,
+    options.maxPerWords ?? SALT_DEFAULT_WORDS_PER_ALTERNATE,
+  );
+  const cap = Math.max(1, Math.floor(words.length / perAlternate));
   return spaced.slice(0, cap);
 };
 

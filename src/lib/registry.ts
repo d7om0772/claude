@@ -31,6 +31,14 @@ import {
 } from "../templates/card-stretch-reveal/schema";
 import stretchMeta from "../templates/card-stretch-reveal/template.json";
 
+import { Template as WordRevealTemplate } from "../templates/thmanyah-word-reveal-vertical/Template";
+import {
+  templateSchema as wordRevealSchema,
+  defaultProps as wordRevealDefaults,
+  calculateMetadata as wordRevealMetadata,
+} from "../templates/thmanyah-word-reveal-vertical/schema";
+import wordRevealMeta from "../templates/thmanyah-word-reveal-vertical/template.json";
+
 /**
  * سجلّ القوالب.
  *
@@ -97,6 +105,13 @@ export const templates: readonly RegisteredTemplate[] = [
     component: StretchTemplate,
     defaultProps: stretchDefaults,
     calculateMetadata: stretchMetadata,
+  }),
+  defineTemplate({
+    meta: wordRevealMeta as TemplateMeta,
+    schema: wordRevealSchema,
+    component: WordRevealTemplate,
+    defaultProps: wordRevealDefaults,
+    calculateMetadata: wordRevealMetadata,
   }),
 ];
 
