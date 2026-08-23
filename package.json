@@ -5,18 +5,16 @@
   "description": "قوالب مونتاج جاهزة بضغطة زر — Remotion",
   "scripts": {
     "dev": "npm run server & npm run ui",
+    "ui": "vite",
+    "server": "node src/server/index.js",
+    "build": "vite build",
+    "start": "node src/server/index.js",
     "studio": "remotion studio",
     "render": "remotion render",
-    "still": "remotion still",
-    "typecheck": "tsc --noEmit",
-    "srt": "tsx src/cli/srt-to-captions.ts",
-    "ui": "vite",
-    "ui:build": "vite build",
-    "previews": "tsx src/cli/render-previews.ts",
-    "ui:standalone": "tsx src/cli/build-standalone.ts",
-    "server": "tsx src/server/index.ts",
-    "build": "vite build",
-    "start": "tsx src/server/index.ts"
+    "previews": "node src/cli/render-previews.js",
+    "srt": "node src/cli/srt-to-captions.js",
+    "ui:standalone": "node src/cli/build-standalone.js",
+    "format": "prettier --write \"src/**/*.{js,jsx,css}\""
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.515",
@@ -33,12 +31,10 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/react": "19.0.0",
-    "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "playwright": "^1.49.1",
-    "tsx": "4.19.2",
-    "typescript": "5.7.2",
+    "prettier": "^3.4.2",
     "vite": "^6.0.7"
-  }
+  },
+  "type": "module"
 }

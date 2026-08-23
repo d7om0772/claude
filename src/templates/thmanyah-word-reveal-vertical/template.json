@@ -1,24 +1,24 @@
 {
-	"id": "thmanyah-word-reveal-vertical",
-	"name": "Thmanyah Word Reveal — Vertical",
-	"nameAr": "كشف الكلمات — عمودي بخط ثمانية",
-	"description": "قالب رأسي بخلفية كريمية وبطاقة وسائط بحواف دائرية، ترجمة عربية تظهر كلمة بعد كلمة وتتراكم دون اختفاء، مبنية على خط ثمانية للعناوين مع دعم خصائص OpenType.",
-	"category": "social-vertical",
-	"fps": 30,
-	"width": 1080,
-	"height": 1920,
-	"defaultDurationInFrames": 150,
-	"tags": [
-		"arabic",
-		"rtl",
-		"captions",
-		"word-by-word",
-		"reels",
-		"tiktok",
-		"shorts",
-		"thmanyah",
-		"vertical",
-		"voiceover"
-	],
-	"previewFile": "preview.mp4"
+    "id": "thmanyah-word-reveal-vertical",
+    "name": "Thmanyah Word Reveal — Vertical",
+    "nameAr": "كشف الكلمات — عمودي بخط ثمانية",
+    "description": "قالب رأسي بخلفية كريمية وبطاقة وسائط بحواف دائرية، ترجمة عربية تظهر كلمة بعد كلمة وتتراكم دون اختفاء، مبنية على خط ثمانية للعناوين مع دعم خصائص OpenType.",
+    "category": "social-vertical",
+    "fps": 30,
+    "width": 1080,
+    "height": 1920,
+    "defaultDurationInFrames": 150,
+    "tags": [
+        "arabic",
+        "rtl",
+        "captions",
+        "word-by-word",
+        "reels",
+        "tiktok",
+        "shorts",
+        "thmanyah",
+        "vertical",
+        "voiceover"
+    ],
+    "previewFile": "preview.mp4"
 }
