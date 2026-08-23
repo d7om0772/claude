@@ -8,3 +8,5 @@ public/fonts/*.ttf
 public/fonts/*.otf
 public/media/*
 !public/media/.gitkeep
+
+dist-ui/

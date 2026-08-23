@@ -1,4 +1,12 @@
-import type { Caption } from "../templates/paper-card-kinetic-line/schema";
+/**
+ * شكل المقطع الواحد. كل القوالب تعرّفه في schema الخاص بها بنفس البنية،
+ * وهذا هو النوع المشترك الذي يتعامل معه المحوّل والواجهة.
+ */
+export type Caption = {
+  readonly text: string;
+  readonly startMs: number;
+  readonly endMs: number;
+};
 
 /**
  * محوّل SRT → captions.
