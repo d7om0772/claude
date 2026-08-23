@@ -33,7 +33,9 @@ npx remotion render paper-card-kinetic-line out/video.mp4 --props=examples/props
 جمالياته في `src/lib/thmanyah-aesthetics.ts`. الخط أصل على مستوى المشروع لا
 على مستوى القالب، وعزله يمنع تكرار `delayRender` وتسجيل نفس `FontFace` مرتين.
 
-**إضافة قالب جديد = مجلد جديد + سطر واحد في `src/lib/registry.ts`.** لا `Root.tsx`
+**إضافة قالب جديد = مجلد جديد + سطر واحد في `src/lib/registry.ts`.**
+السجلّ يرفض المعرّفات المكرّرة عند التحميل، لأن معرّفين متطابقين يعنيان
+Composition واحداً يطغى على الآخر بصمت فيختفي قالب كامل بلا رسالة خطأ. لا `Root.tsx`
 ولا أي ملف آخر يحتاج تعديلاً — الـ Compositions تتولّد من السجلّ.
 
 ## القوالب الحالية
@@ -44,6 +46,7 @@ npx remotion render paper-card-kinetic-line out/video.mp4 --props=examples/props
 | `paper-karaoke-captions` | كابشن كاريوكي ورقي | ١٠٨٠×١٩٢٠ | كابشن كلمة-بكلمة، النشطة Black داكنة والسابقة Medium أفتح |
 | `card-stretch-reveal` | كشف بالتمدّد داخل الكرت | ١٠٨٠×١٩٢٠ | مقطع ينبطح إلى شريط رفيع ثم ينفتح عمودياً في ربع ثانية |
 | `thmanyah-word-reveal-vertical` | كشف الكلمات — عمودي | ١٠٨٠×١٩٢٠ | ترجمة تظهر كلمة بعد كلمة وتتراكم داخل بطاقة وسائط |
+| `paper-card` | لقطة البطاقة الورقية | ١٠٨٠×١٩٢٠ | بطاقة تصعد من أسفل الإطار، ثم يُقطع محتواها إلى فيديو في نفس الإحداثيات |
 
 ## الصوت المرجعي و SRT
 
@@ -123,6 +126,7 @@ src/
     paper-karaoke-captions/
     card-stretch-reveal/
     thmanyah-word-reveal-vertical/
+    paper-card-reveal/
 public/
   fonts/                ملفات الخطوط (محلية، بلا أي طلب شبكة وقت الرندر)
   media/                وسائط المستخدم

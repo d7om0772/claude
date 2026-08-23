@@ -39,6 +39,14 @@ import {
 } from "../templates/thmanyah-word-reveal-vertical/schema";
 import wordRevealMeta from "../templates/thmanyah-word-reveal-vertical/template.json";
 
+import { PaperCardTemplate as PaperCardRevealTemplate } from "../templates/paper-card-reveal/Template";
+import {
+  paperCardSchema as paperCardRevealSchema,
+  paperCardDefaultProps as paperCardRevealDefaults,
+  calculateMetadata as paperCardRevealMetadata,
+} from "../templates/paper-card-reveal/schema";
+import paperCardRevealMeta from "../templates/paper-card-reveal/template.json";
+
 /**
  * سجلّ القوالب.
  *
@@ -113,7 +121,28 @@ export const templates: readonly RegisteredTemplate[] = [
     defaultProps: wordRevealDefaults,
     calculateMetadata: wordRevealMetadata,
   }),
+  defineTemplate({
+    meta: paperCardRevealMeta as TemplateMeta,
+    schema: paperCardRevealSchema,
+    component: PaperCardRevealTemplate,
+    defaultProps: paperCardRevealDefaults,
+    calculateMetadata: paperCardRevealMetadata,
+  }),
 ];
+
+/**
+ * حارس تكرار المعرّفات: معرّفان متطابقان يعنيان Composition واحداً يطغى على
+ * الآخر بصمت، فيختفي قالب كامل بلا رسالة خطأ. يُفحص عند تحميل الوحدة.
+ */
+const duplicateIds = templates
+  .map((t) => t.meta.id)
+  .filter((id, i, all) => all.indexOf(id) !== i);
+
+if (duplicateIds.length > 0) {
+  throw new Error(
+    `معرّفات قوالب مكرّرة في السجلّ: ${[...new Set(duplicateIds)].join("، ")}`,
+  );
+}
 
 export const getTemplate = (id: string): RegisteredTemplate | undefined =>
   templates.find((t) => t.meta.id === id);
