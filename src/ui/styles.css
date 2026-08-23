@@ -198,3 +198,68 @@ input, select, textarea { font-family: inherit; }
 
 .num-list { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .chip { background: var(--panel-2); border: 1px solid var(--line); border-radius: 20px; padding: 3px 6px 3px 10px; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+
+/* ---------- طابور الرندر ---------- */
+
+
+.queue-scrim { display: none; }
+
+/* اللوحة تزيح المحتوى بدل أن تطفو فوقه: طافيةً كانت تحجب بطاقات المعرض
+   تحتها فتصير غير قابلة للنقر — وهي أول ما يحتاجه المستخدم بعد إرسال مهمة. */
+.with-queue { padding-inline-start: min(330px, 88vw); }
+.with-queue .controls,
+.with-queue .stage { max-height: none; }
+
+@media (max-width: 900px) {
+  /* لا مساحة للإزاحة على الشاشات الضيقة، فتطفو ومعها ستارة تُغلقها بالنقر */
+  .with-queue { padding-inline-start: 0; }
+  .queue-scrim {
+    display: block;
+    position: fixed; inset-block: 57px 0; inset-inline: 0;
+    background: rgba(0,0,0,.5); z-index: 19;
+  }
+}
+
+.queue {
+  position: fixed;
+  inset-block: 57px 0;
+  inset-inline-start: 0;
+  width: min(330px, 88vw);
+  background: var(--panel);
+  border-inline-end: 1px solid var(--line);
+  box-shadow: 0 0 50px rgba(0,0,0,.5);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+.queue-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: 14px;
+}
+.queue-empty { color: var(--muted); font-size: 13px; padding: 16px; margin: 0; line-height: 1.7; }
+.queue-list { list-style: none; margin: 0; padding: 12px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+.queue-item {
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+  background: var(--panel-2); display: flex; flex-direction: column; gap: 7px;
+}
+.queue-item.done { border-color: #2c4a33; }
+.queue-item.failed { border-color: #5c3327; }
+.queue-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.queue-row.sub { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.queue-name { font-size: 13.5px; }
+.queue-status { font-size: 11.5px; color: var(--muted); }
+.queue-item.done .queue-status { color: var(--ok); }
+.queue-item.failed .queue-status { color: var(--danger); }
+
+.bar { height: 4px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+
+.btn.tiny { padding: 3px 11px; font-size: 12px; }
+
+.queue-badge {
+  background: var(--accent); color: #221a08; border-radius: 20px;
+  font-size: 11px; padding: 1px 7px; margin-inline-start: 6px; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.render-bar { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; justify-content: center; }

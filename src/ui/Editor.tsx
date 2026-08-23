@@ -5,6 +5,7 @@ import { describeSchema, type Field } from "../lib/schema-introspect";
 import { srtToCaptions, type Caption } from "../lib/srt";
 import { FieldControl, type AssetPick } from "./form/Fields";
 import { readAudioDuration, runChecks, wantsWordLevel } from "./sync";
+import { submitRender } from "./render";
 
 type Props = Record<string, unknown>;
 
@@ -45,7 +46,9 @@ const GROUP_ORDER = [
 export const Editor: React.FC<{
   template: RegisteredTemplate;
   onBack: () => void;
-}> = ({ template, onBack }) => {
+  serverUp: boolean | null;
+  onQueued: () => void;
+}> = ({ template, onBack, serverUp, onQueued }) => {
   const fields = useMemo(
     () => describeSchema(template.schema),
     [template],
@@ -58,6 +61,8 @@ export const Editor: React.FC<{
   const [srtName, setSrtName] = useState<string | null>(null);
   const [audioSeconds, setAudioSeconds] = useState<number | null>(null);
   const [duration, setDuration] = useState(template.meta.defaultDurationInFrames);
+  const [submitting, setSubmitting] = useState(false);
+  const [renderError, setRenderError] = useState<string | null>(null);
 
   const set = useCallback((name: string, value: unknown) => {
     setProps((prev) => ({ ...prev, [name]: value }));
@@ -78,7 +83,7 @@ export const Editor: React.FC<{
           const { [name]: _removed, ...rest } = prev;
           return rest;
         }
-        return { ...prev, [name]: { url, name: file.name } };
+        return { ...prev, [name]: { url, name: file.name, file } };
       });
 
       if (url === null) {
@@ -143,6 +148,17 @@ export const Editor: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
+  const onRender = useCallback(() => {
+    setSubmitting(true);
+    setRenderError(null);
+    submitRender(template.meta.id, props, picked)
+      .then(() => onQueued())
+      .catch((err: unknown) =>
+        setRenderError(err instanceof Error ? err.message : String(err)),
+      )
+      .finally(() => setSubmitting(false));
+  }, [template.meta.id, props, picked, onQueued]);
 
   const captions = (props.captions ?? []) as Caption[];
   const checks = useMemo(
@@ -245,17 +261,34 @@ export const Editor: React.FC<{
             acknowledgeRemotionLicense
           />
         </div>
-        <div style={{ marginTop: 14, color: "var(--muted)", fontSize: 13 }}>
-          {template.meta.nameAr} · {duration} فريم ·{" "}
-          {(duration / template.meta.fps).toFixed(2)} ثانية
-          <button
-            className="btn ghost"
-            style={{ marginInlineStart: 12 }}
-            onClick={onBack}
-          >
+        <div className="render-bar">
+          <span style={{ color: "var(--muted)", fontSize: 13 }}>
+            {duration} فريم · {(duration / template.meta.fps).toFixed(2)} ثانية
+          </span>
+
+          {serverUp === true ? (
+            <button
+              className="btn primary"
+              onClick={onRender}
+              disabled={submitting}
+            >
+              {submitting ? "جارٍ الإرسال …" : "رندر"}
+            </button>
+          ) : serverUp === false ? (
+            <span className="note" style={{ fontSize: 12 }}>
+              الرندر يحتاج تشغيل الخادم محلياً: <code>npm run dev</code>
+            </span>
+          ) : null}
+
+          <button className="btn ghost" onClick={onBack}>
             ← رجوع للمعرض
           </button>
         </div>
+        {renderError ? (
+          <div className="note bad" style={{ marginTop: 10, maxWidth: 420 }}>
+            {renderError}
+          </div>
+        ) : null}
       </main>
     </div>
   );

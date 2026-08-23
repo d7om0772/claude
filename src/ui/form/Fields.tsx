@@ -145,7 +145,12 @@ const EnumField: React.FC<{ field: Field; value: unknown; set: Setter }> = ({
   </div>
 );
 
-export type AssetPick = { readonly url: string; readonly name: string };
+export type AssetPick = {
+  readonly url: string;
+  readonly name: string;
+  /** الملف نفسه — يحتاجه الرندر لأن الخادم لا يعرف blob URL */
+  readonly file: File;
+};
 
 const AssetField: React.FC<{
   field: Field;

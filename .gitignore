@@ -10,3 +10,6 @@ public/media/*
 !public/media/.gitkeep
 
 dist-ui/
+
+.render/
+public/uploads/

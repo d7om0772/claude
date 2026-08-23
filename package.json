@@ -4,7 +4,7 @@
   "private": true,
   "description": "قوالب مونتاج جاهزة بضغطة زر — Remotion",
   "scripts": {
-    "dev": "remotion studio",
+    "dev": "npm run server & npm run ui",
     "studio": "remotion studio",
     "render": "remotion render",
     "still": "remotion still",
@@ -13,13 +13,16 @@
     "ui": "vite",
     "ui:build": "vite build",
     "previews": "tsx src/cli/render-previews.ts",
-    "ui:standalone": "tsx src/cli/build-standalone.ts"
+    "ui:standalone": "tsx src/cli/build-standalone.ts",
+    "server": "tsx src/server/index.ts"
   },
   "dependencies": {
+    "@remotion/bundler": "^4.0.515",
     "@remotion/cli": "4.0.515",
     "@remotion/layout-utils": "4.0.515",
     "@remotion/media-utils": "4.0.515",
     "@remotion/player": "^4.0.515",
+    "@remotion/renderer": "^4.0.515",
     "@remotion/zod-types": "4.0.515",
     "react": "19.0.0",
     "react-dom": "19.0.0",

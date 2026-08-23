@@ -8,5 +8,10 @@ export default defineConfig({
   // بلا أي تهيئة إضافية: يعيد "/fonts/..." وVite يخدمه من هنا.
   publicDir: "../../public",
   build: { outDir: "../../dist-ui", emptyOutDir: true },
-  server: { host: "0.0.0.0", port: 5173 },
+  server: {
+    host: "0.0.0.0",
+    port: 5173,
+    // خادم الرندر منفصل؛ الوكيل يجعل الواجهة تناديه على نفس الأصل
+    proxy: { "/api": "http://localhost:5174" },
+  },
 });
