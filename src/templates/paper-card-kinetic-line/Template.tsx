@@ -10,9 +10,10 @@ import {
   useVideoConfig,
 } from "remotion";
 import { measureText } from "@remotion/layout-utils";
-import { getAudioDurationInSeconds } from "@remotion/media-utils";
+import { contentDurationInFrames } from "../../lib/duration";
 import type { CalculateMetadataFunction } from "remotion";
 import type { Caption, TemplateProps } from "./schema";
+import { isVideoSource } from "../../lib/duration";
 import {
   FONT_STACK,
   FONT_WEIGHT_BLACK,
@@ -139,9 +140,6 @@ const buildHeadlineMotion = (
 
   return { offsetAt, stops };
 };
-
-const isVideoSource = (src: string): boolean =>
-  /\.(mp4|webm|mov|m4v)$/iu.test(src);
 
 const resolveSrc = (src: string): string =>
   /^(https?:|data:|blob:)/u.test(src) || src.startsWith("/")
@@ -588,17 +586,13 @@ export const calculateTemplateMetadata: CalculateMetadataFunction<
   const fps = 30;
   const merged = { ...dp, ...props };
 
-  if (merged.voiceover) {
-    const seconds = await getAudioDurationInSeconds(
-      resolveSrc(merged.voiceover),
-    );
-    return { durationInFrames: Math.ceil(seconds * fps) };
-  }
-
-  if (merged.captions.length > 0) {
-    const lastMs = Math.max(...merged.captions.map((c) => c.endMs));
-    return { durationInFrames: Math.ceil((lastMs / 1000) * fps) };
-  }
-
-  return { durationInFrames: merged.fallbackDurationInFrames };
+  return {
+    durationInFrames: await contentDurationInFrames({
+      fps,
+      voiceover: merged.voiceover ? resolveSrc(merged.voiceover) : null,
+      media: merged.media ? resolveSrc(merged.media) : null,
+      captions: merged.captions,
+      fallbackInFrames: merged.fallbackDurationInFrames,
+    }),
+  };
 };

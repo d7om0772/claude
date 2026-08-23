@@ -12,7 +12,8 @@ import {
   useVideoConfig,
 } from 'remotion';
 import type { CalculateMetadataFunction } from 'remotion';
-import { getAudioDurationInSeconds } from '@remotion/media-utils';
+import { contentDurationInFrames } from '../../lib/duration';
+import { resolveAsset } from '../../lib/asset-url';
 import type { Caption, TemplateProps } from './schema';
 import {
   FONT_STACK,
@@ -57,12 +58,6 @@ const revealEase = (linearProgress: number): number =>
     extrapolateRight: 'clamp',
   });
 
-/** يحوّل مساراً نسبياً إلى staticFile، ويترك الروابط المطلقة كما هي. */
-const resolveAsset = (path: string): string =>
-  path.startsWith('http') || path.startsWith('/') || path.startsWith('data:')
-    ? path
-    : staticFile(path);
-
 /** يختار الكابشن المطابق للفريم الحالي. */
 const pickCaption = (captions: Caption[], currentMs: number): Caption | null => {
   for (const caption of captions) {
@@ -86,28 +81,24 @@ export const calculateMetadata: CalculateMetadataFunction<TemplateProps> = async
 
   const fps = 30;
 
-  // ١) لو فيه تعليق صوتي فهو صاحب القرار في طول الفيديو.
-  if (props.voiceover) {
-    const seconds = await getAudioDurationInSeconds(resolveAsset(props.voiceover));
-    return {
-      durationInFrames: Math.max(1, Math.ceil(seconds * fps)),
-      fps,
-    };
-  }
-
-  // ٢) وإلا فآخر كابشن يحدد النهاية، مع ذيل نصف ثانية للتنفّس.
-  if (props.captions.length > 0) {
-    const lastMs = Math.max(...props.captions.map((caption) => caption.endMs));
-    return {
-      durationInFrames: Math.max(1, Math.ceil((lastMs / 1000) * fps) + Math.round(fps * 0.5)),
-      fps,
-    };
-  }
-
-  // ٣) وإلا مدة ثابتة تكفي لعرض الحركة كاملة والاستقرار بعدها.
-  const minimum = props.revealDelayInFrames + props.revealDurationInFrames + props.textDelayInFrames;
   return {
-    durationInFrames: Math.max(minimum + Math.round(fps * 1.5), Math.round(fps * 2.5)),
+    durationInFrames: await contentDurationInFrames({
+      fps,
+      voiceover: props.voiceover
+        ? resolveAsset(props.voiceover, staticFile)
+        : null,
+      // المقطع هنا يُعرض من الفريم صفر (الحركة تكشفه لا تؤخّره)
+      media: props.media ? resolveAsset(props.media, staticFile) : null,
+      captions: props.captions,
+      captionTailFrames: Math.round(fps * 0.5),
+      fallbackInFrames: Math.max(
+        props.revealDelayInFrames +
+          props.revealDurationInFrames +
+          props.textDelayInFrames +
+          Math.round(fps * 1.5),
+        Math.round(fps * 2.5),
+      ),
+    }),
     fps,
   };
 };
@@ -214,7 +205,7 @@ export const Template: React.FC<TemplateProps> = ({
   const mediaRadius = px(mediaRadiusRatio * REF_W);
   const cardCenterX = LAYOUT.card.left + LAYOUT.card.width / 2;
 
-  const mediaSource = media ? resolveAsset(media) : null;
+  const mediaSource = media ? resolveAsset(media, staticFile) : null;
 
   /* ---------- الأحرف المرسلة (salt) على العنوان ---------- */
   // العنوان فقط: قصير ومحدود بـ ٣٨ حرفاً، وهو الموضع الوحيد الذي يسمح فيه
@@ -272,7 +263,7 @@ export const Template: React.FC<TemplateProps> = ({
             }}
           >
             <Img
-              src={resolveAsset(logo)}
+              src={resolveAsset(logo, staticFile)}
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
           </div>
@@ -428,7 +419,7 @@ export const Template: React.FC<TemplateProps> = ({
       </AbsoluteFill>
 
       {/* الطبقة ٦ — الصوت */}
-      {voiceover ? <Audio src={resolveAsset(voiceover)} volume={voiceoverVolume} /> : null}
+      {voiceover ? <Audio src={resolveAsset(voiceover, staticFile)} volume={voiceoverVolume} /> : null}
     </AbsoluteFill>
   );
 };

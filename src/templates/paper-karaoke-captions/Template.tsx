@@ -13,7 +13,6 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
-import { getAudioDurationInSeconds } from '@remotion/media-utils';
 import {
   Caption,
   FPS,
@@ -22,6 +21,8 @@ import {
   WIDTH,
   defaultProps,
 } from './schema';
+import { contentDurationInFrames, isVideoSource } from '../../lib/duration';
+import { resolveAsset } from '../../lib/asset-url';
 import {
   FONT_STACK,
   FONT_WEIGHT_BLACK,
@@ -61,9 +62,8 @@ export const resolveCaptions = (
 const lastCaptionEndMs = (captions: Caption[]): number =>
   captions.reduce((max, c) => Math.max(max, c.endMs), 0);
 
-const VIDEO_EXTENSIONS = /\.(mp4|mov|webm|mkv|m4v)$/iu;
-
-const isVideoSource = (src: string): boolean => VIDEO_EXTENSIONS.test(src);
+// اكتشاف الفيديو والمدة مشتركان في lib/duration — يتعاملان مع blob URL
+// الذي تنتجه الواجهة عند رفع ملف، وهو بلا امتداد في مساره.
 
 /**
  * يحدّد الكلمة النشطة:
@@ -270,12 +270,12 @@ export const Template: React.FC<TemplateProps> = ({
           <AbsoluteFill style={{ opacity: mediaOpacity }}>
             {isVideoSource(media) ? (
               <Video
-                src={staticFile(media)}
+                src={resolveAsset(media, staticFile)}
                 style={{ width: '100%', height: '100%', objectFit: mediaFit }}
               />
             ) : (
               <Img
-                src={staticFile(media)}
+                src={resolveAsset(media, staticFile)}
                 style={{ width: '100%', height: '100%', objectFit: mediaFit }}
               />
             )}
@@ -293,7 +293,7 @@ export const Template: React.FC<TemplateProps> = ({
             }}
           >
             <Img
-              src={staticFile(logo)}
+              src={resolveAsset(logo, staticFile)}
               style={{
                 position: 'absolute',
                 width: width * logoWidthRatio,
@@ -378,7 +378,7 @@ export const Template: React.FC<TemplateProps> = ({
 
       {/* ---------- الطبقة 5: التعليق الصوتي ---------- */}
       {voiceover === null ? null : (
-        <Audio src={staticFile(voiceover)} volume={voiceoverVolume} />
+        <Audio src={resolveAsset(voiceover, staticFile)} volume={voiceoverVolume} />
       )}
     </AbsoluteFill>
   );
@@ -389,46 +389,27 @@ export const Template: React.FC<TemplateProps> = ({
  * ========================================================================== */
 
 export const calculateTemplateMetadata: CalculateMetadataFunction<
-  TemplateProps
+	TemplateProps
 > = async ({ props }) => {
-  const resolved = resolveCaptions(
-    props.headline,
-    props.captions,
-    props.fallbackWordIntervalMs,
-  );
+	const resolved = resolveCaptions(
+		props.headline,
+		props.captions,
+		props.fallbackWordIntervalMs,
+	);
 
-  const captionsEndMs = lastCaptionEndMs(resolved);
-
-  let audioMs = 0;
-
-  if (props.voiceover !== null) {
-    try {
-      const seconds = await getAudioDurationInSeconds(
-        staticFile(props.voiceover),
-      );
-      audioMs = seconds * 1000;
-    } catch (err: unknown) {
-      cancelRender(
-        new Error(
-          `تعذّر قراءة مدة ملف الصوت "${props.voiceover}": ${String(err)}`,
-        ),
-      );
-    }
-  }
-
-  // المدة = أطول العنصرين (الكابشن أو الصوت) + ذيل سكون في النهاية
-  const contentMs = Math.max(captionsEndMs, audioMs);
-  const contentFrames = Math.ceil((contentMs / 1000) * FPS);
-
-  return {
-    durationInFrames: Math.max(
-      1,
-      contentFrames + props.tailDurationInFrames,
-    ),
-    fps: FPS,
-    width: WIDTH,
-    height: HEIGHT,
-  };
+	return {
+		durationInFrames: await contentDurationInFrames({
+			fps: FPS,
+			voiceover: props.voiceover ? resolveAsset(props.voiceover, staticFile) : null,
+			media: props.media ? resolveAsset(props.media, staticFile) : null,
+			captions: resolved,
+			captionTailFrames: props.tailDurationInFrames,
+			fallbackInFrames: FPS,
+		}),
+		fps: FPS,
+		width: WIDTH,
+		height: HEIGHT,
+	};
 };
 
 export { defaultProps };

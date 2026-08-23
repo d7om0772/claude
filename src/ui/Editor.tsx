@@ -9,6 +9,16 @@ import { readAudioDuration, runChecks, wantsWordLevel } from "./sync";
 type Props = Record<string, unknown>;
 
 /**
+ * مسار blob بلا امتداد، والقوالب تميّز الفيديو من الصورة بالامتداد — فبدون
+ * لاحقة يُعرض أي فيديو مرفوع كصورة ثابتة ولا تُحتسب مدّته. الجزء بعد # لا
+ * يدخل في البحث عن الـ blob فيبقى الرابط صالحاً، ويكفي أدوات الاكتشاف.
+ */
+const extensionSuffix = (fileName: string): string => {
+  const dot = fileName.lastIndexOf(".");
+  return dot > 0 ? `#${fileName.slice(dot)}` : "";
+};
+
+/**
  * تقسيم الحقول إلى مجموعات مفهومة. الترتيب مقصود: ما يعدّله المستخدم كثيراً
  * أولاً (المحتوى، الألوان، الصوت)، وضبط التخطيط والحركة في النهاية مطوياً.
  */
@@ -53,27 +63,30 @@ export const Editor: React.FC<{
     setProps((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  // الملفات المرفوعة تعيش كـ blob URL؛ القوالب تمرّرها كما هي لأن resolveAsset
-  // فيها يتجاوز staticFile للمسارات المطلقة.
   const onPick = useCallback(
     (name: string, file: File | null) => {
+      // رابط واحد للملف يُستعمل في العرض وفي القالب معاً، ويُبطَل عند
+      // الاستبدال. إنشاء رابطين لنفس الملف يسرّب أحدهما.
+      const url = file
+        ? URL.createObjectURL(file) + extensionSuffix(file.name)
+        : null;
+
       setPicked((prev) => {
         const old = prev[name];
         if (old) URL.revokeObjectURL(old.url);
-        if (!file) {
+        if (!file || url === null) {
           const { [name]: _removed, ...rest } = prev;
           return rest;
         }
-        return { ...prev, [name]: { url: URL.createObjectURL(file), name: file.name } };
+        return { ...prev, [name]: { url, name: file.name } };
       });
 
-      if (!file) {
+      if (url === null) {
         set(name, undefined);
         if (name === "voiceover") setAudioSeconds(null);
         return;
       }
 
-      const url = URL.createObjectURL(file);
       set(name, url);
       if (name === "voiceover") {
         readAudioDuration(url)

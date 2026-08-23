@@ -2,7 +2,8 @@ import { z } from 'zod';
 import { zColor } from '@remotion/zod-types';
 import { staticFile } from 'remotion';
 import type { CalculateMetadataFunction } from 'remotion';
-import { getAudioDurationInSeconds } from '@remotion/media-utils';
+import { contentDurationInFrames } from '../../lib/duration';
+import { resolveAsset } from '../../lib/asset-url';
 
 /**
  * قالب "لقطة البطاقة الورقية" — GLOWORA Paper Card
@@ -230,32 +231,23 @@ const FPS = 30;
 /** ذيل سكون بعد آخر كابشن — نصف ثانية، نفس عُرف القوالب الأخرى. */
 const TAIL_FRAMES = Math.round(FPS * 0.5);
 
-const resolveAsset = (path: string): string =>
-  /^(https?:|data:|blob:)/iu.test(path) || path.startsWith('/')
-    ? path
-    : staticFile(path);
-
 export const calculateMetadata: CalculateMetadataFunction<
   PaperCardProps
-> = async ({ props }) => {
-  if (props.voiceover) {
-    const seconds = await getAudioDurationInSeconds(
-      resolveAsset(props.voiceover),
-    );
-    return { durationInFrames: Math.max(1, Math.ceil(seconds * FPS)) };
-  }
-
-  if (props.captions.length > 0) {
-    const lastMs = props.captions.reduce((max, c) => Math.max(max, c.endMs), 0);
-    return {
-      durationInFrames: Math.max(
-        1,
-        Math.ceil((lastMs / 1000) * FPS) + TAIL_FRAMES,
-      ),
-    };
-  }
-
-  // بلا صوت ولا كابشن: مدة تكفي لدخول البطاقة والقطع والاستقرار بعده
-  const minimum = Math.ceil((props.cutSec + 1) * FPS);
-  return { durationInFrames: Math.max(minimum, Math.round(FPS * 2.5)) };
-};
+> = async ({ props }) => ({
+  durationInFrames: await contentDurationInFrames({
+    fps: FPS,
+    voiceover: props.voiceover
+      ? resolveAsset(props.voiceover, staticFile)
+      : null,
+    media: props.media ? resolveAsset(props.media, staticFile) : null,
+    // المقطع هنا لا يظهر إلا بعد القطع، فمدّته تُضاف إلى لحظة القطع لا
+    // إلى بداية اللقطة، وإلا اقتُطع آخره بمقدار زمن المشهد النصي.
+    mediaStartFrame: Math.round(props.cutSec * FPS),
+    captions: props.captions,
+    captionTailFrames: TAIL_FRAMES,
+    fallbackInFrames: Math.max(
+      Math.ceil((props.cutSec + 1) * FPS),
+      Math.round(FPS * 2.5),
+    ),
+  }),
+});

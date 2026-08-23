@@ -15,6 +15,8 @@ import {
 import type {Caption, TemplateProps} from './schema';
 import {FONT_STACK, FONT_WEIGHT_BLACK, FONT_WEIGHT_MEDIUM} from '../../lib/fonts';
 import {sanitizeSaltIndices} from '../../lib/thmanyah-aesthetics';
+import {isVideoSource} from '../../lib/duration';
+import {resolveAsset} from '../../lib/asset-url';
 
 /* ------------------------------------------------------------------ *
  * تجميع الكلمات في "مقاطع" (cues)
@@ -332,8 +334,7 @@ const StaticText: React.FC<{
 /* ------------------------------------------------------------------ *
  * الوسائط داخل البطاقة
  * ------------------------------------------------------------------ */
-const isVideoSource = (src: string): boolean =>
-	/\.(mp4|mov|webm|m4v)$/i.test(src);
+// اكتشاف الفيديو مشترك في lib/duration ليتعامل مع blob URL بلا امتداد
 
 const CardMedia: React.FC<{
 	media?: string;
@@ -359,7 +360,7 @@ const CardMedia: React.FC<{
 		);
 	}
 
-	const src = media.startsWith('http') ? media : staticFile(media);
+	const src = resolveAsset(media, staticFile);
 	const fill: React.CSSProperties = {
 		width: '100%',
 		height: '100%',

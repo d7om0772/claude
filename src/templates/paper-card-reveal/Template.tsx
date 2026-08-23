@@ -17,6 +17,8 @@ import {
   FONT_WEIGHT_MEDIUM,
 } from '../../lib/fonts';
 import { sanitizeSaltIndices } from '../../lib/thmanyah-aesthetics';
+import { isVideoSource } from '../../lib/duration';
+import { resolveAsset } from '../../lib/asset-url';
 
 /* ------------------------------------------------------------------ *
  * ثوابت الهوية — قواعد دليل جماليات خط ثمانية، مكتوبة داخل القالب
@@ -109,18 +111,7 @@ const pickCaption = (
   return null;
 };
 
-/**
- * يحوّل المسار النسبي إلى staticFile ويترك المطلق كما هو.
- * بدونها ينكسر أي مسار نسبي مثل media/clip.mp4 — والـ schema ينص صراحةً
- * على أن المسارات تُقرأ من مجلد public.
- */
-const resolveAsset = (path: string): string =>
-  /^(https?:|data:|blob:)/iu.test(path) || path.startsWith('/')
-    ? path
-    : staticFile(path);
-
-const isVideoPath = (path: string): boolean =>
-  /\.(mp4|mov|webm|mkv|m4v)(\?.*)?$/i.test(path);
+// تحليل المسار واكتشاف الفيديو مشتركان — يتعاملان مع blob URL بلا امتداد
 
 /* ------------------------------------------------------------------ *
  * طبقة ١ — الخلفية الورقية
@@ -232,7 +223,7 @@ const BrandLockup: React.FC<{
     >
       {logo ? (
         <Img
-          src={resolveAsset(logo)}
+          src={resolveAsset(logo, staticFile)}
           style={{ width: markSize, height: markSize, objectFit: 'contain' }}
         />
       ) : (
@@ -416,10 +407,10 @@ const MediaScene: React.FC<{
   return (
     <AbsoluteFill style={{ backgroundColor: cardColor }}>
       {media ? (
-        isVideoPath(media) ? (
-          <OffthreadVideo src={resolveAsset(media)} muted={muted} style={fill} />
+        isVideoSource(media) ? (
+          <OffthreadVideo src={resolveAsset(media, staticFile)} muted={muted} style={fill} />
         ) : (
-          <Img src={resolveAsset(media)} style={fill} />
+          <Img src={resolveAsset(media, staticFile)} style={fill} />
         )
       ) : null}
 
@@ -617,7 +608,7 @@ export const PaperCardTemplate: React.FC<PaperCardProps> = ({
         </div>
       ) : null}
 
-      {voiceover ? <Audio src={resolveAsset(voiceover)} /> : null}
+      {voiceover ? <Audio src={resolveAsset(voiceover, staticFile)} /> : null}
     </AbsoluteFill>
   );
 };

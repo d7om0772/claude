@@ -1,8 +1,9 @@
 // schema.ts
 import {z} from 'zod';
 import {zColor} from '@remotion/zod-types';
-import {getAudioDurationInSeconds} from '@remotion/media-utils';
 import {staticFile} from 'remotion';
+import {contentDurationInFrames} from '../../lib/duration';
+import {resolveAsset} from '../../lib/asset-url';
 import type {CalculateMetadataFunction} from 'remotion';
 
 export const captionSchema = z.object({
@@ -251,36 +252,23 @@ export const defaultProps: TemplateProps = {
  * ------------------------------------------------------------------ */
 export const calculateMetadata: CalculateMetadataFunction<
 	TemplateProps
-> = async ({props, abortSignal}) => {
+> = async ({props}) => {
 	const fps = 30;
-
-	if (props.voiceover) {
-		const src = props.voiceover.startsWith('http')
-			? props.voiceover
-			: staticFile(props.voiceover);
-		abortSignal.throwIfAborted();
-		const seconds = await getAudioDurationInSeconds(src);
-		return {
-			fps,
-			durationInFrames: Math.ceil(seconds * fps) + props.tailInFrames,
-		};
-	}
-
-	if (props.captions.length > 0) {
-		const lastEndMs = props.captions.reduce(
-			(max, caption) => Math.max(max, caption.endMs),
-			0
-		);
-		return {
-			fps,
-			durationInFrames:
-				Math.ceil(((lastEndMs + props.cueHoldMs) / 1000) * fps) +
-				props.tailInFrames,
-		};
-	}
 
 	return {
 		fps,
-		durationInFrames: 150,
+		durationInFrames: await contentDurationInFrames({
+			fps,
+			voiceover: props.voiceover
+				? resolveAsset(props.voiceover, staticFile)
+				: null,
+			media: props.media ? resolveAsset(props.media, staticFile) : null,
+			captions: props.captions,
+			// cueHoldMs جزء من زمن المحتوى فيُدوَّر مع نهاية الكابشن،
+			// وtailInFrames ذيل على مستوى اللقطة فيُضاف بعد التدوير
+			captionTailMs: props.cueHoldMs,
+			captionTailFrames: props.tailInFrames,
+			fallbackInFrames: 150,
+		}),
 	};
 };
