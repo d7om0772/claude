@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { createReadStream, mkdirSync, statSync, writeFileSync } from "node:fs";
-import { extname } from "node:path";
+import { createReadStream, existsSync, mkdirSync, statSync, writeFileSync } from "node:fs";
+import { extname, join, normalize, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { enqueue, getJob, listJobs, warmUp } from "./queue";
 import { templates } from "../lib/registry";
@@ -15,6 +15,9 @@ import { templates } from "../lib/registry";
  *   POST /api/jobs            ينشئ مهمة رندر
  *   GET  /api/jobs            حالة كل المهام
  *   GET  /api/jobs/:id/file   تنزيل الناتج
+ *
+ * وما عدا ذلك يُقدَّم كملف ساكن من dist-ui ثم public، فيكفي أن تعمل عملية
+ * واحدة على المضيف: الواجهة والرندر على نفس المنفذ بلا وكيل ولا خادم ثانٍ.
  */
 
 const PORT = Number(process.env.PORT ?? 5174);
@@ -48,6 +51,53 @@ const saveUpload = (data: Buffer, fileName: string): string => {
   const name = `${randomUUID()}${ext}`;
   writeFileSync(`${UPLOAD_DIR}/${name}`, data);
   return `uploads/${name}`;
+};
+
+const MIME_TYPES: Record<string, string> = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".woff2": "font/woff2",
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+  ".mp3": "audio/mpeg",
+  ".wav": "audio/wav",
+  ".m4a": "audio/mp4",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".svg": "image/svg+xml",
+  ".webp": "image/webp",
+  ".ico": "image/x-icon",
+};
+
+const STATIC_ROOTS = ["dist-ui", "public"];
+
+/**
+ * يحلّ مساراً واردًا إلى ملف داخل أحد الجذرين، ويرفض أي خروج عنهما.
+ * normalize وحده لا يكفي: لا بد من التحقق أن المسار المطلق يبدأ فعلاً
+ * بالجذر، وإلا فتح «..» الطريق إلى أي ملف على المضيف.
+ */
+const resolveStatic = (urlPath: string): string | null => {
+  const clean = normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/u, "");
+  for (const root of STATIC_ROOTS) {
+    const base = resolve(root);
+    const candidate = resolve(join(base, clean));
+    if (!candidate.startsWith(`${base}/`) && candidate !== base) continue;
+    if (existsSync(candidate) && statSync(candidate).isFile()) return candidate;
+  }
+  return null;
+};
+
+const sendFile = (res: ServerResponse, filePath: string): void => {
+  const { size } = statSync(filePath);
+  res.writeHead(200, {
+    "content-type": MIME_TYPES[extname(filePath).toLowerCase()] ?? "application/octet-stream",
+    "content-length": size,
+    "accept-ranges": "bytes",
+  });
+  createReadStream(filePath).pipe(res);
 };
 
 const server = createServer((req, res) => {
@@ -126,7 +176,25 @@ const server = createServer((req, res) => {
       return;
     }
 
-    json(res, 404, { error: "مسار غير معروف" });
+    if (path.startsWith("/api/")) {
+      json(res, 404, { error: "مسار غير معروف" });
+      return;
+    }
+
+    // ملف ساكن، وإلا صفحة الواجهة (التوجيه يجري في المتصفح)
+    const file = resolveStatic(path === "/" ? "/index.html" : path);
+    if (file) {
+      sendFile(res, file);
+      return;
+    }
+    const index = resolveStatic("/index.html");
+    if (index) {
+      sendFile(res, index);
+      return;
+    }
+    json(res, 404, {
+      error: "الواجهة غير مبنيّة. شغّل npm run ui:build أولاً.",
+    });
   })().catch((err: unknown) => {
     json(res, 500, { error: err instanceof Error ? err.message : String(err) });
   });

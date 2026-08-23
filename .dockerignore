@@ -1,0 +1,6 @@
+node_modules
+dist-ui
+.render
+out
+.git
+public/uploads

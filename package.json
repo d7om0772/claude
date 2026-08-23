@@ -14,7 +14,9 @@
     "ui:build": "vite build",
     "previews": "tsx src/cli/render-previews.ts",
     "ui:standalone": "tsx src/cli/build-standalone.ts",
-    "server": "tsx src/server/index.ts"
+    "server": "tsx src/server/index.ts",
+    "build": "vite build",
+    "start": "tsx src/server/index.ts"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.515",
@@ -23,6 +25,7 @@
     "@remotion/media-utils": "4.0.515",
     "@remotion/player": "^4.0.515",
     "@remotion/renderer": "^4.0.515",
+    "@remotion/web-renderer": "^4.0.515",
     "@remotion/zod-types": "4.0.515",
     "react": "19.0.0",
     "react-dom": "19.0.0",
