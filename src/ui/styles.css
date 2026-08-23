@@ -27,6 +27,26 @@ body {
 button { font-family: inherit; cursor: pointer; }
 input, select, textarea { font-family: inherit; }
 
+/* خط ثمانية محمّل في الصفحة للقوالب أصلاً، فنستعمل وزنه المتوسط لعناوين
+   الواجهة: يربط الأداة بمادّتها بدل خط نظام محايد. النصوص الجارية تبقى
+   على خط النظام لأن الخط عرضي (display) لا يُقرأ مريحاً في الأحجام الصغيرة. */
+.topbar h1,
+.card .meta h3,
+.group > summary {
+  /* inherit لا يصحّ داخل قائمة font-family — لا بد من مكدّس صريح */
+  font-family: "Thmanyah Serif Display", "Segoe UI", "Noto Naskh Arabic", serif;
+  font-weight: 500;
+}
+
+/* حالة تركيز مرئية للوحة المفاتيح — البطاقات قابلة للتبويب */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.card:focus-visible { outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  .card:hover { transform: none; }
+}
+
 /* ---------- الهيكل ---------- */
 
 .topbar {

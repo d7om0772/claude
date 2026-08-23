@@ -1,4 +1,5 @@
 import { continueRender, delayRender, staticFile } from "remotion";
+import { assetUrl } from "./asset-url";
 
 /**
  * تحميل خط ثمانية — وحدة مشتركة بين كل القوالب.
@@ -40,7 +41,7 @@ const fontHandle = inBrowser ? delayRender("تحميل خط ثمانية") : nul
  * FontFace مباشرة يجعل الفشل قابلاً للالتقاط فعلاً.
  */
 const loadLocalFont = async (file: string, weight: number): Promise<void> => {
-  const url = staticFile(`fonts/${file}`);
+  const url = assetUrl(staticFile(`fonts/${file}`));
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`تعذّر تحميل الخط ${file} (HTTP ${response.status})`);

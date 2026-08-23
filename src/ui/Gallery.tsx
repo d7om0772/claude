@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { templates, type RegisteredTemplate } from "../lib/registry";
+import { assetUrl } from "../lib/asset-url";
 
 /**
  * شاشة الاختيار: عيّنة فيديو مصغّرة لكل قالب تعمل عند المرور بالمؤشّر،
@@ -46,8 +47,8 @@ const Thumb: React.FC<{ id: string }> = ({ id }) => {
     >
       {/* الصيغتان معاً: H.264 ترميز احتكاري تفتقده بعض بُنى Chromium على
           لينكس، وwebm غير مدعوم على سفاري الأقدم. */}
-      <source src={`/previews/${id}.webm`} type="video/webm" />
-      <source src={`/previews/${id}.mp4`} type="video/mp4" />
+      <source src={assetUrl(`/previews/${id}.webm`)} type="video/webm" />
+      <source src={assetUrl(`/previews/${id}.mp4`)} type="video/mp4" />
     </video>
   );
 };

@@ -12,7 +12,8 @@
     "srt": "tsx src/cli/srt-to-captions.ts",
     "ui": "vite",
     "ui:build": "vite build",
-    "previews": "tsx src/cli/render-previews.ts"
+    "previews": "tsx src/cli/render-previews.ts",
+    "ui:standalone": "tsx src/cli/build-standalone.ts"
   },
   "dependencies": {
     "@remotion/cli": "4.0.515",
