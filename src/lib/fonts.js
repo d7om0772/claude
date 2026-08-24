@@ -33,18 +33,48 @@ const fontHandle = inBrowser ? delayRender("تحميل خط ثمانية") : nul
  * خارجي، ويموت الرندر برسالة غامضة عند أي خلل في ملف خط. التحميل عبر
  * FontFace مباشرة يجعل الفشل قابلاً للالتقاط فعلاً.
  */
-const loadLocalFont = async (file, weight) => {
-  const url = assetUrl(staticFile(`fonts/${file}`));
+/**
+ * يفكّ data: URI إلى ArrayBuffer بلا أي طلب شبكة.
+ *
+ * لا نستعمل fetch على data: عن قصد: سياسة الأمان في الصفحات المنشورة تحصر
+ * connect-src بالأصل نفسه، فترفض المتصفحات الطلب («Refused to connect to
+ * data:…») ويسقط الخط على البديل بصمت. الفكّ المباشر خارج طبقة الشبكة كلياً
+ * فلا تحكمه أي سياسة.
+ */
+const dataUriToArrayBuffer = (uri) => {
+  const comma = uri.indexOf(",");
+  const payload = uri.slice(comma + 1);
+  if (!uri.slice(0, comma).includes(";base64")) {
+    return new TextEncoder().encode(decodeURIComponent(payload)).buffer;
+  }
+  const binary = atob(payload);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+};
+
+const readFontBytes = async (url) => {
+  if (url.startsWith("data:")) {
+    return dataUriToArrayBuffer(url);
+  }
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`تعذّر تحميل الخط ${file} (HTTP ${response.status})`);
+    throw new Error(`تعذّر تحميل الخط (HTTP ${response.status})`);
   }
-  const face = new FontFace(FONT_FAMILY, await response.arrayBuffer(), {
+  return response.arrayBuffer();
+};
+
+const loadLocalFont = async (file, weight) => {
+  const url = assetUrl(staticFile(`fonts/${file}`));
+  const face = new FontFace(FONT_FAMILY, await readFontBytes(url), {
     weight: String(weight),
   });
   await face.load();
   document.fonts.add(face);
 };
+
 /** يُحلّ إلى true إذا حُمّل خط ثمانية فعلاً، و false إذا سقطنا على البديل. */
 export const fontsReady = !inBrowser
   ? Promise.resolve(false)

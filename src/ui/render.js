@@ -8,7 +8,11 @@ export const API = "/api";
 export const checkServer = async () => {
   try {
     const res = await fetch(`${API}/health`);
-    return res.ok;
+    if (!res.ok) return false;
+    // لا يكفي رمز ٢٠٠: المضيفات الساكنة تعيد صفحة الواجهة لكل مسار مجهول،
+    // فيبدو الخادم موجوداً ويظهر زرّ رندر يفشل عند الضغط. نتأكد من الجسم.
+    const body = await res.json();
+    return body?.ok === true;
   } catch {
     return false;
   }
