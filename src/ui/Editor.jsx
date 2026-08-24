@@ -5,6 +5,8 @@ import { srtToCaptions } from "../lib/srt.js";
 import { FieldControl } from "./form/Fields.jsx";
 import { readAudioDuration, runChecks, wantsWordLevel } from "./sync.js";
 import { submitRender } from "./render.js";
+import { pickOutputFormat, renderInBrowser } from "./web-render.js";
+import { saveFile } from "./save-file.js";
 /**
  * مسار blob بلا امتداد، والقوالب تميّز الفيديو من الصورة بالامتداد — فبدون
  * لاحقة يُعرض أي فيديو مرفوع كصورة ثابتة ولا تُحتسب مدّته. الجزء بعد # لا
@@ -51,6 +53,9 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   );
   const [submitting, setSubmitting] = useState(false);
   const [renderError, setRenderError] = useState(null);
+  // الرندر في المتصفح: تقدّم من ٠ إلى ١، وnull حين لا يجري رندر
+  const [webProgress, setWebProgress] = useState(null);
+  const [webNote, setWebNote] = useState(null);
   const set = useCallback((name, value) => {
     setProps((prev) => ({ ...prev, [name]: value }));
   }, []);
@@ -138,6 +143,42 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       )
       .finally(() => setSubmitting(false));
   }, [template.meta.id, props, picked, onQueued]);
+  /**
+   * الرندر داخل المتصفح — الطريق حين لا يكون خلف الصفحة خادم.
+   * أبطأ ويشغّل تبويب المستخدم، لذلك نُبقيه صريحاً لا تلقائياً.
+   */
+  const onBrowserRender = useCallback(async () => {
+    setRenderError(null);
+    setWebNote(null);
+    setWebProgress(0);
+    try {
+      const format = await pickOutputFormat({
+        width: template.meta.width,
+        height: template.meta.height,
+        muted: false,
+      });
+      if (!format) {
+        throw new Error(
+          "متصفحك لا يدعم الترميز داخل الصفحة (WebCodecs). جرّب كروم أو إيدج حديثاً.",
+        );
+      }
+      const { blob, extension } = await renderInBrowser({
+        template,
+        props,
+        format,
+        onProgress: ({ progress }) => setWebProgress(progress),
+      });
+      const message = await saveFile(`${template.meta.id}.${extension}`, blob);
+      setWebNote(
+        `${message} — ${(blob.size / 1024 / 1024).toFixed(2)} م.ب بصيغة ${extension}`,
+      );
+    } catch (err) {
+      setRenderError(err?.message ?? String(err));
+    } finally {
+      setWebProgress(null);
+    }
+  }, [template, props]);
+
   const captions = props.captions ?? [];
   const checks = useMemo(
     () => runChecks(template.meta, captions, audioSeconds),
@@ -251,16 +292,34 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
             >
               {submitting ? "جارٍ الإرسال …" : "رندر"}
             </button>
-          ) : serverUp === false ? (
-            <span className="note" style={{ fontSize: 12 }}>
-              الرندر يحتاج تشغيل الخادم محلياً: <code>npm run dev</code>
-            </span>
+          ) : null}
+
+          {serverUp !== true ? (
+            <button
+              className="btn primary"
+              onClick={onBrowserRender}
+              disabled={webProgress !== null}
+            >
+              {webProgress === null
+                ? "رندر في المتصفح"
+                : `يُرندر… ${Math.round(webProgress * 100)}%`}
+            </button>
           ) : null}
 
           <button className="btn ghost" onClick={onBack}>
             ← رجوع للمعرض
           </button>
         </div>
+        {webProgress !== null ? (
+          <div className="bar" style={{ marginTop: 12, width: 300 }}>
+            <span style={{ width: `${Math.round(webProgress * 100)}%` }} />
+          </div>
+        ) : null}
+        {webNote ? (
+          <div className="note good" style={{ marginTop: 10, maxWidth: 420 }}>
+            {webNote}
+          </div>
+        ) : null}
         {renderError ? (
           <div className="note bad" style={{ marginTop: 10, maxWidth: 420 }}>
             {renderError}
