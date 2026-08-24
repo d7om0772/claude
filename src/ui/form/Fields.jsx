@@ -238,32 +238,120 @@ const ObjectListField = ({ field, value, set }) => {
     </div>
   );
 };
-const CaptionsField = ({ field, value }) => {
+/**
+ * الكابشن قابل للتحرير هنا لا للعرض فقط.
+ *
+ * في القوالب التي يعرض فيها الكابشن كلمات الفيديو، يكون حقل «النص الرئيسي»
+ * احتياطياً لا يظهر إلا حين يفرغ الكابشن. فلو بقي الكابشن للقراءة فقط، صار
+ * النص غير قابل للتغيير إطلاقاً من الواجهة.
+ */
+const CaptionsField = ({ field, value, set }) => {
   const list = Array.isArray(value) ? value : [];
+
+  const update = (index, key, raw) =>
+    set(
+      field.name,
+      list.map((c, i) => (i === index ? { ...c, [key]: raw } : c)),
+    );
+
+  const updateTime = (index, key, seconds) => {
+    const ms = Math.max(0, Math.round(Number(seconds) * 1000));
+    update(index, key, Number.isFinite(ms) ? ms : 0);
+  };
+
+  const addRow = () => {
+    const last = list[list.length - 1];
+    const startMs = last ? last.endMs : 0;
+    set(field.name, [...list, { text: "كلمة", startMs, endMs: startMs + 500 }]);
+  };
+
   return (
     <div className="field">
       <label>
         {field.label} ({list.length})
       </label>
+
       {list.length === 0 ? (
         <div className="note">
-          ارفع ملف SRT من قسم «الصوت والتزامن» ليُملأ هذا الحقل تلقائياً.
+          فارغ — يظهر النص الرئيسي بدله. ارفع ملف SRT من قسم «الصوت والتزامن»،
+          أو أضف مقاطع يدوياً.
         </div>
       ) : (
-        <div className="caption-list">
-          {list.map((c, i) => (
-            <div className="caption-row" key={i}>
-              <span>{c.text}</span>
-              <span className="t" dir="ltr">
-                {(c.startMs / 1000).toFixed(2)}–{(c.endMs / 1000).toFixed(2)}
-              </span>
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="note">
+            هذه الكلمات هي ما يظهر في الفيديو. ما دام هنا مقطع واحد على الأقل،
+            فحقل النص الرئيسي لا يظهر.
+          </div>
+          <div className="caption-list">
+            {list.map((c, i) => (
+              <div className="caption-edit" key={i}>
+                <input
+                  type="text"
+                  value={c.text}
+                  onChange={(e) => update(i, "text", e.target.value)}
+                />
+                <input
+                  type="number"
+                  step="0.05"
+                  min="0"
+                  dir="ltr"
+                  title="بداية بالثواني"
+                  value={(c.startMs / 1000).toFixed(2)}
+                  onChange={(e) => updateTime(i, "startMs", e.target.value)}
+                />
+                <input
+                  type="number"
+                  step="0.05"
+                  min="0"
+                  dir="ltr"
+                  title="نهاية بالثواني"
+                  value={(c.endMs / 1000).toFixed(2)}
+                  onChange={(e) => updateTime(i, "endMs", e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="icon-btn"
+                  title="حذف المقطع"
+                  onClick={() =>
+                    set(
+                      field.name,
+                      list.filter((_, j) => j !== i),
+                    )
+                  }
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
       )}
+
+      <div style={{ display: "flex", gap: 8 }}>
+        <button
+          type="button"
+          className="btn ghost"
+          style={{ padding: "4px 12px", fontSize: 12 }}
+          onClick={addRow}
+        >
+          + مقطع
+        </button>
+        {list.length > 0 ? (
+          <button
+            type="button"
+            className="btn ghost"
+            style={{ padding: "4px 12px", fontSize: 12 }}
+            onClick={() => set(field.name, [])}
+            title="يُفرغ الكابشن فيظهر النص الرئيسي بدله"
+          >
+            مسح الكل
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 };
+
 export const FieldControl = ({ field, value, set, picked, onPick }) => {
   switch (field.kind) {
     case "color":
@@ -292,7 +380,7 @@ export const FieldControl = ({ field, value, set, picked, onPick }) => {
     case "objectList":
       return <ObjectListField field={field} value={value} set={set} />;
     case "captions":
-      return <CaptionsField field={field} value={value} />;
+      return <CaptionsField field={field} value={value} set={set} />;
     default:
       return null;
   }
