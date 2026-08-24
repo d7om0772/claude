@@ -352,7 +352,7 @@ const CaptionsField = ({ field, value, set }) => {
   );
 };
 
-export const FieldControl = ({ field, value, set, picked, onPick }) => {
+const Control = ({ field, value, set, picked, onPick }) => {
   switch (field.kind) {
     case "color":
       return <ColorField field={field} value={value} set={set} />;
@@ -384,4 +384,22 @@ export const FieldControl = ({ field, value, set, picked, onPick }) => {
     default:
       return null;
   }
+};
+
+export const FieldControl = (props) => {
+  const control = Control(props);
+  if (!control) return null;
+
+  const { field } = props;
+  const hint =
+    field.description && field.description !== field.label
+      ? field.description
+      : null;
+
+  return (
+    <div className="field-wrap">
+      {control}
+      {hint ? <p className="field-hint">{hint}</p> : null}
+    </div>
+  );
 };

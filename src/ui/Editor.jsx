@@ -180,6 +180,21 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   }, [template, props]);
 
   const captions = props.captions ?? [];
+
+  /**
+   * بعض القوالب تجعل حقول النص احتياطية خلف الكابشن: لو كان فيه مقطع واحد
+   * على الأقل فالكلمات تأتي منه، وتعديل «النص الرئيسي» لا يغيّر شيئاً.
+   * مؤلّفو القوالب وثّقوا ذلك في وصف الحقل، فنكتشفه من وصفهم لا بتخمين.
+   */
+  const textOverriddenByCaptions = useMemo(
+    () =>
+      captions.length > 0 &&
+      fields.some(
+        (f) =>
+          f.kind !== "captions" && /captions|ترجمة/u.test(f.description ?? ""),
+      ),
+    [captions.length, fields],
+  );
   const checks = useMemo(
     () => runChecks(template.meta, captions, audioSeconds),
     [template.meta, captions, audioSeconds],
@@ -206,6 +221,24 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                 <span className="count">({groupFields.length})</span>
               </summary>
               <div className="body">
+                {groupName === "النصوص" && textOverriddenByCaptions ? (
+                  <div className="note warn">
+                    <b>هذه الحقول لا تظهر الآن.</b> الكابشن ممتلئ (
+                    {captions.length} مقاطع) والكلمات المعروضة تأتي منه. عدّلها
+                    من قسم «الصوت والتزامن»، أو امسح الكابشن ليظهر النص من هنا.
+                    <div style={{ marginTop: 8 }}>
+                      <button
+                        type="button"
+                        className="btn ghost"
+                        style={{ padding: "4px 12px", fontSize: 12 }}
+                        onClick={() => set("captions", [])}
+                      >
+                        مسح الكابشن واستعمال النص
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
                 {groupName === "الصوت والتزامن" ? (
                   <>
                     <div className="field">

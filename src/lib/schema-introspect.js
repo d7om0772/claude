@@ -111,6 +111,9 @@ function fieldsOfShape(shape) {
       name,
       optional,
       label: labelFrom(description, name),
+      // الوصف كاملاً: العنوان يقتطع أول جملة، وكثير من الأوصاف تحمل بعدها
+      // شرطاً يغيّر سلوك الحقل — رميُه يجعل الحقل يبدو معطّلاً بلا تفسير.
+      description,
       ...classify(name, inner),
     };
   });
