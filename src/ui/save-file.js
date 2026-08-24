@@ -17,10 +17,18 @@ export class SaveError extends Error {
 
 const viaDownloadsCapability = async (filename, blob) => {
   const claude = globalThis.claude;
+  // لا وجود لـ claude.use يعني أننا خارج بيئة artifact — التنزيل العادي يعمل
   if (!claude?.use) return false;
 
   const downloads = await claude.use("downloads");
-  if (!downloads) return false;
+  if (!downloads) {
+    // داخل بيئة artifact بلا الصلاحية: رابط التنزيل العادي معطّل هناك، فلو
+    // سقطنا عليه لظهرت رسالة نجاح بلا ملف. نفشل بوضوح بدل أن نُضلّل.
+    throw new SaveError(
+      "unavailable",
+      "الحفظ غير متاح في هذه النسخة المنشورة. صلاحية التنزيل لا تعمل مع artifact مشارك علناً — أوقف المشاركة العلنية ثم أعد النشر.",
+    );
+  }
 
   if (blob.size > MAX_BYTES) {
     throw new SaveError(
