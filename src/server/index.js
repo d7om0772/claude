@@ -184,7 +184,7 @@ const server = createServer((req, res) => {
       return;
     }
     json(res, 404, {
-      error: "الواجهة غير مبنيّة. شغّل npm run ui:build أولاً.",
+      error: "الواجهة غير مبنيّة. شغّل npm run build أولاً.",
     });
   })().catch((err) => {
     json(res, 500, { error: err instanceof Error ? err.message : String(err) });
