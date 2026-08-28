@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
+import { createServer } from "node:http";
 import { existsSync, mkdirSync, appendFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -88,6 +89,15 @@ const waitForServer = async (timeoutMs = 120000) => {
   return false;
 };
 
+/** يتحقق أن المنفذ حرّ: نافذة قديمة ما زالت تعمل تعني خادماً بكود قديم. */
+const portInUse = () =>
+  new Promise((resolve) => {
+    const probe = createServer();
+    probe.once("error", (err) => resolve(err.code === "EADDRINUSE"));
+    probe.once("listening", () => probe.close(() => resolve(false)));
+    probe.listen(PORT, "127.0.0.1");
+  });
+
 const main = async () => {
   say("");
   say("  ============================================");
@@ -120,6 +130,12 @@ const main = async () => {
   // 3) الخادم، ولا نفتح المتصفح إلا بعد أن يردّ فعلاً
   say("");
   say("  [3/3] تشغيل الخادم...");
+  if (await portInUse()) {
+    fail(
+      `المنفذ ${PORT} مشغول. أغلق نافذة تشغيل سابقة ما زالت مفتوحة ثم أعد المحاولة.`,
+    );
+    return;
+  }
   const server = spawn(process.execPath, [join("src", "server", "index.js")], {
     cwd: root,
     stdio: ["ignore", "inherit", "inherit"],

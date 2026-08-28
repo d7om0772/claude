@@ -7,7 +7,7 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { extname, join, normalize, resolve } from "node:path";
+import { extname, isAbsolute, join, normalize, relative, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { enqueue, getJob, listJobs, warmUp } from "./queue.js";
 import { findTemplateMeta, templateMetas } from "../lib/template-meta.js";
@@ -87,7 +87,10 @@ const resolveStatic = (urlPath) => {
   for (const root of STATIC_ROOTS) {
     const base = resolve(root);
     const candidate = resolve(join(base, clean));
-    if (!candidate.startsWith(`${base}/`) && candidate !== base) continue;
+    // relative لا startsWith: فاصل المسار على ويندوز «\» فكانت المقارنة
+    // بـ «/» تفشل دائماً، فلا يُقدَّم أي ملف ساكن على ويندوز إطلاقاً.
+    const within = relative(base, candidate);
+    if (within.startsWith("..") || isAbsolute(within)) continue;
     if (existsSync(candidate) && statSync(candidate).isFile()) return candidate;
   }
   return null;
