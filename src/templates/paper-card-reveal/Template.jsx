@@ -1,15 +1,14 @@
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
-  Audio,
   Img,
-  OffthreadVideo,
   Sequence,
   interpolate,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import { Audio, Video } from "@remotion/media";
 import {
   FONT_STACK,
   FONT_WEIGHT_BLACK,
@@ -355,7 +354,7 @@ const MediaScene = ({
     <AbsoluteFill style={{ backgroundColor: cardColor }}>
       {media ? (
         isVideoSource(media) ? (
-          <OffthreadVideo
+          <Video
             src={resolveAsset(media, staticFile)}
             muted={muted}
             style={fill}

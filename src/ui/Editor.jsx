@@ -12,6 +12,32 @@ import { saveFile } from "./save-file.js";
  * لاحقة يُعرض أي فيديو مرفوع كصورة ثابتة ولا تُحتسب مدّته. الجزء بعد # لا
  * يدخل في البحث عن الـ blob فيبقى الرابط صالحاً، ويكفي أدوات الاكتشاف.
  */
+/**
+ * رسائل فشل الرندر في المتصفح تأتي بالإنجليزية ومصطلحات ترميز. نترجم أشهرها
+ * إلى سبب وحلّ، ونُبقي الأصل ملحقاً لمن يريد التفاصيل.
+ */
+const describeRenderFailure = (err) => {
+  const raw = err?.message ?? String(err);
+
+  if (/could not be decoded|DEMUXER_ERROR|no supported stream/iu.test(raw)) {
+    return (
+      "متصفحك لا يستطيع فكّ ترميز الفيديو المرفق. جرّب مقطعاً بترميز " +
+      "H.264 داخل mp4، أو VP9 داخل webm — وهما الأوسع دعماً. " +
+      `(${raw.slice(0, 120)})`
+    );
+  }
+
+  if (
+    /WebCodecs|VideoEncoder|not supported in @remotion\/web-renderer/iu.test(
+      raw,
+    )
+  ) {
+    return `متصفحك لا يدعم الترميز داخل الصفحة. جرّب كروم أو إيدج حديثاً. (${raw.slice(0, 120)})`;
+  }
+
+  return raw;
+};
+
 const extensionSuffix = (fileName) => {
   const dot = fileName.lastIndexOf(".");
   return dot > 0 ? `#${fileName.slice(dot)}` : "";
@@ -173,7 +199,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         `${message} — ${(blob.size / 1024 / 1024).toFixed(2)} م.ب بصيغة ${extension}`,
       );
     } catch (err) {
-      setRenderError(err?.message ?? String(err));
+      setRenderError(describeRenderFailure(err));
     } finally {
       setWebProgress(null);
     }
