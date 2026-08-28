@@ -4,7 +4,7 @@
   "private": true,
   "description": "قوالب مونتاج جاهزة بضغطة زر — Remotion",
   "scripts": {
-    "dev": "npm run server & npm run ui",
+    "dev": "node src/cli/dev.js",
     "ui": "vite",
     "server": "node src/server/index.js",
     "build": "vite build",
