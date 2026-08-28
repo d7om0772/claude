@@ -2,15 +2,16 @@
 import React, { useCallback, useMemo } from "react";
 import {
   AbsoluteFill,
+  Audio,
   Easing,
   Img,
   Sequence,
+  Video,
   interpolate,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { Audio, Video } from "@remotion/media";
 import { FONT_STACK, FONT_WEIGHT_BLACK } from "../../lib/fonts.js";
 import { sanitizeSaltIndices } from "../../lib/thmanyah-aesthetics.js";
 import { isVideoSource } from "../../lib/duration.js";

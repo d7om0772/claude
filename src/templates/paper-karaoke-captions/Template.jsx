@@ -1,15 +1,16 @@
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
+  Audio,
   Img,
   Sequence,
+  Video,
   interpolate,
   spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { Audio, Video } from "@remotion/media";
 import { FPS, HEIGHT, WIDTH, defaultProps } from "./schema.js";
 import { contentDurationInFrames, isVideoSource } from "../../lib/duration.js";
 import { resolveAsset } from "../../lib/asset-url.js";

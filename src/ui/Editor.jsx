@@ -176,6 +176,22 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const onBrowserRender = useCallback(async () => {
     setRenderError(null);
     setWebNote(null);
+
+    // فحص قبلي: الرندر في المتصفح لا يدعم الوسائط المرفقة. الفشل بلا هذا
+    // الفحص يأتي بعد انتظار وبرسالة تقنية، فنقوله مقدّماً مع الحل.
+    const attached = ["media", "voiceover", "logo"].filter(
+      (k) => typeof props[k] === "string" && props[k].length > 0,
+    );
+    if (attached.length > 0) {
+      setRenderError(
+        "الرندر داخل المتصفح لا يدعم الملفات المرفوعة (فيديو أو صوت أو شعار)، " +
+          "لأن بيئة الصفحة المنشورة تمنعها من قراءة ما ترفعه. " +
+          "أزل الملفات المرفقة لترندر النص والألوان هنا، أو شغّل المشروع محلياً " +
+          "للرندر الكامل مع الوسائط.",
+      );
+      return;
+    }
+
     setWebProgress(0);
     try {
       const format = await pickOutputFormat({

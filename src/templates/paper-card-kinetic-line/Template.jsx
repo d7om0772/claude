@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   AbsoluteFill,
+  Audio,
   Img,
+  OffthreadVideo,
   Sequence,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { Audio, Video } from "@remotion/media";
 import { measureText } from "@remotion/layout-utils";
 import { contentDurationInFrames } from "../../lib/duration.js";
 import { isVideoSource } from "../../lib/duration.js";
@@ -340,7 +341,7 @@ export const Template = ({
           {/* ٣أ — وسائط المستخدم خلف كل شيء */}
           {media ? (
             isVideoSource(media) ? (
-              <Video
+              <OffthreadVideo
                 src={resolveSrc(media)}
                 style={{
                   position: "absolute",

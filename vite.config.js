@@ -10,6 +10,13 @@ export default defineConfig({
   build: {
     outDir: "../../dist-ui",
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        // حزمة واحدة إلزاماً: نسخة الملف الواحد تضمّن ملف JS واحداً، وأي
+        // حزمة ديناميكية (مرمّزات mediabunny مثلاً) تضيع فتفشل بلا سبب ظاهر.
+        inlineDynamicImports: true,
+      },
+    },
   },
   server: {
     host: "0.0.0.0",

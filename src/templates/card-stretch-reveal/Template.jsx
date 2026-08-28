@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
 import {
   AbsoluteFill,
+  Audio,
   Img,
+  OffthreadVideo,
   Sequence,
   interpolate,
   spring,
@@ -9,7 +11,6 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { Audio, Video } from "@remotion/media";
 import { contentDurationInFrames } from "../../lib/duration.js";
 import { resolveAsset } from "../../lib/asset-url.js";
 import {
@@ -280,9 +281,9 @@ export const Template = ({
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             ) : (
-              <Video
+              <OffthreadVideo
                 src={mediaSource}
-                trimBefore={Math.round(mediaStartFromSeconds * fps)}
+                startFrom={Math.round(mediaStartFromSeconds * fps)}
                 volume={mediaVolume}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
