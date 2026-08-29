@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Player } from "@remotion/player";
+import { registerBlob, unregisterBlob } from "./blob-source.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
 import { FieldControl } from "./form/Fields.jsx";
@@ -92,9 +93,14 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       const url = file
         ? URL.createObjectURL(file) + extensionSuffix(file.name)
         : null;
+      // يقرأ منه محرّك الوسائط مباشرة؛ بلا هذا يفشل fetch على blob: بالسياسة
+      if (url && file) registerBlob(url, file);
       setPicked((prev) => {
         const old = prev[name];
-        if (old) URL.revokeObjectURL(old.url);
+        if (old) {
+          URL.revokeObjectURL(old.url);
+          unregisterBlob(old.url);
+        }
         if (!file || url === null) {
           const { [name]: _removed, ...rest } = prev;
           return rest;
@@ -176,21 +182,6 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const onBrowserRender = useCallback(async () => {
     setRenderError(null);
     setWebNote(null);
-
-    // فحص قبلي: الرندر في المتصفح لا يدعم الوسائط المرفقة. الفشل بلا هذا
-    // الفحص يأتي بعد انتظار وبرسالة تقنية، فنقوله مقدّماً مع الحل.
-    const attached = ["media", "voiceover", "logo"].filter(
-      (k) => typeof props[k] === "string" && props[k].length > 0,
-    );
-    if (attached.length > 0) {
-      setRenderError(
-        "الرندر داخل المتصفح لا يدعم الملفات المرفوعة (فيديو أو صوت أو شعار)، " +
-          "لأن بيئة الصفحة المنشورة تمنعها من قراءة ما ترفعه. " +
-          "أزل الملفات المرفقة لترندر النص والألوان هنا، أو شغّل المشروع محلياً " +
-          "للرندر الكامل مع الوسائط.",
-      );
-      return;
-    }
 
     setWebProgress(0);
     try {
