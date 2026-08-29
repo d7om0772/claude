@@ -122,7 +122,9 @@ const Word = ({
         fontFeatureSettings: featureSettings,
       }}
     >
-      <span style={{ visibility: "hidden" }} aria-hidden>
+      {/* opacity لا visibility: الرندر داخل المتصفح يعيد بناء الصفحة على
+          canvas ولا يفهم إلا display:none — فالمخفي بـ visibility يُرسم. */}
+      <span style={{ opacity: 0 }} aria-hidden>
         {caption.text}
       </span>
 
@@ -133,10 +135,9 @@ const Word = ({
           top: 0,
           width: "100%",
           textAlign: "center",
-          visibility: revealed ? "visible" : "hidden",
           fontWeight: isActive ? WEIGHT_ACTIVE : WEIGHT_PAST,
           color: isActive ? fontColor : pastWordColor,
-          opacity,
+          opacity: revealed ? opacity : 0,
           transform: `translateY(${translateY}px)`,
           textShadow,
           fontFeatureSettings: featureSettings,

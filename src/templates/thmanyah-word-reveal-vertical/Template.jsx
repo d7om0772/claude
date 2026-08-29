@@ -175,7 +175,9 @@ const CaptionBlock = ({
         return (
           <div
             key={`row-${rowIndex}-${rowStartMs}`}
-            style={{ visibility: rowVisible ? "visible" : "hidden" }}
+            // opacity لا visibility: الرندر داخل المتصفح يرسم ما يخفيه
+            // visibility، فيظهر السطر قبل أوانه
+            style={{ opacity: rowVisible ? 1 : 0 }}
           >
             {cells}
           </div>
