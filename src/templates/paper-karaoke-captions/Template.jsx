@@ -18,7 +18,6 @@ import {
   FONT_WEIGHT_BLACK,
   FONT_WEIGHT_MEDIUM,
 } from "../../lib/fonts.js";
-import { sanitizeSaltIndices } from "../../lib/thmanyah-aesthetics.js";
 /** وزن الكلمة النشطة: Black. الأصل استعمل Black لأن Bold ما يعطي تبايناً كافياً. */
 const WEIGHT_ACTIVE = FONT_WEIGHT_BLACK;
 /** وزن الكلمات السابقة: Medium. */
@@ -71,7 +70,6 @@ const Word = ({
   currentMs,
   fontColor,
   pastWordColor,
-  useSalt,
   enterStyle,
   enterDurationInFrames,
   riseDistancePx,
@@ -104,7 +102,6 @@ const Word = ({
       translateY = interpolate(progress, [0, 1], [riseDistancePx, 0]);
     }
   }
-  const featureSettings = useSalt ? "'salt' 1" : "normal";
   // ظِل نصي خفيف للتوهّج — 0 يعني مطفي تماماً (السلوك الأصلي).
   const textShadow =
     isActive && glowStrength > 0
@@ -119,7 +116,6 @@ const Word = ({
         // لما يتغيّر الوزن من Black إلى Medium. هذا سلوك اللقطة الأصلية:
         // كل كلمة لها موقع ثابت من أول فريم.
         fontWeight: WEIGHT_ACTIVE,
-        fontFeatureSettings: featureSettings,
       }}
     >
       {/* opacity لا visibility: الرندر داخل المتصفح يعيد بناء الصفحة على
@@ -140,7 +136,6 @@ const Word = ({
           opacity: revealed ? opacity : 0,
           transform: `translateY(${translateY}px)`,
           textShadow,
-          fontFeatureSettings: featureSettings,
         }}
       >
         {caption.text}
@@ -162,7 +157,6 @@ export const Template = ({
   subheadline,
   captions,
   fallbackWordIntervalMs,
-  saltWordIndices,
   fontSizeRatio,
   lineHeightRatio,
   captionTopRatio,
@@ -192,16 +186,6 @@ export const Template = ({
   const riseDistancePx = height * riseDistanceRatio;
   // تصفية وفق دليل ثمانية: لا في نص طويل، ولا في كلمتين متجاورتين، ولا بكثرة،
   // ولا على كلمة لا بديل ممتد لحرفها الأخير.
-  const saltSet = useMemo(
-    () =>
-      new Set(
-        sanitizeSaltIndices(
-          resolved.map((caption) => caption.text),
-          saltWordIndices,
-        ),
-      ),
-    [resolved, saltWordIndices],
-  );
   return (
     <AbsoluteFill style={{ backgroundColor }}>
       {/* ---------- الطبقة 1: الوسائط (اختيارية، خلف كل شي) ---------- */}
@@ -278,7 +262,6 @@ export const Template = ({
                 currentMs={currentMs}
                 fontColor={fontColor}
                 pastWordColor={pastWordColor}
-                useSalt={saltSet.has(index)}
                 enterStyle={enterStyle}
                 enterDurationInFrames={enterDurationInFrames}
                 riseDistancePx={riseDistancePx}

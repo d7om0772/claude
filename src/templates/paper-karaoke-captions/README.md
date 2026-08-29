@@ -50,7 +50,7 @@ npx remotion render paper-karaoke-captions out/video.mp4 --props=props.json
 | الخلفية | 0 | 81 | ثابتة |
 | «ارحب» | 0 | 81 | قطع فوري للظهور بوزن Black |
 | «البقى» | 13.5 | 81 | قطع فوري + «ارحب» تصير Medium فوراً |
-| «انت» | 27 | 81 | قطع فوري (عليها salt) |
+| «انت» | 27 | 81 | قطع فوري |
 | «من» | 36 | 81 | قطع فوري |
 | «اي» | 43.5 | 81 | قطع فوري |
 | «منطقة» | 52.5 | 81 | قطع فوري، تبقى نشطة للنهاية |
@@ -92,25 +92,7 @@ currentMs = (frame / fps) × 1000
 | التنضيد | `fontSizeRatio`, `lineHeightRatio`, `captionTopRatio`, `maxTextWidthRatio`, `wordGapEm` |
 | الحركة | `enterStyle`, `enterDurationInFrames`, `riseDistanceRatio`, `glowStrength` |
 | الأصول | `logo`, `logoWidthRatio`, `logoCenterYRatio`, `media`, `mediaFit`, `mediaOpacity`, `voiceover`, `voiceoverVolume` |
-| التايبوغرافي المتقدّم | `saltWordIndices` |
 | المدة | `tailDurationInFrames`, `fallbackWordIntervalMs` |
-
----
-
-## الأحرف المرسلة (salt)
-
-خط ثمانية فيه خاصية OpenType اسمها `salt` تعطي أشكالاً ممتدة لحروف نهاية الكلمة. استخراج جدول GSUB من ملف الخط نفسه يعطي **١٥ حرفاً** لا خمسة: `ئ ب ت ث س ش ص ض ف ق ك م ن ى ي`. دليل جماليات الخط ينص على:
-
-- لا تُستخدم بكثرة في الجملة الواحدة
-- لا تُستخدم في كلمتين متجاورتين
-- لا تُستخدم في النصوص الطويلة
-
-`saltWordIndices` تأخذ أرقام الكلمات المفعّلة، وتمرّ على مصفّي
-`src/lib/thmanyah-aesthetics.ts` الذي يطبّق القواعد الثلاث أعلاه آلياً بدل
-الاعتماد على انضباط من يعبّي الحقل. الافتراضي `[2]` — كلمة واحدة فقط من ست. اخترناها لأنها آخر كلمة في السطر الأول، فالامتداد ينسحب على الفراغ بدل ما يزاحم الكلمة المجاورة.
-
-كلمات تنتهي بتاء مربوطة أو ألف أو دال ما يتغيّر شكلها مع `salt` — والمصفّي
-يسقطها تلقائياً بدل أن يهدر عليها واحدة من الحصة المسموحة.
 
 ---
 

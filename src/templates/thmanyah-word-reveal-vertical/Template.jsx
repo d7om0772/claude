@@ -12,7 +12,6 @@ import {
 } from "remotion";
 import { Audio, Video } from "../../lib/media.js";
 import { FONT_STACK, FONT_WEIGHT_BLACK } from "../../lib/fonts.js";
-import { sanitizeSaltIndices } from "../../lib/thmanyah-aesthetics.js";
 import { isVideoSource } from "../../lib/duration.js";
 import { resolveAsset } from "../../lib/asset-url.js";
 const buildCues = (captions, wordsPerLine, linesPerCue, holdMs) => {
@@ -63,7 +62,6 @@ const CaptionWord = ({
   popDurationInFrames,
   popRiseRatio,
   popStartScale,
-  saltEnabled,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -93,7 +91,6 @@ const CaptionWord = ({
         // ظل ناعم غامق أسفل النص — يضمن قراءة النص فوق أي لقطة.
         textShadow: `0 ${fontSize * 0.09}px ${fontSize * 0.28}px rgba(0,0,0,${shadowOpacity})`,
         // الأحرف المرسلة: خاصية OpenType الخاصة بخط ثمانية.
-        fontFeatureSettings: saltEnabled ? '"salt" 1' : '"salt" 0',
       }}
     >
       {word.text}
@@ -115,7 +112,6 @@ const CaptionBlock = ({
   popDurationInFrames,
   popRiseRatio,
   popStartScale,
-  saltWordIndexes,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -126,17 +122,6 @@ const CaptionBlock = ({
   );
   // كثافة الأحرف المرسلة هنا «واحدة لكل سطر» لا لكل أربع كلمات، لأن وحدة
   // التنضيد في هذا القالب هي السطر. البقية من دليل ثمانية كما هي.
-  const approvedSalt = useMemo(
-    () =>
-      new Set(
-        sanitizeSaltIndices(
-          cue.words.map((word) => word.text),
-          saltWordIndexes,
-          { maxPerWords: wordsPerLine },
-        ),
-      ),
-    [cue.words, saltWordIndexes, wordsPerLine],
-  );
   let globalIndex = 0;
   return (
     <div
@@ -168,7 +153,6 @@ const CaptionBlock = ({
               popDurationInFrames={popDurationInFrames}
               popRiseRatio={popRiseRatio}
               popStartScale={popStartScale}
-              saltEnabled={approvedSalt.has(index)}
             />
           );
         });
@@ -331,7 +315,6 @@ export const Template = ({
   popStartScale,
   shadowOpacity,
   placeholderText,
-  saltWordIndexes,
 }) => {
   const { width, height, fps } = useVideoConfig();
   const frame = useCurrentFrame();
@@ -428,7 +411,6 @@ export const Template = ({
                   popDurationInFrames={popDurationInFrames}
                   popRiseRatio={popRiseRatio}
                   popStartScale={popStartScale}
-                  saltWordIndexes={saltWordIndexes}
                 />
               ) : captions.length === 0 ? (
                 <StaticText

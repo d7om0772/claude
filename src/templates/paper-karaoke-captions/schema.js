@@ -88,12 +88,6 @@ export const templateSchema = z.object({
     .describe(
       "المدة بين كلمة وكلمة بالملي ثانية لما نستخدم headline بدل captions",
     ),
-  saltWordIndices: z
-    .array(z.number().int().min(0))
-    .describe(
-      "أرقام الكلمات (تبدأ من 0) اللي تتفعّل عليها «الأحرف المرسلة» salt. " +
-        "دليل ثمانية: لا تُستخدم بكثرة في الجملة الواحدة ولا في كلمتين متجاورتين",
-    ),
   /* ------------------------------------------------------- تنضيد وتموضع النص */
   fontSizeRatio: z
     .number()
@@ -203,7 +197,6 @@ export const defaultProps = {
     { text: "منطقة", startMs: 1750, endMs: 2400 },
   ],
   fallbackWordIntervalMs: 380,
-  saltWordIndices: [2],
   fontSizeRatio: 0.0474,
   lineHeightRatio: 1.9011,
   captionTopRatio: 0.41689,

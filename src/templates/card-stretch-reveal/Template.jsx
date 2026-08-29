@@ -17,10 +17,6 @@ import {
   FONT_WEIGHT_BLACK,
   FONT_WEIGHT_MEDIUM,
 } from "../../lib/fonts.js";
-import {
-  sanitizeSaltIndices,
-  saltFeatureSettings,
-} from "../../lib/thmanyah-aesthetics.js";
 /* ------------------------------------------------------------------ *
  *  مساحة التصميم المرجعية
  *  كل الإحداثيات مكتوبة داخل مساحة 1080×1920 ثم تُقاس على أبعاد الفيديو
@@ -121,7 +117,6 @@ export const Template = ({
   glowIntensity,
   cardRadiusRatio,
   mediaRadiusRatio,
-  saltWordIndices,
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
@@ -192,16 +187,11 @@ export const Template = ({
   const mediaRadius = px(mediaRadiusRatio * REF_W);
   const cardCenterX = LAYOUT.card.left + LAYOUT.card.width / 2;
   const mediaSource = media ? resolveAsset(media, staticFile) : null;
-  /* ---------- الأحرف المرسلة (salt) على العنوان ---------- */
   // العنوان فقط: قصير ومحدود بـ ٣٨ حرفاً، وهو الموضع الوحيد الذي يسمح فيه
   // دليل ثمانية بالأحرف المرسلة. الثانوي والكابشن نصوص طويلة فتُمنع عليهما.
   const headlineWords = useMemo(
     () => headline.split(/\s+/u).filter((w) => w.length > 0),
     [headline],
-  );
-  const approvedSalt = useMemo(
-    () => new Set(sanitizeSaltIndices(headlineWords, saltWordIndices)),
-    [headlineWords, saltWordIndices],
   );
   return (
     <AbsoluteFill
@@ -339,14 +329,7 @@ export const Template = ({
               }}
             >
               {headlineWords.map((word, index) => (
-                <span
-                  key={`${index}-${word}`}
-                  style={{
-                    fontFeatureSettings: saltFeatureSettings(
-                      approvedSalt.has(index),
-                    ),
-                  }}
-                >
+                <span key={`${index}-${word}`} style={{}}>
                   {index === 0 ? word : ` ${word}`}
                 </span>
               ))}
@@ -363,8 +346,6 @@ export const Template = ({
                   fontSize: px(LAYOUT.subheadline.fontSize),
                   lineHeight: `${px(LAYOUT.subheadline.lineHeight)}px`,
                   fontWeight: FONT_WEIGHT_MEDIUM,
-                  // نص طويل ⇒ بلا أحرف مرسلة، وفق دليل ثمانية
-                  fontFeatureSettings: "normal",
                   opacity: 0.75,
                 }}
               >
@@ -395,8 +376,6 @@ export const Template = ({
                 fontSize: px(LAYOUT.caption.fontSize),
                 lineHeight: `${px(LAYOUT.caption.fontSize * 1.45)}px`,
                 fontWeight: FONT_WEIGHT_BLACK,
-                // الكابشن نص طويل متغيّر ⇒ بلا أحرف مرسلة
-                fontFeatureSettings: "normal",
                 padding: `${px(LAYOUT.caption.paddingY)}px ${px(LAYOUT.caption.paddingX)}px`,
                 borderRadius: px(18),
                 textAlign: "center",

@@ -14,7 +14,6 @@ import {
   FONT_WEIGHT_BLACK,
   FONT_WEIGHT_MEDIUM,
 } from "../../lib/fonts.js";
-import { sanitizeSaltIndices } from "../../lib/thmanyah-aesthetics.js";
 import { isVideoSource } from "../../lib/duration.js";
 import { resolveAsset } from "../../lib/asset-url.js";
 /* ------------------------------------------------------------------ *
@@ -22,16 +21,12 @@ import { resolveAsset } from "../../lib/asset-url.js";
  * لأنها جزء من الهوية لا من المحتوى.
  * ------------------------------------------------------------------ */
 /** الأحرف المرسلة. لا تُفعَّل إلا على كلمة واحدة، ولا على كلمتين متجاورتين. */
-const FEATURE_SWASH = '"salt" 1';
 /**
  * امتداد الفتحة فوق الكشيدة المائلة. اخترنا ss03 (درجة متوسطة) عمداً
  * لا ss07، لأن الدليل ينص: لا تُستخدم إلى أقصى حدّ لها.
  */
-const FEATURE_KASHIDA = '"ss03" 1';
 /** محرف التطويل العربي — هو الكشيدة نفسها. */
-const TATWEEL = "\u0640";
 /** طول التطويل داخل الكلمة: مرة واحدة فقط، بمقدار محرفين. */
-const KASHIDA_LENGTH = 2;
 /** الأصل ١٠٨٠×١٩٢٠. كل الأحجام تُقاس نسبةً لهذا حتى يتكيّف القالب مع أي مقاس. */
 const REFERENCE_HEIGHT = 1920;
 /* ------------------------------------------------------------------ *
@@ -41,50 +36,6 @@ const REFERENCE_HEIGHT = 1920;
  * يُدخل كشيدة واحدة في منتصف أول كلمة تقبلها.
  * الشرط: الحرف السابق يجب أن يكون قابلاً للوصل، وإلا انكسرت الكلمة.
  */
-const NON_JOINING_AFTER = new Set([
-  "ا",
-  "أ",
-  "إ",
-  "آ",
-  "د",
-  "ذ",
-  "ر",
-  "ز",
-  "و",
-  "ؤ",
-  "ة",
-  "ى",
-  "ء",
-  " ",
-]);
-const applyKashida = (word) => {
-  // نبحث عن أفضل موضع وصل قرب منتصف الكلمة
-  const mid = Math.floor(word.length / 2);
-  for (let offset = 0; offset < word.length; offset++) {
-    for (const dir of [-1, 1]) {
-      const i = mid + dir * offset;
-      if (i <= 0 || i >= word.length) continue;
-      const prev = word[i - 1];
-      if (prev === undefined || NON_JOINING_AFTER.has(prev)) continue;
-      return word.slice(0, i) + TATWEEL.repeat(KASHIDA_LENGTH) + word.slice(i);
-    }
-  }
-  return word;
-};
-/** يطبّق الكشيدة على أطول كلمة في السطر — مرة واحدة في السطر كله. */
-const kashidaLine = (line) => {
-  const words = line.split(" ");
-  let bestIndex = -1;
-  let bestLength = 0;
-  words.forEach((w, i) => {
-    if (w.length > bestLength) {
-      bestLength = w.length;
-      bestIndex = i;
-    }
-  });
-  if (bestIndex === -1) return line;
-  return words.map((w, i) => (i === bestIndex ? applyKashida(w) : w)).join(" ");
-};
 /** يختار الكابشن الموافق للفريم الحالي. */
 const pickCaption = (captions, currentMs) => {
   for (const c of captions) {
@@ -212,29 +163,8 @@ const BrandLockup = ({ logo, brandName, color, letterSpacing, scale }) => {
 /* ------------------------------------------------------------------ *
  * طبقة ٣ — الكابشن داخل البطاقة
  * ------------------------------------------------------------------ */
-const CaptionLine = ({
-  text,
-  swashWordIndex,
-  color,
-  strokeColor,
-  fontSize,
-}) => {
+const CaptionLine = ({ text, color, strokeColor, fontSize }) => {
   const words = text.split(" ").filter(Boolean);
-  // كلمة واحدة فقط في الكابشن — يمرّ الطلب على مصفّي دليل ثمانية بدل
-  // الاعتماد على أن الرقم المُدخل يقع على كلمة لها بديل ممتد أصلاً.
-  const approved = useMemo(
-    () =>
-      new Set(
-        sanitizeSaltIndices(
-          words,
-          swashWordIndex >= 0 ? [swashWordIndex] : [],
-          {
-            maxPerWords: words.length,
-          },
-        ),
-      ),
-    [words, swashWordIndex],
-  );
   return (
     <div
       dir="rtl"
@@ -256,15 +186,7 @@ const CaptionLine = ({
       }}
     >
       {words.map((w, i) => (
-        <span
-          key={`${i}-${w}`}
-          style={{
-            // حرف مرسل على كلمة واحدة فقط — لا على كلمتين متجاورتين
-            fontFeatureSettings: approved.has(i) ? FEATURE_SWASH : "normal",
-          }}
-        >
-          {w}
-        </span>
+        <span key={`${i}-${w}`}>{w}</span>
       ))}
     </div>
   );
@@ -306,10 +228,9 @@ const TextScene = ({
               // ‎1.34 = المسافة بين مراكز الأسطر في المرجع (١٢٫٥٪ من الارتفاع)
               lineHeight: 1.34,
               whiteSpace: "nowrap",
-              fontFeatureSettings: line.kashida ? FEATURE_KASHIDA : "normal",
             }}
           >
-            {line.kashida ? kashidaLine(line.text) : line.text}
+            {line.text}
           </div>
         ))}
         {subheadline ? (
@@ -342,7 +263,6 @@ const MediaScene = ({
   fontColor,
   strokeColor,
   caption,
-  swashWordIndex,
   scale,
 }) => {
   const fill = {
@@ -386,7 +306,6 @@ const MediaScene = ({
         >
           <CaptionLine
             text={caption}
-            swashWordIndex={swashWordIndex}
             color={fontColor}
             strokeColor={strokeColor}
             fontSize={58 * scale}
@@ -414,7 +333,6 @@ export const PaperCardTemplate = ({
   mediaMuted,
   voiceover,
   captions,
-  captionSwashWordIndex,
   cardWidthPct,
   cardTopPct,
   cardHeightPct,
@@ -543,7 +461,6 @@ export const PaperCardTemplate = ({
                 fontColor={fontColor}
                 strokeColor={captionStrokeColor}
                 caption={activeCaption ? activeCaption.text : null}
-                swashWordIndex={captionSwashWordIndex}
                 scale={scale}
               />
             </Sequence>

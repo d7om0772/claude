@@ -9,17 +9,12 @@ import { resolveAsset } from "../../lib/asset-url.js";
  * مباشرةً من فيديو المرجع الأصلي (تسجيل شاشة CapCut) ولا يجوز تغييرها
  * إلا بقصد، لأنها هي هوية القالب.
  */
-/** سطر واحد داخل البطاقة النصية، مع تحكم مستقل بخصائص OpenType. */
+/** سطر واحد داخل البطاقة النصية، داخل الكتلة النصية. */
 export const headlineLineSchema = z.object({
   text: z
     .string()
     .max(24)
     .describe("نص السطر. حد أقصى ٢٤ حرفاً حتى لا يخرج عن عرض البطاقة."),
-  kashida: z
-    .boolean()
-    .describe(
-      "تفعيل الكشيدة المائلة لهذا السطر. حسب دليل جماليات خط ثمانية: لا تُفعَّل إلا في سطر واحد من الكتلة، ولا تتكرر داخل الكلمة الواحدة.",
-    ),
 });
 /** كابشن واحد، يجي عادةً من تحويل ملف SRT خارج القالب. */
 export const captionSchema = z.object({
@@ -96,13 +91,6 @@ export const paperCardSchema = z.object({
     .describe(
       "مصفوفة الكابشن الجاهزة من ملف SRT. تنسيقها جزء من هوية القالب، ونصّها فقط يأتي من هنا.",
     ),
-  captionSwashWordIndex: z
-    .number()
-    .int()
-    .min(-1)
-    .describe(
-      "ترتيب الكلمة التي تُفعَّل عليها الأحرف المرسلة داخل الكابشن (٠ = أول كلمة من اليمين). القيمة ‎-1 تعني لا حرف مرسل. الدليل يمنع تفعيلها على كلمتين متجاورتين، لذلك التحكم بكلمة واحدة فقط.",
-    ),
   // ---------------- الهندسة ----------------
   cardWidthPct: z
     .number()
@@ -173,17 +161,12 @@ export const paperCardDefaultProps = {
   logo: undefined,
   brandName: "GLOWORA",
   brandLetterSpacing: 0.24,
-  headline: [
-    { text: "دقيقة !", kashida: false },
-    { text: "دقيقة !", kashida: false },
-    { text: "دقيقة !", kashida: true },
-  ],
+  headline: [{ text: "دقيقة !" }, { text: "دقيقة !" }, { text: "دقيقة !" }],
   subheadline: undefined,
   media: undefined,
   mediaMuted: true,
   voiceover: undefined,
   captions: [{ text: "تحس المكان مكتوم", startMs: 1250, endMs: 3000 }],
-  captionSwashWordIndex: 1,
   cardWidthPct: 0.8,
   cardTopPct: 0.226,
   cardHeightPct: 0.599,
