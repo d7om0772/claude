@@ -6,7 +6,12 @@ import { srtToCaptions } from "../lib/srt.js";
 import { FieldControl } from "./form/Fields.jsx";
 import { Scenes } from "./form/Scenes.jsx";
 import { setIn } from "./form/paths.js";
-import { readAudioDuration, runChecks, wantsWordLevel } from "./sync.js";
+import {
+  readAudioDuration,
+  readMediaAspect,
+  runChecks,
+  wantsWordLevel,
+} from "./sync.js";
 import { submitRender } from "./render.js";
 import { pickOutputFormat, renderInBrowser } from "./web-render.js";
 import { saveFile } from "./save-file.js";
@@ -97,35 +102,49 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
    * (`scenes.2.media.src`) فيضعه أبوه في موضعه بنفسه. أما التسجيل — إبطال
    * الرابط القديم وربط الملف بالذاكرة — فمركزي هنا حتى لا يتسرّب رابط.
    */
-  const pickAsset = useCallback((key, file) => {
-    const url = file
-      ? URL.createObjectURL(file) + extensionSuffix(file.name)
-      : null;
-    // يقرأ منه محرّك الوسائط مباشرة؛ بلا هذا يفشل fetch على blob: بالسياسة
-    if (url && file) registerBlob(url, file);
-    setPicked((prev) => {
-      const old = prev[key];
-      if (old) {
-        URL.revokeObjectURL(old.url);
-        unregisterBlob(old.url);
+  const pickAsset = useCallback(
+    (key, file) => {
+      const url = file
+        ? URL.createObjectURL(file) + extensionSuffix(file.name)
+        : null;
+      // يقرأ منه محرّك الوسائط مباشرة؛ بلا هذا يفشل fetch على blob: بالسياسة
+      if (url && file) registerBlob(url, file);
+      setPicked((prev) => {
+        const old = prev[key];
+        if (old) {
+          URL.revokeObjectURL(old.url);
+          unregisterBlob(old.url);
+        }
+        if (!file || url === null) {
+          const { [key]: _removed, ...rest } = prev;
+          return rest;
+        }
+        return { ...prev, [key]: { url, name: file.name, file } };
+      });
+      // القوالب التي تعرض المقطع بنسبته الطبيعية تحتاج النسبة قيمةً في props،
+      // فتُقاس هنا مرة بدل قراءة غير متزامنة داخل القالب في كل فريم.
+      if (key === "media" && "mediaAspect" in template.defaultProps) {
+        if (url === null) {
+          set("mediaAspect", null);
+        } else {
+          readMediaAspect(url)
+            .then((value) => set("mediaAspect", value))
+            .catch(() => set("mediaAspect", null));
+        }
       }
-      if (!file || url === null) {
-        const { [key]: _removed, ...rest } = prev;
-        return rest;
+      if (key === "voiceover") {
+        if (url === null) {
+          setAudioSeconds(null);
+        } else {
+          readAudioDuration(url)
+            .then(setAudioSeconds)
+            .catch(() => setAudioSeconds(null));
+        }
       }
-      return { ...prev, [key]: { url, name: file.name, file } };
-    });
-    if (key === "voiceover") {
-      if (url === null) {
-        setAudioSeconds(null);
-      } else {
-        readAudioDuration(url)
-          .then(setAudioSeconds)
-          .catch(() => setAudioSeconds(null));
-      }
-    }
-    return url;
-  }, []);
+      return url;
+    },
+    [set, template.defaultProps],
+  );
 
   const pickedAt = useCallback((key) => picked[key], [picked]);
 

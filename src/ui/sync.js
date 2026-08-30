@@ -70,3 +70,36 @@ export const readAudioDuration = (url) =>
     audio.onerror = () => reject(new Error("تعذّر قراءة ملف الصوت"));
     audio.src = url;
   });
+
+/**
+ * يقرأ نسبة العرض إلى الارتفاع لملف مرفوع.
+ *
+ * القياس هنا لا داخل القالب: القالب دالةٌ نقية من props إلى صورة، وأي قراءة
+ * غير متزامنة داخله تعني delayRender في كل فريم وسلوكاً مختلفاً بين المعاينة
+ * والرندر. الواجهة تقيسها مرة وتمرّرها قيمةً في props.
+ *
+ * الجزء بعد # يُلحق برابط blob لتعريف الامتداد، وعنصر <video> لا يجد الـ blob
+ * إن بقي — فيُنزع قبل القياس.
+ */
+export const readMediaAspect = (raw) =>
+  new Promise((resolve, reject) => {
+    const url = String(raw).split("#")[0];
+    const isVideo = /\.(mp4|mov|webm|mkv|m4v)(\?[^#]*)?$/iu.test(
+      String(raw).split("#")[1] ?? String(raw),
+    );
+    if (isVideo) {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.muted = true;
+      video.onloadedmetadata = () =>
+        resolve(video.videoWidth / Math.max(1, video.videoHeight));
+      video.onerror = () => reject(new Error("تعذّر قراءة أبعاد المقطع"));
+      video.src = url;
+      return;
+    }
+    const image = new Image();
+    image.onload = () =>
+      resolve(image.naturalWidth / Math.max(1, image.naturalHeight));
+    image.onerror = () => reject(new Error("تعذّر قراءة أبعاد الصورة"));
+    image.src = url;
+  });

@@ -243,21 +243,38 @@ const StaticText = ({
   );
 };
 /* ------------------------------------------------------------------ *
- * الوسائط داخل البطاقة
+ * الوسائط
  * ------------------------------------------------------------------ */
-// اكتشاف الفيديو مشترك في lib/duration ليتعامل مع blob URL بلا امتداد
+/**
+ * نسبة عرض الوسائط إلى ارتفاعها، أو null قبل أن تُقرأ.
+ *
+ * تُقاس من الملف لأن الحجم الحر يعني أن الإطار يتبع المقطع لا العكس: بلا
+ * النسبة لا يمكن رسم صندوق يطابق المقطع، فتعود الأشرطة أو القصّ.
+ * الفشل ليس قاتلاً — نرجع إلى مقاس البطاقة.
+ */
 const CardMedia = ({
-  radiusPx,
   media,
+  aspect,
+  box,
+  radiusPx,
+  freeSize,
   placeholderText,
   placeholderColor,
   fontFamily,
   fontSize,
 }) => {
+  const src = media ? resolveAsset(media, staticFile) : null;
+
   if (!media) {
     return (
-      <AbsoluteFill
+      <div
         style={{
+          position: "absolute",
+          left: box.left,
+          top: box.top,
+          width: box.width,
+          height: box.height,
+          display: "flex",
           alignItems: "center",
           justifyContent: "center",
           color: placeholderColor,
@@ -267,23 +284,56 @@ const CardMedia = ({
         }}
       >
         {placeholderText}
-      </AbsoluteFill>
+      </div>
     );
   }
-  const src = resolveAsset(media, staticFile);
-  const fill = {
-    width: "100%",
-    height: "100%",
-    // نصف القطر على المقطع نفسه لا على البطاقة وحدها: كروم لا يقصّ الطبقات
-    // المركّبة (canvas الفيديو) عند الزوايا المدوّرة لأبٍ فيه overflow:hidden
-    // ما لم يكن للأب سياق تركيب خاص، فكان الفيديو يخرج بزوايا حادّة داخل
-    // بطاقة مدوّرة.
-    borderRadius: radiusPx,
-  };
-  if (isVideoSource(media)) {
-    return <Video src={src} objectFit="cover" style={fill} />;
+
+  // الصندوق يتبع نسبة المقطع ويُحتوى داخل المساحة المتاحة، فلا قصّ ولا أشرطة
+  let { left, top, width, height } = box;
+  if (freeSize && aspect !== null) {
+    const fitted =
+      aspect > box.width / box.height
+        ? { width: box.width, height: box.width / aspect }
+        : { width: box.height * aspect, height: box.height };
+    left = box.centerX - fitted.width / 2;
+    top = box.centerY - fitted.height / 2;
+    width = fitted.width;
+    height = fitted.height;
   }
-  return <Img src={src} style={{ ...fill, objectFit: "cover" }} />;
+
+  const frame = {
+    position: "absolute",
+    left,
+    top,
+    width,
+    height,
+    // نصف القطر على المقطع نفسه: كروم لا يقصّ الطبقات المركّبة (canvas
+    // الفيديو) عند زوايا أبٍ مدوّر ما لم يكن للأب سياق تركيب خاص.
+    borderRadius: radiusPx,
+    overflow: "hidden",
+  };
+
+  return (
+    <div style={frame}>
+      {isVideoSource(media) ? (
+        <Video
+          src={src}
+          objectFit="cover"
+          style={{ width: "100%", height: "100%", borderRadius: radiusPx }}
+        />
+      ) : (
+        <Img
+          src={src}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: radiusPx,
+          }}
+        />
+      )}
+    </div>
+  );
 };
 /* ------------------------------------------------------------------ *
  * المكوّن الرئيسي
@@ -304,6 +354,12 @@ export const Template = ({
   cardInsetTopWithLogoRatio,
   cardInsetBottomWithLogoRatio,
   cardRadiusRatio,
+  mediaAspect,
+  mediaFreeSize,
+  mediaScale,
+  mediaCenterXRatio,
+  mediaCenterYRatio,
+  mediaRadiusRatio,
   logoTopRatio,
   logoHeightRatio,
   captionTopRatio,
@@ -374,6 +430,7 @@ export const Template = ({
       {/* الطبقة ٢: بطاقة الوسائط بحواف دائرية */}
       <Sequence from={0} name="card">
         <AbsoluteFill>
+          {/* خلفية البطاقة وحدها — الوسائط لم تعد محبوسة داخلها */}
           <div
             style={{
               position: "absolute",
@@ -383,19 +440,38 @@ export const Template = ({
               height: cardHeight,
               backgroundColor: cardColor,
               borderRadius: width * cardRadiusRatio,
-              overflow: "hidden",
+            }}
+          />
+
+          <CardMedia
+            media={media}
+            aspect={mediaAspect}
+            freeSize={mediaFreeSize}
+            radiusPx={width * mediaRadiusRatio}
+            box={{
+              left: cardLeft + (cardWidth * (1 - mediaScale)) / 2,
+              top: cardTop + (cardHeight * (1 - mediaScale)) / 2,
+              width: cardWidth * mediaScale,
+              height: cardHeight * mediaScale,
+              centerX: width * mediaCenterXRatio,
+              centerY: height * mediaCenterYRatio,
+            }}
+            placeholderText={placeholderText}
+            placeholderColor={placeholderColor}
+            fontFamily={FONT_STACK}
+            fontSize={fontSize * 0.56}
+          />
+
+          {/* الطبقة ٣: الترجمة فوق الوسائط، أعلى يمين البطاقة */}
+          <div
+            style={{
+              position: "absolute",
+              left: cardLeft,
+              top: cardTop,
+              width: cardWidth,
+              height: cardHeight,
             }}
           >
-            <CardMedia
-              radiusPx={width * cardRadiusRatio}
-              media={media}
-              placeholderText={placeholderText}
-              placeholderColor={placeholderColor}
-              fontFamily={FONT_STACK}
-              fontSize={fontSize * 0.56}
-            />
-
-            {/* الطبقة ٣: الترجمة داخل البطاقة، أعلى اليمين */}
             <div
               style={{
                 position: "absolute",

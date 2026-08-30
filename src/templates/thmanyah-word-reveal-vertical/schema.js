@@ -86,6 +86,41 @@ export const templateSchema = z.object({
     .min(0)
     .max(0.2)
     .describe("نصف قطر حواف البطاقة كنسبة من عرض الكادر"),
+  mediaAspect: z
+    .number()
+    .min(0.1)
+    .max(10)
+    .nullable()
+    .describe(
+      "نسبة عرض المقطع إلى ارتفاعه. تُقاس تلقائياً عند رفع الملف من الواجهة، وبدونها يملأ المقطع البطاقة",
+    ),
+  mediaFreeSize: z
+    .boolean()
+    .describe(
+      "الفيديو المرفق يأخذ نسبته الطبيعية بدل أن يُقصّ على مقاس البطاقة. أطفئه ليملأ البطاقة كما كان",
+    ),
+  mediaScale: z
+    .number()
+    .min(0.2)
+    .max(2)
+    .describe(
+      "حجم الفيديو نسبةً إلى مساحة البطاقة. أكبر من ١ يتجاوز حدود البطاقة",
+    ),
+  mediaCenterXRatio: z
+    .number()
+    .min(0)
+    .max(1)
+    .describe("مركز الفيديو أفقياً كنسبة من عرض الإطار"),
+  mediaCenterYRatio: z
+    .number()
+    .min(0)
+    .max(1)
+    .describe("مركز الفيديو رأسياً كنسبة من ارتفاع الإطار"),
+  mediaRadiusRatio: z
+    .number()
+    .min(0)
+    .max(0.2)
+    .describe("نصف قطر زوايا الفيديو نفسه كنسبة من عرض الإطار"),
   logoTopRatio: z
     .number()
     .min(0)
@@ -201,6 +236,12 @@ export const defaultProps = {
   cardInsetTopWithLogoRatio: 0.17,
   cardInsetBottomWithLogoRatio: 0.044,
   cardRadiusRatio: 0.0333,
+  mediaAspect: null,
+  mediaFreeSize: true,
+  mediaScale: 1,
+  mediaCenterXRatio: 0.5,
+  mediaCenterYRatio: 0.5,
+  mediaRadiusRatio: 0.0333,
   logoTopRatio: 0.055,
   logoHeightRatio: 0.045,
   captionTopRatio: 0.05,
