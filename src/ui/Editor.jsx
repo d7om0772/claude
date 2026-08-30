@@ -11,6 +11,7 @@ import {
 import { FieldControl } from "./form/Fields.jsx";
 import { Scenes } from "./form/Scenes.jsx";
 import { CanvasStage } from "./form/CanvasStage.jsx";
+import { mediaGeometry } from "./form/media-geometry.js";
 import { setIn } from "./form/paths.js";
 import {
   readAudioDuration,
@@ -150,14 +151,18 @@ const ChipRow = ({ label, hint, options, value, onPick }) => (
   </div>
 );
 
-/** المسرح يلفّ المعاينة في قوالب الاستوديو فقط، وإلا مرّ الأبناء كما هم. */
+/**
+ * المسرح يلفّ المعاينة في كل قالب يصف هندسة مقطعه — لا في الاستوديو وحده:
+ * تكبير المقطع بالماوس مطلوب في القوالب الجاهزة كذلك. كتلة النص تبقى
+ * للاستوديو لأنها وحدها من يملك موضعاً حرّاً للنص.
+ */
 const StageWrap = ({ studio, props, set, meta, children }) =>
-  studio ? (
-    <CanvasStage props={props} set={set} meta={meta}>
+  mediaGeometry(props, meta) === null && !studio ? (
+    children
+  ) : (
+    <CanvasStage props={props} set={set} meta={meta} withText={studio}>
       {children}
     </CanvasStage>
-  ) : (
-    children
   );
 
 export const Editor = ({ template, onBack, serverUp, onQueued }) => {

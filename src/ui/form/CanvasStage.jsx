@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { mediaGeometry } from "./media-geometry.js";
 
 /**
  * تحريك الطبقات بالماوس فوق المعاينة.
@@ -102,7 +103,34 @@ const Box = ({
   );
 };
 
-export const CanvasStage = ({ props, set, meta, children }) => {
+/** شريط عرض أفقي: للقوالب التي تسمح بتغيير العرض دون الموضع. */
+const WidthBar = ({
+  stageRef,
+  label,
+  widthRatio,
+  onResize,
+  active,
+  onSelect,
+}) => {
+  const resize = useDrag(stageRef, onResize);
+  return (
+    <div
+      className={`stage-box${active ? " active" : ""}`}
+      style={{
+        left: `${(1 - widthRatio) * 50}%`,
+        width: `${widthRatio * 100}%`,
+        top: "50%",
+        height: "0px",
+      }}
+      onPointerDown={onSelect}
+    >
+      <span className="stage-label">{label}</span>
+      <Handle label="⇔" title="اسحب لتغيير العرض" {...resize} />
+    </div>
+  );
+};
+
+export const CanvasStage = ({ props, set, meta, withText, children }) => {
   const stageRef = useRef(null);
   const [selected, setSelected] = useState("text");
   const [enabled, setEnabled] = useState(true);
@@ -113,14 +141,9 @@ export const CanvasStage = ({ props, set, meta, children }) => {
     if (!enabled) setSelected(null);
   }, [enabled]);
 
-  const aspect = props.mediaAspect ?? 9 / 16;
-  const mediaWidth = props.mediaScale;
-  const mediaHeight = (mediaWidth * meta.width) / aspect / meta.height;
-  const mediaRect = {
-    left: props.mediaCenterXRatio - mediaWidth / 2,
-    top: props.mediaCenterYRatio - mediaHeight / 2,
-    width: mediaWidth,
-    height: mediaHeight,
+  const media = mediaGeometry(props, meta);
+  const apply = (patch) => {
+    for (const [key, value] of Object.entries(patch)) set(key, value);
   };
 
   // ارتفاع كتلة النص تقديري: سطران بحجم الخط الحالي — يكفي كدليل سحب
@@ -142,44 +165,49 @@ export const CanvasStage = ({ props, set, meta, children }) => {
       {children}
       {enabled ? (
         <div className="stage-overlay">
-          {props.media ? (
+          {media?.kind === "box" ? (
             <Box
               stageRef={stageRef}
-              label="المقطع"
-              rect={mediaRect}
+              label={media.label}
+              rect={media.rect}
               active={selected === "media"}
               onSelect={() => setSelected("media")}
-              onMove={moveBy(
-                "mediaCenterXRatio",
-                "mediaCenterYRatio",
-                -0.5,
-                1.5,
-              )}
+              onMove={(dx, dy) => apply(media.onMove(dx, dy))}
+              onResize={(dx, dy) => apply(media.onResize(dx, dy))}
+            />
+          ) : null}
+          {media?.kind === "width" ? (
+            <WidthBar
+              stageRef={stageRef}
+              label={media.label}
+              widthRatio={media.widthRatio}
+              active={selected === "media"}
+              onSelect={() => setSelected("media")}
+              onResize={(dx, dy) => apply(media.onResize(dx, dy))}
+            />
+          ) : null}
+          {withText ? (
+            <Box
+              stageRef={stageRef}
+              label="النص"
+              rect={textRect}
+              active={selected === "text"}
+              onSelect={() => setSelected("text")}
+              onMove={moveBy("textCenterXRatio", "textCenterYRatio", 0, 1)}
               onResize={(dx) =>
-                set("mediaScale", clamp(props.mediaScale + dx * 2, 0.1, 2))
+                set(
+                  "textWidthRatio",
+                  clamp(props.textWidthRatio + dx * 2, 0.2, 1),
+                )
+              }
+              onFontSize={(_dx, dy) =>
+                set(
+                  "fontSizeRatio",
+                  clamp(props.fontSizeRatio + dy * 0.25, 0.02, 0.2),
+                )
               }
             />
           ) : null}
-          <Box
-            stageRef={stageRef}
-            label="النص"
-            rect={textRect}
-            active={selected === "text"}
-            onSelect={() => setSelected("text")}
-            onMove={moveBy("textCenterXRatio", "textCenterYRatio", 0, 1)}
-            onResize={(dx) =>
-              set(
-                "textWidthRatio",
-                clamp(props.textWidthRatio + dx * 2, 0.2, 1),
-              )
-            }
-            onFontSize={(_dx, dy) =>
-              set(
-                "fontSizeRatio",
-                clamp(props.fontSizeRatio + dy * 0.25, 0.02, 0.2),
-              )
-            }
-          />
         </div>
       ) : null}
       <button
