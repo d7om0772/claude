@@ -58,8 +58,13 @@ const STYLE_LABELS = {
 
 const MAX_WIDTH_BY_STYLE = { over: 480, above: 440, full: 620 };
 
-/** أقصى عدد كلمات في المقطع الواحد، من حدود المحتوى في دليل القالب. */
-const MAX_WORDS_BY_STYLE = { over: 4, above: 4, full: 7 };
+/**
+ * أقصى عدد كلمات تظهر معاً، ثم يبدأ مقطع جديد من الصفر.
+ *
+ * حدود دليل القالب (٤ فوق البطاقة و٧ على الشاشة الفاضية) حدودُ اتّساع لا
+ * إيقاع: احترامها وحدها يعرض الجملة كاملة فيضيع نبض الكشف كلمةً كلمة.
+ */
+const MAX_WORDS_PER_CUE = 3;
 
 /** فجوة تكفي لاعتبار ما بعدها جملة جديدة. */
 const SENTENCE_GAP_MS = 700;
@@ -76,6 +81,14 @@ const isWordLevel = (blocks) => {
   if (blocks.length < 3) return false;
   const singles = blocks.filter((b) => splitWords(b.text).length === 1).length;
   return singles / blocks.length >= 0.7;
+};
+
+/** يقسّم مصفوفة إلى دفعات بحجم ثابت. */
+const chunk = (items, size) => {
+  const out = [];
+  for (let i = 0; i < items.length; i += size)
+    out.push(items.slice(i, i + size));
+  return out;
 };
 
 /** يجمع بلوكات الكلمات في مقاطع: تنتهي بالحد الأقصى للكلمات أو بفجوة. */
@@ -265,14 +278,13 @@ export const Scenes = ({
     const scene = scenes[sceneIndex];
     const style = scene.media ? styles[0] : (styles[styles.length - 1] ?? "");
     const maxWidthPx = MAX_WIDTH_BY_STYLE[style] ?? 620;
-    const maxWords = MAX_WORDS_BY_STYLE[style] ?? 7;
     const shift = (ms) => ms + scene.startMs;
     // كلمة تبدأ بعد نهاية اللقطة لن تُعرض أبداً، فإبقاؤها يوهم أنها ستظهر
     const blocks = srtToCaptions(await file.text()).filter(
       (b) => shift(b.startMs) < scene.endMs,
     );
     const imported = isWordLevel(blocks)
-      ? groupWordBlocks(blocks, maxWords).map((group) => ({
+      ? groupWordBlocks(blocks, MAX_WORDS_PER_CUE).map((group) => ({
           text: group.map((b) => b.text.trim()).join(" "),
           startMs: shift(group[0].startMs),
           endMs: Math.min(shift(group[group.length - 1].endMs), scene.endMs),
@@ -280,21 +292,26 @@ export const Scenes = ({
           wordStartsMs: group.map((b) => shift(b.startMs)),
           maxWidthPx,
         }))
-      : blocks.map((cue) => {
+      : blocks.flatMap((cue) => {
+          // البلوك جملة كاملة: نوزّع كلماتها على مدّته ثم نقطّعها إلى دفعات
+          // بنفس السقف، فلا يختلف إيقاع ملف الجُمل عن ملف الكلمات.
           const startMs = shift(cue.startMs);
           const endMs = Math.min(shift(cue.endMs), scene.endMs);
           const words = splitWords(cue.text);
-          const span = (endMs - startMs) * WORD_SPAN_RATIO;
-          return {
-            text: cue.text,
-            startMs,
-            endMs,
+          if (words.length === 0) return [];
+          const step = (endMs - startMs) / words.length;
+          const timed = words.map((text, i) => ({
+            text,
+            startMs: Math.round(startMs + step * i),
+          }));
+          return chunk(timed, MAX_WORDS_PER_CUE).map((group, index, all) => ({
+            text: group.map((w) => w.text).join(" "),
+            startMs: group[0].startMs,
+            endMs: index === all.length - 1 ? endMs : all[index + 1][0].startMs,
             style,
-            wordStartsMs: words.map((_, i) =>
-              Math.round(startMs + (span * i) / Math.max(1, words.length)),
-            ),
+            wordStartsMs: group.map((w) => w.startMs),
             maxWidthPx,
-          };
+          }));
         });
 
     const mine = new Set(grouped.map.get(sceneIndex) ?? []);
