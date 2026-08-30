@@ -46,6 +46,13 @@ import {
   calculateMetadata as klovaReelMetadata,
 } from "../templates/klova-word-reveal-reel/schema.js";
 import klovaReelMeta from "../templates/klova-word-reveal-reel/template.json";
+import { Template as CustomCanvasTemplate } from "../templates/custom-canvas/Template.jsx";
+import {
+  templateSchema as customCanvasSchema,
+  defaultProps as customCanvasDefaults,
+  calculateMetadata as customCanvasMetadata,
+} from "../templates/custom-canvas/schema.js";
+import customCanvasMeta from "../templates/custom-canvas/template.json";
 /**
  * كل قالب له props مختلفة تماماً، فالسجلّ غير متجانس بطبيعته ولا يمكن تمثيله
  * بنوع واحد دقيق. هذه الدالة تتحقق من اتساق القالب داخلياً — أن props المكوّن
@@ -96,12 +103,24 @@ export const templates = [
     defaultProps: klovaReelDefaults,
     calculateMetadata: klovaReelMetadata,
   }),
+  defineTemplate({
+    meta: customCanvasMeta,
+    schema: customCanvasSchema,
+    component: CustomCanvasTemplate,
+    defaultProps: customCanvasDefaults,
+    calculateMetadata: customCanvasMetadata,
+  }),
 ];
 
-/** «لقطة» = وحدة واحدة، و«قالب» = نموذج مركّب من عدة لقطات. */
+/**
+ * «لقطة» وحدة واحدة، و«قالب» نموذج مركّب من عدة لقطات، و«استوديو» لوحة حرّة
+ * يبنيها المستخدم بنفسه بالماوس.
+ */
 export const SHOT = "shot";
 export const TEMPLATE = "template";
-export const kindOf = (meta) => (meta.kind === TEMPLATE ? TEMPLATE : SHOT);
+export const STUDIO = "studio";
+const KINDS = new Set([SHOT, TEMPLATE, STUDIO]);
+export const kindOf = (meta) => (KINDS.has(meta.kind) ? meta.kind : SHOT);
 export const templatesOfKind = (kind) =>
   templates.filter((t) => kindOf(t.meta) === kind);
 /**

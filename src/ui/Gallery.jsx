@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { SHOT, TEMPLATE, templatesOfKind } from "../lib/registry.js";
+import { SHOT, STUDIO, TEMPLATE, templatesOfKind } from "../lib/registry.js";
 import { assetUrl } from "../lib/asset-url.js";
 /**
  * شاشة الاختيار: عيّنة فيديو مصغّرة لكل قالب تعمل عند المرور بالمؤشّر،
@@ -75,6 +75,11 @@ const Thumb = ({ id }) => {
  * فيبقى عقد القالب واحداً وإضافة أي منهما سطراً واحداً في السجلّ.
  */
 const SECTIONS = [
+  {
+    kind: STUDIO,
+    label: "اصنع قالبك بنفسك",
+    hint: "لوحة فاضية: ضع المقطع والنص بالماوس، واختر ستايل الكشف، وارفع SRT.",
+  },
   {
     kind: TEMPLATE,
     label: "القوالب",

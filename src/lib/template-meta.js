@@ -4,6 +4,7 @@ import cardStretchReveal from "../templates/card-stretch-reveal/template.json" w
 import thmanyahWordReveal from "../templates/thmanyah-word-reveal-vertical/template.json" with { type: "json" };
 import paperCardReveal from "../templates/paper-card-reveal/template.json" with { type: "json" };
 import klovaWordRevealReel from "../templates/klova-word-reveal-reel/template.json" with { type: "json" };
+import customCanvas from "../templates/custom-canvas/template.json" with { type: "json" };
 
 /**
  * ميتاداتا القوالب وحدها — بلا مكوّنات React.
@@ -19,6 +20,7 @@ export const templateMetas = [
   thmanyahWordReveal,
   paperCardReveal,
   klovaWordRevealReel,
+  customCanvas,
 ];
 
 /**

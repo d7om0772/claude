@@ -1,0 +1,400 @@
+import React, { useMemo } from "react";
+import {
+  AbsoluteFill,
+  Img,
+  Sequence,
+  interpolate,
+  spring,
+  staticFile,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
+import { Audio, Video } from "../../lib/media.js";
+import {
+  FONT_STACK,
+  FONT_WEIGHT_BLACK,
+  FONT_WEIGHT_MEDIUM,
+} from "../../lib/fonts.js";
+import { resolveAsset } from "../../lib/asset-url.js";
+import { isVideoSource } from "../../lib/duration.js";
+
+/* ==========================================================================
+ * 1) الكلمات
+ * ========================================================================== */
+
+/**
+ * توقيت كل كلمة صريح دائماً: الستايلات تحتاج لحظة ظهور كل كلمة، وتوزيعها
+ * ضمنياً داخل كل ستايل يجعل الأربعة تختلف في التزامن بلا سبب.
+ */
+const wordsOf = (cue) => {
+  const words = cue.text.split(/\s+/u).filter((w) => w.length > 0);
+  const given = cue.wordStartsMs ?? [];
+  const span = (cue.endMs - cue.startMs) * 0.85;
+  return words.map((text, i) => ({
+    text,
+    startMs: given[i] ?? cue.startMs + (span * i) / Math.max(1, words.length),
+  }));
+};
+
+const activeIndexOf = (words, currentMs) => {
+  let index = -1;
+  for (let i = 0; i < words.length; i += 1) {
+    if (words[i].startMs <= currentMs) index = i;
+  }
+  return index;
+};
+
+/* ==========================================================================
+ * 2) الستايلات
+ * ==========================================================================
+ * كل ستايل دالة من (الكلمات، اللحظة) إلى عناصر. المشترك بينها — الكلمات
+ * ترتّب في مواضعها النهائية والمخفي يُخفى بالشفافية لا بالحذف — مقصود:
+ * غيره يجعل الكلمات تقفز كلما ظهرت واحدة جديدة.
+ */
+
+const useEnter = (word, enterFrames) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const local = frame - (word.startMs / 1000) * fps;
+  if (enterFrames <= 0) return { opacity: 1, rise: 0, scale: 1 };
+  const progress = spring({
+    frame: local,
+    fps,
+    durationInFrames: enterFrames,
+    config: { damping: 200, mass: 0.5 },
+  });
+  return { opacity: progress, rise: (1 - progress) * 14, scale: progress };
+};
+
+const Word = ({ word, revealed, active, style, enterFrames, colors }) => {
+  const { opacity, rise, scale } = useEnter(word, enterFrames);
+  const common = {
+    display: "inline-block",
+    opacity: revealed ? opacity : 0,
+    color: active ? colors.font : colors.muted,
+    fontWeight: active ? FONT_WEIGHT_BLACK : FONT_WEIGHT_MEDIUM,
+  };
+
+  if (style === "pop") {
+    const rest = active ? 1.14 : 1;
+    return (
+      <span
+        style={{
+          ...common,
+          transform: `translateY(${rise}px) scale(${(0.7 + scale * 0.3) * rest})`,
+        }}
+      >
+        {word.text}
+      </span>
+    );
+  }
+
+  if (style === "boxed") {
+    return (
+      <span
+        style={{
+          ...common,
+          color: active ? colors.onAccent : colors.muted,
+          backgroundColor: active ? colors.accent : "transparent",
+          borderRadius: "0.18em",
+          padding: "0 0.14em",
+          transform: `translateY(${rise * 0.4}px)`,
+        }}
+      >
+        {word.text}
+      </span>
+    );
+  }
+
+  // karaoke و kinetic: ظهور هادئ في المكان
+  return (
+    <span style={{ ...common, transform: `translateY(${rise * 0.5}px)` }}>
+      {word.text}
+    </span>
+  );
+};
+
+/** سطر واحد ضخم تتحرك فيه الكلمة النشطة إلى المنتصف. */
+const KineticLine = ({ words, activeIndex, fontSize, colors, enterFrames }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  // إزاحة أفقية ناعمة: الكلمة النشطة تقترب من المنتصف بدل قفزة لكل كلمة
+  const shift = interpolate(
+    activeIndex,
+    [0, Math.max(1, words.length - 1)],
+    [0, -1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
+  const eased = spring({
+    frame:
+      frame - ((words[Math.max(0, activeIndex)]?.startMs ?? 0) / 1000) * fps,
+    fps,
+    durationInFrames: Math.max(1, enterFrames * 2),
+    config: { damping: 200 },
+  });
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "baseline",
+        gap: fontSize * 0.28,
+        whiteSpace: "nowrap",
+        transform: `translateX(${shift * eased * fontSize * 0.6}px)`,
+      }}
+    >
+      {words.map((word, i) => (
+        <Word
+          key={`${i}-${word.startMs}`}
+          word={word}
+          revealed={i <= activeIndex}
+          active={i === activeIndex}
+          style="kinetic"
+          enterFrames={enterFrames}
+          colors={colors}
+        />
+      ))}
+    </div>
+  );
+};
+
+const TextBlock = ({
+  words,
+  style,
+  fontSize,
+  widthPx,
+  colors,
+  enterFrames,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const currentMs = (frame / fps) * 1000;
+  const activeIndex = activeIndexOf(words, currentMs);
+  if (activeIndex < 0) return null;
+
+  if (style === "kinetic") {
+    return (
+      <div
+        style={{
+          width: widthPx,
+          direction: "rtl",
+          fontFamily: FONT_STACK,
+          fontSize,
+        }}
+      >
+        <KineticLine
+          words={words}
+          activeIndex={activeIndex}
+          fontSize={fontSize}
+          colors={colors}
+          enterFrames={enterFrames}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        width: widthPx,
+        direction: "rtl",
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        alignContent: "center",
+        columnGap: fontSize * 0.26,
+        rowGap: fontSize * 0.18,
+        fontFamily: FONT_STACK,
+        fontSize,
+        lineHeight: 1.25,
+        textAlign: "center",
+      }}
+    >
+      {words.map((word, i) => (
+        <Word
+          key={`${i}-${word.startMs}`}
+          word={word}
+          revealed={i <= activeIndex}
+          active={i === activeIndex}
+          style={style}
+          enterFrames={enterFrames}
+          colors={colors}
+        />
+      ))}
+    </div>
+  );
+};
+
+/* ==========================================================================
+ * 3) المقطع
+ * ========================================================================== */
+
+const MediaLayer = ({
+  src,
+  aspect,
+  centerX,
+  centerY,
+  scale,
+  radius,
+  muted,
+  width,
+  height,
+}) => {
+  const boxWidth = width * scale;
+  // بلا نسبة مقيسة نفترض عمودي 9:16 — أقرب ما يكون لمحتوى الشورتس
+  const boxHeight = boxWidth / (aspect ?? 9 / 16);
+  const box = {
+    position: "absolute",
+    left: width * centerX - boxWidth / 2,
+    top: height * centerY - boxHeight / 2,
+    width: boxWidth,
+    height: boxHeight,
+    borderRadius: boxWidth * radius,
+    overflow: "hidden",
+  };
+  const fill = {
+    width: "100%",
+    height: "100%",
+    borderRadius: boxWidth * radius,
+  };
+  return (
+    <div style={box}>
+      {isVideoSource(src) ? (
+        <Video src={src} muted={muted} objectFit="cover" style={fill} />
+      ) : (
+        <Img src={src} style={{ ...fill, objectFit: "cover" }} />
+      )}
+    </div>
+  );
+};
+
+/* ==========================================================================
+ * 4) القالب
+ * ========================================================================== */
+
+export const Template = ({
+  backgroundColor,
+  media,
+  mediaAspect,
+  mediaCenterXRatio,
+  mediaCenterYRatio,
+  mediaScale,
+  mediaRadiusRatio,
+  mediaMuted,
+  textStyle,
+  captions,
+  headline,
+  textCenterXRatio,
+  textCenterYRatio,
+  textWidthRatio,
+  fontSizeRatio,
+  fontColor,
+  mutedFontColor,
+  accentColor,
+  wordEnterFrames,
+  voiceover,
+  voiceoverVolume,
+  clickSfx,
+  clickVolume,
+}) => {
+  const { width, height, fps } = useVideoConfig();
+  const frame = useCurrentFrame();
+  const currentMs = (frame / fps) * 1000;
+
+  const cues = useMemo(() => {
+    if (captions.length > 0) return captions;
+    if (headline.length === 0) return [];
+    // بلا كابشن نعرض النص المكتوب بإيقاع ثابت، فيرى المستخدم الستايل فوراً
+    const words = headline.split(/\s+/u).filter(Boolean);
+    return [
+      {
+        text: headline,
+        startMs: 0,
+        endMs: 400 + words.length * 400,
+        wordStartsMs: words.map((_, i) => i * 400),
+      },
+    ];
+  }, [captions, headline]);
+
+  const activeCue = cues.find(
+    (cue) => currentMs >= cue.startMs && currentMs < cue.endMs,
+  );
+  const words = useMemo(
+    () => (activeCue ? wordsOf(activeCue) : []),
+    [activeCue],
+  );
+
+  const clickOnsets = useMemo(() => {
+    if (!clickSfx) return [];
+    return cues.flatMap((cue) => wordsOf(cue).map((w) => w.startMs));
+  }, [cues, clickSfx]);
+
+  const fontSize = width * fontSizeRatio;
+  const textWidth = width * textWidthRatio;
+
+  return (
+    <AbsoluteFill style={{ backgroundColor }}>
+      {media ? (
+        <MediaLayer
+          src={resolveAsset(media, staticFile)}
+          aspect={mediaAspect}
+          centerX={mediaCenterXRatio}
+          centerY={mediaCenterYRatio}
+          scale={mediaScale}
+          radius={mediaRadiusRatio}
+          muted={mediaMuted}
+          width={width}
+          height={height}
+        />
+      ) : null}
+
+      <div
+        style={{
+          position: "absolute",
+          left: width * textCenterXRatio - textWidth / 2,
+          top: height * textCenterYRatio,
+          width: textWidth,
+          transform: "translateY(-50%)",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <TextBlock
+          words={words}
+          style={textStyle}
+          fontSize={fontSize}
+          widthPx={textWidth}
+          enterFrames={wordEnterFrames}
+          colors={{
+            font: fontColor,
+            muted: mutedFontColor,
+            accent: accentColor,
+            onAccent: backgroundColor,
+          }}
+        />
+      </div>
+
+      {voiceover ? (
+        <Audio
+          src={resolveAsset(voiceover, staticFile)}
+          volume={voiceoverVolume}
+        />
+      ) : null}
+
+      {clickSfx
+        ? clickOnsets.map((onsetMs, i) => (
+            <Sequence
+              key={`click-${i}-${onsetMs}`}
+              from={Math.round((onsetMs / 1000) * fps)}
+              layout="none"
+            >
+              <Audio
+                src={resolveAsset(clickSfx, staticFile)}
+                volume={clickVolume}
+              />
+            </Sequence>
+          ))
+        : null}
+    </AbsoluteFill>
+  );
+};

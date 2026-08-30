@@ -3,8 +3,10 @@ import { Player } from "@remotion/player";
 import { registerBlob, unregisterBlob } from "./blob-source.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
+import { cuesFromSrt } from "./form/srt-cues.js";
 import { FieldControl } from "./form/Fields.jsx";
 import { Scenes } from "./form/Scenes.jsx";
+import { CanvasStage } from "./form/CanvasStage.jsx";
 import { setIn } from "./form/paths.js";
 import {
   readAudioDuration,
@@ -78,6 +80,23 @@ const GROUP_ORDER = [
   "الوسائط والشعار",
   "التخطيط والحركة",
 ];
+const TEXT_STYLES = [
+  { value: "karaoke", label: "تراكم", hint: "الكلمات تتراكم والنشطة داكنة" },
+  { value: "pop", label: "قفزة", hint: "كل كلمة تكبر في مكانها" },
+  { value: "kinetic", label: "سطر متحرك", hint: "سطر واحد ينزلق مع الكلمة" },
+  { value: "boxed", label: "شريط", hint: "الكلمة النشطة على شريط ملوّن" },
+];
+
+/** المسرح يلفّ المعاينة في قوالب الاستوديو فقط، وإلا مرّ الأبناء كما هم. */
+const StageWrap = ({ studio, props, set, meta, children }) =>
+  studio ? (
+    <CanvasStage props={props} set={set} meta={meta}>
+      {children}
+    </CanvasStage>
+  ) : (
+    children
+  );
+
 export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const fields = useMemo(() => describeSchema(template.schema), [template]);
   const [props, setProps] = useState(() => ({ ...template.defaultProps }));
@@ -148,6 +167,17 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
 
   const pickedAt = useCallback((key) => picked[key], [picked]);
 
+  const captionField = useMemo(
+    () => fields.find((f) => f.kind === "captions"),
+    [fields],
+  );
+  const studio = template.meta.kind === "studio";
+  const wordTimed = useMemo(
+    () =>
+      (captionField?.itemFields ?? []).some((f) => f.name === "wordStartsMs"),
+    [captionField],
+  );
+
   const onSrt = useCallback(
     async (file) => {
       if (!file) {
@@ -155,11 +185,14 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         set("captions", []);
         return;
       }
-      const captions = srtToCaptions(await file.text());
-      setSrtName(file.name);
+      const text = await file.text();
+      // القوالب التي توقّت كل كلمة تحتاج تجميع ملفات مستوى الكلمة في مقاطع؛
+      // غيرها يأخذ المقاطع كما هي في الملف.
+      const captions = wordTimed ? cuesFromSrt(text) : srtToCaptions(text);
+      setSrtName(`${file.name} — ${captions.length} مقاطع`);
       set("captions", captions);
     },
-    [set],
+    [set, wordTimed],
   );
   // المدة تُحسب بنفس الدالة التي يستعملها الرندر، فالمعاينة تطابق المخرج.
   useEffect(() => {
@@ -274,10 +307,6 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       ),
     [fields],
   );
-  const captionField = useMemo(
-    () => fields.find((f) => f.kind === "captions"),
-    [fields],
-  );
   const sceneBased = Boolean(sceneField && captionField);
   const sceneMediaSrc = useMemo(
     () =>
@@ -319,6 +348,29 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                 <span className="count">({groupFields.length})</span>
               </summary>
               <div className="body">
+                {studio && groupName === "النصوص" ? (
+                  <div className="field">
+                    <label>ستايل كشف الكلمات</label>
+                    <div className="style-picker">
+                      {TEXT_STYLES.map((style) => (
+                        <button
+                          key={style.value}
+                          type="button"
+                          title={style.hint}
+                          className={`style-chip${props.textStyle === style.value ? " active" : ""}`}
+                          onClick={() => set("textStyle", style.value)}
+                        >
+                          {style.label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="field-hint">
+                      حرّك المقطع والنص بالماوس فوق المعاينة، واسحب مقبض الزاوية
+                      للحجم و«A» لحجم الخط.
+                    </p>
+                  </div>
+                ) : null}
+
                 {groupName === SCENES_GROUP ? (
                   <Scenes
                     scenes={props.scenes ?? []}
@@ -412,18 +464,25 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
 
       <main className="stage">
         <div className="player-wrap">
-          <Player
-            component={template.component}
-            inputProps={props}
-            durationInFrames={duration}
-            fps={template.meta.fps}
-            compositionWidth={template.meta.width}
-            compositionHeight={template.meta.height}
-            style={{ width: "100%" }}
-            controls
-            loop
-            acknowledgeRemotionLicense
-          />
+          <StageWrap
+            studio={studio}
+            props={props}
+            set={set}
+            meta={template.meta}
+          >
+            <Player
+              component={template.component}
+              inputProps={props}
+              durationInFrames={duration}
+              fps={template.meta.fps}
+              compositionWidth={template.meta.width}
+              compositionHeight={template.meta.height}
+              style={{ width: "100%" }}
+              controls
+              loop
+              acknowledgeRemotionLicense
+            />
+          </StageWrap>
         </div>
         <div className="render-bar">
           <span style={{ color: "var(--muted)", fontSize: 13 }}>

@@ -797,3 +797,94 @@ textarea {
   width: 16px;
   text-align: center;
 }
+
+/* ---------- مسرح التحريك بالماوس ---------- */
+.stage-canvas {
+  position: relative;
+}
+.stage-overlay {
+  position: absolute;
+  inset: 0;
+  /* الطبقة نفسها لا تلتقط المؤشّر، فتبقى أزرار المشغّل تحتها قابلة للنقر */
+  pointer-events: none;
+}
+.stage-box {
+  position: absolute;
+  pointer-events: auto;
+  border: 1px dashed rgba(217, 164, 65, 0.75);
+  border-radius: 6px;
+  cursor: move;
+  touch-action: none;
+}
+.stage-box.active {
+  border-style: solid;
+  box-shadow: 0 0 0 1px rgba(217, 164, 65, 0.35);
+}
+.stage-label {
+  position: absolute;
+  top: -20px;
+  inset-inline-start: 0;
+  font-size: 11px;
+  color: var(--accent);
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 4px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.stage-handle,
+.stage-font {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: #221a08;
+  background: var(--accent);
+  border-radius: 5px;
+  touch-action: none;
+}
+.stage-handle {
+  inset-inline-end: -10px;
+  bottom: -10px;
+  cursor: nwse-resize;
+}
+.stage-font {
+  inset-inline-start: -10px;
+  bottom: -10px;
+  cursor: ns-resize;
+}
+.stage-toggle {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 8px;
+  z-index: 2;
+  /* المعاينة قد تكون فاتحة، فالزر الشفاف يختفي فوقها */
+  background: rgba(12, 10, 9, 0.72);
+  color: #efe7dd;
+  border-color: rgba(217, 164, 65, 0.5);
+}
+
+/* ---------- منتقي الستايل ---------- */
+.style-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.style-chip {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 13px;
+}
+.style-chip:hover {
+  border-color: var(--accent-dim);
+}
+.style-chip.active {
+  background: var(--accent);
+  color: #221a08;
+  border-color: var(--accent);
+  font-weight: 600;
+}
