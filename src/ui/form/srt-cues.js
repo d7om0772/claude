@@ -26,7 +26,7 @@ export const splitWords = (text) =>
  * المقطع وحدةُ عرض تظهر ثم يحلّ محلّها التالي، فلو أخذنا كل بلوك مقطعاً
  * لعرض ملفُ الكلمات كلمةً واحدة في كل لحظة بدل أن تتراكم الجملة.
  */
-const isWordLevel = (blocks) => {
+export const isWordLevel = (blocks) => {
   if (blocks.length < 3) return false;
   const singles = blocks.filter((b) => splitWords(b.text).length === 1).length;
   return singles / blocks.length >= 0.7;
@@ -109,6 +109,15 @@ export const cuesFromSrt = (
     );
   });
 };
+
+/**
+ * مستوى تقطيع الملف: "word" توقيت لكل كلمة، و"sentence" توقيت لكل جملة.
+ *
+ * الفرق ليس شكلياً: في الأول تأتي لحظة كل كلمة من الملف، وفي الثاني تُوزَّع
+ * كلمات الجملة على مدّتها بالتساوي — فالتزامن تقريبي.
+ */
+export const srtGranularity = (raw) =>
+  isWordLevel(srtToCaptions(raw)) ? "word" : "sentence";
 
 /** توقيتات صريحة لكل كلمة، حتى لو خلا المقطع منها. */
 export const wordsOfCue = (cue) => {

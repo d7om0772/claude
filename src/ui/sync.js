@@ -10,7 +10,13 @@ const averageWords = (captions) =>
         (sum, c) => sum + c.text.split(/\s+/u).filter(Boolean).length,
         0,
       ) / captions.length;
-export const runChecks = (meta, captions, audioSeconds) => {
+export const runChecks = (
+  meta,
+  captions,
+  audioSeconds,
+  srtKind = null,
+  wordTimed = false,
+) => {
   const checks = [];
   if (captions.length === 0) {
     return checks;
@@ -37,18 +43,36 @@ export const runChecks = (meta, captions, audioSeconds) => {
       });
     }
   }
-  const avg = averageWords(captions);
-  if (wantsWordLevel(meta) && avg > 1.6) {
+  /*
+   * التقطيع: القديم كان يقيس متوسط الكلمات في المقطع ويحذّر إن تجاوز كلمة —
+   * وكان صحيحاً يوم كان كل مقطع يظهر دفعة واحدة. الآن يحمل المقطع توقيتاً لكل
+   * كلمة وتظهر كلمةً كلمة، فمتوسط ٣ كلمات هو الناتج المقصود لا خلل.
+   * السؤال الباقي: هل توقيتات الكلمات مقيسة من الملف أم موزّعة بالتساوي؟
+   */
+  if (srtKind === "word") {
     checks.push({
-      severity: "bad",
-      text: `هذا القالب يعرض كلمة بكلمة، لكن مقاطع الـ SRT فيها ${avg.toFixed(1)} كلمة وسطياً. استخرج التوقيتات على مستوى الكلمة (Whisper بخيار word_timestamps) وإلا ظهرت الجملة دفعة واحدة.`,
+      severity: "good",
+      text: "الملف يحمل توقيتاً لكل كلمة — التزامن مأخوذ منه كما هو.",
     });
-  } else if (!wantsWordLevel(meta) && avg < 1.4 && captions.length > 3) {
+  } else if (srtKind === "sentence" && wordTimed) {
     checks.push({
       severity: "warn",
-      text: "الـ SRT مقطّع على مستوى الكلمة، وهذا القالب يتوقع جملاً — قد يظهر النص متقطّعاً.",
+      text:
+        "الملف على مستوى الجملة: وُزّعت كلمات كل مقطع على مدّته بالتساوي، " +
+        "فالتزامن تقريبي وقد تسبق الكلمة الصوت أو تتأخر عنه. للتزامن الدقيق " +
+        "صدّر التفريغ بتوقيت الكلمة (Whisper بخيار word_timestamps).",
+    });
+  } else if (
+    srtKind === null &&
+    wantsWordLevel(meta) &&
+    averageWords(captions) > 1.6
+  ) {
+    checks.push({
+      severity: "warn",
+      text: "هذا القالب يكشف الكلمات واحدةً واحدة، والمقاطع الحالية بلا توقيت لكل كلمة — ستُوزَّع بالتساوي.",
     });
   }
+
   const overlapping = captions.some((c, i) => {
     const next = captions[i + 1];
     return next !== undefined && c.endMs > next.startMs;

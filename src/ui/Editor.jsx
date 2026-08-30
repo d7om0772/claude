@@ -3,7 +3,7 @@ import { Player } from "@remotion/player";
 import { registerBlob, unregisterBlob } from "./blob-source.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
-import { cuesFromSrt } from "./form/srt-cues.js";
+import { cuesFromSrt, srtGranularity } from "./form/srt-cues.js";
 import { FieldControl } from "./form/Fields.jsx";
 import { Scenes } from "./form/Scenes.jsx";
 import { CanvasStage } from "./form/CanvasStage.jsx";
@@ -102,6 +102,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const [props, setProps] = useState(() => ({ ...template.defaultProps }));
   const [picked, setPicked] = useState({});
   const [srtName, setSrtName] = useState(null);
+  const [srtKind, setSrtKind] = useState(null);
   const [audioSeconds, setAudioSeconds] = useState(null);
   const [duration, setDuration] = useState(
     template.meta.defaultDurationInFrames,
@@ -182,6 +183,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     async (file) => {
       if (!file) {
         setSrtName(null);
+        setSrtKind(null);
         set("captions", []);
         return;
       }
@@ -189,6 +191,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       // القوالب التي توقّت كل كلمة تحتاج تجميع ملفات مستوى الكلمة في مقاطع؛
       // غيرها يأخذ المقاطع كما هي في الملف.
       const captions = wordTimed ? cuesFromSrt(text) : srtToCaptions(text);
+      setSrtKind(srtGranularity(text));
       setSrtName(`${file.name} — ${captions.length} مقاطع`);
       set("captions", captions);
     },
@@ -289,8 +292,8 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     [captions.length, fields],
   );
   const checks = useMemo(
-    () => runChecks(template.meta, captions, audioSeconds),
-    [template.meta, captions, audioSeconds],
+    () => runChecks(template.meta, captions, audioSeconds, srtKind, wordTimed),
+    [template.meta, captions, audioSeconds, srtKind, wordTimed],
   );
   /**
    * قالب مشهدي: عنده مصفوفة مشاهد ومصفوفة كابشن معاً. عندها يُعرض محرّر
