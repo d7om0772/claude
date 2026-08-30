@@ -41,7 +41,9 @@ const hasCustomCheck = (node) =>
 const ASSET_ACCEPT = {
   logo: "image/*",
   media: "image/*,video/*",
+  src: "image/*,video/*",
   voiceover: "audio/*",
+  clickSfx: "audio/*",
 };
 const isCaptionArray = (element) => {
   const shape = defOf(element).shape;
@@ -52,7 +54,9 @@ const isCaptionArray = (element) => {
 const classify = (name, node) => {
   const def = defOf(node);
   const accept = ASSET_ACCEPT[name];
-  if (accept !== undefined) {
+  // الاسم وحده لا يكفي: في قالب الريل حقل media كائن {src, aspect, …} لا
+  // مساراً، فلو صنّفناه ملفاً لكتبت الواجهة نصاً مكان كائن وانكسر القالب.
+  if (accept !== undefined && def.type === "string") {
     return { kind: "asset", accept };
   }
   switch (def.type) {
@@ -81,6 +85,13 @@ const classify = (name, node) => {
       return { kind: "boolean" };
     case "enum":
       return { kind: "enum", options: Object.values(def.entries ?? {}) };
+    case "object": {
+      // كائن متداخل: نفس منطق الاشتقاق، والواجهة تعرضه كمجموعة فرعية
+      const shape = def.shape;
+      return shape
+        ? { kind: "object", itemFields: fieldsOfShape(shape) }
+        : { kind: "unsupported" };
+    }
     case "array": {
       const element = def.element;
       if (isCaptionArray(element)) return { kind: "captions" };

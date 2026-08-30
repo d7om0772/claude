@@ -4,7 +4,9 @@
  * الواجهة تعمل بلا خادم أيضاً (نسخة الملف الواحد للمعاينة فقط)، فكل ما يخصّ
  * الرندر يمرّ من هنا ويُفحص توفّره أولاً بدل افتراضه.
  */
-export const API = "/api";
+import { setIn } from "./form/paths.js";
+
+const API = "/api";
 export const checkServer = async () => {
   try {
     const res = await fetch(`${API}/health`);
@@ -34,10 +36,11 @@ const uploadFile = async (file) => {
  * ويُستبدل مسارها في الـ props قبل إرسال المهمة.
  */
 export const submitRender = async (templateId, props, picked) => {
-  const resolved = { ...props };
-  for (const [field, pick] of Object.entries(picked)) {
+  let resolved = { ...props };
+  // المفاتيح مسارات لا أسماء: وسائط المشهد تسكن داخل مصفوفة وكائن
+  for (const [path, pick] of Object.entries(picked)) {
     if (!pick.file) continue;
-    resolved[field] = await uploadFile(pick.file);
+    resolved = setIn(resolved, path, await uploadFile(pick.file));
   }
   const res = await fetch(`${API}/jobs`, {
     method: "POST",

@@ -1,23 +1,24 @@
 {
-    "id": "card-stretch-reveal",
-    "name": "Card Stretch Reveal",
-    "nameAr": "كشف بالتمدّد داخل الكرت",
-    "description": "مقطع يظهر داخل كرت بيج على شكل شريط رفيع ثم يتمدّد عمودياً حتى يملأ مكانه في ربع ثانية، يتبعه نص رئيسي وثانوي وكابشن مزامن مع التعليق الصوتي.",
-    "category": "social-reels",
-    "fps": 30,
-    "width": 1080,
-    "height": 1920,
-    "defaultDurationInFrames": 78,
-    "tags": [
-        "stretch-reveal",
-        "squash",
-        "mockup",
-        "instagram-reels",
-        "tiktok",
-        "arabic",
-        "captions",
-        "voiceover",
-        "vertical"
-    ],
-    "previewFile": "preview.mp4"
+  "id": "card-stretch-reveal",
+  "kind": "shot",
+  "name": "Card Stretch Reveal",
+  "nameAr": "كشف بالتمدّد داخل الكرت",
+  "description": "مقطع يظهر داخل كرت بيج على شكل شريط رفيع ثم يتمدّد عمودياً حتى يملأ مكانه في ربع ثانية، يتبعه نص رئيسي وثانوي وكابشن مزامن مع التعليق الصوتي.",
+  "category": "social-reels",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "defaultDurationInFrames": 78,
+  "tags": [
+    "stretch-reveal",
+    "squash",
+    "mockup",
+    "instagram-reels",
+    "tiktok",
+    "arabic",
+    "captions",
+    "voiceover",
+    "vertical"
+  ],
+  "previewFile": "preview.mp4"
 }

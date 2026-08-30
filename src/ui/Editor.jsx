@@ -4,6 +4,7 @@ import { registerBlob, unregisterBlob } from "./blob-source.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
 import { FieldControl } from "./form/Fields.jsx";
+import { setIn } from "./form/paths.js";
 import { readAudioDuration, runChecks, wantsWordLevel } from "./sync.js";
 import { submitRender } from "./render.js";
 import { pickOutputFormat, renderInBrowser } from "./web-render.js";
@@ -86,41 +87,45 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const set = useCallback((name, value) => {
     setProps((prev) => ({ ...prev, [name]: value }));
   }, []);
-  const onPick = useCallback(
-    (name, file) => {
-      // رابط واحد للملف يُستعمل في العرض وفي القالب معاً، ويُبطَل عند
-      // الاستبدال. إنشاء رابطين لنفس الملف يسرّب أحدهما.
-      const url = file
-        ? URL.createObjectURL(file) + extensionSuffix(file.name)
-        : null;
-      // يقرأ منه محرّك الوسائط مباشرة؛ بلا هذا يفشل fetch على blob: بالسياسة
-      if (url && file) registerBlob(url, file);
-      setPicked((prev) => {
-        const old = prev[name];
-        if (old) {
-          URL.revokeObjectURL(old.url);
-          unregisterBlob(old.url);
-        }
-        if (!file || url === null) {
-          const { [name]: _removed, ...rest } = prev;
-          return rest;
-        }
-        return { ...prev, [name]: { url, name: file.name, file } };
-      });
-      if (url === null) {
-        set(name, undefined);
-        if (name === "voiceover") setAudioSeconds(null);
-        return;
+  /**
+   * يسجّل ملفاً مرفوعاً تحت مفتاح المسار ويعيد رابطه، ولا يكتب في props.
+   *
+   * الكتابة متروكة لمن نادى، لأن الحقل قد يكون متداخلاً
+   * (`scenes.2.media.src`) فيضعه أبوه في موضعه بنفسه. أما التسجيل — إبطال
+   * الرابط القديم وربط الملف بالذاكرة — فمركزي هنا حتى لا يتسرّب رابط.
+   */
+  const pickAsset = useCallback((key, file) => {
+    const url = file
+      ? URL.createObjectURL(file) + extensionSuffix(file.name)
+      : null;
+    // يقرأ منه محرّك الوسائط مباشرة؛ بلا هذا يفشل fetch على blob: بالسياسة
+    if (url && file) registerBlob(url, file);
+    setPicked((prev) => {
+      const old = prev[key];
+      if (old) {
+        URL.revokeObjectURL(old.url);
+        unregisterBlob(old.url);
       }
-      set(name, url);
-      if (name === "voiceover") {
+      if (!file || url === null) {
+        const { [key]: _removed, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [key]: { url, name: file.name, file } };
+    });
+    if (key === "voiceover") {
+      if (url === null) {
+        setAudioSeconds(null);
+      } else {
         readAudioDuration(url)
           .then(setAudioSeconds)
           .catch(() => setAudioSeconds(null));
       }
-    },
-    [set],
-  );
+    }
+    return url;
+  }, []);
+
+  const pickedAt = useCallback((key) => picked[key], [picked]);
+
   const onSrt = useCallback(
     async (file) => {
       if (!file) {
@@ -320,8 +325,8 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                     field={field}
                     value={props[field.name]}
                     set={set}
-                    picked={picked[field.name]}
-                    onPick={onPick}
+                    pickedAt={pickedAt}
+                    pickAsset={pickAsset}
                   />
                 ))}
               </div>

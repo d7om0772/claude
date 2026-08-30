@@ -1,0 +1,28 @@
+{
+  "id": "klova-word-reveal-reel",
+  "kind": "template",
+  "name": "KLOVA Word Reveal Reel",
+  "nameAr": "ريل كلوفا — كشف الكلمات",
+  "description": "Vertical short-form ad template on a warm beige canvas. A centred rounded media card sits under a locked wordmark, and Arabic captions reveal word-by-word in their final positions with a click on every word. Three caption modes: white over the card, dark above a landscape card, and dark on an empty frame.",
+  "descriptionAr": "قالب إعلان عمودي على خلفية بيج دافئة. بطاقة وسائط بحواف دائرية في منتصف الشاشة تحت شعار ثابت، وكابشن عربي يظهر كلمة كلمة في مواضعها النهائية مع نقرة صوتية لكل كلمة. ثلاثة أنماط كابشن: أبيض فوق البطاقة، غامق فوق البطاقة الأفقية، وغامق على شاشة فاضية.",
+  "category": "social-ad",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "defaultDurationInFrames": 691,
+  "tags": [
+    "arabic",
+    "rtl",
+    "vertical",
+    "9:16",
+    "reels",
+    "tiktok",
+    "captions",
+    "word-reveal",
+    "karaoke",
+    "ecommerce",
+    "product-ad",
+    "beige",
+    "minimal"
+  ]
+}

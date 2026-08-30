@@ -1,8 +1,7 @@
 #!/usr/bin/env tsx
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, statSync } from "node:fs";
-import { basename } from "node:path";
-import { templateMetas } from "../lib/template-meta.js";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { basename, join, posix } from "node:path";
 /**
  * يبني الواجهة كملف HTML واحد مكتفٍ بذاته: كل شيء مضمّن، صفر طلبات شبكة.
  * الغرض مشاركتها للتجربة على أي جهاز بلا تشغيل خادم.
@@ -11,8 +10,17 @@ const DIST = "dist-ui";
 const OUT = `${DIST}/standalone.html`;
 const MIME = {
   woff2: "font/woff2",
+  otf: "font/otf",
   mp4: "video/mp4",
   webm: "video/webm",
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  svg: "image/svg+xml",
+  webp: "image/webp",
+  wav: "audio/wav",
+  mp3: "audio/mpeg",
+  m4a: "audio/mp4",
 };
 const dataUri = (path) => {
   const ext = path.split(".").pop() ?? "";
@@ -36,26 +44,34 @@ const css = readFileSync(
   "utf8",
 );
 const js = readFileSync(`${DIST}/assets/${basename(jsSrc)}`, "utf8");
-// الأصول التي تُطلب بمسار مطلق وقت التشغيل
-const assets = {
-  "/fonts/thmanyah-serif-display-Black.woff2": dataUri(
-    "public/fonts/thmanyah-serif-display-Black.woff2",
-  ),
-  "/fonts/thmanyah-serif-display-Medium.woff2": dataUri(
-    "public/fonts/thmanyah-serif-display-Medium.woff2",
-  ),
-};
-for (const t of templateMetas) {
-  for (const ext of ["webm", "mp4"]) {
-    const file = `public/previews/${t.id}.${ext}`;
-    try {
-      statSync(file);
-      assets[`/previews/${t.id}.${ext}`] = dataUri(file);
-    } catch {
-      process.stderr.write(`تحذير: لا توجد عيّنة ${file}\n`);
+/**
+ * كل ما في public يُضمَّن، عدا uploads.
+ *
+ * كان هنا سردٌ يدوي للخطوط والعيّنات، فكل أصل جديد يضيفه قالب — شعار أو صوت
+ * نقرة — يغيب عن نسخة الملف الواحد بلا أي خطأ ظاهر: الصورة تنكسر والصوت يصمت.
+ * المسح التلقائي يجعل «أضِف ملفاً إلى public» كافياً.
+ */
+const SKIP_DIRS = new Set(["uploads"]);
+const collectAssets = (dir, prefix = "") => {
+  const out = {};
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".")) continue;
+    if (entry.isDirectory()) {
+      if (SKIP_DIRS.has(entry.name)) continue;
+      Object.assign(
+        out,
+        collectAssets(join(dir, entry.name), posix.join(prefix, entry.name)),
+      );
+      continue;
     }
+    const ext = entry.name.split(".").pop() ?? "";
+    if (MIME[ext] === undefined) continue;
+    out[`/${posix.join(prefix, entry.name)}`] = dataUri(join(dir, entry.name));
   }
-}
+  return out;
+};
+const assets = collectAssets("public");
+
 // إعلان الترميز أولاً: الملف عربي بالكامل، وبدونه يقرؤه المتصفح لاتينياً
 // فتتحوّل الحروف إلى بايتات مشوّهة — ويكفي تعبيرٌ نمطي واحد فيه مدى عربي
 // ليصير غير صالح فيسقط التطبيق كله عند الإقلاع.

@@ -39,6 +39,13 @@ import {
   calculateMetadata as paperCardRevealMetadata,
 } from "../templates/paper-card-reveal/schema.js";
 import paperCardRevealMeta from "../templates/paper-card-reveal/template.json";
+import { Template as KlovaReelTemplate } from "../templates/klova-word-reveal-reel/Template.jsx";
+import {
+  templateSchema as klovaReelSchema,
+  defaultProps as klovaReelDefaults,
+  calculateMetadata as klovaReelMetadata,
+} from "../templates/klova-word-reveal-reel/schema.js";
+import klovaReelMeta from "../templates/klova-word-reveal-reel/template.json";
 /**
  * كل قالب له props مختلفة تماماً، فالسجلّ غير متجانس بطبيعته ولا يمكن تمثيله
  * بنوع واحد دقيق. هذه الدالة تتحقق من اتساق القالب داخلياً — أن props المكوّن
@@ -82,7 +89,21 @@ export const templates = [
     defaultProps: paperCardRevealDefaults,
     calculateMetadata: paperCardRevealMetadata,
   }),
+  defineTemplate({
+    meta: klovaReelMeta,
+    schema: klovaReelSchema,
+    component: KlovaReelTemplate,
+    defaultProps: klovaReelDefaults,
+    calculateMetadata: klovaReelMetadata,
+  }),
 ];
+
+/** «لقطة» = وحدة واحدة، و«قالب» = نموذج مركّب من عدة لقطات. */
+export const SHOT = "shot";
+export const TEMPLATE = "template";
+export const kindOf = (meta) => (meta.kind === TEMPLATE ? TEMPLATE : SHOT);
+export const templatesOfKind = (kind) =>
+  templates.filter((t) => kindOf(t.meta) === kind);
 /**
  * حارس تكرار المعرّفات: معرّفان متطابقان يعنيان Composition واحداً يطغى على
  * الآخر بصمت، فيختفي قالب كامل بلا رسالة خطأ. يُفحص عند تحميل الوحدة.

@@ -1,4 +1,5 @@
 import React from "react";
+import { joinPath } from "./paths.js";
 const asString = (v, fallback = "") => (typeof v === "string" ? v : fallback);
 /** hex فقط هو ما يقبله <input type="color">؛ غيره (rgba مثلاً) يُحرَّر نصياً. */
 const hexOrNull = (v) =>
@@ -111,42 +112,45 @@ const EnumField = ({ field, value, set }) => (
     </select>
   </div>
 );
-const AssetField = ({ field, value, set, picked, onPick }) => (
-  <div className="field">
-    <label>{field.label}</label>
-    <div className="file-row">
-      <label className="btn ghost" style={{ fontSize: 13 }}>
-        اختر ملفاً
-        <input
-          type="file"
-          accept={field.accept}
-          style={{ display: "none" }}
-          onChange={(e) => onPick(field.name, e.target.files?.[0] ?? null)}
-        />
-      </label>
-      {picked ? (
-        <>
-          <span className="file-name">{picked.name}</span>
-          <button
-            type="button"
-            className="icon-btn"
-            title="إزالة"
-            onClick={() => {
-              onPick(field.name, null);
-              set(field.name, undefined);
-            }}
-          >
-            ✕
-          </button>
-        </>
-      ) : (
-        <span className="file-empty">
-          {value ? asString(value) : "لا شيء — القالب يعمل بدونه"}
-        </span>
-      )}
+const AssetField = ({ field, value, set, path, picked, pickAsset }) => {
+  const choose = (file) => {
+    const url = pickAsset(path, file);
+    set(field.name, url ?? undefined);
+  };
+  return (
+    <div className="field">
+      <label>{field.label}</label>
+      <div className="file-row">
+        <label className="btn ghost" style={{ fontSize: 13 }}>
+          اختر ملفاً
+          <input
+            type="file"
+            accept={field.accept}
+            style={{ display: "none" }}
+            onChange={(e) => choose(e.target.files?.[0] ?? null)}
+          />
+        </label>
+        {picked ? (
+          <>
+            <span className="file-name">{picked.name}</span>
+            <button
+              type="button"
+              className="icon-btn"
+              title="إزالة"
+              onClick={() => choose(null)}
+            >
+              ✕
+            </button>
+          </>
+        ) : (
+          <span className="file-empty">
+            {value ? asString(value) : "لا شيء — القالب يعمل بدونه"}
+          </span>
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 const NumberListField = ({ field, value, set }) => {
   const list = Array.isArray(value) ? value : [];
   return (
@@ -182,7 +186,21 @@ const NumberListField = ({ field, value, set }) => {
     </div>
   );
 };
-const ObjectListField = ({ field, value, set }) => {
+/** عنصر فارغ مطابق لشكل الحقول — الأرقام صفر والمنطقيات false. */
+const blankFromFields = (fields) =>
+  Object.fromEntries(
+    fields.map((f) => {
+      if (f.kind === "boolean") return [f.name, false];
+      if (f.kind === "number") return [f.name, f.min ?? 0];
+      if (f.kind === "object") return [f.name, null];
+      if (f.kind === "objectList" || f.kind === "numberList")
+        return [f.name, []];
+      if (f.kind === "enum") return [f.name, (f.options ?? [""])[0]];
+      return [f.name, ""];
+    }),
+  );
+
+const ObjectListField = ({ field, value, set, path, pickedAt, pickAsset }) => {
   const items = Array.isArray(value) ? value : [];
   const itemFields = field.itemFields ?? [];
   const update = (index, key, v) =>
@@ -190,10 +208,7 @@ const ObjectListField = ({ field, value, set }) => {
       field.name,
       items.map((it, i) => (i === index ? { ...it, [key]: v } : it)),
     );
-  const blank = () =>
-    Object.fromEntries(
-      itemFields.map((f) => [f.name, f.kind === "boolean" ? false : ""]),
-    );
+  const blank = () => blankFromFields(itemFields);
   return (
     <div className="field">
       <label>{field.label}</label>
@@ -221,7 +236,9 @@ const ObjectListField = ({ field, value, set }) => {
                 field={sub}
                 value={item[sub.name]}
                 set={(k, v) => update(i, k, v)}
-                onPick={() => undefined}
+                path={joinPath(joinPath(path, i), sub.name)}
+                pickedAt={pickedAt}
+                pickAsset={pickAsset}
               />
             ))}
           </div>
@@ -352,7 +369,65 @@ const CaptionsField = ({ field, value, set }) => {
   );
 };
 
-const Control = ({ field, value, set, picked, onPick }) => {
+/**
+ * كائن متداخل — مثل وسائط المشهد {src, aspect, …}.
+ *
+ * القيمة قد تكون null (مشهد بلا وسائط)، فنعرض زرّ إنشاء بدل حقول على كائن
+ * غير موجود: الكتابة في حقل ابن لكائن null تنتج كائناً ناقص البقية.
+ */
+const ObjectField = ({ field, value, set, path, pickedAt, pickAsset }) => {
+  const itemFields = field.itemFields ?? [];
+  const present = value !== null && typeof value === "object";
+  const obj = present ? value : {};
+  const childSet = (key, v) => set(field.name, { ...obj, [key]: v });
+  if (!present) {
+    return (
+      <div className="field">
+        <label>{field.label}</label>
+        <button
+          type="button"
+          className="btn ghost"
+          style={{ padding: "5px 12px", fontSize: 13 }}
+          onClick={() => set(field.name, blankFromFields(itemFields))}
+        >
+          + تفعيل
+        </button>
+      </div>
+    );
+  }
+  return (
+    <div className="field">
+      <div className="obj-item">
+        <div className="obj-head">
+          <span>{field.label}</span>
+          {field.optional ? (
+            <button
+              type="button"
+              className="icon-btn"
+              title="إزالة"
+              onClick={() => set(field.name, null)}
+            >
+              ✕
+            </button>
+          ) : null}
+        </div>
+        {itemFields.map((sub) => (
+          <FieldControl
+            key={sub.name}
+            field={sub}
+            value={obj[sub.name]}
+            set={childSet}
+            path={joinPath(path, sub.name)}
+            pickedAt={pickedAt}
+            pickAsset={pickAsset}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Control = ({ field, value, set, path, pickedAt, pickAsset }) => {
   switch (field.kind) {
     case "color":
       return <ColorField field={field} value={value} set={set} />;
@@ -371,14 +446,35 @@ const Control = ({ field, value, set, picked, onPick }) => {
           field={field}
           value={value}
           set={set}
-          picked={picked}
-          onPick={onPick}
+          path={path}
+          picked={pickedAt(path)}
+          pickAsset={pickAsset}
         />
       );
     case "numberList":
       return <NumberListField field={field} value={value} set={set} />;
     case "objectList":
-      return <ObjectListField field={field} value={value} set={set} />;
+      return (
+        <ObjectListField
+          field={field}
+          value={value}
+          set={set}
+          path={path}
+          pickedAt={pickedAt}
+          pickAsset={pickAsset}
+        />
+      );
+    case "object":
+      return (
+        <ObjectField
+          field={field}
+          value={value}
+          set={set}
+          path={path}
+          pickedAt={pickedAt}
+          pickAsset={pickAsset}
+        />
+      );
     case "captions":
       return <CaptionsField field={field} value={value} set={set} />;
     default:
@@ -387,7 +483,7 @@ const Control = ({ field, value, set, picked, onPick }) => {
 };
 
 export const FieldControl = (props) => {
-  const control = Control(props);
+  const control = Control({ ...props, path: props.path ?? props.field.name });
   if (!control) return null;
 
   const { field } = props;
