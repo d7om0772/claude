@@ -58,6 +58,46 @@ const STYLE_LABELS = {
 
 const MAX_WIDTH_BY_STYLE = { over: 480, above: 440, full: 620 };
 
+/** أقصى عدد كلمات في المقطع الواحد، من حدود المحتوى في دليل القالب. */
+const MAX_WORDS_BY_STYLE = { over: 4, above: 4, full: 7 };
+
+/** فجوة تكفي لاعتبار ما بعدها جملة جديدة. */
+const SENTENCE_GAP_MS = 700;
+
+/**
+ * ملفات SRT على نوعين: مقطع لكل جملة، ومقطع لكل كلمة (مخرج Whisper وأمثاله).
+ *
+ * المقطع في هذا القالب وحدةُ عرض: يظهر ثم يختفي ليحلّ محلّه التالي. فلو
+ * أخذنا كل بلوك مقطعاً، صار ملف الكلمات يعرض كلمة واحدة في كل لحظة وتختفي
+ * قبلها — بدل أن تتراكم الجملة. لذلك نكتشف النوع ونجمع الكلمات في جمل،
+ * ونستعمل توقيت كل بلوك توقيتاً لكلمته.
+ */
+const isWordLevel = (blocks) => {
+  if (blocks.length < 3) return false;
+  const singles = blocks.filter((b) => splitWords(b.text).length === 1).length;
+  return singles / blocks.length >= 0.7;
+};
+
+/** يجمع بلوكات الكلمات في مقاطع: تنتهي بالحد الأقصى للكلمات أو بفجوة. */
+const groupWordBlocks = (blocks, maxWords) => {
+  const groups = [];
+  let current = [];
+  for (const block of blocks) {
+    const previous = current[current.length - 1];
+    const gap = previous ? block.startMs - previous.endMs : 0;
+    if (
+      current.length >= maxWords ||
+      (previous !== undefined && gap > SENTENCE_GAP_MS)
+    ) {
+      groups.push(current);
+      current = [];
+    }
+    current.push(block);
+  }
+  if (current.length > 0) groups.push(current);
+  return groups;
+};
+
 const Cue = ({ cue, styles, onChange, onRemove }) => {
   const words = wordsOf(cue);
   const setWords = (next) => onChange(cueFromWords(cue, next));
@@ -224,25 +264,45 @@ export const Scenes = ({
     if (!file) return;
     const scene = scenes[sceneIndex];
     const style = scene.media ? styles[0] : (styles[styles.length - 1] ?? "");
-    const imported = srtToCaptions(await file.text()).map((cue) => {
-      const startMs = cue.startMs + scene.startMs;
-      const endMs = Math.min(cue.endMs + scene.startMs, scene.endMs);
-      const words = splitWords(cue.text);
-      const span = (endMs - startMs) * WORD_SPAN_RATIO;
-      return {
-        text: cue.text,
-        startMs,
-        endMs,
-        style,
-        wordStartsMs: words.map((_, i) =>
-          Math.round(startMs + (span * i) / Math.max(1, words.length)),
-        ),
-        maxWidthPx: MAX_WIDTH_BY_STYLE[style] ?? 620,
-      };
-    });
+    const maxWidthPx = MAX_WIDTH_BY_STYLE[style] ?? 620;
+    const maxWords = MAX_WORDS_BY_STYLE[style] ?? 7;
+    const shift = (ms) => ms + scene.startMs;
+    // كلمة تبدأ بعد نهاية اللقطة لن تُعرض أبداً، فإبقاؤها يوهم أنها ستظهر
+    const blocks = srtToCaptions(await file.text()).filter(
+      (b) => shift(b.startMs) < scene.endMs,
+    );
+    const imported = isWordLevel(blocks)
+      ? groupWordBlocks(blocks, maxWords).map((group) => ({
+          text: group.map((b) => b.text.trim()).join(" "),
+          startMs: shift(group[0].startMs),
+          endMs: Math.min(shift(group[group.length - 1].endMs), scene.endMs),
+          style,
+          wordStartsMs: group.map((b) => shift(b.startMs)),
+          maxWidthPx,
+        }))
+      : blocks.map((cue) => {
+          const startMs = shift(cue.startMs);
+          const endMs = Math.min(shift(cue.endMs), scene.endMs);
+          const words = splitWords(cue.text);
+          const span = (endMs - startMs) * WORD_SPAN_RATIO;
+          return {
+            text: cue.text,
+            startMs,
+            endMs,
+            style,
+            wordStartsMs: words.map((_, i) =>
+              Math.round(startMs + (span * i) / Math.max(1, words.length)),
+            ),
+            maxWidthPx,
+          };
+        });
+
     const mine = new Set(grouped.map.get(sceneIndex) ?? []);
     setCaptions([...captions.filter((_, i) => !mine.has(i)), ...imported]);
-    setSrtNames((prev) => ({ ...prev, [sceneIndex]: file.name }));
+    setSrtNames((prev) => ({
+      ...prev,
+      [sceneIndex]: `${file.name} — ${imported.length} مقاطع`,
+    }));
   };
 
   const setScene = (index, patch) =>
@@ -273,18 +333,20 @@ export const Scenes = ({
           <div className="scene" key={index}>
             <div className="scene-head">
               <h4>اللقطة {index + 1}</h4>
-              <span className="scene-range" dir="ltr">
+              <span className="scene-range">
+                تظهر من
                 <MS
                   value={scene.startMs}
-                  title="بداية اللقطة بالملي ثانية"
+                  title="لحظة ظهور بطاقة اللقطة بالملي ثانية"
                   onChange={(v) => setScene(index, { startMs: v })}
                 />
-                {" → "}
+                إلى
                 <MS
                   value={scene.endMs}
-                  title="نهاية اللقطة بالملي ثانية"
+                  title="لحظة اختفاء بطاقة اللقطة بالملي ثانية"
                   onChange={(v) => setScene(index, { endMs: v })}
                 />
+                م.ث
               </span>
               <button
                 type="button"
@@ -328,6 +390,34 @@ export const Scenes = ({
                 </span>
               )}
             </div>
+
+            {scene.media ? (
+              <div className="scene-row">
+                <span className="file-empty">يبدأ الفيديو من داخله عند</span>
+                <MS
+                  value={scene.media.startFromMs ?? 0}
+                  title="تقديم بداية المقطع نفسه بالملي ثانية"
+                  onChange={(v) =>
+                    setScene(index, {
+                      media: { ...scene.media, startFromMs: Math.max(0, v) },
+                    })
+                  }
+                />
+                <span className="file-empty">م.ث</span>
+                <label className="switch" style={{ marginInlineStart: 8 }}>
+                  <input
+                    type="checkbox"
+                    checked={scene.media.muted !== false}
+                    onChange={(e) =>
+                      setScene(index, {
+                        media: { ...scene.media, muted: e.target.checked },
+                      })
+                    }
+                  />
+                  <span>كتم صوت المقطع</span>
+                </label>
+              </div>
+            ) : null}
 
             <div className="scene-row">
               <label className="btn ghost tiny">

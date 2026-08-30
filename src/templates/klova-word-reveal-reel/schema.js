@@ -345,7 +345,9 @@ export const defaultProps = {
   wordPopFrames: 4,
   wordPopRisePx: 6,
   wordPopStartOpacity: 0.15,
-  cardEnterFrames: 3,
+  // صفر: البطاقة ظاهرة من الفريم الأول كالنص. أي قيمة أكبر تبدأ بشفافية صفر
+  // فتتأخّر البطاقة عن أول كلمة، وهو تنافر واضح في أول ثانية.
+  cardEnterFrames: 0,
 
   captionFontSizes: { over: 77, above: 77, full: 89 },
 };
