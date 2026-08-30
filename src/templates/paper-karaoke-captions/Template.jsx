@@ -169,6 +169,7 @@ export const Template = ({
   media,
   mediaFit,
   mediaOpacity,
+  mediaRadiusRatio,
   voiceover,
   voiceoverVolume,
 }) => {
@@ -191,7 +192,16 @@ export const Template = ({
       {/* ---------- الطبقة 1: الوسائط (اختيارية، خلف كل شي) ---------- */}
       {media === null ? null : (
         <Sequence name="media" from={0}>
-          <AbsoluteFill style={{ opacity: mediaOpacity }}>
+          {/* التدوير على الحاوية لا على المقطع: الرندر داخل المتصفح يقصّ
+              عند زوايا الحاوية المدوّرة، والمقطع يملأ الإطار فلا زوايا له
+              أصلاً بغير هذا القصّ. */}
+          <AbsoluteFill
+            style={{
+              opacity: mediaOpacity,
+              borderRadius: width * mediaRadiusRatio,
+              overflow: "hidden",
+            }}
+          >
             {isVideoSource(media) ? (
               <Video
                 src={resolveAsset(media, staticFile)}

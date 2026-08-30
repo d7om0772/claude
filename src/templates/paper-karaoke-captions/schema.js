@@ -151,6 +151,13 @@ export const templateSchema = z.object({
     .min(0)
     .max(1)
     .describe("شفافية طبقة الوسائط. الأقل يخلي النص أوضح"),
+  mediaRadiusRatio: z
+    .number()
+    .min(0)
+    .max(0.2)
+    .describe(
+      "نصف قطر زوايا الفيديو كنسبة من عرض الإطار — الزوايا تكشف لون الخلفية خلفها. صفر يعيدها حادّة",
+    ),
   /* ----------------------------------------------------------------- الصوت */
   voiceover: z
     .string()
@@ -209,6 +216,7 @@ export const defaultProps = {
   media: null,
   mediaFit: "cover",
   mediaOpacity: 1,
+  mediaRadiusRatio: 0.045,
   voiceover: null,
   voiceoverVolume: 1,
   tailDurationInFrames: 9,
