@@ -274,7 +274,8 @@ export const Template = ({
                 src={mediaSource}
                 trimBefore={Math.round(mediaStartFromSeconds * fps)}
                 volume={mediaVolume}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                objectFit="cover"
+                style={{ width: "100%", height: "100%" }}
               />
             )
           ) : (

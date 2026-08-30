@@ -205,7 +205,8 @@ export const Template = ({
             {isVideoSource(media) ? (
               <Video
                 src={resolveAsset(media, staticFile)}
-                style={{ width: "100%", height: "100%", objectFit: mediaFit }}
+                objectFit={mediaFit}
+                style={{ width: "100%", height: "100%" }}
               />
             ) : (
               <Img

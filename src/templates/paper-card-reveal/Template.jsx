@@ -268,7 +268,6 @@ const MediaScene = ({
   const fill = {
     width: "100%",
     height: "100%",
-    objectFit: "cover",
   };
   return (
     <AbsoluteFill style={{ backgroundColor: cardColor }}>
@@ -277,10 +276,14 @@ const MediaScene = ({
           <Video
             src={resolveAsset(media, staticFile)}
             muted={muted}
+            objectFit="cover"
             style={fill}
           />
         ) : (
-          <Img src={resolveAsset(media, staticFile)} style={fill} />
+          <Img
+            src={resolveAsset(media, staticFile)}
+            style={{ ...fill, objectFit: "cover" }}
+          />
         )
       ) : null}
 

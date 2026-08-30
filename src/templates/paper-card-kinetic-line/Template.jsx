@@ -342,12 +342,12 @@ export const Template = ({
             isVideoSource(media) ? (
               <Video
                 src={resolveSrc(media)}
+                objectFit="cover"
                 style={{
                   position: "absolute",
                   inset: 0,
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
                 }}
               />
             ) : (

@@ -247,6 +247,7 @@ const StaticText = ({
  * ------------------------------------------------------------------ */
 // اكتشاف الفيديو مشترك في lib/duration ليتعامل مع blob URL بلا امتداد
 const CardMedia = ({
+  radiusPx,
   media,
   placeholderText,
   placeholderColor,
@@ -273,12 +274,16 @@ const CardMedia = ({
   const fill = {
     width: "100%",
     height: "100%",
-    objectFit: "cover",
+    // نصف القطر على المقطع نفسه لا على البطاقة وحدها: كروم لا يقصّ الطبقات
+    // المركّبة (canvas الفيديو) عند الزوايا المدوّرة لأبٍ فيه overflow:hidden
+    // ما لم يكن للأب سياق تركيب خاص، فكان الفيديو يخرج بزوايا حادّة داخل
+    // بطاقة مدوّرة.
+    borderRadius: radiusPx,
   };
   if (isVideoSource(media)) {
-    return <Video src={src} style={fill} />;
+    return <Video src={src} objectFit="cover" style={fill} />;
   }
-  return <Img src={src} style={fill} />;
+  return <Img src={src} style={{ ...fill, objectFit: "cover" }} />;
 };
 /* ------------------------------------------------------------------ *
  * المكوّن الرئيسي
@@ -382,6 +387,7 @@ export const Template = ({
             }}
           >
             <CardMedia
+              radiusPx={width * cardRadiusRatio}
               media={media}
               placeholderText={placeholderText}
               placeholderColor={placeholderColor}

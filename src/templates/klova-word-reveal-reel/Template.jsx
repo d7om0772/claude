@@ -212,10 +212,12 @@ const MediaCard = ({
     );
   }
 
+  // ملاحظة: <Video> من @remotion/media يتجاهل objectFit داخل style ويطبّق
+  // contain افتراضاً، فيخرج المقطع محاطاً بأشرطة بدل أن يملأ الإطار. القيمة
+  // تُمرَّر خاصيةً مستقلة.
   const fillStyle = {
     width: "100%",
     height: "100%",
-    objectFit: "cover",
     // نصف القطر على المقطع نفسه لا على الحاوية وحدها: الرندر داخل المتصفح
     // يعيد رسم الصفحة على canvas ويقصّ عند مستطيل الحاوية لا عند زواياها
     // المدوّرة، فكان المقطع يخرج بزوايا حادّة بينما البطاقة مدوّرة.
@@ -229,10 +231,14 @@ const MediaCard = ({
           src={resolveAsset(media.src, staticFile)}
           trimBefore={Math.round((media.startFromMs / 1000) * fps)}
           muted={media.muted}
+          objectFit="cover"
           style={fillStyle}
         />
       ) : (
-        <Img src={resolveAsset(media.src, staticFile)} style={fillStyle} />
+        <Img
+          src={resolveAsset(media.src, staticFile)}
+          style={{ ...fillStyle, objectFit: "cover" }}
+        />
       )}
     </div>
   );
