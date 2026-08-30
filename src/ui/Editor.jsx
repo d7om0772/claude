@@ -3,7 +3,11 @@ import { Player } from "@remotion/player";
 import { registerBlob, unregisterBlob } from "./blob-source.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
-import { cuesFromSrt, srtGranularity } from "./form/srt-cues.js";
+import {
+  MAX_WORDS_PER_CUE,
+  cuesFromSrt,
+  srtGranularity,
+} from "./form/srt-cues.js";
 import { FieldControl } from "./form/Fields.jsx";
 import { Scenes } from "./form/Scenes.jsx";
 import { CanvasStage } from "./form/CanvasStage.jsx";
@@ -101,6 +105,51 @@ const TEXT_STYLES = [
   { value: "gradient", label: "تدرّج", hint: "تدرّج لوني على الكلمة النشطة" },
 ];
 
+const MEDIA_STYLES = [
+  { value: "plain", label: "بلا زخرفة", hint: "المقطع كما هو" },
+  { value: "shadow", label: "ظل", hint: "ظل ناعم يرفعه عن الخلفية" },
+  { value: "frame", label: "إطار", hint: "حدّ بلون الإبراز" },
+  { value: "polaroid", label: "بولارويد", hint: "هامش أبيض عريض وظل" },
+  { value: "tilt", label: "ميلان", hint: "ميلان خفيف كصورة ملقاة" },
+  {
+    value: "offset",
+    label: "بطاقة خلفه",
+    hint: "بطاقة ملوّنة مزاحة خلف المقطع",
+  },
+  { value: "circle", label: "دائرة", hint: "يُقصّ في دائرة" },
+  { value: "zoom", label: "تكبير بطيء", hint: "زحف تكبير عبر اللقطة" },
+];
+
+const REVEAL_MODES = [
+  { value: "word", label: "كلمة كلمة", hint: "كل كلمة تظهر في وقتها" },
+  {
+    value: "cue",
+    label: "جملة كاملة",
+    hint: "كلمات المقطع تظهر معاً، فتتحكم بتوقيت كل جملة وحدها",
+  },
+];
+
+/** صفّ أزرار اختيار — بديل القائمة المنسدلة حين تكون الخيارات قليلة ومرئية. */
+const ChipRow = ({ label, hint, options, value, onPick }) => (
+  <div className="field">
+    <label>{label}</label>
+    <div className="style-picker">
+      {options.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          title={option.hint}
+          className={`style-chip${value === option.value ? " active" : ""}`}
+          onClick={() => onPick(option.value)}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+    {hint ? <p className="field-hint">{hint}</p> : null}
+  </div>
+);
+
 /** المسرح يلفّ المعاينة في قوالب الاستوديو فقط، وإلا مرّ الأبناء كما هم. */
 const StageWrap = ({ studio, props, set, meta, children }) =>
   studio ? (
@@ -117,6 +166,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const [picked, setPicked] = useState({});
   const [srtName, setSrtName] = useState(null);
   const [srtKind, setSrtKind] = useState(null);
+  const [srtText, setSrtText] = useState(null);
   const [audioSeconds, setAudioSeconds] = useState(null);
   const [duration, setDuration] = useState(
     template.meta.defaultDurationInFrames,
@@ -193,24 +243,53 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     [captionField],
   );
 
+  // «جملة كاملة» تعرض كلمات المقطع معاً، فلا معنى لتقطيعه إلى ثلاثات
+  const cueOptions = useMemo(
+    () => ({
+      maxWords:
+        props.revealMode === "cue"
+          ? Number.POSITIVE_INFINITY
+          : MAX_WORDS_PER_CUE,
+    }),
+    [props.revealMode],
+  );
+
   const onSrt = useCallback(
     async (file) => {
       if (!file) {
         setSrtName(null);
         setSrtKind(null);
+        setSrtText(null);
         set("captions", []);
         return;
       }
       const text = await file.text();
+      setSrtText(text);
       // القوالب التي توقّت كل كلمة تحتاج تجميع ملفات مستوى الكلمة في مقاطع؛
       // غيرها يأخذ المقاطع كما هي في الملف.
-      const captions = wordTimed ? cuesFromSrt(text) : srtToCaptions(text);
+      const captions = wordTimed
+        ? cuesFromSrt(text, cueOptions)
+        : srtToCaptions(text);
       setSrtKind(srtGranularity(text));
       setSrtName(`${file.name} — ${captions.length} مقاطع`);
       set("captions", captions);
     },
-    [set, wordTimed],
+    [set, wordTimed, cueOptions],
   );
+
+  /**
+   * إعادة الاشتقاق عند تبديل طريقة الكشف.
+   *
+   * سقف الكلمات جزء من الطريقة لا من الملف: «كلمة كلمة» تريد مقاطع قصيرة،
+   * و«جملة كاملة» تريد الجملة كما هي. بلا هذا يعتمد الناتج على ترتيب النقر —
+   * استورد ثم بدّل، أو بدّل ثم استورد — وهو فخّ صامت.
+   */
+  useEffect(() => {
+    if (srtText === null || !wordTimed) return;
+    set("captions", cuesFromSrt(srtText, cueOptions));
+    // الاشتقاق يتبع الملف والطريقة فقط
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srtText, cueOptions.maxWords, wordTimed]);
   // المدة تُحسب بنفس الدالة التي يستعملها الرندر، فالمعاينة تطابق المخرج.
   useEffect(() => {
     let cancelled = false;
@@ -366,26 +445,30 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
               </summary>
               <div className="body">
                 {studio && groupName === "النصوص" ? (
-                  <div className="field">
-                    <label>ستايل كشف الكلمات</label>
-                    <div className="style-picker">
-                      {TEXT_STYLES.map((style) => (
-                        <button
-                          key={style.value}
-                          type="button"
-                          title={style.hint}
-                          className={`style-chip${props.textStyle === style.value ? " active" : ""}`}
-                          onClick={() => set("textStyle", style.value)}
-                        >
-                          {style.label}
-                        </button>
-                      ))}
-                    </div>
-                    <p className="field-hint">
-                      حرّك المقطع والنص بالماوس فوق المعاينة، واسحب مقبض الزاوية
-                      للحجم و«A» لحجم الخط.
-                    </p>
-                  </div>
+                  <>
+                    <ChipRow
+                      label="ستايل كشف الكلمات"
+                      options={TEXT_STYLES}
+                      value={props.textStyle}
+                      onPick={(v) => set("textStyle", v)}
+                    />
+                    <ChipRow
+                      label="طريقة الكشف"
+                      hint="حرّك المقطع والنص بالماوس فوق المعاينة، واسحب مقبض الزاوية للحجم و«A» لحجم الخط."
+                      options={REVEAL_MODES}
+                      value={props.revealMode}
+                      onPick={(v) => set("revealMode", v)}
+                    />
+                  </>
+                ) : null}
+
+                {studio && groupName === "الوسائط والشعار" ? (
+                  <ChipRow
+                    label="ستايل المقطع"
+                    options={MEDIA_STYLES}
+                    value={props.mediaStyle}
+                    onPick={(v) => set("mediaStyle", v)}
+                  />
                 ) : null}
 
                 {groupName === SCENES_GROUP ? (

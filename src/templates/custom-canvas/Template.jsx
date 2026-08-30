@@ -230,6 +230,7 @@ const KineticLine = ({ words, activeIndex, fontSize, colors, enterFrames }) => {
 const TextBlock = ({
   words,
   style,
+  revealMode,
   fontSize,
   widthPx,
   colors,
@@ -238,12 +239,21 @@ const TextBlock = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const currentMs = (frame / fps) * 1000;
-  const activeIndex = activeIndexOf(words, currentMs);
+  // في وضع الجملة تظهر كلمات المقطع كلها مع أول كلمة، فيكفي توقيت واحد
+  // للجملة — وهو ما يجعل تحرير التوقيت لكل جملة على حدة ممكناً أصلاً.
+  const wholeCue = revealMode === "cue";
+  const activeIndex = wholeCue
+    ? words.length - 1
+    : activeIndexOf(words, currentMs);
   if (activeIndex < 0) return null;
+  const isActive = (i) => (wholeCue ? true : i === activeIndex);
+  const cueWords = wholeCue
+    ? words.map((w) => ({ ...w, startMs: words[0].startMs }))
+    : words;
 
   if (style === "oneWord") {
     // كلمة واحدة كبيرة في المنتصف: أقصى تركيز، وأنسب للجُمل القصيرة
-    const word = words[activeIndex];
+    const word = cueWords[activeIndex];
     return (
       <div
         style={{
@@ -283,12 +293,12 @@ const TextBlock = ({
           alignItems: "center",
         }}
       >
-        {words.map((word, i) => (
+        {cueWords.map((word, i) => (
           <Word
             key={`${i}-${word.startMs}`}
             word={word}
             revealed={i <= activeIndex}
-            active={i === activeIndex}
+            active={isActive(i)}
             style="slide"
             enterFrames={enterFrames}
             colors={colors}
@@ -309,7 +319,7 @@ const TextBlock = ({
         }}
       >
         <KineticLine
-          words={words}
+          words={cueWords}
           activeIndex={activeIndex}
           fontSize={fontSize}
           colors={colors}
@@ -336,12 +346,12 @@ const TextBlock = ({
         textAlign: "center",
       }}
     >
-      {words.map((word, i) => (
+      {cueWords.map((word, i) => (
         <Word
           key={`${i}-${word.startMs}`}
           word={word}
           revealed={i <= activeIndex}
-          active={i === activeIndex}
+          active={isActive(i)}
           style={style}
           enterFrames={enterFrames}
           colors={colors}
@@ -355,6 +365,28 @@ const TextBlock = ({
  * 3) المقطع
  * ========================================================================== */
 
+/**
+ * ستايلات المقطع.
+ *
+ * كلها من خصائص يرسمها الرندر داخل المتصفح: transform وborder وborder-radius
+ * وbox-shadow الأساسي. تجنّبنا filter وclip-path لأنهما يُسقطان هناك بصمت،
+ * فيظهر الستايل في المعاينة ويغيب عن الفيديو.
+ */
+const MEDIA_STYLES = {
+  plain: {},
+  shadow: { shadow: "0 0.05em 0.12em rgba(20,16,12,0.38)" },
+  frame: { border: 0.02, pad: 0 },
+  // بولارويد: هامش أبيض وحده — الإطار الملوّن ستايل آخر (frame)
+  polaroid: {
+    pad: 0.055,
+    shadow: "0 0.04em 0.1em rgba(20,16,12,0.3)",
+  },
+  tilt: { rotate: -3, shadow: "0 0.04em 0.1em rgba(20,16,12,0.34)" },
+  offset: { offsetCard: 0.035 },
+  circle: { circle: true },
+  zoom: { zoom: true },
+};
+
 const MediaLayer = ({
   src,
   aspect,
@@ -363,34 +395,92 @@ const MediaLayer = ({
   scale,
   radius,
   muted,
+  style,
+  accentColor,
   width,
   height,
 }) => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const preset = MEDIA_STYLES[style] ?? MEDIA_STYLES.plain;
+
   const boxWidth = width * scale;
-  // بلا نسبة مقيسة نفترض عمودي 9:16 — أقرب ما يكون لمحتوى الشورتس
-  const boxHeight = boxWidth / (aspect ?? 9 / 16);
-  const box = {
+  // الدائرة تفرض صندوقاً مربّعاً: نصف القطر وحده يعطي شكل حبّة دواء لا دائرة
+  // حين تختلف النسبة، والمقطع يُقصّ من أطرافه بـ cover كما هو متوقّع.
+  const boxHeight = preset.circle ? boxWidth : boxWidth / (aspect ?? 9 / 16);
+  const unit = boxWidth; // كل أرقام الستايل نِسب من عرض المقطع، فتصمد بأي مقاس
+  const cornerRadius = preset.circle ? boxWidth / 2 : boxWidth * radius;
+  const padding = (preset.pad ?? 0) * unit;
+  const borderWidth = (preset.border ?? 0) * unit;
+
+  // تكبير بطيء (Ken Burns): يعطي حياة للصورة الثابتة ولقطة بلا حركة
+  const zoom = preset.zoom
+    ? interpolate(frame, [0, Math.max(1, durationInFrames)], [1, 1.12], {
+        extrapolateRight: "clamp",
+      })
+    : 1;
+
+  const wrapper = {
     position: "absolute",
-    left: width * centerX - boxWidth / 2,
-    top: height * centerY - boxHeight / 2,
-    width: boxWidth,
-    height: boxHeight,
-    borderRadius: boxWidth * radius,
+    left: width * centerX - boxWidth / 2 - padding - borderWidth,
+    top: height * centerY - boxHeight / 2 - padding - borderWidth,
+    width: boxWidth + (padding + borderWidth) * 2,
+    height: boxHeight + (padding + borderWidth) * 2,
+    padding: padding + borderWidth,
+    boxSizing: "border-box",
+    borderRadius: cornerRadius + padding + borderWidth,
+    transform: preset.rotate ? `rotate(${preset.rotate}deg)` : undefined,
+    backgroundColor:
+      preset.pad !== undefined && preset.pad > 0 ? "#FFFFFF" : undefined,
+    border:
+      borderWidth > 0 ? `${borderWidth}px solid ${accentColor}` : undefined,
+    boxShadow: preset.shadow
+      ? preset.shadow.replace(
+          /([\d.]+)em/gu,
+          (_m, n) => `${Number(n) * unit}px`,
+        )
+      : undefined,
+  };
+
+  const clip = {
+    width: "100%",
+    height: "100%",
+    borderRadius: cornerRadius,
     overflow: "hidden",
   };
   const fill = {
     width: "100%",
     height: "100%",
-    borderRadius: boxWidth * radius,
+    borderRadius: cornerRadius,
+    transform: zoom === 1 ? undefined : `scale(${zoom})`,
   };
+
   return (
-    <div style={box}>
-      {isVideoSource(src) ? (
-        <Video src={src} muted={muted} objectFit="cover" style={fill} />
-      ) : (
-        <Img src={src} style={{ ...fill, objectFit: "cover" }} />
-      )}
-    </div>
+    <>
+      {/* بطاقة مزاحة خلف المقطع — عمق بلا ظل */}
+      {preset.offsetCard ? (
+        <div
+          style={{
+            position: "absolute",
+            left: wrapper.left + unit * preset.offsetCard,
+            top: wrapper.top + unit * preset.offsetCard,
+            width: wrapper.width,
+            height: wrapper.height,
+            borderRadius: wrapper.borderRadius,
+            backgroundColor: accentColor,
+          }}
+        />
+      ) : null}
+      <div style={wrapper}>
+        <div style={clip}>
+          {isVideoSource(src) ? (
+            <Video src={src} muted={muted} objectFit="cover" style={fill} />
+          ) : (
+            <Img src={src} style={{ ...fill, objectFit: "cover" }} />
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -407,7 +497,9 @@ export const Template = ({
   mediaScale,
   mediaRadiusRatio,
   mediaMuted,
+  mediaStyle,
   textStyle,
+  revealMode,
   captions,
   headline,
   textCenterXRatio,
@@ -452,8 +544,9 @@ export const Template = ({
 
   const clickOnsets = useMemo(() => {
     if (!clickSfx) return [];
+    if (revealMode === "cue") return cues.map((cue) => cue.startMs);
     return cues.flatMap((cue) => wordsOf(cue).map((w) => w.startMs));
-  }, [cues, clickSfx]);
+  }, [cues, clickSfx, revealMode]);
 
   const fontSize = width * fontSizeRatio;
   const textWidth = width * textWidthRatio;
@@ -469,6 +562,8 @@ export const Template = ({
           scale={mediaScale}
           radius={mediaRadiusRatio}
           muted={mediaMuted}
+          style={mediaStyle}
+          accentColor={accentColor}
           width={width}
           height={height}
         />
@@ -488,6 +583,7 @@ export const Template = ({
         <TextBlock
           words={words}
           style={textStyle}
+          revealMode={revealMode}
           fontSize={fontSize}
           widthPx={textWidth}
           enterFrames={wordEnterFrames}

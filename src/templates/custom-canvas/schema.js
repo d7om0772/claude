@@ -38,6 +38,27 @@ export const textStyleSchema = z
     "ستايل كشف الكلمات: تراكم | قفزة | سطر متحرك | شريط | تظليل | تسطير | انزلاق | تراص عمودي | كلمة واحدة | تدرّج لوني",
   );
 
+export const revealModeSchema = z
+  .enum(["word", "cue"])
+  .describe(
+    "طريقة الكشف: word كلمة بعد كلمة داخل المقطع | cue الجملة كاملة تظهر دفعة واحدة، فتتحكم بتوقيت كل جملة وحدها",
+  );
+
+export const mediaStyleSchema = z
+  .enum([
+    "plain",
+    "shadow",
+    "frame",
+    "polaroid",
+    "tilt",
+    "offset",
+    "circle",
+    "zoom",
+  ])
+  .describe(
+    "ستايل المقطع: بلا زخرفة | ظل | إطار ملوّن | بولارويد | ميلان | بطاقة مزاحة خلفه | دائرة | تكبير بطيء",
+  );
+
 export const templateSchema = z.object({
   /* ---------------------------------------------------------- اللوحة */
   backgroundColor: zColor().describe("لون خلفية الإطار"),
@@ -74,9 +95,11 @@ export const templateSchema = z.object({
     .max(0.5)
     .describe("نصف قطر زوايا المقطع كنسبة من عرضه"),
   mediaMuted: z.boolean().describe("كتم صوت المقطع"),
+  mediaStyle: mediaStyleSchema,
 
   /* ------------------------------------------------------------ النص */
   textStyle: textStyleSchema,
+  revealMode: revealModeSchema,
   captions: z.array(captionCueSchema).describe("مقاطع الكلمات — عادةً من SRT"),
   headline: z
     .string()
@@ -136,8 +159,10 @@ export const defaultProps = {
   mediaScale: 0.8,
   mediaRadiusRatio: 0.035,
   mediaMuted: true,
+  mediaStyle: "shadow",
 
   textStyle: "karaoke",
+  revealMode: "word",
   captions: [],
   headline: "اكتب نصك هنا ثم حرّكه بالماوس",
   textCenterXRatio: 0.5,
