@@ -5,48 +5,68 @@ import { assetUrl } from "../lib/asset-url.js";
  * شاشة الاختيار: عيّنة فيديو مصغّرة لكل قالب تعمل عند المرور بالمؤشّر،
  * فيرى المستخدم القالب متحرّكاً قبل أن يختاره.
  */
+/**
+ * صورة ثابتة تحت الفيديو، والفيديو لا يعمل إلا عند المرور بالمؤشّر.
+ *
+ * الاعتماد على الفيديو وحده يجعل البطاقة فارغة تماماً على أي جهاز يعجز عن فكّ
+ * ترميزه — وهو ما حصل فعلاً — رغم أن الملف موجود وسليم. الصورة تكفل أن يرى
+ * المستخدم القالب دائماً، والفيديو زيادة عند توفّره.
+ */
 const Thumb = ({ id }) => {
   const ref = useRef(null);
-  const [failed, setFailed] = React.useState(false);
-  if (failed) {
-    return (
-      <div className="hint">
-        لا توجد عيّنة بعد
-        <br />
-        <code style={{ fontSize: 11 }}>npm run previews</code>
-      </div>
-    );
-  }
+  const [videoFailed, setVideoFailed] = React.useState(false);
+  const [posterFailed, setPosterFailed] = React.useState(false);
+  const [playing, setPlaying] = React.useState(false);
   return (
-    <video
-      ref={ref}
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      onError={(e) => {
-        // MEDIA_ERR_ABORTED‏ (1) ليس فقداناً للملف: يقع عند إلغاء الطلب —
-        // مثلاً حين يعيد StrictMode تركيب العنصر في التطوير. لو عاملناه
-        // كفقدان لاختفت كل العيّنات رغم وجودها على الخادم.
-        const code = e.currentTarget.error?.code;
-        if (code !== undefined && code !== MediaError.MEDIA_ERR_ABORTED) {
-          setFailed(true);
-        }
-      }}
-      onMouseEnter={() => void ref.current?.play()}
-      onMouseLeave={() => {
-        const v = ref.current;
-        if (v) {
-          v.pause();
-          v.currentTime = 0;
-        }
-      }}
-    >
-      {/* الصيغتان معاً: H.264 ترميز احتكاري تفتقده بعض بُنى Chromium على
+    <>
+      <img
+        className="poster"
+        src={assetUrl(`/previews/${id}.jpg`)}
+        alt=""
+        onError={() => setPosterFailed(true)}
+      />
+      {videoFailed ? null : (
+        <video
+          ref={ref}
+          muted
+          loop
+          playsInline
+          preload="none"
+          style={{ opacity: playing ? 1 : 0 }}
+          onError={(e) => {
+            // MEDIA_ERR_ABORTED‏ (1) ليس فقداناً للملف: يقع عند إلغاء الطلب —
+            // مثلاً حين يعيد StrictMode تركيب العنصر في التطوير. لو عاملناه
+            // كفقدان لاختفت كل العيّنات رغم وجودها.
+            const code = e.currentTarget.error?.code;
+            if (code !== undefined && code !== MediaError.MEDIA_ERR_ABORTED) {
+              setVideoFailed(true);
+            }
+          }}
+          onPlaying={() => setPlaying(true)}
+          onMouseEnter={() => void ref.current?.play()?.catch(() => undefined)}
+          onMouseLeave={() => {
+            const v = ref.current;
+            if (v) {
+              v.pause();
+              v.currentTime = 0;
+              setPlaying(false);
+            }
+          }}
+        >
+          {/* الصيغتان معاً: H.264 ترميز احتكاري تفتقده بعض بُنى Chromium على
             لينكس، وwebm غير مدعوم على سفاري الأقدم. */}
-      <source src={assetUrl(`/previews/${id}.webm`)} type="video/webm" />
-      <source src={assetUrl(`/previews/${id}.mp4`)} type="video/mp4" />
-    </video>
+          <source src={assetUrl(`/previews/${id}.webm`)} type="video/webm" />
+          <source src={assetUrl(`/previews/${id}.mp4`)} type="video/mp4" />
+        </video>
+      )}
+      {posterFailed && videoFailed ? (
+        <div className="hint">
+          لا توجد عيّنة بعد
+          <br />
+          <code style={{ fontSize: 11 }}>npm run previews</code>
+        </div>
+      ) : null}
+    </>
   );
 };
 /**

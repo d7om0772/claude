@@ -94,7 +94,15 @@ const classify = (name, node) => {
     }
     case "array": {
       const element = def.element;
-      if (isCaptionArray(element)) return { kind: "captions" };
+      // حقول العنصر تُشتقّ حتى للكابشن: محرّر اللقطات يقرأ منها أنماط العرض
+      // المتاحة، وبدونها يكتب نمطاً فارغاً يسقط القالب عند الرسم.
+      if (isCaptionArray(element)) {
+        const captionShape = defOf(element).shape;
+        return {
+          kind: "captions",
+          ...(captionShape ? { itemFields: fieldsOfShape(captionShape) } : {}),
+        };
+      }
       if (defOf(element).type === "number") return { kind: "numberList" };
       // مصفوفة كائنات: نشتقّ حقول العنصر بنفس المنطق تكرارياً بدل معالجة
       // كل قالب كحالة خاصة.

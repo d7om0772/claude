@@ -156,11 +156,18 @@ textarea {
   background: #0c0a09;
   overflow: hidden;
 }
-.card .thumb video {
+.card .thumb video,
+.card .thumb img.poster {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+/* الفيديو فوق الصورة ولا يظهر إلا وهو يعمل، فلا وميض إطار أسود قبل التشغيل */
+.card .thumb video {
+  transition: opacity 0.12s;
 }
 .card .thumb .badge {
   position: absolute;
@@ -696,4 +703,97 @@ textarea {
   color: var(--muted);
   margin: 0 0 18px;
   font-size: 14px;
+}
+
+/* ---------- محرّر اللقطات ---------- */
+.scenes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.scene {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--panel-2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.scene-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.scene-head h4 {
+  margin: 0;
+  font-size: 14px;
+  font-family: "Thmanyah Serif Display", "Segoe UI", "Noto Naskh Arabic", serif;
+  font-weight: 500;
+}
+.scene-head .icon-btn {
+  margin-inline-start: auto;
+}
+.scene-range,
+.cue-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.scene-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn.tiny {
+  padding: 4px 11px;
+  font-size: 12px;
+  align-self: flex-start;
+}
+.ms-input {
+  width: 78px;
+  padding: 3px 6px;
+  font-size: 12px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.cue {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cue-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cue-head select {
+  flex: 1;
+  min-width: 0;
+}
+.cue-head .icon-btn {
+  margin-inline-start: auto;
+}
+.word-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.word-row input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+.word-index {
+  color: var(--muted);
+  font-size: 11px;
+  width: 16px;
+  text-align: center;
 }

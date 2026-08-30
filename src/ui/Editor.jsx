@@ -4,6 +4,7 @@ import { registerBlob, unregisterBlob } from "./blob-source.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
 import { FieldControl } from "./form/Fields.jsx";
+import { Scenes } from "./form/Scenes.jsx";
 import { setIn } from "./form/paths.js";
 import { readAudioDuration, runChecks, wantsWordLevel } from "./sync.js";
 import { submitRender } from "./render.js";
@@ -63,7 +64,9 @@ const groupOf = (field) => {
   }
   return "التخطيط والحركة";
 };
+const SCENES_GROUP = "اللقطات";
 const GROUP_ORDER = [
+  SCENES_GROUP,
   "النصوص",
   "الألوان",
   "الصوت والتزامن",
@@ -237,15 +240,53 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     () => runChecks(template.meta, captions, audioSeconds),
     [template.meta, captions, audioSeconds],
   );
+  /**
+   * قالب مشهدي: عنده مصفوفة مشاهد ومصفوفة كابشن معاً. عندها يُعرض محرّر
+   * اللقطات بدل الحقلين الخامين، لأن عرضهما منفصلين يجبر المستخدم على مطابقة
+   * توقيتات الكابشن بالمشاهد يدوياً.
+   */
+  const sceneField = useMemo(
+    () =>
+      fields.find(
+        (f) =>
+          f.name === "scenes" &&
+          f.kind === "objectList" &&
+          (f.itemFields ?? []).some((s) => s.name === "media"),
+      ),
+    [fields],
+  );
+  const captionField = useMemo(
+    () => fields.find((f) => f.kind === "captions"),
+    [fields],
+  );
+  const sceneBased = Boolean(sceneField && captionField);
+  const sceneMediaSrc = useMemo(
+    () =>
+      (sceneField?.itemFields ?? [])
+        .find((f) => f.name === "media")
+        ?.itemFields?.find((f) => f.name === "src"),
+    [sceneField],
+  );
+  const captionStyles = useMemo(() => {
+    const styleField = (captionField?.itemFields ?? []).find(
+      (f) => f.name === "style",
+    );
+    return styleField?.options ?? [];
+  }, [captionField]);
+
   const grouped = useMemo(() => {
     const map = new Map();
     for (const f of fields) {
       if (f.kind === "unsupported") continue;
+      if (sceneBased && (f.name === "scenes" || f.kind === "captions")) {
+        map.set(SCENES_GROUP, [...(map.get(SCENES_GROUP) ?? []), f]);
+        continue;
+      }
       const g = groupOf(f);
       map.set(g, [...(map.get(g) ?? []), f]);
     }
     return map;
-  }, [fields]);
+  }, [fields, sceneBased]);
   return (
     <div className="editor">
       <aside className="controls">
@@ -259,6 +300,19 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                 <span className="count">({groupFields.length})</span>
               </summary>
               <div className="body">
+                {groupName === SCENES_GROUP ? (
+                  <Scenes
+                    scenes={props.scenes ?? []}
+                    captions={captions}
+                    styles={captionStyles}
+                    setScenes={(v) => set("scenes", v)}
+                    setCaptions={(v) => set("captions", v)}
+                    accept={sceneMediaSrc?.accept ?? "video/*"}
+                    pickedAt={pickedAt}
+                    pickAsset={pickAsset}
+                  />
+                ) : null}
+
                 {groupName === "النصوص" && textOverriddenByCaptions ? (
                   <div className="note warn">
                     <b>هذه الحقول لا تظهر الآن.</b> الكابشن ممتلئ (
@@ -319,16 +373,18 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                   </>
                 ) : null}
 
-                {groupFields.map((field) => (
-                  <FieldControl
-                    key={field.name}
-                    field={field}
-                    value={props[field.name]}
-                    set={set}
-                    pickedAt={pickedAt}
-                    pickAsset={pickAsset}
-                  />
-                ))}
+                {(groupName === SCENES_GROUP ? [] : groupFields).map(
+                  (field) => (
+                    <FieldControl
+                      key={field.name}
+                      field={field}
+                      value={props[field.name]}
+                      set={set}
+                      pickedAt={pickedAt}
+                      pickAsset={pickAsset}
+                    />
+                  ),
+                )}
               </div>
             </details>
           );
