@@ -89,6 +89,75 @@ const Word = ({ word, revealed, active, style, enterFrames, colors }) => {
     );
   }
 
+  if (style === "underline") {
+    return (
+      <span
+        style={{
+          ...common,
+          color: active ? colors.font : colors.muted,
+          borderBottom: active ? `0.08em solid ${colors.accent}` : "none",
+          paddingBottom: "0.04em",
+          transform: `translateY(${rise * 0.4}px)`,
+        }}
+      >
+        {word.text}
+      </span>
+    );
+  }
+
+  if (style === "slide") {
+    // القناع يقصّ الكلمة وهي صاعدة، فتبدو كأنها تخرج من تحت السطر
+    return (
+      <span style={{ display: "inline-block", overflow: "hidden" }}>
+        <span
+          style={{
+            ...common,
+            transform: `translateY(${revealed ? (1 - scale) * 100 : 100}%)`,
+          }}
+        >
+          {word.text}
+        </span>
+      </span>
+    );
+  }
+
+  if (style === "highlight") {
+    // الكلمات القادمة ظاهرة أصلاً بلون خافت — كاريوكي الأغاني الكلاسيكي
+    return (
+      <span
+        style={{
+          display: "inline-block",
+          opacity: revealed ? 1 : 0.28,
+          color: active ? colors.accent : revealed ? colors.font : colors.muted,
+          fontWeight: active ? FONT_WEIGHT_BLACK : FONT_WEIGHT_MEDIUM,
+        }}
+      >
+        {word.text}
+      </span>
+    );
+  }
+
+  if (style === "gradient") {
+    return (
+      <span
+        style={{
+          ...common,
+          ...(active
+            ? {
+                backgroundImage: `linear-gradient(180deg, ${colors.font} 0%, ${colors.accent} 100%)`,
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }
+            : {}),
+          transform: `translateY(${rise * 0.5}px)`,
+        }}
+      >
+        {word.text}
+      </span>
+    );
+  }
+
   if (style === "boxed") {
     return (
       <span
@@ -171,6 +240,63 @@ const TextBlock = ({
   const currentMs = (frame / fps) * 1000;
   const activeIndex = activeIndexOf(words, currentMs);
   if (activeIndex < 0) return null;
+
+  if (style === "oneWord") {
+    // كلمة واحدة كبيرة في المنتصف: أقصى تركيز، وأنسب للجُمل القصيرة
+    const word = words[activeIndex];
+    return (
+      <div
+        style={{
+          width: widthPx,
+          direction: "rtl",
+          fontFamily: FONT_STACK,
+          fontSize: fontSize * 1.5,
+          fontWeight: FONT_WEIGHT_BLACK,
+          color: colors.font,
+          textAlign: "center",
+        }}
+      >
+        <Word
+          word={word}
+          revealed
+          active
+          style="pop"
+          enterFrames={enterFrames}
+          colors={colors}
+        />
+      </div>
+    );
+  }
+
+  if (style === "stack") {
+    // كل كلمة سطر مستقل تتراكم من الأعلى
+    return (
+      <div
+        style={{
+          width: widthPx,
+          direction: "rtl",
+          fontFamily: FONT_STACK,
+          fontSize,
+          lineHeight: 1.18,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {words.map((word, i) => (
+          <Word
+            key={`${i}-${word.startMs}`}
+            word={word}
+            revealed={i <= activeIndex}
+            active={i === activeIndex}
+            style="slide"
+            enterFrames={enterFrames}
+            colors={colors}
+          />
+        ))}
+      </div>
+    );
+  }
 
   if (style === "kinetic") {
     return (

@@ -22,9 +22,20 @@ export const captionCueSchema = z.object({
 });
 
 export const textStyleSchema = z
-  .enum(["karaoke", "pop", "kinetic", "boxed"])
+  .enum([
+    "karaoke",
+    "pop",
+    "kinetic",
+    "boxed",
+    "highlight",
+    "underline",
+    "slide",
+    "stack",
+    "oneWord",
+    "gradient",
+  ])
   .describe(
-    "ستايل النص: karaoke تراكم بكلمة نشطة | pop كل كلمة تقفز في مكانها | kinetic سطر واحد ضخم | boxed كلمات على شريط",
+    "ستايل كشف الكلمات: تراكم | قفزة | سطر متحرك | شريط | تظليل | تسطير | انزلاق | تراص عمودي | كلمة واحدة | تدرّج لوني",
   );
 
 export const templateSchema = z.object({
