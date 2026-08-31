@@ -505,6 +505,8 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                       perLine={wordsPerCue}
                       setPerLine={setWordsPerCue}
                       perWordTiming={props.revealMode === "word"}
+                      styles={TEXT_STYLES}
+                      defaultStyle={props.textStyle}
                     />
                   </>
                 ) : null}

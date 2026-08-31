@@ -37,6 +37,9 @@ export const reflow = (words, perLine, lastEndMs) => {
       startMs: Math.round(start),
       endMs: Math.round(end),
       wordStartsMs: line.map((w) => Math.round(w.startMs)),
+      // ستايل السطر ستايل أوّل كلماته: بعد إعادة التوزيع يبقى لكل سطر ستايل
+      // واحد محدَّد بدل خليط لا يمكن عرضه
+      style: line[0].style ?? null,
     };
   });
 };
@@ -60,6 +63,8 @@ export const WordLines = ({
   perLine,
   setPerLine,
   perWordTiming = true,
+  styles = [],
+  defaultStyle = null,
 }) => {
   const words = flattenWords(cues);
   const lastEndMs = cues.reduce((max, c) => Math.max(max, c.endMs), 0);
@@ -90,7 +95,11 @@ export const WordLines = ({
       ? (current.startMs + next.startMs) / 2
       : current.startMs + 400;
     const copy = words.slice();
-    copy.splice(index + 1, 0, { text: "كلمة", startMs });
+    copy.splice(index + 1, 0, {
+      text: "كلمة",
+      startMs,
+      style: current.style ?? null,
+    });
     commit(copy);
   };
 
@@ -133,7 +142,9 @@ export const WordLines = ({
             <button
               type="button"
               className="btn ghost tiny"
-              onClick={() => commit([{ text: "كلمة", startMs: 0 }])}
+              onClick={() =>
+                commit([{ text: "كلمة", startMs: 0, style: null }])
+              }
             >
               + كلمة
             </button>
@@ -146,6 +157,35 @@ export const WordLines = ({
               <span className="stage-label" style={{ position: "static" }}>
                 سطر {lineIndex + 1}
               </span>
+              {styles.length > 0 ? (
+                <select
+                  className="line-style"
+                  title="ستايل هذا السطر وحده"
+                  value={line.words[0].style ?? ""}
+                  onChange={(e) => {
+                    const value = e.target.value === "" ? null : e.target.value;
+                    commit(
+                      words.map((w, i) =>
+                        i >= line.start && i < line.start + perLine
+                          ? { ...w, style: value }
+                          : w,
+                      ),
+                    );
+                  }}
+                >
+                  <option value="">
+                    ستايل القالب
+                    {defaultStyle
+                      ? ` (${styles.find((s) => s.value === defaultStyle)?.label ?? defaultStyle})`
+                      : ""}
+                  </option>
+                  {styles.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              ) : null}
               {perWordTiming ? null : (
                 <span className="cue-range">
                   <MS

@@ -12,15 +12,7 @@ export const FPS = 30;
 export const WIDTH = 1080;
 export const HEIGHT = 1920;
 
-export const captionCueSchema = z.object({
-  text: z.string().describe("نص المقطع — يُقسَّم كلمات وتظهر كلمة كلمة"),
-  startMs: z.number().min(0).describe("لحظة ظهور أول كلمة بالملي ثانية"),
-  endMs: z.number().min(0).describe("لحظة اختفاء المقطع بالملي ثانية"),
-  wordStartsMs: z
-    .array(z.number().min(0))
-    .describe("توقيت ظهور كل كلمة. الفارغ يوزّع الكلمات بالتساوي"),
-});
-
+/* يُعرَّف قبل المقاطع لأن لكل سطر ستايله الخاص */
 export const textStyleSchema = z
   .enum([
     "karaoke",
@@ -37,6 +29,19 @@ export const textStyleSchema = z
   .describe(
     "ستايل كشف الكلمات: تراكم | قفزة | سطر متحرك | شريط | تظليل | تسطير | انزلاق | تراص عمودي | كلمة واحدة | تدرّج لوني",
   );
+
+export const captionCueSchema = z.object({
+  text: z.string().describe("نص المقطع — يُقسَّم كلمات وتظهر كلمة كلمة"),
+  startMs: z.number().min(0).describe("لحظة ظهور أول كلمة بالملي ثانية"),
+  endMs: z.number().min(0).describe("لحظة اختفاء المقطع بالملي ثانية"),
+  wordStartsMs: z
+    .array(z.number().min(0))
+    .describe("توقيت ظهور كل كلمة. الفارغ يوزّع الكلمات بالتساوي"),
+  style: textStyleSchema
+    .nullable()
+    .optional()
+    .describe("ستايل هذا السطر وحده. فارغ يعني ستايل القالب العام"),
+});
 
 export const revealModeSchema = z
   .enum(["word", "cue"])

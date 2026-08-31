@@ -910,3 +910,17 @@ textarea {
   border-radius: 8px;
   padding: 3px 0;
 }
+
+/* اختيار ستايل السطر داخل رأس صندوق الكلمات */
+.cue-head .line-style {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 190px;
+  width: auto;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}

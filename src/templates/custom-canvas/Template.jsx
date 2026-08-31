@@ -530,6 +530,7 @@ export const Template = ({
         startMs: 0,
         endMs: 400 + words.length * 400,
         wordStartsMs: words.map((_, i) => i * 400),
+        style: null,
       },
     ];
   }, [captions, headline]);
@@ -537,6 +538,9 @@ export const Template = ({
   const activeCue = cues.find(
     (cue) => currentMs >= cue.startMs && currentMs < cue.endMs,
   );
+  // ستايل السطر يغلب ستايل القالب: هكذا يخلط المستخدم تراكماً مع شريط في
+  // نفس المقطع. الفارغ يعني «اتبع العام»، لا ستايلاً بلا اسم.
+  const activeStyle = activeCue?.style ?? textStyle;
   const words = useMemo(
     () => (activeCue ? wordsOf(activeCue) : []),
     [activeCue],
@@ -582,7 +586,7 @@ export const Template = ({
       >
         <TextBlock
           words={words}
-          style={textStyle}
+          style={activeStyle}
           revealMode={revealMode}
           fontSize={fontSize}
           widthPx={textWidth}
