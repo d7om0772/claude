@@ -78,8 +78,10 @@ const groupOf = (field) => {
   return "التخطيط والحركة";
 };
 const SCENES_GROUP = "اللقطات";
+const WORDS_GROUP = "الكلمات";
 const GROUP_ORDER = [
   SCENES_GROUP,
+  WORDS_GROUP,
   "النصوص",
   "الألوان",
   "الصوت والتزامن",
@@ -433,6 +435,10 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
 
   const grouped = useMemo(() => {
     const map = new Map();
+    // مجموعة الكلمات في الاستوديو ليست حقلاً في الـ schema: محرّرها يبني
+    // مصفوفة المقاطع من كلمات مفردة، فتُفتح لها مجموعة صريحة بدل دفنها بين
+    // الحقول — وهناك ضاعت على المستخدم فعلاً.
+    if (studio) map.set(WORDS_GROUP, []);
     for (const f of fields) {
       if (f.kind === "unsupported") continue;
       if (sceneBased && (f.name === "scenes" || f.kind === "captions")) {
@@ -449,14 +455,60 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       <aside className="controls">
         {GROUP_ORDER.map((groupName, index) => {
           const groupFields = grouped.get(groupName);
-          if (!groupFields || groupFields.length === 0) return null;
+          // مجموعة الكلمات محرّرها مرسوم يدوياً لا من حقول الـ schema، فشرط
+          // «لا حقول ⇐ لا مجموعة» كان يحذفها بالكامل.
+          const ownRows = groupName === WORDS_GROUP ? captions.length : 0;
+          if (
+            !groupFields ||
+            (groupFields.length === 0 &&
+              ownRows === 0 &&
+              groupName !== WORDS_GROUP)
+          )
+            return null;
           return (
             <details className="group" key={groupName} open={index < 3}>
               <summary>
                 {groupName}{" "}
-                <span className="count">({groupFields.length})</span>
+                <span className="count">
+                  ({groupName === WORDS_GROUP ? ownRows : groupFields.length})
+                </span>
               </summary>
               <div className="body">
+                {groupName === WORDS_GROUP ? (
+                  <>
+                    <div className="field">
+                      <label>ملف الترجمة SRT</label>
+                      <div className="file-row">
+                        <label className="btn ghost" style={{ fontSize: 13 }}>
+                          اختر ملف SRT
+                          <input
+                            type="file"
+                            accept=".srt,.vtt,text/plain"
+                            style={{ display: "none" }}
+                            onChange={(e) =>
+                              void onSrt(e.target.files?.[0] ?? null)
+                            }
+                          />
+                        </label>
+                        {srtName ? (
+                          <span className="file-name">{srtName}</span>
+                        ) : (
+                          <span className="file-empty">
+                            لا شيء — أضف الكلمات يدوياً
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <WordLines
+                      cues={captions}
+                      setCues={(next) => set("captions", next)}
+                      perLine={wordsPerCue}
+                      setPerLine={setWordsPerCue}
+                      perWordTiming={props.revealMode === "word"}
+                    />
+                  </>
+                ) : null}
+
                 {studio && groupName === "النصوص" ? (
                   <>
                     <ChipRow
@@ -465,14 +517,6 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                       value={props.textStyle}
                       onPick={(v) => set("textStyle", v)}
                     />
-                    <WordLines
-                      cues={captions}
-                      setCues={(next) => set("captions", next)}
-                      perLine={wordsPerCue}
-                      setPerLine={setWordsPerCue}
-                      perWordTiming={props.revealMode === "word"}
-                    />
-
                     <ChipRow
                       label="طريقة الكشف"
                       hint="حرّك المقطع والنص بالماوس فوق المعاينة، واسحب مقبض الزاوية للحجم و«A» لحجم الخط."
@@ -525,29 +569,31 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
 
                 {groupName === "الصوت والتزامن" ? (
                   <>
-                    <div className="field">
-                      <label>
-                        ملف الترجمة SRT — منه تُشتقّ توقيتات الكلمات
-                      </label>
-                      <div className="file-row">
-                        <label className="btn ghost" style={{ fontSize: 13 }}>
-                          اختر ملف SRT
-                          <input
-                            type="file"
-                            accept=".srt,.vtt,text/plain"
-                            style={{ display: "none" }}
-                            onChange={(e) =>
-                              void onSrt(e.target.files?.[0] ?? null)
-                            }
-                          />
+                    {studio ? null : (
+                      <div className="field">
+                        <label>
+                          ملف الترجمة SRT — منه تُشتقّ توقيتات الكلمات
                         </label>
-                        {srtName ? (
-                          <span className="file-name">{srtName}</span>
-                        ) : (
-                          <span className="file-empty">لا شيء</span>
-                        )}
+                        <div className="file-row">
+                          <label className="btn ghost" style={{ fontSize: 13 }}>
+                            اختر ملف SRT
+                            <input
+                              type="file"
+                              accept=".srt,.vtt,text/plain"
+                              style={{ display: "none" }}
+                              onChange={(e) =>
+                                void onSrt(e.target.files?.[0] ?? null)
+                              }
+                            />
+                          </label>
+                          {srtName ? (
+                            <span className="file-name">{srtName}</span>
+                          ) : (
+                            <span className="file-empty">لا شيء</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div className="note">
                       هذا القالب يتوقع تقطيعاً على مستوى{" "}
                       <b>
