@@ -1,0 +1,31 @@
+{
+  "id": "echo-card-vertical",
+  "kind": "template",
+  "name": "Echo Card",
+  "nameAr": "كرت الصدى",
+  "description": "Vertical template on a warm cream canvas: a rounded card slides up from the bottom with an ease-out curve, then the headline prints inside it repeated several times in one flash. Supports a preceding media scene, SRT captions synced to a voiceover, and a click on every word.",
+  "descriptionAr": "قالب رأسي بخلفية كريمية وكرت بزوايا دائرية ينزلق من أسفل الشاشة بحركة ease-out هادئة، ثم يظهر النص الرئيسي مكرراً عدة مرات داخله بظهور خاطف يوحي بأنه انطبع على الكرت. يدعم مشهد وسائط يسبقه، وكابشن متزامن مع تعليق صوتي.",
+  "category": "social-vertical",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "defaultDurationInFrames": 49,
+  "tags": [
+    "arabic",
+    "rtl",
+    "vertical",
+    "9:16",
+    "reels",
+    "tiktok",
+    "shorts",
+    "kinetic-typography",
+    "echo-text",
+    "slide-in",
+    "captions",
+    "srt",
+    "voiceover",
+    "brand",
+    "minimal",
+    "warm-neutral"
+  ]
+}

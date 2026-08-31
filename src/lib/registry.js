@@ -53,6 +53,13 @@ import {
   calculateMetadata as customCanvasMetadata,
 } from "../templates/custom-canvas/schema.js";
 import customCanvasMeta from "../templates/custom-canvas/template.json";
+import { Template as EchoCardTemplate } from "../templates/echo-card-vertical/Template.jsx";
+import {
+  templateSchema as echoCardSchema,
+  defaultProps as echoCardDefaults,
+  calculateMetadata as echoCardMetadata,
+} from "../templates/echo-card-vertical/schema.js";
+import echoCardMeta from "../templates/echo-card-vertical/template.json";
 /**
  * كل قالب له props مختلفة تماماً، فالسجلّ غير متجانس بطبيعته ولا يمكن تمثيله
  * بنوع واحد دقيق. هذه الدالة تتحقق من اتساق القالب داخلياً — أن props المكوّن
@@ -102,6 +109,13 @@ export const templates = [
     component: KlovaReelTemplate,
     defaultProps: klovaReelDefaults,
     calculateMetadata: klovaReelMetadata,
+  }),
+  defineTemplate({
+    meta: echoCardMeta,
+    schema: echoCardSchema,
+    component: EchoCardTemplate,
+    defaultProps: echoCardDefaults,
+    calculateMetadata: echoCardMetadata,
   }),
   defineTemplate({
     meta: customCanvasMeta,
