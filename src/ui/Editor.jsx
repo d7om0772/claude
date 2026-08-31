@@ -172,6 +172,13 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const [srtName, setSrtName] = useState(null);
   const [srtKind, setSrtKind] = useState(null);
   const [srtText, setSrtText] = useState(null);
+  /**
+   * كلمات السطر الواحد عند الاستيراد.
+   *
+   * حالةُ محرّر لا خاصية قالب: الناتج المحفوظ هو المقاطع نفسها، فلو خزّنّاه
+   * في props لصار رقماً لا يقرؤه القالب ويوهم بأنه يؤثر في الرندر.
+   */
+  const [wordsPerCue, setWordsPerCue] = useState(4);
   const [audioSeconds, setAudioSeconds] = useState(null);
   const [duration, setDuration] = useState(
     template.meta.defaultDurationInFrames,
@@ -248,15 +255,13 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     [captionField],
   );
 
-  // «جملة كاملة» تعرض كلمات المقطع معاً، فلا معنى لتقطيعه إلى ثلاثات
+  // «جملة كاملة» تعرض كلمات المقطع معاً، فلا معنى لتقطيعها إلى أسطر
   const cueOptions = useMemo(
     () => ({
       maxWords:
-        props.revealMode === "cue"
-          ? Number.POSITIVE_INFINITY
-          : MAX_WORDS_PER_CUE,
+        props.revealMode === "cue" ? Number.POSITIVE_INFINITY : wordsPerCue,
     }),
-    [props.revealMode],
+    [props.revealMode, wordsPerCue],
   );
 
   const onSrt = useCallback(
@@ -457,6 +462,37 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                       value={props.textStyle}
                       onPick={(v) => set("textStyle", v)}
                     />
+                    {props.revealMode === "word" ? (
+                      <div className="field">
+                        <label>كلمات كل سطر عند استيراد SRT</label>
+                        <div className="stepper">
+                          <button
+                            type="button"
+                            className="btn ghost tiny"
+                            onClick={() =>
+                              setWordsPerCue((n) => Math.max(1, n - 1))
+                            }
+                          >
+                            −
+                          </button>
+                          <span className="stepper-value">{wordsPerCue}</span>
+                          <button
+                            type="button"
+                            className="btn ghost tiny"
+                            onClick={() =>
+                              setWordsPerCue((n) => Math.min(10, n + 1))
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p className="field-hint">
+                          كل سطر يجمع هذا العدد من الكلمات، وتظهر واحدةً واحدة
+                          في وقتها. تغيير الرقم يعيد تقسيم الملف المستورد فوراً.
+                        </p>
+                      </div>
+                    ) : null}
+
                     <ChipRow
                       label="طريقة الكشف"
                       hint="حرّك المقطع والنص بالماوس فوق المعاينة، واسحب مقبض الزاوية للحجم و«A» لحجم الخط."

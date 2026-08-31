@@ -888,3 +888,21 @@ textarea {
   border-color: var(--accent);
   font-weight: 600;
 }
+
+/* ---------- عدّاد بزرّين ---------- */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.stepper-value {
+  min-width: 34px;
+  text-align: center;
+  font-family: ui-monospace, monospace;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 3px 0;
+}
