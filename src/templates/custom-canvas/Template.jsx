@@ -531,6 +531,7 @@ export const Template = ({
         endMs: 400 + words.length * 400,
         wordStartsMs: words.map((_, i) => i * 400),
         style: null,
+        yRatio: null,
       },
     ];
   }, [captions, headline]);
@@ -541,6 +542,8 @@ export const Template = ({
   // ستايل السطر يغلب ستايل القالب: هكذا يخلط المستخدم تراكماً مع شريط في
   // نفس المقطع. الفارغ يعني «اتبع العام»، لا ستايلاً بلا اسم.
   const activeStyle = activeCue?.style ?? textStyle;
+  // وموضعه كذلك: سطر فوق وسطر تحت في نفس المقطع
+  const activeY = activeCue?.yRatio ?? textCenterYRatio;
   const words = useMemo(
     () => (activeCue ? wordsOf(activeCue) : []),
     [activeCue],
@@ -577,7 +580,7 @@ export const Template = ({
         style={{
           position: "absolute",
           left: width * textCenterXRatio - textWidth / 2,
-          top: height * textCenterYRatio,
+          top: height * activeY,
           width: textWidth,
           transform: "translateY(-50%)",
           display: "flex",

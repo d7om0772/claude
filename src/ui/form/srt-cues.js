@@ -129,7 +129,8 @@ export const wordsOfCue = (cue) => {
     startMs:
       given[i] ??
       Math.round(cue.startMs + (span * i) / Math.max(1, words.length)),
-    // الكلمة تحمل ستايل سطرها، فتعيد إعادةُ التوزيع بناءه بدل ضياعه
+    // الكلمة تحمل ستايل سطرها وموضعه، فتعيد إعادةُ التوزيع بناءهما بدل ضياعهما
     style: cue.style ?? null,
+    yRatio: cue.yRatio ?? null,
   }));
 };

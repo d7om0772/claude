@@ -41,6 +41,13 @@ export const captionCueSchema = z.object({
     .nullable()
     .optional()
     .describe("ستايل هذا السطر وحده. فارغ يعني ستايل القالب العام"),
+  yRatio: z
+    .number()
+    .min(0)
+    .max(1)
+    .nullable()
+    .optional()
+    .describe("موضع هذا السطر رأسياً كنسبة من الارتفاع. فارغ يعني موضع القالب"),
 });
 
 export const revealModeSchema = z
