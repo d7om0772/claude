@@ -11,6 +11,7 @@ import {
 import { FieldControl } from "./form/Fields.jsx";
 import { Scenes } from "./form/Scenes.jsx";
 import { CanvasStage } from "./form/CanvasStage.jsx";
+import { WordLines } from "./form/WordLines.jsx";
 import { mediaGeometry } from "./form/media-geometry.js";
 import { setIn } from "./form/paths.js";
 import {
@@ -299,7 +300,9 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     set("captions", cuesFromSrt(srtText, cueOptions));
     // الاشتقاق يتبع الملف والطريقة فقط
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [srtText, cueOptions.maxWords, wordTimed]);
+    // تبديل الطريقة وحده يعيد الاشتقاق؛ عدد كلمات السطر يعيد التوزيع على
+    // الكلمات الموجودة في محرّرها، فلا يمحو التحرير اليدوي
+  }, [srtText, props.revealMode, wordTimed]);
   // المدة تُحسب بنفس الدالة التي يستعملها الرندر، فالمعاينة تطابق المخرج.
   useEffect(() => {
     let cancelled = false;
@@ -463,34 +466,12 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                       onPick={(v) => set("textStyle", v)}
                     />
                     {props.revealMode === "word" ? (
-                      <div className="field">
-                        <label>كلمات كل سطر عند استيراد SRT</label>
-                        <div className="stepper">
-                          <button
-                            type="button"
-                            className="btn ghost tiny"
-                            onClick={() =>
-                              setWordsPerCue((n) => Math.max(1, n - 1))
-                            }
-                          >
-                            −
-                          </button>
-                          <span className="stepper-value">{wordsPerCue}</span>
-                          <button
-                            type="button"
-                            className="btn ghost tiny"
-                            onClick={() =>
-                              setWordsPerCue((n) => Math.min(10, n + 1))
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
-                        <p className="field-hint">
-                          كل سطر يجمع هذا العدد من الكلمات، وتظهر واحدةً واحدة
-                          في وقتها. تغيير الرقم يعيد تقسيم الملف المستورد فوراً.
-                        </p>
-                      </div>
+                      <WordLines
+                        cues={captions}
+                        setCues={(next) => set("captions", next)}
+                        perLine={wordsPerCue}
+                        setPerLine={setWordsPerCue}
+                      />
                     ) : null}
 
                     <ChipRow
