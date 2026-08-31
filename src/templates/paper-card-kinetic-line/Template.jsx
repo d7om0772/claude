@@ -17,6 +17,7 @@ import {
   FONT_WEIGHT_MEDIUM,
   fontsReady,
 } from "../../lib/fonts.js";
+import { WordClicks, cueWordOnsets } from "../../lib/word-clicks.jsx";
 /* ────────────────────────────────────────────────────────────────────────────
    مساعدات الحركة
    ──────────────────────────────────────────────────────────────────────── */
@@ -106,7 +107,10 @@ const buildHeadlineMotion = (
     }
     return value;
   };
-  return { offsetAt, stops };
+  // لحظة وصول كل كلمة إلى موضع الوقوف — عليها تُبنى النقرات: الأولى واقفة
+  // من الفريم صفر، وما بعدها ينتهي انتقاله بعد moveFrames من بدايته
+  const arrivals = [0, ...starts.map((f) => f + moveFrames)];
+  return { offsetAt, stops, arrivals };
 };
 const resolveSrc = (src) =>
   /^(https?:|data:|blob:)/u.test(src) || src.startsWith("/")
@@ -193,6 +197,8 @@ export const Template = ({
   logo,
   media,
   voiceover,
+  clickSfx,
+  clickVolume,
   captions,
   cardWidthRatio,
   cardHeightRatio,
@@ -222,7 +228,7 @@ export const Template = ({
   vignetteStrength,
 }) => {
   const frame = useCurrentFrame();
-  const { width, height, durationInFrames } = useVideoConfig();
+  const { width, height, fps, durationInFrames } = useVideoConfig();
   const [fontsLoaded, setFontsLoaded] = useState(false);
   useEffect(() => {
     let cancelled = false;
@@ -295,6 +301,16 @@ export const Template = ({
       rtl,
     ],
   );
+  /**
+   * النقرات تتبع ما يُكشف فعلاً: إن وُجد كابشن فكلماته هي الظاهرة تباعاً،
+   * وإلا فمحطات وقوف السطر الزاحف — وهي حركة الكلمة في هذا القالب.
+   */
+  const clickOnsets = useMemo(() => {
+    if (!clickSfx) return [];
+    if (captions.length > 0) return cueWordOnsets(captions);
+    return motion.arrivals.map((f) => (f / fps) * 1000);
+  }, [clickSfx, captions, motion, fps]);
+
   const offset = motion.offsetAt(frame);
   // السرعة تُقاس على نصف فريم قبل وبعد — هي مصدر شدة الموشن بلر
   const velocity = motion.offsetAt(frame + 0.5) - motion.offsetAt(frame - 0.5);
@@ -505,6 +521,12 @@ export const Template = ({
       </AbsoluteFill>
 
       {/* الطبقة ٤ — الصوت */}
+      <WordClicks
+        src={clickSfx}
+        volume={clickVolume}
+        onsetsMs={clickOnsets}
+        fps={fps}
+      />
       {voiceover ? (
         <Sequence from={0}>
           <Audio src={resolveSrc(voiceover)} />

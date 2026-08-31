@@ -54,6 +54,11 @@ export const templateSchema = z.object({
     .describe(
       "كلمات الترجمة مع توقيتاتها، مستخرجة من ملف SRT — كل عنصر كلمة واحدة لا جملة",
     ),
+  clickSfx: z
+    .string()
+    .nullable()
+    .describe("صوت نقرة يشتغل مع كل كلمة تظهر. فارغ يوقفه"),
+  clickVolume: z.number().min(0).max(1).describe("مستوى صوت النقرة"),
   placeholderText: z
     .string()
     .max(30)
@@ -227,6 +232,8 @@ export const defaultProps = {
     { text: "ليش", startMs: 1750, endMs: 2100 },
     { text: "نجرّب", startMs: 2400, endMs: 2950 },
   ],
+  clickSfx: "klova/click.wav",
+  clickVolume: 0.7,
   placeholderText: "لقطتك هنا",
   // «وقفنا» تنتهي بألف و«نفكّر..» تنتهي براء، وكلاهما بلا بديل ممتد في الخط،
   // فالسطر الأول لا يقبل أحرفاً مرسلة أصلاً. الكلمة ٣ «نجرّب» تنتهي بباء

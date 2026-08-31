@@ -91,6 +91,11 @@ export const paperCardSchema = z.object({
     .describe(
       "مصفوفة الكابشن الجاهزة من ملف SRT. تنسيقها جزء من هوية القالب، ونصّها فقط يأتي من هنا.",
     ),
+  clickSfx: z
+    .string()
+    .nullable()
+    .describe("صوت نقرة يشتغل مع كل كلمة تظهر. فارغ يوقفه"),
+  clickVolume: z.number().min(0).max(1).describe("مستوى صوت النقرة"),
   // ---------------- الهندسة ----------------
   cardWidthPct: z
     .number()
@@ -167,6 +172,8 @@ export const paperCardDefaultProps = {
   mediaMuted: true,
   voiceover: undefined,
   captions: [{ text: "تحس المكان مكتوم", startMs: 1250, endMs: 3000 }],
+  clickSfx: "klova/click.wav",
+  clickVolume: 0.7,
   cardWidthPct: 0.8,
   cardTopPct: 0.226,
   cardHeightPct: 0.599,

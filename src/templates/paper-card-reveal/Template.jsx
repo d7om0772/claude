@@ -16,6 +16,7 @@ import {
 } from "../../lib/fonts.js";
 import { isVideoSource } from "../../lib/duration.js";
 import { resolveAsset } from "../../lib/asset-url.js";
+import { WordClicks, cueWordOnsets } from "../../lib/word-clicks.jsx";
 /* ------------------------------------------------------------------ *
  * ثوابت الهوية — قواعد دليل جماليات خط ثمانية، مكتوبة داخل القالب
  * لأنها جزء من الهوية لا من المحتوى.
@@ -335,6 +336,8 @@ export const PaperCardTemplate = ({
   media,
   mediaMuted,
   voiceover,
+  clickSfx,
+  clickVolume,
   captions,
   cardWidthPct,
   cardTopPct,
@@ -399,6 +402,11 @@ export const PaperCardTemplate = ({
   // ---------- الكابشن ----------
   const currentMs = (frame / fps) * 1000;
   const activeCaption = pickCaption(captions, currentMs);
+  // الكابشن يظهر كتلةً، فتوزَّع كلماته على مدّته ما لم يأتِ توقيتٌ صريح
+  const clickOnsets = useMemo(
+    () => (clickSfx ? cueWordOnsets(captions) : []),
+    [captions, clickSfx],
+  );
   const cardBox = {
     position: "absolute",
     left: cardX,
@@ -471,6 +479,12 @@ export const PaperCardTemplate = ({
         </div>
       ) : null}
 
+      <WordClicks
+        src={clickSfx}
+        volume={clickVolume}
+        onsetsMs={clickOnsets}
+        fps={fps}
+      />
       {voiceover ? <Audio src={resolveAsset(voiceover, staticFile)} /> : null}
     </AbsoluteFill>
   );

@@ -69,6 +69,11 @@ export const templateSchema = z.object({
   captions: z
     .array(captionSchema)
     .describe("الكابشن جاهزاً كمصفوفة — يُولَّد من ملف SRT خارج القالب"),
+  clickSfx: z
+    .string()
+    .nullable()
+    .describe("صوت نقرة يشتغل مع كل كلمة تظهر. فارغ يوقفه"),
+  clickVolume: z.number().min(0).max(1).describe("مستوى صوت النقرة"),
   showCaptions: z.boolean().describe("إظهار أو إخفاء الكابشن بالكامل"),
   /* ---------- الحركة ---------- */
   revealDelayInFrames: z
@@ -147,6 +152,8 @@ export const defaultProps = {
   voiceoverVolume: 1,
   captions: [],
   showCaptions: true,
+  clickSfx: "klova/click.wav",
+  clickVolume: 0.7,
   // ٩ فريمات ≈ ٠.٣ ثانية وقفة، ثم ٨ فريمات ≈ ٠.٢٥ ثانية تمدد — مقيسة من المرجع
   revealDelayInFrames: 9,
   revealDurationInFrames: 8,

@@ -18,6 +18,7 @@ import {
   FONT_WEIGHT_BLACK,
   FONT_WEIGHT_MEDIUM,
 } from "../../lib/fonts.js";
+import { WordClicks, cueWordOnsets } from "../../lib/word-clicks.jsx";
 /** وزن الكلمة النشطة: Black. الأصل استعمل Black لأن Bold ما يعطي تبايناً كافياً. */
 const WEIGHT_ACTIVE = FONT_WEIGHT_BLACK;
 /** وزن الكلمات السابقة: Medium. */
@@ -172,6 +173,8 @@ export const Template = ({
   mediaRadiusRatio,
   voiceover,
   voiceoverVolume,
+  clickSfx,
+  clickVolume,
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
@@ -179,6 +182,10 @@ export const Template = ({
   const resolved = useMemo(
     () => resolveCaptions(headline, captions, fallbackWordIntervalMs),
     [headline, captions, fallbackWordIntervalMs],
+  );
+  const clickOnsets = useMemo(
+    () => (clickSfx ? resolved.map((c) => c.startMs) : []),
+    [resolved, clickSfx],
   );
   const activeIndex = findActiveIndex(resolved, currentMs);
   // كل المقاسات مشتقّة من أبعاد الإطار، فالقالب يشتغل على أي دقّة أو نسبة.
@@ -311,6 +318,13 @@ export const Template = ({
       )}
 
       {/* ---------- الطبقة 5: التعليق الصوتي ---------- */}
+      {/* النقرات تتبع الكلمات المعروضة فعلاً، بما فيها المشتقّة من headline */}
+      <WordClicks
+        src={clickSfx}
+        volume={clickVolume}
+        onsetsMs={clickOnsets}
+        fps={fps}
+      />
       {voiceover === null ? null : (
         <Audio
           src={resolveAsset(voiceover, staticFile)}

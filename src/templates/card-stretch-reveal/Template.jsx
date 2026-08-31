@@ -17,6 +17,7 @@ import {
   FONT_WEIGHT_BLACK,
   FONT_WEIGHT_MEDIUM,
 } from "../../lib/fonts.js";
+import { WordClicks, cueWordOnsets } from "../../lib/word-clicks.jsx";
 /* ------------------------------------------------------------------ *
  *  مساحة التصميم المرجعية
  *  كل الإحداثيات مكتوبة داخل مساحة 1080×1920 ثم تُقاس على أبعاد الفيديو
@@ -105,6 +106,8 @@ export const Template = ({
   mediaVolume,
   voiceover,
   voiceoverVolume,
+  clickSfx,
+  clickVolume,
   captions,
   showCaptions,
   revealDelayInFrames,
@@ -183,6 +186,13 @@ export const Template = ({
         { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
       )
     : 0;
+  // نقرة مع كل كلمة: الكابشن هنا يظهر كتلةً، فتوزَّع الكلمات على مدّته ما لم
+  // يوفّر ملف SRT توقيتاً صريحاً لكل كلمة
+  const clickOnsets = useMemo(
+    () => (clickSfx ? cueWordOnsets(captions) : []),
+    [captions, clickSfx],
+  );
+
   const cardRadius = px(cardRadiusRatio * REF_W);
   const mediaRadius = px(mediaRadiusRatio * REF_W);
   const cardCenterX = LAYOUT.card.left + LAYOUT.card.width / 2;
@@ -389,6 +399,12 @@ export const Template = ({
       </AbsoluteFill>
 
       {/* الطبقة ٦ — الصوت */}
+      <WordClicks
+        src={clickSfx}
+        volume={clickVolume}
+        onsetsMs={clickOnsets}
+        fps={fps}
+      />
       {voiceover ? (
         <Audio
           src={resolveAsset(voiceover, staticFile)}

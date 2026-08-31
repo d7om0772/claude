@@ -14,6 +14,7 @@ import { Audio, Video } from "../../lib/media.js";
 import { FONT_STACK, FONT_WEIGHT_BLACK } from "../../lib/fonts.js";
 import { isVideoSource } from "../../lib/duration.js";
 import { resolveAsset } from "../../lib/asset-url.js";
+import { WordClicks, cueWordOnsets } from "../../lib/word-clicks.jsx";
 const buildCues = (captions, wordsPerLine, linesPerCue, holdMs) => {
   const perCue = Math.max(1, wordsPerLine * linesPerCue);
   const chunks = [];
@@ -348,6 +349,8 @@ export const Template = ({
   subheadline,
   media,
   voiceover,
+  clickSfx,
+  clickVolume,
   captions,
   cardInsetXRatio,
   cardInsetYRatio,
@@ -394,12 +397,23 @@ export const Template = ({
     () => buildCues(captions, wordsPerLine, linesPerCue, cueHoldMs),
     [captions, wordsPerLine, linesPerCue, cueHoldMs],
   );
+  const clickOnsets = useMemo(
+    () => (clickSfx ? captions.map((c) => c.startMs) : []),
+    [captions, clickSfx],
+  );
   const currentMs = (frame / fps) * 1000;
   const activeCue = cues.find(
     (cue) => currentMs >= cue.startMs && currentMs < cue.endMs,
   );
   return (
     <AbsoluteFill style={{ backgroundColor }}>
+      {/* كل عنصر في captions كلمة، فلحظة ظهورها هي لحظة النقرة */}
+      <WordClicks
+        src={clickSfx}
+        volume={clickVolume}
+        onsetsMs={clickOnsets}
+        fps={fps}
+      />
       {voiceover ? (
         <Audio
           src={voiceover.startsWith("http") ? voiceover : staticFile(voiceover)}

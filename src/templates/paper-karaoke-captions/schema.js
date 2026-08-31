@@ -170,6 +170,11 @@ export const templateSchema = z.object({
     .min(0)
     .max(1)
     .describe("مستوى صوت التعليق الصوتي"),
+  clickSfx: z
+    .string()
+    .nullable()
+    .describe("صوت نقرة يشتغل مع كل كلمة تظهر. فارغ يوقفه"),
+  clickVolume: z.number().min(0).max(1).describe("مستوى صوت النقرة"),
   /* ------------------------------------------------------------------ المدة */
   tailDurationInFrames: z
     .number()
@@ -219,5 +224,7 @@ export const defaultProps = {
   mediaRadiusRatio: 0.045,
   voiceover: null,
   voiceoverVolume: 1,
+  clickSfx: "klova/click.wav",
+  clickVolume: 0.7,
   tailDurationInFrames: 9,
 };

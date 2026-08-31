@@ -48,6 +48,11 @@ export const templateSchema = z.object({
   captions: z
     .array(captionSchema)
     .describe("مقاطع الكابشن القادمة من ملف SRT — تظهر أسفل الكرت"),
+  clickSfx: z
+    .string()
+    .nullable()
+    .describe("صوت نقرة يشتغل مع كل كلمة تظهر. فارغ يوقفه"),
+  clickVolume: z.number().min(0).max(1).describe("مستوى صوت النقرة"),
   // ───────────────────────── هندسة الكرت ─────────────────────────
   cardWidthRatio: z
     .number()
@@ -185,6 +190,8 @@ export const defaultProps = {
   media: undefined,
   voiceover: undefined,
   captions: [],
+  clickSfx: "klova/click.wav",
+  clickVolume: 0.7,
   cardWidthRatio: 0.7111,
   cardHeightRatio: 0.7177,
   cardRadiusRatio: 0.0519,
