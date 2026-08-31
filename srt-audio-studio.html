@@ -1,0 +1,1092 @@
+<title>مقص الترجمة والصوت</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.0/lame.min.js"></script>
+<style>
+:root{
+  color-scheme: dark;
+  --ink:#15100c; --ink-2:#1b1510; --panel:#221a14; --panel-2:#2b2118; --panel-3:#342819;
+  --line:#3b2e22; --line-soft:#2c231b;
+  --text:#f1e8dc;
+}
+:root{
+  --muted:#a99684; --dim:#7d6c5b;
+  --amber:#f0a13c; --amber-2:#ffc784; --amber-dim:rgba(240,161,60,.15); --amber-line:rgba(240,161,60,.38);
+  --ok:#7cc596; --warn:#e8bd55; --bad:#e57a68;
+  --r:14px; --r-sm:9px;
+  --f-ui:"Tajawal","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Arabic","Tajawal",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ink); color:var(--text);
+  font-family:var(--f-body); font-size:15px; line-height:1.7;
+  direction:rtl; text-align:right;
+  background-image:radial-gradient(1100px 480px at 80% -8%, rgba(240,161,60,.07), transparent 60%);
+  background-attachment:fixed;
+}
+h1,h2,h3,h4,.ui{font-family:var(--f-ui)}
+.wrap{max-width:1200px;margin:0 auto;padding:26px 18px 90px}
+
+/* ---------- masthead ---------- */
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 22px;margin-bottom:22px}
+.mast h1{font-size:clamp(23px,3.4vw,32px);font-weight:800;margin:0;letter-spacing:-.4px;text-wrap:balance}
+.mast h1 .cut{color:var(--amber)}
+.mast p{margin:4px 0 0;color:var(--muted);font-size:14px;max-width:62ch}
+.pills{display:flex;gap:8px;margin-inline-start:auto;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-ui);font-size:12.5px;font-weight:500;
+  padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted)}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.pill.on{color:var(--text);border-color:var(--amber-line);background:var(--amber-dim)}
+.pill.on .dot{background:var(--amber);box-shadow:0 0 0 3px rgba(240,161,60,.18)}
+
+/* ---------- cards ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.card-hd{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line-soft);background:var(--ink-2)}
+.card-hd h2{margin:0;font-size:15px;font-weight:700;letter-spacing:-.2px}
+.card-hd .num{font-family:var(--f-mono);font-size:11px;color:var(--amber);border:1px solid var(--amber-line);
+  border-radius:6px;padding:1px 6px;background:var(--amber-dim)}
+.card-hd .hint{margin-inline-start:auto;font-size:12.5px;color:var(--dim);font-family:var(--f-ui)}
+.card-bd{padding:16px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-out{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
+@media (max-width:900px){.grid2,.grid-out{grid-template-columns:1fr}}
+
+/* ---------- dropzones ---------- */
+.drop{position:relative;display:flex;gap:13px;align-items:center;padding:15px;border:1px dashed var(--line);
+  border-radius:var(--r-sm);background:var(--ink-2);cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop:focus-within{border-color:var(--amber-line);background:var(--panel-2)}
+.drop.over{border-color:var(--amber);background:var(--amber-dim)}
+.drop.filled{border-style:solid;border-color:var(--amber-line)}
+.drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop .ico{flex:0 0 40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--panel-3);color:var(--amber);font-size:19px}
+.drop .t{font-family:var(--f-ui);font-weight:600;font-size:14px}
+.drop .s{font-size:12.5px;color:var(--muted);word-break:break-all}
+.drop.filled .s{color:var(--ok)}
+
+/* ---------- buttons ---------- */
+.btn{font-family:var(--f-ui);font-weight:600;font-size:14px;padding:9px 16px;border-radius:10px;
+  border:1px solid var(--line);background:var(--panel-2);color:var(--text);cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;transition:background .15s,border-color .15s,transform .08s}
+.btn:hover{background:var(--panel-3);border-color:var(--amber-line)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn.primary{background:var(--amber);border-color:var(--amber);color:#241703}
+.btn.primary:hover{background:var(--amber-2);border-color:var(--amber-2)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:6px 11px;font-size:12.5px;border-radius:8px}
+:where(button,input,select,textarea,[tabindex]):focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.seg{display:inline-flex;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:4px;gap:4px;flex-wrap:wrap}
+.seg button{font-family:var(--f-ui);font-weight:600;font-size:13.5px;padding:7px 15px;border-radius:8px;border:0;
+  background:transparent;color:var(--muted);cursor:pointer;transition:background .15s,color .15s}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed=true]{background:var(--amber);color:#241703}
+
+/* ---------- workspace ---------- */
+.modebar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.modenote{font-size:12.5px;color:var(--dim);font-family:var(--f-ui)}
+.selbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;
+  padding:11px 14px;background:linear-gradient(var(--ink-2),var(--ink-2)) padding-box;border:1px solid var(--line);
+  border-radius:11px;margin-bottom:12px;font-family:var(--f-ui);font-size:13.5px}
+.selbar .lbl{color:var(--dim);font-size:12.5px}
+.selbar b{font-weight:700}
+.selbar .word{color:var(--amber-2)}
+.tc{font-family:var(--f-mono);font-size:12.5px;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;color:var(--muted)}
+.selbar .sep{color:var(--dim)}
+.selbar .right{margin-inline-start:auto;display:flex;gap:8px;align-items:center}
+
+.score{max-height:44vh;overflow:auto;padding:14px;border:1px solid var(--line);border-radius:11px;background:var(--ink-2)}
+.words{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;line-height:1.5}
+.w{font-family:var(--f-body);font-size:14.5px;padding:5px 10px;border-radius:8px;border:1px solid transparent;
+  background:var(--panel-2);color:var(--text);cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+.w:hover{background:var(--panel-3);border-color:var(--line)}
+.w.sel{background:var(--amber-dim);border-color:rgba(240,161,60,.22);color:var(--amber-2)}
+.w.edge{background:var(--amber);border-color:var(--amber);color:#241703;font-weight:600}
+.w.hit{outline:2px dashed var(--warn);outline-offset:1px}
+.w .brk{color:var(--dim)}
+.cuebreak{flex-basis:100%;height:0}
+.lines{display:flex;flex-direction:column;gap:7px}
+.line{display:flex;gap:12px;align-items:flex-start;padding:9px 11px;border-radius:9px;background:var(--panel-2);
+  border:1px solid transparent;cursor:pointer;text-align:right;width:100%;color:var(--text);font-family:var(--f-body);font-size:14.5px}
+.line:hover{border-color:var(--line);background:var(--panel-3)}
+.line.sel{background:var(--amber-dim);border-color:rgba(240,161,60,.22)}
+.line.edge{border-color:var(--amber)}
+.line .n{font-family:var(--f-mono);font-size:11.5px;color:var(--dim);flex:0 0 auto;padding-top:3px}
+.line .tx{flex:1;white-space:pre-wrap}
+.empty{padding:34px 16px;text-align:center;color:var(--dim);font-family:var(--f-ui);font-size:14px}
+.searchbox{display:flex;align-items:center;gap:8px;background:var(--ink-2);border:1px solid var(--line);
+  border-radius:9px;padding:5px 10px}
+.searchbox input{background:transparent;border:0;color:var(--text);font-family:var(--f-body);font-size:13.5px;width:150px;outline:none}
+.searchbox input::placeholder{color:var(--dim)}
+.searchbox .cnt{font-family:var(--f-mono);font-size:11.5px;color:var(--dim)}
+
+/* ---------- waveform ---------- */
+.wavewrap{position:relative;border:1px solid var(--line);border-radius:11px;background:var(--ink-2);overflow:hidden}
+#wave{display:block;width:100%;height:128px}
+.wavebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 12px;border-top:1px solid var(--line-soft);background:var(--panel)}
+.meta{font-family:var(--f-mono);font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums}
+.meta b{color:var(--muted);font-weight:500}
+
+/* ---------- options ---------- */
+.opts{display:flex;flex-direction:column;gap:11px}
+.opt{display:flex;align-items:center;gap:10px;font-family:var(--f-ui);font-size:13.5px;color:var(--text)}
+.opt .desc{display:block;font-size:12px;color:var(--dim);font-family:var(--f-ui);line-height:1.5}
+input[type=checkbox]{appearance:none;width:18px;height:18px;flex:0 0 18px;border-radius:5px;border:1px solid var(--line);
+  background:var(--ink-2);cursor:pointer;position:relative;margin:0}
+input[type=checkbox]:checked{background:var(--amber);border-color:var(--amber)}
+input[type=checkbox]:checked::after{content:"";position:absolute;inset:0;background:#241703;
+  clip-path:polygon(19% 47%,8% 60%,40% 88%,92% 27%,80% 17%,38% 66%)}
+select,input[type=number],input[type=text]{font-family:var(--f-ui);font-size:13.5px;background:var(--ink-2);
+  color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+input[type=number]{width:86px;font-family:var(--f-mono);text-align:center}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--f-ui);font-size:13.5px}
+.row label{color:var(--muted)}
+.divider{height:1px;background:var(--line-soft);margin:4px 0}
+
+/* ---------- tabs + output ---------- */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:0 -16px 14px;padding:0 16px}
+.tabs button{font-family:var(--f-ui);font-weight:600;font-size:13.5px;padding:9px 14px;border:0;background:transparent;
+  color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button:hover{color:var(--text)}
+.tabs button[aria-selected=true]{color:var(--amber);border-bottom-color:var(--amber)}
+.tabs .flag{margin-inline-start:auto;align-self:center;font-family:var(--f-ui);font-size:11.5px;color:var(--warn)}
+.out{width:100%;min-height:210px;max-height:340px;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;
+  padding:12px;color:var(--text);font-family:var(--f-mono);font-size:12.5px;line-height:1.85;direction:ltr;text-align:left;
+  white-space:pre;overflow:auto;resize:vertical;tab-size:2}
+textarea.out{display:block}
+.out.rtltext{direction:rtl;text-align:right;font-family:var(--f-body);font-size:14px;white-space:pre-wrap}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px;align-items:center}
+.note{font-size:12.5px;color:var(--dim);font-family:var(--f-ui);line-height:1.6}
+.note.warn{color:var(--warn)}
+.note.bad{color:var(--bad)}
+.note.ok{color:var(--ok)}
+.inline-fix{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:10px;padding:10px 12px;
+  border:1px solid rgba(232,189,85,.34);background:rgba(232,189,85,.09);border-radius:9px}
+.bar{height:6px;border-radius:99px;background:var(--panel-3);overflow:hidden;margin-top:10px;display:none}
+.bar.on{display:block}
+.bar i{display:block;height:100%;width:30%;background:var(--amber);border-radius:99px;animation:slide 1.1s ease-in-out infinite}
+@keyframes slide{0%{margin-inline-start:-30%}100%{margin-inline-start:100%}}
+@media (prefers-reduced-motion:reduce){.bar i{animation:none;width:100%}}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;inset-block-end:20px;inset-inline-start:50%;transform:translateX(50%) translateY(20px);
+  background:var(--panel-3);border:1px solid var(--amber-line);color:var(--text);font-family:var(--f-ui);font-size:13.5px;
+  padding:11px 18px;border-radius:11px;box-shadow:0 12px 34px rgba(0,0,0,.5);opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;z-index:50;max-width:min(90vw,460px)}
+#toast.show{opacity:1;transform:translateX(50%) translateY(0)}
+#toast.bad{border-color:var(--bad)}
+footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line-soft);color:var(--dim);font-size:12.5px;font-family:var(--f-ui)}
+.hidden{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.stack{display:flex;flex-direction:column;gap:16px}
+</style>
+<div class="wrap">
+
+  <header class="mast">
+    <div>
+      <h1>مقص الترجمة <span class="cut">والصوت</span></h1>
+      <p>حمّل ملف ترجمة SRT، حدّد المقطع بالكلمة أو بالسطر، واسحب منه ملف SRT جديد ومقطعاً صوتياً مقصوصاً على نفس التوقيت — كل شيء يشتغل داخل متصفحك، ولا يُرفع أي ملف لأي خادم.</p>
+    </div>
+    <div class="pills">
+      <span class="pill" id="pillSrt"><span class="dot"></span> لا يوجد ملف SRT</span>
+      <span class="pill" id="pillAudio"><span class="dot"></span> لا يوجد ملف صوتي</span>
+    </div>
+  </header>
+
+  <div class="stack">
+
+    <!-- 1. files -->
+    <section class="card">
+      <div class="card-hd"><span class="num">١</span><h2>الملفات</h2><span class="hint">الصوت اختياري — تقدر تكتفي بمخرج SRT</span></div>
+      <div class="card-bd">
+        <div class="grid2">
+          <label class="drop" id="dropSrt">
+            <span class="ico">۞</span>
+            <span>
+              <span class="t">ملف الترجمة SRT</span>
+              <span class="s" id="srtInfo">اسحب الملف هنا أو اضغط للاختيار · ‎.srt‎ ‏/‏ ‎.txt</span>
+            </span>
+            <input type="file" id="fileSrt" accept=".srt,.txt,text/plain">
+          </label>
+          <label class="drop" id="dropAudio">
+            <span class="ico">♪</span>
+            <span>
+              <span class="t">الملف الصوتي</span>
+              <span class="s" id="audioInfo">اسحب الملف هنا أو اضغط للاختيار · ‎.mp3‎ ‏/‏ ‎.wav‎ ‏/‏ ‎.m4a</span>
+            </span>
+            <input type="file" id="fileAudio" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac">
+          </label>
+        </div>
+        <div class="bar" id="audioBar"><i></i></div>
+        <p class="note" id="fileNote" style="margin:10px 0 0"></p>
+      </div>
+    </section>
+
+    <!-- 2. selection -->
+    <section class="card hidden" id="wsCard">
+      <div class="card-hd"><span class="num">٢</span><h2>تحديد المقطع</h2><span class="hint" id="wsHint"></span></div>
+      <div class="card-bd">
+        <div class="modebar">
+          <div class="seg" role="group" aria-label="طريقة التحديد">
+            <button type="button" data-mode="word" aria-pressed="true">كلمة كلمة</button>
+            <button type="button" data-mode="line" aria-pressed="false">سطر سطر</button>
+            <button type="button" data-mode="all" aria-pressed="false">الملف كامل</button>
+          </div>
+          <span class="modenote" id="modeNote"></span>
+          <div class="searchbox" style="margin-inline-start:auto">
+            <span aria-hidden="true">⌕</span>
+            <input type="text" id="search" placeholder="ابحث عن كلمة" aria-label="ابحث عن كلمة">
+            <span class="cnt" id="searchCnt"></span>
+          </div>
+        </div>
+
+        <div class="selbar" id="selBar">
+          <span class="lbl">المقطع</span>
+          <span>من <b class="word" id="selFromW">—</b> <span class="tc" id="selFromT"></span></span>
+          <span class="sep">←</span>
+          <span>إلى <b class="word" id="selToW">—</b> <span class="tc" id="selToT"></span></span>
+          <span class="sep">·</span>
+          <span id="selCount" class="lbl">لم يتم التحديد</span>
+          <span class="right">
+            <button class="btn sm ghost" id="btnAll" type="button">حدّد الكل</button>
+            <button class="btn sm ghost" id="btnClear" type="button">مسح</button>
+          </span>
+        </div>
+
+        <div class="score" id="score"></div>
+      </div>
+    </section>
+
+    <!-- 3. waveform -->
+    <section class="card hidden" id="waveCard">
+      <div class="card-hd"><span class="num">٣</span><h2>الموجة الصوتية</h2><span class="hint">المنطقة المضيئة هي ما سيُقص</span></div>
+      <div class="card-bd">
+        <div class="wavewrap">
+          <canvas id="wave" aria-label="الموجة الصوتية للملف مع تظليل المقطع المحدد"></canvas>
+          <div class="wavebar">
+            <button class="btn sm" id="btnPlaySel" type="button">▶ شغّل المقطع</button>
+            <button class="btn sm ghost" id="btnPlayAll" type="button">▶ شغّل الملف</button>
+            <span class="meta" id="audioMeta"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. outputs -->
+    <div class="grid-out">
+
+      <section class="card">
+        <div class="card-hd"><span class="num">٤</span><h2>مخرج الترجمة</h2><span class="hint" id="srtOutHint"></span></div>
+        <div class="card-bd">
+          <div class="tabs" role="tablist">
+            <button type="button" role="tab" data-tab="srt" aria-selected="true">ملف SRT</button>
+            <button type="button" role="tab" data-tab="text" aria-selected="false">النص</button>
+            <button type="button" role="tab" data-tab="edit" aria-selected="false">عدّل بنفسك</button>
+            <span class="flag hidden" id="editedFlag">مُعدّل يدوياً</span>
+          </div>
+
+          <pre class="out" id="outSrt" data-pane="srt"></pre>
+          <pre class="out rtltext hidden" id="outText" data-pane="text"></pre>
+          <textarea class="out hidden" id="outEdit" data-pane="edit" spellcheck="false" aria-label="تحرير ملف SRT الناتج"></textarea>
+
+          <div class="divider"></div>
+          <div class="opts">
+            <label class="opt"><input type="checkbox" id="optZero" checked>
+              <span>ابدأ التوقيت من الصفر
+                <span class="desc" id="zeroDesc">يخلي أول بطاقة تبدأ من 00:00:00,000 عشان تمشي مع المقطع الصوتي المقصوص.</span>
+              </span></label>
+            <label class="opt"><input type="checkbox" id="optRenum" checked>
+              <span>إعادة الترقيم من ١</span></label>
+            <div class="row">
+              <label for="optGran">شكل البطاقات</label>
+              <select id="optGran">
+                <option value="keep">كما هي في الملف الأصلي</option>
+                <option value="one">بطاقة واحدة للمقطع كله</option>
+                <option value="word">بطاقة لكل كلمة</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="padBefore">هامش قبل</label>
+              <input type="number" id="padBefore" value="0" min="0" max="10000" step="50">
+              <label for="padAfter">هامش بعد</label>
+              <input type="number" id="padAfter" value="0" min="0" max="10000" step="50">
+              <span class="note">بالمللي ثانية — يُطبَّق على الصوت والترجمة معاً.</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="btnSaveSrt" type="button" disabled>حفظ ملف SRT</button>
+            <button class="btn" id="btnCopySrt" type="button" disabled>نسخ النص</button>
+            <button class="btn ghost sm" id="btnResync" type="button">إعادة التوليد</button>
+          </div>
+          <p class="note" id="srtSaveNote" style="margin-top:9px"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-hd"><span class="num">٥</span><h2>مخرج الصوت</h2><span class="hint" id="audioOutHint"></span></div>
+        <div class="card-bd">
+          <div class="opts">
+            <div class="row">
+              <label for="fmt">الصيغة</label>
+              <select id="fmt">
+                <option value="mp3">MP3</option>
+                <option value="wav">WAV</option>
+              </select>
+              <span id="brWrap">
+                <label for="bitrate">الجودة</label>
+                <select id="bitrate">
+                  <option value="320">320 kbps</option>
+                  <option value="192" selected>192 kbps</option>
+                  <option value="128">128 kbps</option>
+                  <option value="96">96 kbps</option>
+                </select>
+              </span>
+            </div>
+            <label class="opt"><input type="checkbox" id="optFade" checked>
+              <span>تلاشي خفيف عند البداية والنهاية
+                <span class="desc">١٥ مللي ثانية تمنع الطقطقة عند القص.</span>
+              </span></label>
+            <label class="opt"><input type="checkbox" id="optMono">
+              <span>دمج القنوات (مونو)</span></label>
+          </div>
+
+          <div class="divider"></div>
+          <div class="actions">
+            <button class="btn primary" id="btnCut" type="button" disabled>اقصص واحفظ</button>
+            <button class="btn" id="btnPreviewCut" type="button" disabled>سماع النتيجة</button>
+          </div>
+          <div class="bar" id="cutBar"><i></i></div>
+          <p class="note" id="cutNote" style="margin-top:9px">حمّل ملفاً صوتياً وحدّد مقطعاً لتفعيل القص.</p>
+          <div class="inline-fix hidden" id="fallbackBox">
+            <span class="note warn" id="fallbackMsg"></span>
+            <button class="btn sm" id="btnFallback" type="button">احفظ نسخة WebM</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>
+    كل المعالجة تتم محلياً داخل المتصفح · توقيت الكلمة داخل البطاقة الواحدة تقديري ويُوزَّع حسب طول الكلمات.
+  </footer>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const $$ = s => Array.prototype.slice.call(document.querySelectorAll(s));
+
+/* ---------------- capability ---------------- */
+const dlPromise = (window.claude && typeof window.claude.use === "function")
+  ? window.claude.use("downloads").catch(() => null)
+  : Promise.resolve(null);
+let dl = null;
+dlPromise.then(d => { dl = d; refreshSaveNotes(); });
+
+/* ---------------- state ---------------- */
+const S = {
+  cues: [], tokens: [], cueTokens: [],   // cueTokens[c] = [tokenIdx...]
+  srtName: "", mode: "word", a: null, b: null, anchorSet: false,
+  audio: null, audioName: "", peaks: null, playPos: null, edited: false
+};
+
+/* ---------------- helpers ---------------- */
+let toastT = null;
+function toast(msg, bad){
+  const t = $("#toast"); t.textContent = msg; t.classList.toggle("bad", !!bad); t.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 3200);
+}
+const pad = (n, w) => String(n).padStart(w, "0");
+function msToSrt(ms){
+  ms = Math.max(0, Math.round(ms));
+  const h = Math.floor(ms/3600000), m = Math.floor(ms/60000)%60, s = Math.floor(ms/1000)%60;
+  return pad(h,2)+":"+pad(m,2)+":"+pad(s,2)+","+pad(ms%1000,3);
+}
+function msToClock(ms){
+  ms = Math.max(0, Math.round(ms));
+  const m = Math.floor(ms/60000), s = Math.floor(ms/1000)%60;
+  return pad(m,2)+":"+pad(s,2)+"."+pad(Math.floor((ms%1000)/10),2);
+}
+function tc2ms(t){
+  const p = t.replace(",", ".").split(":").map(parseFloat);
+  let s = 0;
+  if(p.length === 3) s = p[0]*3600 + p[1]*60 + p[2];
+  else if(p.length === 2) s = p[0]*60 + p[1];
+  else s = p[0];
+  return Math.round(s*1000);
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clean = t => t.replace(/\{\\[^}]*\}/g, "").replace(/<[^>]*>/g, "");
+function baseName(n){ return (n || "subtitle").replace(/\.[^.]+$/, "").slice(0, 60) || "clip"; }
+
+/* ---------------- SRT parsing ---------------- */
+const TC = "(?:\\d{1,3}:)?\\d{1,3}:\\d{1,2}[,.]\\d{1,3}";
+const TCRE = new RegExp("("+TC+")\\s*-->\\s*("+TC+")");
+function parseSRT(txt){
+  txt = String(txt).replace(/^﻿/, "").replace(/\r\n?/g, "\n");
+  const out = [];
+  txt.split(/\n[ \t]*\n+/).forEach(function(block){
+    const lines = block.split("\n").filter(l => l.trim() !== "");
+    if(!lines.length) return;
+    let ti = -1;
+    for(let i = 0; i < lines.length; i++){ if(lines[i].indexOf("-->") > -1){ ti = i; break; } }
+    if(ti < 0) return;
+    const m = lines[ti].match(TCRE);
+    if(!m) return;
+    const text = lines.slice(ti+1).join("\n").trim();
+    if(!text) return;
+    const numRaw = ti > 0 ? parseInt(lines[ti-1].trim(), 10) : NaN;
+    let start = tc2ms(m[1]), end = tc2ms(m[2]);
+    if(end <= start) end = start + 800;
+    out.push({ num: isFinite(numRaw) ? numRaw : out.length+1, start: start, end: end, text: text });
+  });
+  out.sort((x, y) => x.start - y.start);
+  return out;
+}
+function tokenize(cues){
+  const tokens = [], cueTokens = [];
+  cues.forEach(function(cue, c){
+    const words = clean(cue.text).split(/\s+/).filter(Boolean);
+    const list = [];
+    const total = words.reduce((s, w) => s + w.length, 0) || words.length || 1;
+    const dur = cue.end - cue.start;
+    let acc = 0;
+    words.forEach(function(w, i){
+      const wgt = (w.length || 1) / total;
+      const st = cue.start + dur * acc;
+      acc += wgt;
+      const en = i === words.length - 1 ? cue.end : cue.start + dur * acc;
+      list.push(tokens.length);
+      tokens.push({ i: tokens.length, cue: c, w: i, text: w, start: st, end: en });
+    });
+    cueTokens.push(list);
+  });
+  return { tokens: tokens, cueTokens: cueTokens };
+}
+
+/* ---------------- selection ---------------- */
+function range(){
+  if(S.a === null || S.b === null) return null;
+  return { a: Math.min(S.a, S.b), b: Math.max(S.a, S.b) };
+}
+function selectAll(){
+  if(!S.tokens.length) return;
+  S.a = 0; S.b = S.tokens.length - 1; S.anchorSet = false; sync();
+}
+function clearSel(){ S.a = S.b = null; S.anchorSet = false; sync(); }
+function pickToken(i){
+  if(S.mode === "all") return;
+  if(!S.anchorSet || S.a === null){ S.a = i; S.b = i; S.anchorSet = true; }
+  else { S.b = i; S.anchorSet = false; }
+  sync();
+}
+function pickCue(c){
+  const list = S.cueTokens[c];
+  if(!list || !list.length) return;
+  const first = list[0], last = list[list.length-1];
+  if(!S.anchorSet || S.a === null){ S.a = first; S.b = last; S.anchorSet = true; }
+  else {
+    if(first < S.a){ S.b = S.a; S.a = first; } else { S.b = last; }
+    S.anchorSet = false;
+  }
+  sync();
+}
+
+/* ---------------- rendering the score ---------------- */
+function renderScore(){
+  const host = $("#score");
+  host.innerHTML = "";
+  if(!S.cues.length){ host.innerHTML = '<div class="empty">حمّل ملف SRT للبدء.</div>'; return; }
+  if(S.mode === "word"){
+    const box = document.createElement("div");
+    box.className = "words";
+    S.tokens.forEach(function(t, i){
+      if(i > 0 && S.tokens[i-1].cue !== t.cue){
+        const br = document.createElement("span"); br.className = "cuebreak"; box.appendChild(br);
+      }
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "w"; b.textContent = t.text; b.dataset.i = i;
+      b.title = msToClock(t.start) + " → " + msToClock(t.end);
+      box.appendChild(b);
+    });
+    host.appendChild(box);
+  } else {
+    const box = document.createElement("div");
+    box.className = "lines";
+    S.cues.forEach(function(cue, c){
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "line"; b.dataset.c = c;
+      const n = document.createElement("span"); n.className = "n";
+      n.textContent = pad(c+1, 3) + " · " + msToClock(cue.start);
+      const tx = document.createElement("span"); tx.className = "tx"; tx.textContent = clean(cue.text);
+      b.appendChild(n); b.appendChild(tx);
+      box.appendChild(b);
+    });
+    host.appendChild(box);
+  }
+  paintSel();
+  runSearch();
+}
+function paintSel(){
+  const r = range();
+  if(S.mode === "word"){
+    $$("#score .w").forEach(function(el){
+      const i = +el.dataset.i;
+      const inR = r && i >= r.a && i <= r.b;
+      el.classList.toggle("sel", !!inR);
+      el.classList.toggle("edge", !!(r && (i === r.a || i === r.b)));
+    });
+  } else {
+    $$("#score .line").forEach(function(el){
+      const c = +el.dataset.c;
+      const list = S.cueTokens[c] || [];
+      const inR = r && list.length && list[0] >= r.a && list[list.length-1] <= r.b;
+      el.classList.toggle("sel", !!inR);
+      el.classList.toggle("edge", !!(r && list.length && (list[0] === r.a || list[list.length-1] === r.b)));
+    });
+  }
+}
+
+/* ---------------- output builders ---------------- */
+function buildCues(){
+  const r = range();
+  if(!r) return [];
+  const gran = $("#optGran").value;
+  const groups = [];
+  let c = S.tokens[r.a].cue;
+  const lastC = S.tokens[r.b].cue;
+  for(; c <= lastC; c++){
+    const list = (S.cueTokens[c] || []).filter(i => i >= r.a && i <= r.b);
+    if(!list.length) continue;
+    const full = list.length === S.cueTokens[c].length;
+    const first = S.tokens[list[0]], last = S.tokens[list[list.length-1]];
+    groups.push({
+      start: full ? S.cues[c].start : first.start,
+      end: full ? S.cues[c].end : last.end,
+      text: full ? clean(S.cues[c].text).replace(/[ \t]+\n/g, "\n") : list.map(i => S.tokens[i].text).join(" "),
+      tokens: list
+    });
+  }
+  if(!groups.length) return [];
+  let cues;
+  if(gran === "one"){
+    cues = [{ start: groups[0].start, end: groups[groups.length-1].end,
+              text: groups.map(g => g.text.replace(/\n/g, " ")).join(" ") }];
+  } else if(gran === "word"){
+    cues = [];
+    for(let i = r.a; i <= r.b; i++){
+      const t = S.tokens[i];
+      cues.push({ start: t.start, end: t.end, text: t.text });
+    }
+  } else {
+    cues = groups.map(g => ({ start: g.start, end: g.end, text: g.text }));
+  }
+  const preMs = Math.max(0, +$("#padBefore").value || 0);
+  const rawStart = S.tokens[r.a].start;
+  const offset = $("#optZero").checked ? Math.max(0, rawStart - preMs) : 0;
+  return cues.map(function(x, i){
+    return { num: $("#optRenum").checked || $("#optGran").value !== "keep" ? i+1 : (S.cues[S.tokens[r.a].cue+i] ? S.cues[S.tokens[r.a].cue+i].num : i+1),
+             start: x.start - offset, end: x.end - offset, text: x.text };
+  });
+}
+function toSRT(cues){
+  return cues.map(c => c.num + "\n" + msToSrt(c.start) + " --> " + msToSrt(c.end) + "\n" + c.text).join("\n\n") + (cues.length ? "\n" : "");
+}
+function toText(cues){ return cues.map(c => c.text).join("\n"); }
+
+/* ---------------- sync everything ---------------- */
+function sync(){
+  paintSel();
+  const r = range();
+  const has = !!r;
+  $("#selFromW").textContent = has ? S.tokens[r.a].text : "—";
+  $("#selToW").textContent   = has ? S.tokens[r.b].text : "—";
+  $("#selFromT").textContent = has ? msToClock(S.tokens[r.a].start) : "";
+  $("#selToT").textContent   = has ? msToClock(S.tokens[r.b].end) : "";
+  if(has){
+    const words = r.b - r.a + 1;
+    const cuesN = S.tokens[r.b].cue - S.tokens[r.a].cue + 1;
+    const dur = (S.tokens[r.b].end - S.tokens[r.a].start) / 1000;
+    $("#selCount").textContent = words + " كلمة · " + cuesN + " بطاقة · " + dur.toFixed(2) + " ثانية";
+  } else {
+    $("#selCount").textContent = S.mode === "line" ? "اضغط بداية السطر ثم نهايته" : "اضغط أول كلمة ثم آخر كلمة";
+  }
+  const cues = buildCues();
+  const srt = toSRT(cues);
+  $("#outSrt").textContent = srt || "— لا يوجد تحديد —";
+  $("#outText").textContent = toText(cues) || "— لا يوجد تحديد —";
+  if(!S.edited) $("#outEdit").value = srt;
+  $("#editedFlag").classList.toggle("hidden", !S.edited);
+  $("#btnSaveSrt").disabled = !cues.length;
+  $("#btnCopySrt").disabled = !cues.length;
+  $("#srtOutHint").textContent = cues.length ? cues.length + " بطاقة" : "";
+  $("#zeroDesc").innerHTML = has
+    ? "موضعه في التسجيل الأصلي: من <span class=\"tc\">" + msToClock(S.tokens[r.a].start) + "</span> إلى <span class=\"tc\">" + msToClock(S.tokens[r.b].end) + "</span> — الصوت يُقص من هنا عشان يمشي مع الملف."
+    : "يخلي أول بطاقة تبدأ من 00:00:00,000 عشان تمشي مع المقطع الصوتي المقصوص.";
+  const canCut = !!(S.audio && has);
+  $("#btnCut").disabled = !canCut;
+  $("#btnPreviewCut").disabled = !canCut;
+  $("#btnPlaySel").disabled = !canCut;
+  if(has && S.audio){
+    const t = selTimes();
+    $("#cutNote").className = "note";
+    $("#cutNote").innerHTML = "سيُقص من <span class=\"tc\">" + msToClock(t.t0*1000) + "</span> إلى <span class=\"tc\">" + msToClock(t.t1*1000) + "</span> · المدة " + (t.t1-t.t0).toFixed(2) + " ثانية.";
+    $("#audioOutHint").textContent = (t.t1-t.t0).toFixed(2) + " ثانية";
+  } else {
+    $("#cutNote").className = "note";
+    $("#cutNote").textContent = !S.audio ? "حمّل ملفاً صوتياً لتفعيل القص." : "حدّد مقطعاً أولاً.";
+    $("#audioOutHint").textContent = "";
+  }
+  drawWave();
+}
+function selTimes(){
+  const r = range();
+  if(!r) return null;
+  const pre = Math.max(0, +$("#padBefore").value || 0), post = Math.max(0, +$("#padAfter").value || 0);
+  let t0 = (S.tokens[r.a].start - pre) / 1000;
+  let t1 = (S.tokens[r.b].end + post) / 1000;
+  if(t0 < 0) t0 = 0;
+  if(S.audio){ t1 = Math.min(t1, S.audio.duration); t0 = Math.min(t0, S.audio.duration); }
+  if(t1 <= t0) t1 = t0 + 0.05;
+  return { t0: t0, t1: t1 };
+}
+
+/* ---------------- audio ---------------- */
+let ac = null;
+function actx(){
+  if(!ac){ const C = window.AudioContext || window.webkitAudioContext; ac = new C(); }
+  if(ac.state === "suspended") ac.resume();
+  return ac;
+}
+function buildPeaks(buf){
+  const P = 3000, out = new Float32Array(P*2), n = buf.length, ch = buf.numberOfChannels;
+  const step = Math.max(1, Math.floor(n / P));
+  const data = [];
+  for(let c = 0; c < ch; c++) data.push(buf.getChannelData(c));
+  for(let p = 0; p < P; p++){
+    const s = p*step, e = Math.min(n, s+step);
+    let mn = 0, mx = 0;
+    for(let i = s; i < e; i += Math.max(1, Math.floor(step/60))){
+      let v = 0;
+      for(let c = 0; c < ch; c++) v += data[c][i];
+      v /= ch;
+      if(v < mn) mn = v; if(v > mx) mx = v;
+    }
+    out[p*2] = mn; out[p*2+1] = mx;
+  }
+  return out;
+}
+function drawWave(){
+  const c = $("#wave");
+  if(!c || !S.audio || !S.peaks) return;
+  const ctx = c.getContext("2d");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = c.clientWidth || 600, h = c.clientHeight || 128;
+  if(c.width !== Math.round(w*dpr) || c.height !== Math.round(h*dpr)){ c.width = Math.round(w*dpr); c.height = Math.round(h*dpr); }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  const dur = S.audio.duration, mid = h/2, P = S.peaks.length/2;
+  const t = selTimes();
+  const x0 = t ? Math.round(t.t0/dur*w) : -1, x1 = t ? Math.round(t.t1/dur*w) : -1;
+  if(t){ ctx.fillStyle = "rgba(240,161,60,.12)"; ctx.fillRect(x0, 0, Math.max(1, x1-x0), h); }
+  for(let x = 0; x < w; x++){
+    const p = Math.min(P-1, Math.floor(x/w*P));
+    const mn = S.peaks[p*2], mx = S.peaks[p*2+1];
+    const inSel = t && x >= x0 && x <= x1;
+    ctx.fillStyle = inSel ? "#f0a13c" : "#5a483a";
+    const y1 = mid - mx*mid*0.94, y2 = mid - mn*mid*0.94;
+    ctx.fillRect(x, y1, 1, Math.max(1, y2-y1));
+  }
+  if(t){
+    ctx.fillStyle = "rgba(240,161,60,.75)";
+    ctx.fillRect(x0, 0, 1.5, h); ctx.fillRect(x1, 0, 1.5, h);
+  }
+  if(S.playPos !== null){
+    const px = Math.round(S.playPos/dur*w);
+    ctx.fillStyle = "#ffe9c9"; ctx.fillRect(px, 0, 1.5, h);
+  }
+}
+let srcNode = null, rafId = 0;
+function stopPlay(){
+  if(srcNode){ try{ srcNode.onended = null; srcNode.stop(); }catch(e){} srcNode = null; }
+  cancelAnimationFrame(rafId); S.playPos = null; drawWave();
+  $("#btnPlaySel").textContent = "▶ شغّل المقطع"; $("#btnPlayAll").textContent = "▶ شغّل الملف";
+}
+function playRange(from, to, buffer, mapTo){
+  const a = actx();
+  stopPlay();
+  const buf = buffer || S.audio;
+  srcNode = a.createBufferSource(); srcNode.buffer = buf; srcNode.connect(a.destination);
+  const t0 = a.currentTime;
+  srcNode.start(0, buffer ? 0 : from, to - from);
+  srcNode.onended = stopPlay;
+  const tick = function(){
+    const el = a.currentTime - t0;
+    S.playPos = (mapTo === undefined ? from : mapTo) + el;
+    drawWave();
+    rafId = requestAnimationFrame(tick);
+  };
+  tick();
+}
+function sliceAudio(){
+  const t = selTimes(), buf = S.audio;
+  const sr = buf.sampleRate;
+  const s = Math.max(0, Math.round(t.t0*sr));
+  const e = Math.min(buf.length, Math.round(t.t1*sr));
+  const len = Math.max(1, e-s);
+  const mono = $("#optMono").checked;
+  const nch = mono ? 1 : buf.numberOfChannels;
+  const chans = [];
+  for(let c = 0; c < nch; c++){
+    const a = new Float32Array(len);
+    if(mono && buf.numberOfChannels > 1){
+      for(let k = 0; k < buf.numberOfChannels; k++){
+        const d = buf.getChannelData(k);
+        for(let i = 0; i < len; i++) a[i] += d[s+i] / buf.numberOfChannels;
+      }
+    } else {
+      const d = buf.getChannelData(c);
+      for(let i = 0; i < len; i++) a[i] = d[s+i];
+    }
+    chans.push(a);
+  }
+  if($("#optFade").checked){
+    const f = Math.min(Math.round(sr*0.015), Math.floor(len/2));
+    for(let c = 0; c < chans.length; c++){
+      const a = chans[c];
+      for(let i = 0; i < f; i++){ const g = i/f; a[i] *= g; a[len-1-i] *= g; }
+    }
+  }
+  return { channels: chans, sampleRate: sr, length: len };
+}
+function toAudioBuffer(clip){
+  const a = actx();
+  const b = a.createBuffer(clip.channels.length, clip.length, clip.sampleRate);
+  for(let c = 0; c < clip.channels.length; c++){
+    if(b.copyToChannel) b.copyToChannel(clip.channels[c], c);
+    else b.getChannelData(c).set(clip.channels[c]);
+  }
+  return b;
+}
+
+/* ---------------- encoders ---------------- */
+function encodeWAV(clip){
+  const nch = clip.channels.length, len = clip.length, sr = clip.sampleRate;
+  const bytes = len*nch*2;
+  const ab = new ArrayBuffer(44+bytes), v = new DataView(ab);
+  const str = (o, s) => { for(let i = 0; i < s.length; i++) v.setUint8(o+i, s.charCodeAt(i)); };
+  str(0, "RIFF"); v.setUint32(4, 36+bytes, true); str(8, "WAVE"); str(12, "fmt ");
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, nch, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr*nch*2, true); v.setUint16(32, nch*2, true);
+  v.setUint16(34, 16, true); str(36, "data"); v.setUint32(40, bytes, true);
+  let o = 44;
+  for(let i = 0; i < len; i++){
+    for(let c = 0; c < nch; c++){
+      let x = clip.channels[c][i];
+      x = x < -1 ? -1 : x > 1 ? 1 : x;
+      v.setInt16(o, x < 0 ? x*0x8000 : x*0x7FFF, true); o += 2;
+    }
+  }
+  return new Blob([ab], { type: "audio/wav" });
+}
+function f32to16(a){
+  const o = new Int16Array(a.length);
+  for(let i = 0; i < a.length; i++){ let x = a[i]; x = x < -1 ? -1 : x > 1 ? 1 : x; o[i] = x < 0 ? x*0x8000 : x*0x7FFF; }
+  return o;
+}
+const mp3Ready = () => typeof window.lamejs !== "undefined" && !!window.lamejs.Mp3Encoder;
+async function encodeMP3(clip, kbps){
+  const nch = clip.channels.length;
+  const enc = new window.lamejs.Mp3Encoder(nch, clip.sampleRate, kbps);
+  const L = f32to16(clip.channels[0]);
+  const R = nch > 1 ? f32to16(clip.channels[1]) : null;
+  const block = 1152, parts = [];
+  for(let i = 0, k = 0; i < clip.length; i += block, k++){
+    const end = Math.min(i+block, clip.length);
+    const buf = nch > 1 ? enc.encodeBuffer(L.subarray(i, end), R.subarray(i, end)) : enc.encodeBuffer(L.subarray(i, end));
+    if(buf && buf.length) parts.push(new Uint8Array(buf));
+    if(k % 250 === 249) await sleep(0);
+  }
+  const tail = enc.flush();
+  if(tail && tail.length) parts.push(new Uint8Array(tail));
+  return new Blob(parts, { type: "audio/mpeg" });
+}
+async function encodeRecorded(clip){
+  if(!window.MediaRecorder) throw new Error("recorder");
+  const C = window.AudioContext || window.webkitAudioContext;
+  const oc = new C({ sampleRate: clip.sampleRate });
+  const buf = toAudioBufferOn(oc, clip);
+  const dest = oc.createMediaStreamDestination();
+  const src = oc.createBufferSource(); src.buffer = buf; src.connect(dest);
+  const mime = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"].filter(m => MediaRecorder.isTypeSupported(m))[0];
+  if(!mime) throw new Error("mime");
+  const rec = new MediaRecorder(dest.stream, { mimeType: mime, audioBitsPerSecond: 192000 });
+  const chunks = [];
+  rec.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
+  const stopped = new Promise(res => { rec.onstop = res; });
+  rec.start(); src.start();
+  await new Promise(res => { src.onended = res; setTimeout(res, (clip.length/clip.sampleRate)*1000 + 900); });
+  rec.stop(); await stopped;
+  try{ oc.close(); }catch(e){}
+  return { blob: new Blob(chunks, { type: mime }), ext: mime.indexOf("mp4") > -1 ? "mp4" : "webm" };
+}
+function toAudioBufferOn(ctx, clip){
+  const b = ctx.createBuffer(clip.channels.length, clip.length, clip.sampleRate);
+  for(let c = 0; c < clip.channels.length; c++){
+    if(b.copyToChannel) b.copyToChannel(clip.channels[c], c);
+    else b.getChannelData(c).set(clip.channels[c]);
+  }
+  return b;
+}
+
+/* ---------------- saving ---------------- */
+async function saveFile(filename, blob){
+  if(dl){
+    try{ await dl.save({ filename: filename, data: blob }); toast("تم الحفظ: " + filename); return { ok: true }; }
+    catch(e){ return { ok: false, code: (e && e.code) || "unavailable", message: (e && e.message) || "" }; }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  toast("تم التنزيل: " + filename);
+  return { ok: true };
+}
+function saveErrText(code){
+  if(code === "declined") return "أُلغي الحفظ.";
+  if(code === "rate_limited") return "فيه نافذة حفظ مفتوحة — جرّب بعد لحظة.";
+  if(code === "too_large") return "الملف أكبر من ١٦ ميجابايت — قصّر المقطع أو نزّل الجودة.";
+  return "تعذّر الحفظ في هذه الصفحة.";
+}
+function refreshSaveNotes(){
+  $("#srtSaveNote").textContent = dl
+    ? "داخل صفحة الـ Artifact يُحفظ الملف بامتداد ‎.txt‎ — غيّر الاسم إلى ‎.srt‎ بعد التنزيل، أو استخدم زر النسخ."
+    : "";
+}
+
+/* ---------------- file loading ---------------- */
+function loadSRTText(txt, name){
+  const cues = parseSRT(txt);
+  if(!cues.length){
+    $("#fileNote").className = "note bad";
+    $("#fileNote").textContent = "ما قدرت أقرأ أي بطاقة من هذا الملف. تأكد أنه ملف SRT فيه توقيتات بصيغة 00:00:00,000 --> 00:00:02,000";
+    return;
+  }
+  S.cues = cues;
+  const tk = tokenize(cues);
+  S.tokens = tk.tokens; S.cueTokens = tk.cueTokens;
+  S.srtName = name; S.a = S.b = null; S.anchorSet = false; S.edited = false;
+  $("#srtInfo").textContent = name + " · " + cues.length + " بطاقة · " + S.tokens.length + " كلمة";
+  $("#dropSrt").classList.add("filled");
+  $("#pillSrt").classList.add("on");
+  $("#pillSrt").innerHTML = '<span class="dot"></span> ' + cues.length + " بطاقة جاهزة";
+  $("#wsCard").classList.remove("hidden");
+  $("#wsHint").textContent = "المدة الكاملة " + msToClock(cues[cues.length-1].end);
+  $("#fileNote").className = "note ok";
+  $("#fileNote").textContent = "تم تحميل الترجمة. اختر بداية المقطع ثم نهايته.";
+  renderScore(); sync();
+}
+function readSRTFile(f){
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => loadSRTText(String(r.result || ""), f.name);
+  r.onerror = () => toast("تعذّرت قراءة الملف", true);
+  r.readAsText(f, "utf-8");
+}
+function readAudioFile(f){
+  if(!f) return;
+  $("#audioBar").classList.add("on");
+  $("#audioInfo").textContent = "جارٍ فك ترميز الصوت…";
+  const r = new FileReader();
+  r.onload = function(){
+    const a = actx();
+    a.decodeAudioData(r.result, function(buf){
+      S.audio = buf; S.audioName = f.name; S.peaks = buildPeaks(buf);
+      $("#audioBar").classList.remove("on");
+      $("#dropAudio").classList.add("filled");
+      $("#audioInfo").textContent = f.name + " · " + msToClock(buf.duration*1000) + " · " + buf.sampleRate + "Hz";
+      $("#pillAudio").classList.add("on");
+      $("#pillAudio").innerHTML = '<span class="dot"></span> صوت ' + msToClock(buf.duration*1000);
+      $("#waveCard").classList.remove("hidden");
+      $("#audioMeta").innerHTML = "<b>" + (buf.numberOfChannels > 1 ? "ستيريو" : "مونو") + "</b> · " +
+        '<span dir="ltr">' + buf.sampleRate + " Hz</span> · " +
+        '<span dir="ltr">' + buf.duration.toFixed(2) + "s</span>";
+      sync();
+    }, function(){
+      $("#audioBar").classList.remove("on");
+      $("#audioInfo").textContent = "تعذّر فك ترميز هذا الملف";
+      toast("صيغة الصوت غير مدعومة في هذا المتصفح", true);
+    });
+  };
+  r.readAsArrayBuffer(f);
+}
+function wireDrop(zone, input, handler){
+  const z = $(zone);
+  ["dragenter", "dragover"].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.remove("over"); }));
+  z.addEventListener("drop", e => { const f = e.dataTransfer && e.dataTransfer.files[0]; if(f) handler(f); });
+  $(input).addEventListener("change", e => { const f = e.target.files[0]; if(f) handler(f); });
+}
+wireDrop("#dropSrt", "#fileSrt", readSRTFile);
+wireDrop("#dropAudio", "#fileAudio", readAudioFile);
+
+/* ---------------- events ---------------- */
+$("#score").addEventListener("click", function(e){
+  const w = e.target.closest(".w");
+  if(w){ pickToken(+w.dataset.i); return; }
+  const l = e.target.closest(".line");
+  if(l && S.mode === "line") pickCue(+l.dataset.c);
+});
+$$(".seg [data-mode]").forEach(function(b){
+  b.addEventListener("click", function(){
+    S.mode = b.dataset.mode;
+    $$(".seg [data-mode]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    $("#modeNote").textContent = S.mode === "word"
+      ? "توقيت الكلمة تقديري داخل البطاقة — دقيق عند حدود البطاقات."
+      : S.mode === "line" ? "التحديد يمشي على بطاقات الملف الأصلية بتوقيتها الدقيق."
+      : "المقطع كامل من أول بطاقة لآخر بطاقة.";
+    if(S.mode === "all") selectAll(); else { S.anchorSet = false; }
+    renderScore(); sync();
+  });
+});
+$("#btnAll").addEventListener("click", selectAll);
+$("#btnClear").addEventListener("click", clearSel);
+["#optZero", "#optRenum", "#optGran", "#padBefore", "#padAfter"].forEach(function(sel){
+  $(sel).addEventListener("change", function(){ S.edited = false; sync(); });
+  $(sel).addEventListener("input", function(){ S.edited = false; sync(); });
+});
+["#optMono", "#optFade"].forEach(s => $(s).addEventListener("change", () => { $("#fallbackBox").classList.add("hidden"); }));
+$("#outEdit").addEventListener("input", function(){ S.edited = true; $("#editedFlag").classList.remove("hidden"); });
+$("#btnResync").addEventListener("click", function(){ S.edited = false; sync(); toast("تم إرجاع النص المولّد"); });
+$$(".tabs [data-tab]").forEach(function(b){
+  b.addEventListener("click", function(){
+    $$(".tabs [data-tab]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+    $$("[data-pane]").forEach(p => p.classList.toggle("hidden", p.dataset.pane !== b.dataset.tab));
+  });
+});
+$("#fmt").addEventListener("change", function(){
+  $("#brWrap").style.display = $("#fmt").value === "mp3" ? "" : "none";
+  $("#fallbackBox").classList.add("hidden");
+});
+$("#search").addEventListener("input", runSearch);
+function runSearch(){
+  const q = ($("#search").value || "").trim();
+  $$("#score .hit").forEach(el => el.classList.remove("hit"));
+  if(!q){ $("#searchCnt").textContent = ""; return; }
+  const nodes = S.mode === "word" ? $$("#score .w") : $$("#score .line .tx");
+  let n = 0, first = null;
+  nodes.forEach(function(el){
+    if(el.textContent.indexOf(q) > -1){
+      const target = S.mode === "word" ? el : el.parentElement;
+      target.classList.add("hit"); n++; if(!first) first = target;
+    }
+  });
+  $("#searchCnt").textContent = n ? n + " نتيجة" : "لا شيء";
+  if(first) first.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
+/* ---------------- actions ---------------- */
+$("#btnCopySrt").addEventListener("click", async function(){
+  const txt = $("#outEdit").value;
+  try{ await navigator.clipboard.writeText(txt); toast("اننسخ ملف SRT"); }
+  catch(e){
+    const ta = $("#outEdit");
+    $$(".tabs [data-tab]").forEach(x => x.setAttribute("aria-selected", String(x.dataset.tab === "edit")));
+    $$("[data-pane]").forEach(p => p.classList.toggle("hidden", p.dataset.pane !== "edit"));
+    ta.focus(); ta.select();
+    toast("اضغط Ctrl+C للنسخ");
+  }
+});
+$("#btnSaveSrt").addEventListener("click", async function(){
+  const txt = $("#outEdit").value;
+  if(!txt.trim()) return;
+  const name = baseName(S.srtName) + "-cut" + (dl ? ".srt.txt" : ".srt");
+  const res = await saveFile(name, new Blob([txt], { type: "text/plain" }));
+  if(!res.ok){ toast(saveErrText(res.code), true); }
+});
+$("#btnPlaySel").addEventListener("click", function(){
+  if(srcNode){ stopPlay(); return; }
+  const t = selTimes(); if(!t || !S.audio) return;
+  playRange(t.t0, t.t1);
+  $("#btnPlaySel").textContent = "■ إيقاف";
+});
+$("#btnPlayAll").addEventListener("click", function(){
+  if(srcNode){ stopPlay(); return; }
+  if(!S.audio) return;
+  playRange(0, S.audio.duration);
+  $("#btnPlayAll").textContent = "■ إيقاف";
+});
+$("#btnPreviewCut").addEventListener("click", function(){
+  if(srcNode){ stopPlay(); return; }
+  const t = selTimes(); if(!t || !S.audio) return;
+  const clip = sliceAudio();
+  playRange(0, clip.length/clip.sampleRate, toAudioBuffer(clip), t.t0);
+  toast("تسمع النتيجة النهائية بالهوامش والتلاشي");
+});
+let lastClip = null;
+$("#btnCut").addEventListener("click", async function(){
+  const t = selTimes(); if(!t || !S.audio) return;
+  const fmt = $("#fmt").value;
+  $("#fallbackBox").classList.add("hidden");
+  $("#cutBar").classList.add("on");
+  $("#btnCut").disabled = true;
+  try{
+    const clip = sliceAudio();
+    lastClip = clip;
+    let blob, ext;
+    if(fmt === "mp3"){
+      if(!mp3Ready()){ toast("مُرمّز MP3 ما تحمّل — اختر WAV", true); return; }
+      blob = await encodeMP3(clip, +$("#bitrate").value); ext = "mp3";
+    } else { blob = encodeWAV(clip); ext = "wav"; }
+    const mb = (blob.size/1048576).toFixed(2);
+    const name = baseName(S.audioName || S.srtName) + "-cut." + ext;
+    const res = await saveFile(name, blob);
+    if(res.ok){ $("#cutNote").className = "note ok"; $("#cutNote").textContent = "تم إخراج " + name + " · " + mb + " ميجابايت · " + (t.t1-t.t0).toFixed(2) + " ثانية."; }
+    else if(res.code === "rejected_extension" || res.code === "extension_not_enabled"){
+      $("#fallbackMsg").textContent = "صفحة الـ Artifact ما تسمح بحفظ ملفات " + ext.toUpperCase() + " مباشرة. أقدر أحفظ نفس المقطع بصيغة WebM/Opus، أو انسخ الصفحة وشغّلها محلياً لتنزيل MP3/WAV.";
+      $("#fallbackBox").classList.remove("hidden");
+    } else { toast(saveErrText(res.code), true); }
+  } catch(err){
+    toast("صار خطأ أثناء القص: " + (err && err.message ? err.message : err), true);
+  } finally {
+    $("#cutBar").classList.remove("on");
+    $("#btnCut").disabled = false;
+  }
+});
+$("#btnFallback").addEventListener("click", async function(){
+  if(!lastClip) return;
+  $("#cutBar").classList.add("on");
+  $("#btnFallback").disabled = true;
+  try{
+    const out = await encodeRecorded(lastClip);
+    const name = baseName(S.audioName || S.srtName) + "-cut." + out.ext;
+    const res = await saveFile(name, out.blob);
+    if(res.ok){ $("#fallbackBox").classList.add("hidden"); }
+    else toast(saveErrText(res.code), true);
+  } catch(e){ toast("تعذّر التحويل في هذا المتصفح", true); }
+  finally{ $("#cutBar").classList.remove("on"); $("#btnFallback").disabled = false; }
+});
+
+/* ---------------- init ---------------- */
+let rzT = null;
+window.addEventListener("resize", function(){ clearTimeout(rzT); rzT = setTimeout(drawWave, 120); });
+$("#modeNote").textContent = "توقيت الكلمة تقديري داخل البطاقة — دقيق عند حدود البطاقات.";
+renderScore(); sync();
+if(!mp3Ready()){
+  window.addEventListener("load", function(){
+    if(!mp3Ready()){
+      const o = $("#fmt").querySelector('option[value="mp3"]');
+      if(o){ o.disabled = true; o.textContent = "MP3 (غير متاح هنا)"; }
+      $("#fmt").value = "wav"; $("#brWrap").style.display = "none";
+    }
+  });
+}
+})();
+</script>
