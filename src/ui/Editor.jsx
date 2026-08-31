@@ -465,14 +465,13 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                       value={props.textStyle}
                       onPick={(v) => set("textStyle", v)}
                     />
-                    {props.revealMode === "word" ? (
-                      <WordLines
-                        cues={captions}
-                        setCues={(next) => set("captions", next)}
-                        perLine={wordsPerCue}
-                        setPerLine={setWordsPerCue}
-                      />
-                    ) : null}
+                    <WordLines
+                      cues={captions}
+                      setCues={(next) => set("captions", next)}
+                      perLine={wordsPerCue}
+                      setPerLine={setWordsPerCue}
+                      perWordTiming={props.revealMode === "word"}
+                    />
 
                     <ChipRow
                       label="طريقة الكشف"
@@ -566,18 +565,30 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                   </>
                 ) : null}
 
-                {(groupName === SCENES_GROUP ? [] : groupFields).map(
-                  (field) => (
-                    <FieldControl
-                      key={field.name}
-                      field={field}
-                      value={props[field.name]}
-                      set={set}
-                      pickedAt={pickedAt}
-                      pickAsset={pickAsset}
-                    />
-                  ),
-                )}
+                {/* في الاستوديو تُعرض هذه الحقول بأدوات خاصة أعلاه، فرسمها
+                    خاماً هنا يعني نسختين من الشيء نفسه تتعارضان */}
+                {(groupName === SCENES_GROUP
+                  ? []
+                  : groupFields.filter(
+                      (f) =>
+                        !(
+                          studio &&
+                          (["textStyle", "revealMode", "mediaStyle"].includes(
+                            f.name,
+                          ) ||
+                            f.kind === "captions")
+                        ),
+                    )
+                ).map((field) => (
+                  <FieldControl
+                    key={field.name}
+                    field={field}
+                    value={props[field.name]}
+                    set={set}
+                    pickedAt={pickedAt}
+                    pickAsset={pickAsset}
+                  />
+                ))}
               </div>
             </details>
           );

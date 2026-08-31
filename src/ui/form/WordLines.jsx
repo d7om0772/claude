@@ -54,7 +54,13 @@ const MS = ({ value, onChange, title }) => (
   />
 );
 
-export const WordLines = ({ cues, setCues, perLine, setPerLine }) => {
+export const WordLines = ({
+  cues,
+  setCues,
+  perLine,
+  setPerLine,
+  perWordTiming = true,
+}) => {
   const words = flattenWords(cues);
   const lastEndMs = cues.reduce((max, c) => Math.max(max, c.endMs), 0);
   const commit = (next, count = perLine) =>
@@ -98,7 +104,9 @@ export const WordLines = ({ cues, setCues, perLine, setPerLine }) => {
       <label>الكلمات ({words.length})</label>
 
       <div className="scene-row">
-        <span className="file-empty">كلمات السطر</span>
+        <span className="file-empty">
+          {perWordTiming ? "كلمات السطر" : "كلمات السطر (تظهر معاً)"}
+        </span>
         <div className="stepper">
           <button
             type="button"
@@ -138,6 +146,23 @@ export const WordLines = ({ cues, setCues, perLine, setPerLine }) => {
               <span className="stage-label" style={{ position: "static" }}>
                 سطر {lineIndex + 1}
               </span>
+              {perWordTiming ? null : (
+                <span className="cue-range">
+                  <MS
+                    value={line.words[0].startMs}
+                    title="لحظة ظهور السطر بالملي ثانية"
+                    onChange={(v) =>
+                      commit(
+                        words.map((w, i) =>
+                          i >= line.start && i < line.start + perLine
+                            ? { ...w, startMs: v }
+                            : w,
+                        ),
+                      )
+                    }
+                  />
+                </span>
+              )}
               <button
                 type="button"
                 className="icon-btn"
@@ -165,11 +190,13 @@ export const WordLines = ({ cues, setCues, perLine, setPerLine }) => {
                       replaceWord(index, { text: e.target.value })
                     }
                   />
-                  <MS
-                    value={word.startMs}
-                    title="لحظة ظهور الكلمة بالملي ثانية"
-                    onChange={(v) => replaceWord(index, { startMs: v })}
-                  />
+                  {perWordTiming ? (
+                    <MS
+                      value={word.startMs}
+                      title="لحظة ظهور الكلمة بالملي ثانية"
+                      onChange={(v) => replaceWord(index, { startMs: v })}
+                    />
+                  ) : null}
                   <button
                     type="button"
                     className="icon-btn"
