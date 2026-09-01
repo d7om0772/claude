@@ -67,22 +67,45 @@ const wordsOfWordCues = (cues) =>
     text: cue.text,
     startMs: cue.startMs,
     endMs: cue.endMs,
+    startsLine: cue.startsLine ?? false,
   }));
+
+/**
+ * أسطر نمط الكلمة: حدودٌ صريحة إن علّمها المستخدم، وإلا فبالعدد الثابت.
+ *
+ * الحدّ الصريح هو ما يسمح بسطر من ثلاث كلمات وتاليه من كلمتين — وهو نفس ما
+ * يقرأه القالب عند الرسم، فما في اللوحة هو ما في الفيديو.
+ */
+const linesOfWords = (words, perLine) =>
+  words.some((w) => w.startsLine)
+    ? words.reduce((lines, word) => {
+        if (lines.length === 0 || word.startsLine) lines.push({ words: [] });
+        lines[lines.length - 1].words.push(word);
+        return lines;
+      }, [])
+    : cut(words, [perLine]);
 
 /**
  * وتُكتب كما هي أيضاً. نهاية الكلمة تخصّ القالب — يبني منها مدة بقاء آخر
  * مقطع — فلا تُشتقّ من جارتها، وإنما تُصان ولا تُترك قبل بدايتها.
  */
-const wordCuesOf = (words) =>
-  words.map((w) => {
-    const startMs = Math.round(w.startMs);
-    const endMs = Math.round(w.endMs ?? startMs + 400);
-    return {
-      text: w.text,
-      startMs,
-      endMs: Math.max(endMs, startMs + MIN_WORD_MS),
-    };
-  });
+const wordCuesOf = (lines, marked) =>
+  lines.flatMap((line, lineIndex) =>
+    line.words.map((w, i) => {
+      const startMs = Math.round(w.startMs);
+      const endMs = Math.round(w.endMs ?? startMs + 400);
+      return {
+        text: w.text,
+        startMs,
+        endMs: Math.max(endMs, startMs + MIN_WORD_MS),
+        // العلامة تُكتب على كل الكلمات معاً أو لا تُكتب أصلاً: علامةٌ واحدة
+        // تجعل كل الحدود صريحة عند القالب، فبقيّة الأسطر بلا علامة تلتحم
+        ...(marked && !(lineIndex === 0 && i === 0)
+          ? { startsLine: i === 0 }
+          : {}),
+      };
+    }),
+  );
 
 /** يقطّع قائمة كلمات إلى أسطر بأطوال معطاة، وما زاد يأخذ الطول الأخير. */
 const cut = (words, lengths) => {
@@ -152,15 +175,16 @@ export const WordLines = ({
   perLineMax = 10,
 }) => {
   const byWord = granularity === "word";
-  const lines = byWord
-    ? cut(wordsOfWordCues(cues), [perLine])
-    : linesOfCues(cues);
+  const wordCues = byWord ? wordsOfWordCues(cues) : [];
+  const lines = byWord ? linesOfWords(wordCues, perLine) : linesOfCues(cues);
   const words = flattenWords(lines);
   const lastEndMs = cues.reduce((max, c) => Math.max(max, c.endMs), 0);
-  const commitLines = (next) =>
-    setCues(
-      byWord ? wordCuesOf(flattenWords(next)) : cuesOfLines(next, lastEndMs),
-    );
+  /**
+   * `marked` يقرّر أيُكتب الحدّ صريحاً أم يُترك للعدد الثابت. أي تغيير على
+   * سطر بعينه يجعله صريحاً، والعدّاد العام يمحوه ليعود التقسيم منتظماً.
+   */
+  const commitLines = (next, marked = wordCues.some((w) => w.startsLine)) =>
+    setCues(byWord ? wordCuesOf(next, marked) : cuesOfLines(next, lastEndMs));
 
   /** يبدّل كلمات سطر واحد ويترك البقية كما هي. */
   const patchLine = (index, nextWords) =>
@@ -201,7 +225,11 @@ export const WordLines = ({
         need -= taken.length;
       }
     }
-    commitLines(next.filter((line) => line.words.length > 0));
+    // تغيير سطر بعينه يعني أن الأطوال لم تعد منتظمة، فتُكتب الحدود صريحة
+    commitLines(
+      next.filter((line) => line.words.length > 0),
+      true,
+    );
   };
 
   /**
@@ -213,9 +241,10 @@ export const WordLines = ({
    */
   const changePerLine = (count) => {
     setPerLine(count);
-    // في نمط الكلمة التقسيم خاصية في القالب لا شكلٌ في التخزين، فتغييره
-    // وحده يكفي: المقاطع تبقى كلمةً كلمة كما هي
-    if (!byWord && words.length > 0) commitLines(cut(words, [count]));
+    if (words.length === 0) return;
+    // في نمط الكلمة العدّاد العام يعيد كل الأسطر إلى الانتظام، فيمحو الحدود
+    // الصريحة التي وضعها المستخدم على أسطر بعينها
+    commitLines(cut(words, [count]), false);
   };
 
   /** خاصية تُكتب على كل كلمات السطر — ستايله أو موضعه. */
@@ -313,13 +342,11 @@ export const WordLines = ({
               <span className="stage-label" style={{ position: "static" }}>
                 سطر {lineIndex + 1}
               </span>
-              {byWord ? null : (
-                <Stepper
-                  value={line.words.length}
-                  onChange={(count) => resizeLine(lineIndex, count)}
-                  title="كلمات هذا السطر — ما زاد ينزل للسطر التالي"
-                />
-              )}
+              <Stepper
+                value={line.words.length}
+                onChange={(count) => resizeLine(lineIndex, count)}
+                title="كلمات هذا السطر — ما زاد ينزل للسطر التالي"
+              />
               {perWordTiming ? null : (
                 <span className="cue-range">
                   <MS

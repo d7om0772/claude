@@ -15,13 +15,36 @@ import { FONT_STACK, FONT_WEIGHT_BLACK } from "../../lib/fonts.js";
 import { isVideoSource } from "../../lib/duration.js";
 import { resolveAsset } from "../../lib/asset-url.js";
 import { WordClicks, cueWordOnsets } from "../../lib/word-clicks.jsx";
-const buildCues = (captions, wordsPerLine, linesPerCue, holdMs) => {
-  const perCue = Math.max(1, wordsPerLine * linesPerCue);
-  const chunks = [];
-  for (let i = 0; i < captions.length; i += perCue) {
-    chunks.push(captions.slice(i, i + perCue));
+/**
+ * يقسّم الكلمات أسطراً.
+ *
+ * الأصل كان يقطّع بعدد ثابت لكل سطر. حين تعلّم أحد الكلمات ببداية سطر
+ * (`startsLine`) صارت الحدود صريحة، فيصحّ أن يكون سطر من ثلاث كلمات وتاليه
+ * من كلمتين. والعدد الثابت يبقى الافتراضي حين لا علامة في المقاطع.
+ */
+const buildLines = (captions, wordsPerLine) => {
+  const size = Math.max(1, wordsPerLine);
+  const marked = captions.some((word) => word.startsLine);
+  const lines = [];
+  for (const word of captions) {
+    const startNew = marked
+      ? lines.length === 0 || word.startsLine
+      : lines.length === 0 || lines[lines.length - 1].length >= size;
+    if (startNew) lines.push([]);
+    lines[lines.length - 1].push(word);
   }
-  return chunks.flatMap((words, index) => {
+  return lines;
+};
+
+const buildCues = (captions, wordsPerLine, linesPerCue, holdMs) => {
+  const lines = buildLines(captions, wordsPerLine);
+  const perCue = Math.max(1, linesPerCue);
+  const chunks = [];
+  for (let i = 0; i < lines.length; i += perCue) {
+    chunks.push(lines.slice(i, i + perCue));
+  }
+  return chunks.flatMap((rows, index) => {
+    const words = rows.flat();
     const first = words[0];
     const last = words[words.length - 1];
     if (first === undefined || last === undefined) {
@@ -29,10 +52,11 @@ const buildCues = (captions, wordsPerLine, linesPerCue, holdMs) => {
     }
     // المقطع يبقى معروضاً حتى تبدأ الكلمة الأولى من المقطع التالي،
     // أو حتى نهاية آخر كلمة + مدة التثبيت إن كان المقطع الأخير.
-    const nextFirst = chunks[index + 1]?.[0];
+    const nextFirst = chunks[index + 1]?.[0]?.[0];
     const end = nextFirst ? nextFirst.startMs : last.endMs + holdMs;
     return [
       {
+        rows,
         words,
         startMs: first.startMs,
         endMs: Math.max(end, first.startMs + 1),
@@ -40,6 +64,7 @@ const buildCues = (captions, wordsPerLine, linesPerCue, holdMs) => {
     ];
   });
 };
+
 const chunkRows = (words, wordsPerLine) => {
   const rows = [];
   const size = Math.max(1, wordsPerLine);
@@ -117,10 +142,8 @@ const CaptionBlock = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const currentMs = (frame / fps) * 1000;
-  const rows = useMemo(
-    () => chunkRows(cue.words, wordsPerLine),
-    [cue.words, wordsPerLine],
-  );
+  // الصفوف تأتي مبنيّة مع المقطع: حدود الأسطر قد تكون صريحة لا بعدد ثابت
+  const rows = cue.rows ?? chunkRows(cue.words, wordsPerLine);
   // كثافة الأحرف المرسلة هنا «واحدة لكل سطر» لا لكل أربع كلمات، لأن وحدة
   // التنضيد في هذا القالب هي السطر. البقية من دليل ثمانية كما هي.
   let globalIndex = 0;

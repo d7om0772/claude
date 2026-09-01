@@ -8,6 +8,12 @@ export const captionSchema = z.object({
   text: z.string().max(24).describe("نص الكلمة كما تُنطق"),
   startMs: z.number().min(0).describe("لحظة بدء نطق الكلمة بالمللي ثانية"),
   endMs: z.number().min(0).describe("لحظة انتهاء نطق الكلمة بالمللي ثانية"),
+  startsLine: z
+    .boolean()
+    .optional()
+    .describe(
+      "بداية سطر جديد. حين تُعلَّم كلمةٌ واحدة على الأقل تصير حدود الأسطر صريحة فيختلف طول السطر عن الآخر، وإلا فالتقسيم بعدد wordsPerLine",
+    ),
 });
 export const templateSchema = z.object({
   /* ---------- الألوان ---------- */
@@ -259,7 +265,8 @@ export const defaultProps = {
   wordGapRatio: 0.0204,
   shadowOpacity: 0.75,
   wordsPerLine: 2,
-  linesPerCue: 2,
+  // سطر واحد في كل لحظة: الجديد يحلّ محلّ الذي قبله
+  linesPerCue: 1,
   cueHoldMs: 450,
   popDurationInFrames: 5,
   popRiseRatio: 0.28,
