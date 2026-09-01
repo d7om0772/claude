@@ -252,6 +252,18 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     [fields],
   );
   const studio = template.meta.kind === "studio";
+  /**
+   * محرّر الكلمات ليس حكراً على الاستوديو: كل قالب مقاطعُه كلماتٌ مفردة
+   * ويجمعها أسطراً بعدد ثابت يستحقّ الصناديق نفسها — فما يراه المستخدم في
+   * اللوحة يصير سطر الفيديو نفسه بدل قائمة مقاطع لا شكل لها.
+   */
+  const perLineField = useMemo(
+    () => fields.find((f) => f.name === "wordsPerLine"),
+    [fields],
+  );
+  const wordCueTemplate =
+    !studio && wantsWordLevel(template.meta) && perLineField !== undefined;
+  const wordEditor = studio || wordCueTemplate;
   const wordTimed = useMemo(
     () =>
       (captionField?.itemFields ?? []).some((f) => f.name === "wordStartsMs"),
@@ -438,7 +450,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     // مجموعة الكلمات في الاستوديو ليست حقلاً في الـ schema: محرّرها يبني
     // مصفوفة المقاطع من كلمات مفردة، فتُفتح لها مجموعة صريحة بدل دفنها بين
     // الحقول — وهناك ضاعت على المستخدم فعلاً.
-    if (studio) map.set(WORDS_GROUP, []);
+    if (wordEditor) map.set(WORDS_GROUP, []);
     for (const f of fields) {
       if (f.kind === "unsupported") continue;
       if (sceneBased && (f.name === "scenes" || f.kind === "captions")) {
@@ -449,7 +461,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       map.set(g, [...(map.get(g) ?? []), f]);
     }
     return map;
-  }, [fields, sceneBased]);
+  }, [fields, sceneBased, wordEditor]);
   return (
     <div className="editor">
       <aside className="controls">
@@ -502,11 +514,28 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                     <WordLines
                       cues={captions}
                       setCues={(next) => set("captions", next)}
-                      perLine={wordsPerCue}
-                      setPerLine={setWordsPerCue}
-                      perWordTiming={props.revealMode === "word"}
-                      styles={TEXT_STYLES}
+                      perLine={
+                        wordCueTemplate
+                          ? (props.wordsPerLine ?? 1)
+                          : wordsPerCue
+                      }
+                      setPerLine={(n) =>
+                        wordCueTemplate
+                          ? set("wordsPerLine", n)
+                          : setWordsPerCue(n)
+                      }
+                      perWordTiming={
+                        studio ? props.revealMode === "word" : true
+                      }
+                      styles={studio ? TEXT_STYLES : []}
                       defaultStyle={props.textStyle}
+                      granularity={wordCueTemplate ? "word" : "line"}
+                      perLineMin={
+                        wordCueTemplate ? (perLineField?.min ?? 1) : 1
+                      }
+                      perLineMax={
+                        wordCueTemplate ? (perLineField?.max ?? 10) : 10
+                      }
                     />
                   </>
                 ) : null}
@@ -555,7 +584,8 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                   <div className="note warn">
                     <b>هذه الحقول لا تظهر الآن.</b> الكابشن ممتلئ (
                     {captions.length} مقاطع) والكلمات المعروضة تأتي منه. عدّلها
-                    من قسم «الصوت والتزامن»، أو امسح الكابشن ليظهر النص من هنا.
+                    من قسم «{wordEditor ? WORDS_GROUP : "الصوت والتزامن"}»، أو
+                    امسح الكابشن ليظهر النص من هنا.
                     <div style={{ marginTop: 8 }}>
                       <button
                         type="button"
@@ -571,7 +601,9 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
 
                 {groupName === "الصوت والتزامن" ? (
                   <>
-                    {studio ? null : (
+                    {/* لمن له محرّر كلمات: صفّ الاستيراد هناك، فتكراره هنا
+                        زرّان لعمل واحد */}
+                    {wordEditor ? null : (
                       <div className="field">
                         <label>
                           ملف الترجمة SRT — منه تُشتقّ توقيتات الكلمات
@@ -620,11 +652,12 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                   : groupFields.filter(
                       (f) =>
                         !(
-                          studio &&
-                          (["textStyle", "revealMode", "mediaStyle"].includes(
-                            f.name,
-                          ) ||
-                            f.kind === "captions")
+                          (studio &&
+                            ["textStyle", "revealMode", "mediaStyle"].includes(
+                              f.name,
+                            )) ||
+                          (wordEditor && f.kind === "captions") ||
+                          (wordCueTemplate && f.name === "wordsPerLine")
                         ),
                     )
                 ).map((field) => (

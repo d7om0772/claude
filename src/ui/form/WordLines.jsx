@@ -13,6 +13,15 @@ import { wordsOfCue } from "./srt-cues.js";
  *
  * ستايل السطر وموضعه محفوظان على كلماته: أيّ إعادة توزيع تعيد بناء الأسطر
  * من الكلمات، فحفظُهما على السطر وحده يضيّعهما عند أول تغيير.
+ *
+ * وللقوالب نمطان في تخزين المقاطع، فللمحرّر `granularity`:
+ *
+ * - "line": المقطع سطرٌ ونصّه كلماته — استوديو «اصنع قالبك». الأسطر تختلف
+ *   أطوالها، ولكلٍّ ستايله وموضعه.
+ * - "word": المقطع كلمةٌ واحدة، والقالب هو من يجمعها أسطراً بعدد ثابت
+ *   (`wordsPerLine`). هنا تُقرأ الكلمات كما هي وتُقطَّع للعرض بنفس العدد،
+ *   فما تراه في المحرّر هو سطر الفيديو نفسه. ولأن التقسيم يخصّ القالب كلَّه
+ *   لا سطراً بعينه، تُخفى عدّادات الأسطر المفردة.
  */
 
 /** المسافة بعد آخر كلمة حين لا يوجد ما بعدها يحدّد النهاية. */
@@ -48,6 +57,32 @@ export const cuesOfLines = (lines, lastEndMs) => {
     };
   });
 };
+
+/** أقل مدة تُترك للكلمة حين يزحف توقيتها فوق نهايتها. */
+const MIN_WORD_MS = 200;
+
+/** في نمط الكلمة: كل مقطع كلمةٌ بذاتها، فتُقرأ كما هي بلا تقسيم نصّها. */
+const wordsOfWordCues = (cues) =>
+  cues.map((cue) => ({
+    text: cue.text,
+    startMs: cue.startMs,
+    endMs: cue.endMs,
+  }));
+
+/**
+ * وتُكتب كما هي أيضاً. نهاية الكلمة تخصّ القالب — يبني منها مدة بقاء آخر
+ * مقطع — فلا تُشتقّ من جارتها، وإنما تُصان ولا تُترك قبل بدايتها.
+ */
+const wordCuesOf = (words) =>
+  words.map((w) => {
+    const startMs = Math.round(w.startMs);
+    const endMs = Math.round(w.endMs ?? startMs + 400);
+    return {
+      text: w.text,
+      startMs,
+      endMs: Math.max(endMs, startMs + MIN_WORD_MS),
+    };
+  });
 
 /** يقطّع قائمة كلمات إلى أسطر بأطوال معطاة، وما زاد يأخذ الطول الأخير. */
 const cut = (words, lengths) => {
@@ -112,11 +147,20 @@ export const WordLines = ({
   perWordTiming = true,
   styles = [],
   defaultStyle = null,
+  granularity = "line",
+  perLineMin = 1,
+  perLineMax = 10,
 }) => {
-  const lines = linesOfCues(cues);
+  const byWord = granularity === "word";
+  const lines = byWord
+    ? cut(wordsOfWordCues(cues), [perLine])
+    : linesOfCues(cues);
   const words = flattenWords(lines);
   const lastEndMs = cues.reduce((max, c) => Math.max(max, c.endMs), 0);
-  const commitLines = (next) => setCues(cuesOfLines(next, lastEndMs));
+  const commitLines = (next) =>
+    setCues(
+      byWord ? wordCuesOf(flattenWords(next)) : cuesOfLines(next, lastEndMs),
+    );
 
   /** يبدّل كلمات سطر واحد ويترك البقية كما هي. */
   const patchLine = (index, nextWords) =>
@@ -169,7 +213,9 @@ export const WordLines = ({
    */
   const changePerLine = (count) => {
     setPerLine(count);
-    if (words.length > 0) commitLines(cut(words, [count]));
+    // في نمط الكلمة التقسيم خاصية في القالب لا شكلٌ في التخزين، فتغييره
+    // وحده يكفي: المقاطع تبقى كلمةً كلمة كما هي
+    if (!byWord && words.length > 0) commitLines(cut(words, [count]));
   };
 
   /** خاصية تُكتب على كل كلمات السطر — ستايله أو موضعه. */
@@ -205,6 +251,7 @@ export const WordLines = ({
     copy.splice(wordIndex + 1, 0, {
       text: "كلمة",
       startMs,
+      endMs: startMs + 400,
       style: current.style ?? null,
       yRatio: current.yRatio ?? null,
     });
@@ -219,14 +266,22 @@ export const WordLines = ({
 
       <div className="scene-row">
         <span className="file-empty">
-          {perWordTiming ? "توزيع كل الأسطر" : "توزيع كل الأسطر (تظهر معاً)"}
+          {byWord
+            ? "كلمات السطر"
+            : perWordTiming
+              ? "توزيع كل الأسطر"
+              : "توزيع كل الأسطر (تظهر معاً)"}
         </span>
         <Stepper
           value={perLine}
-          min={1}
-          max={10}
+          min={perLineMin}
+          max={perLineMax}
           onChange={changePerLine}
-          title="يسوّي كل الأسطر على هذا العدد. لتغيير سطر وحده استعمل عدّاده"
+          title={
+            byWord
+              ? "عدد كلمات السطر في القالب"
+              : "يسوّي كل الأسطر على هذا العدد. لتغيير سطر وحده استعمل عدّاده"
+          }
         />
       </div>
 
@@ -239,7 +294,11 @@ export const WordLines = ({
               className="btn ghost tiny"
               onClick={() =>
                 commitLines([
-                  { words: [{ text: "كلمة", startMs: 0, style: null }] },
+                  {
+                    words: [
+                      { text: "كلمة", startMs: 0, endMs: 400, style: null },
+                    ],
+                  },
                 ])
               }
             >
@@ -254,11 +313,13 @@ export const WordLines = ({
               <span className="stage-label" style={{ position: "static" }}>
                 سطر {lineIndex + 1}
               </span>
-              <Stepper
-                value={line.words.length}
-                onChange={(count) => resizeLine(lineIndex, count)}
-                title="كلمات هذا السطر — ما زاد ينزل للسطر التالي"
-              />
+              {byWord ? null : (
+                <Stepper
+                  value={line.words.length}
+                  onChange={(count) => resizeLine(lineIndex, count)}
+                  title="كلمات هذا السطر — ما زاد ينزل للسطر التالي"
+                />
+              )}
               {perWordTiming ? null : (
                 <span className="cue-range">
                   <MS
@@ -280,54 +341,56 @@ export const WordLines = ({
               </button>
             </div>
 
-            <div className="cue-head">
-              {styles.length > 0 ? (
+            {byWord ? null : (
+              <div className="cue-head">
+                {styles.length > 0 ? (
+                  <select
+                    className="line-style"
+                    title="ستايل هذا السطر وحده"
+                    value={line.words[0].style ?? ""}
+                    onChange={(e) =>
+                      setLineProp(lineIndex, {
+                        style: e.target.value === "" ? null : e.target.value,
+                      })
+                    }
+                  >
+                    <option value="">
+                      ستايل القالب
+                      {defaultStyle
+                        ? ` (${styles.find((s) => s.value === defaultStyle)?.label ?? defaultStyle})`
+                        : ""}
+                    </option>
+                    {styles.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : null}
                 <select
                   className="line-style"
-                  title="ستايل هذا السطر وحده"
-                  value={line.words[0].style ?? ""}
+                  title="موضع هذا السطر رأسياً"
+                  value={
+                    line.words[0].yRatio === null ||
+                    line.words[0].yRatio === undefined
+                      ? ""
+                      : String(line.words[0].yRatio)
+                  }
                   onChange={(e) =>
                     setLineProp(lineIndex, {
-                      style: e.target.value === "" ? null : e.target.value,
+                      yRatio:
+                        e.target.value === "" ? null : Number(e.target.value),
                     })
                   }
                 >
-                  <option value="">
-                    ستايل القالب
-                    {defaultStyle
-                      ? ` (${styles.find((s) => s.value === defaultStyle)?.label ?? defaultStyle})`
-                      : ""}
-                  </option>
-                  {styles.map((s) => (
-                    <option key={s.value} value={s.value}>
-                      {s.label}
+                  {POSITIONS.map((p) => (
+                    <option key={p.value} value={p.value}>
+                      {p.label}
                     </option>
                   ))}
                 </select>
-              ) : null}
-              <select
-                className="line-style"
-                title="موضع هذا السطر رأسياً"
-                value={
-                  line.words[0].yRatio === null ||
-                  line.words[0].yRatio === undefined
-                    ? ""
-                    : String(line.words[0].yRatio)
-                }
-                onChange={(e) =>
-                  setLineProp(lineIndex, {
-                    yRatio:
-                      e.target.value === "" ? null : Number(e.target.value),
-                  })
-                }
-              >
-                {POSITIONS.map((p) => (
-                  <option key={p.value} value={p.value}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+              </div>
+            )}
 
             {line.words.map((word, i) => {
               counter += 1;
