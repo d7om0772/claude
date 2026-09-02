@@ -97,6 +97,7 @@ export const templateSchema = z.object({
     .min(0)
     .max(0.2)
     .describe("نصف قطر حواف البطاقة كنسبة من عرض الكادر"),
+  mediaMuted: z.boolean().describe("كتم صوت المقطع المرفق داخل الكرت"),
   mediaAspect: z
     .number()
     .min(0.1)
@@ -231,6 +232,7 @@ export const defaultProps = {
   headline: "وقفنا نفكّر..",
   subheadline: "ليش نجرّب",
   media: undefined,
+  mediaMuted: true,
   voiceover: undefined,
   captions: [
     { text: "وقفنا", startMs: 300, endMs: 720 },

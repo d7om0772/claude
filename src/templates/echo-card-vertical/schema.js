@@ -30,26 +30,6 @@ export const captionCueSchema = z.object({
     ),
 });
 
-/** الوسيط اللي يعبّي كرت المشهد الأول (صورة أو فيديو) */
-export const mediaAssetSchema = z.object({
-  src: z
-    .string()
-    .describe(
-      "مسار الصورة أو الفيديو. المسار النسبي يُقرأ من مجلد public عبر staticFile — مثال: media/shirt.mp4",
-    ),
-  kind: z
-    .enum(["image", "video"])
-    .describe("نوع الوسيط: صورة ثابتة أو مقطع فيديو."),
-  fit: z
-    .enum(["cover", "contain"])
-    .describe(
-      "cover يملأ الكرت كامل ويقص الزوائد (الوضع الأصلي في القالب)، contain يُظهر الوسيط كامل مع فراغ.",
-    ),
-  muted: z
-    .boolean()
-    .describe("كتم صوت الفيديو. يُفضّل تركه مفعّل لأن التعليق الصوتي منفصل."),
-});
-
 /** اتجاه دخول الكرت للشاشة */
 export const slideDirectionSchema = z.enum(["bottom", "top", "left", "right"]);
 
@@ -153,11 +133,21 @@ export const templateSchema = z.object({
     .describe("إعدادات مشهد كرت الصدى — النص المكرر داخل الكرت الوردي."),
 
   /* ----- إعدادات مشهد الوسائط ----- */
-  media: mediaAssetSchema
+  media: z
+    .string()
     .nullable()
+    .optional()
     .describe(
-      "الصورة أو الفيديو اللي يعبّي كرت المشهد الأول. اتركه فاضي (null) عشان يبدأ الفيديو مباشرة بكرت الصدى.",
+      "مسار الصورة أو الفيديو داخل مجلد public. اتركه فارغاً عشان يبدأ الفيديو مباشرة بكرت الصدى",
     ),
+  mediaFit: z
+    .enum(["cover", "contain"])
+    .describe(
+      "cover يملأ الكرت ويقص الزوائد (الوضع الأصلي)، contain يُظهر الوسيط كاملاً مع فراغ",
+    ),
+  mediaMuted: z
+    .boolean()
+    .describe("كتم صوت المقطع المرفق داخل الكرت — يُفضّل تركه مفعّلاً"),
   mediaScene: z
     .object({
       minDurationInFrames: z
@@ -291,6 +281,8 @@ export const defaultProps = {
   },
 
   media: null,
+  mediaFit: "cover",
+  mediaMuted: true,
   mediaScene: {
     minDurationInFrames: 90,
   },
@@ -335,12 +327,12 @@ export const calculateMetadata = async ({ props }) => {
   const echoFrames = props.echoScene.durationInFrames;
   const hasVoiceover = Boolean(props.voiceover);
   const hasContent =
-    hasVoiceover || props.captions.length > 0 || props.media !== null;
+    hasVoiceover || props.captions.length > 0 || Boolean(props.media);
 
   const attached = await contentDurationInFrames({
     fps,
     voiceover: props.voiceover,
-    media: props.media ? props.media.src : null,
+    media: props.media ?? null,
     captions: props.captions,
     fallbackInFrames: props.media ? props.mediaScene.minDurationInFrames : 1,
   });

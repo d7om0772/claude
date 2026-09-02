@@ -1,0 +1,27 @@
+{
+  "id": "cream-card-kinetic-ar",
+  "kind": "template",
+  "name": "Cream Card Kinetic",
+  "nameAr": "كرت كريمي وكلمات متتابعة",
+  "description": "Vertical Arabic template on a still cream canvas: the clip sits in a rounded card while captions reveal word by word with a gold underline sweeping beneath the active word, cut with stacked-word scenes, a colour card entering on an echo trail, and a closing word in a gold box. Click on every word.",
+  "descriptionAr": "قالب عمودي بخلفية كريمية ثابتة: المقطع داخل كرت بحواف دائرية، وكابشن عربي يظهر كلمة كلمة مع خط ذهبي يمسح تحت الكلمة النشطة، تتخلله لقطات كلمات متراكمة، وكرت ملوّن يدخل بأثر حركة، وكلمة ختامية بمربع ذهبي.",
+  "category": "social-vertical",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "defaultDurationInFrames": 546,
+  "tags": [
+    "arabic",
+    "rtl",
+    "vertical",
+    "reels",
+    "tiktok",
+    "word-by-word",
+    "captions",
+    "srt",
+    "kinetic-typography",
+    "cream",
+    "minimal",
+    "voiceover"
+  ]
+}

@@ -125,6 +125,7 @@ export const templateSchema = z.object({
     .min(0)
     .max(0.3)
     .describe("نصف قطر زوايا الكرت كنسبة من العرض المرجعي"),
+  mediaMuted: z.boolean().describe("كتم صوت المقطع المرفق داخل الكرت"),
   mediaRadiusRatio: z
     .number()
     .min(0)
@@ -147,7 +148,10 @@ export const defaultProps = {
   media: undefined,
   mediaIsImage: false,
   mediaStartFromSeconds: 0,
-  mediaVolume: 0,
+  mediaMuted: true,
+  // الافتراضي مسموع، فالكتم يتولاه mediaMuted وهو مفعّل افتراضياً: بلا هذا
+  // يرفع المستخدم الكتم فلا يسمع شيئاً
+  mediaVolume: 1,
   voiceover: undefined,
   voiceoverVolume: 1,
   captions: [],

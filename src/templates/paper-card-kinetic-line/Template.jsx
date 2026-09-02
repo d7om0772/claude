@@ -196,6 +196,7 @@ export const Template = ({
   subheadline,
   logo,
   media,
+  mediaMuted,
   voiceover,
   clickSfx,
   clickVolume,
@@ -358,6 +359,7 @@ export const Template = ({
             isVideoSource(media) ? (
               <Video
                 src={resolveSrc(media)}
+                muted={mediaMuted}
                 objectFit="cover"
                 style={{
                   position: "absolute",

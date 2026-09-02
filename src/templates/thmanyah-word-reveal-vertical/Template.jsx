@@ -278,6 +278,7 @@ const StaticText = ({
  */
 const CardMedia = ({
   media,
+  muted,
   aspect,
   box,
   radiusPx,
@@ -342,6 +343,7 @@ const CardMedia = ({
       {isVideoSource(media) ? (
         <Video
           src={src}
+          muted={muted}
           objectFit="cover"
           style={{ width: "100%", height: "100%", borderRadius: radiusPx }}
         />
@@ -371,6 +373,7 @@ export const Template = ({
   headline,
   subheadline,
   media,
+  mediaMuted,
   voiceover,
   clickSfx,
   clickVolume,
@@ -482,6 +485,7 @@ export const Template = ({
 
           <CardMedia
             media={media}
+            muted={mediaMuted}
             aspect={mediaAspect}
             freeSize={mediaFreeSize}
             radiusPx={width * mediaRadiusRatio}

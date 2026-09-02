@@ -60,6 +60,13 @@ import {
   calculateMetadata as echoCardMetadata,
 } from "../templates/echo-card-vertical/schema.js";
 import echoCardMeta from "../templates/echo-card-vertical/template.json";
+import { Template as CreamCardTemplate } from "../templates/cream-card-kinetic-ar/Template.jsx";
+import {
+  templateSchema as creamCardSchema,
+  defaultProps as creamCardDefaults,
+  calculateMetadata as creamCardMetadata,
+} from "../templates/cream-card-kinetic-ar/schema.js";
+import creamCardMeta from "../templates/cream-card-kinetic-ar/template.json";
 /**
  * كل قالب له props مختلفة تماماً، فالسجلّ غير متجانس بطبيعته ولا يمكن تمثيله
  * بنوع واحد دقيق. هذه الدالة تتحقق من اتساق القالب داخلياً — أن props المكوّن
@@ -116,6 +123,13 @@ export const templates = [
     component: EchoCardTemplate,
     defaultProps: echoCardDefaults,
     calculateMetadata: echoCardMetadata,
+  }),
+  defineTemplate({
+    meta: creamCardMeta,
+    schema: creamCardSchema,
+    component: CreamCardTemplate,
+    defaultProps: creamCardDefaults,
+    calculateMetadata: creamCardMetadata,
   }),
   defineTemplate({
     meta: customCanvasMeta,

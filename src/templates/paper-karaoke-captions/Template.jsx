@@ -168,6 +168,7 @@ export const Template = ({
   riseDistanceRatio,
   glowStrength,
   media,
+  mediaMuted,
   mediaFit,
   mediaOpacity,
   mediaRadiusRatio,
@@ -212,6 +213,7 @@ export const Template = ({
             {isVideoSource(media) ? (
               <Video
                 src={resolveAsset(media, staticFile)}
+                muted={mediaMuted}
                 objectFit={mediaFit}
                 style={{ width: "100%", height: "100%" }}
               />

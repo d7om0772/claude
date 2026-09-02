@@ -104,6 +104,7 @@ export const Template = ({
   mediaIsImage,
   mediaStartFromSeconds,
   mediaVolume,
+  mediaMuted,
   voiceover,
   voiceoverVolume,
   clickSfx,
@@ -283,7 +284,8 @@ export const Template = ({
               <Video
                 src={mediaSource}
                 trimBefore={Math.round(mediaStartFromSeconds * fps)}
-                volume={mediaVolume}
+                muted={mediaMuted}
+                volume={mediaMuted ? 0 : mediaVolume}
                 objectFit="cover"
                 style={{ width: "100%", height: "100%" }}
               />

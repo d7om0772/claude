@@ -35,6 +35,7 @@ export const templateSchema = z.object({
     .describe(
       "شعار يظهر أعلى الكرت (مسار صورة عبر staticFile). اتركه فارغاً لإخفائه",
     ),
+  mediaMuted: z.boolean().describe("كتم صوت المقطع المرفق داخل الكرت"),
   media: z
     .string()
     .optional()
@@ -188,6 +189,7 @@ export const defaultProps = {
   subheadline: "ان في احد",
   logo: undefined,
   media: undefined,
+  mediaMuted: true,
   voiceover: undefined,
   captions: [],
   clickSfx: "klova/click.wav",

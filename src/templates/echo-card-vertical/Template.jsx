@@ -16,6 +16,7 @@ import {
   FONT_WEIGHT_MEDIUM,
 } from "../../lib/fonts.js";
 import { resolveAsset } from "../../lib/asset-url.js";
+import { isVideoSource } from "../../lib/duration.js";
 import { WordClicks, cueWordOnsets } from "../../lib/word-clicks.jsx";
 
 /**
@@ -329,7 +330,7 @@ const EchoScene = ({
 /*  مشهد الوسائط                                                               */
 /* -------------------------------------------------------------------------- */
 
-const MediaScene = ({ media, cardColor, motion }) => {
+const MediaScene = ({ media, mediaFit, mediaMuted, cardColor, motion }) => {
   const localFrame = useCurrentFrame();
 
   const offset = getSlideOffset({
@@ -356,17 +357,17 @@ const MediaScene = ({ media, cardColor, motion }) => {
         shadowOpacity={motion.shadowOpacity}
         offset={offset}
       >
-        {media.kind === "image" ? (
-          <Img
-            src={resolveSrc(media.src)}
-            style={{ ...fillStyle, objectFit: media.fit }}
+        {isVideoSource(media) ? (
+          <Video
+            src={resolveSrc(media)}
+            muted={mediaMuted}
+            objectFit={mediaFit}
+            style={fillStyle}
           />
         ) : (
-          <Video
-            src={resolveSrc(media.src)}
-            muted={media.muted}
-            objectFit={media.fit}
-            style={fillStyle}
+          <Img
+            src={resolveSrc(media)}
+            style={{ ...fillStyle, objectFit: mediaFit }}
           />
         )}
       </Card>
@@ -468,6 +469,8 @@ export const Template = ({
   subheadline,
   echoScene,
   media,
+  mediaFit,
+  mediaMuted,
   mediaScene,
   motion,
   voiceover,
@@ -485,7 +488,7 @@ export const Template = ({
     [captions, clickSfx],
   );
 
-  const hasMediaScene = media !== null;
+  const hasMediaScene = Boolean(media);
 
   /**
    * موضع كرت الصدى في التايم لاين: يقعد آخر المدة كلما سبقه محتوى — نفس
@@ -525,7 +528,13 @@ export const Template = ({
           durationInFrames={effectiveMediaDuration}
           layout="none"
         >
-          <MediaScene media={media} cardColor={cardColor} motion={motion} />
+          <MediaScene
+            media={media}
+            mediaFit={mediaFit}
+            mediaMuted={mediaMuted}
+            cardColor={cardColor}
+            motion={motion}
+          />
         </Sequence>
       ) : null}
 

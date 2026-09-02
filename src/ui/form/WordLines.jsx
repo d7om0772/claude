@@ -171,6 +171,9 @@ export const WordLines = ({
   styles = [],
   defaultStyle = null,
   granularity = "line",
+  // موضع السطر خاصية في الاستوديو وحده؛ إظهار القائمة في قالب لا يقرؤها
+  // يعني إعداداً بلا أثر
+  showPosition = false,
   perLineMin = 1,
   perLineMax = 10,
 }) => {
@@ -368,7 +371,7 @@ export const WordLines = ({
               </button>
             </div>
 
-            {byWord ? null : (
+            {byWord || (styles.length === 0 && !showPosition) ? null : (
               <div className="cue-head">
                 {styles.length > 0 ? (
                   <select
@@ -394,28 +397,30 @@ export const WordLines = ({
                     ))}
                   </select>
                 ) : null}
-                <select
-                  className="line-style"
-                  title="موضع هذا السطر رأسياً"
-                  value={
-                    line.words[0].yRatio === null ||
-                    line.words[0].yRatio === undefined
-                      ? ""
-                      : String(line.words[0].yRatio)
-                  }
-                  onChange={(e) =>
-                    setLineProp(lineIndex, {
-                      yRatio:
-                        e.target.value === "" ? null : Number(e.target.value),
-                    })
-                  }
-                >
-                  {POSITIONS.map((p) => (
-                    <option key={p.value} value={p.value}>
-                      {p.label}
-                    </option>
-                  ))}
-                </select>
+                {showPosition ? (
+                  <select
+                    className="line-style"
+                    title="موضع هذا السطر رأسياً"
+                    value={
+                      line.words[0].yRatio === null ||
+                      line.words[0].yRatio === undefined
+                        ? ""
+                        : String(line.words[0].yRatio)
+                    }
+                    onChange={(e) =>
+                      setLineProp(lineIndex, {
+                        yRatio:
+                          e.target.value === "" ? null : Number(e.target.value),
+                      })
+                    }
+                  >
+                    {POSITIONS.map((p) => (
+                      <option key={p.value} value={p.value}>
+                        {p.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : null}
               </div>
             )}
 

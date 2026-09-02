@@ -145,6 +145,7 @@ export const templateSchema = z.object({
     .describe(
       "مسار صورة أو فيديو داخل public يظهر كطبقة خلف النص. اتركه فارغاً للخلفية اللونية الصافية",
     ),
+  mediaMuted: z.boolean().describe("كتم صوت المقطع المرفق داخل الكرت"),
   mediaFit: mediaFitSchema,
   mediaOpacity: z
     .number()
@@ -220,6 +221,7 @@ export const defaultProps = {
   glowStrength: 0,
   media: null,
   mediaFit: "cover",
+  mediaMuted: true,
   mediaOpacity: 1,
   mediaRadiusRatio: 0.045,
   voiceover: null,

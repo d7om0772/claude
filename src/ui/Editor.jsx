@@ -68,6 +68,10 @@ const groupOf = (field) => {
   }
   if (field.kind === "asset") return "الوسائط والشعار";
   if (field.kind === "color") return "الألوان";
+  // كل ما يخصّ المقطع المرفق والشعار مع ملفه: كتم الصوت خاصةً كان يهبط في
+  // «التخطيط والحركة» فيبحث عنه المستخدم في المكان الخطأ. الألوان تُفحص
+  // قبله لأن mutedFontColor لون لا إعداد وسائط
+  if (/^(media|mute|logo)/iu.test(field.name)) return "الوسائط والشعار";
   if (
     field.kind === "text" ||
     field.kind === "textarea" ||
@@ -252,6 +256,22 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     [fields],
   );
   const studio = template.meta.kind === "studio";
+  const sceneField = useMemo(
+    () =>
+      fields.find(
+        (f) =>
+          f.name === "scenes" &&
+          f.kind === "objectList" &&
+          (f.itemFields ?? []).some((s) => s.name === "media"),
+      ),
+    [fields],
+  );
+  const sceneBased = Boolean(sceneField && captionField);
+  const wordTimed = useMemo(
+    () =>
+      (captionField?.itemFields ?? []).some((f) => f.name === "wordStartsMs"),
+    [captionField],
+  );
   /**
    * محرّر الكلمات ليس حكراً على الاستوديو: كل قالب مقاطعُه كلماتٌ مفردة
    * ويجمعها أسطراً بعدد ثابت يستحقّ الصناديق نفسها — فما يراه المستخدم في
@@ -263,12 +283,13 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   );
   const wordCueTemplate =
     !studio && wantsWordLevel(template.meta) && perLineField !== undefined;
-  const wordEditor = studio || wordCueTemplate;
-  const wordTimed = useMemo(
-    () =>
-      (captionField?.itemFields ?? []).some((f) => f.name === "wordStartsMs"),
-    [captionField],
-  );
+  /**
+   * القوالب التي مقاطعها أسطرٌ من كلمات — يُعرف ذلك بوجود `wordStartsMs` في
+   * مقطعها — تُحرَّر بنفس الصناديق: السطر مقطع، وأطواله تختلف كما يشاء
+   * المستخدم. القوالب المبنية على لقطات مستثناة لأن لكل لقطة كابشنها.
+   */
+  const lineCueTemplate = !studio && !sceneBased && wordTimed;
+  const wordEditor = studio || wordCueTemplate || lineCueTemplate;
 
   // «جملة كاملة» تعرض كلمات المقطع معاً، فلا معنى لتقطيعها إلى أسطر
   const cueOptions = useMemo(
@@ -420,17 +441,6 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
    * اللقطات بدل الحقلين الخامين، لأن عرضهما منفصلين يجبر المستخدم على مطابقة
    * توقيتات الكابشن بالمشاهد يدوياً.
    */
-  const sceneField = useMemo(
-    () =>
-      fields.find(
-        (f) =>
-          f.name === "scenes" &&
-          f.kind === "objectList" &&
-          (f.itemFields ?? []).some((s) => s.name === "media"),
-      ),
-    [fields],
-  );
-  const sceneBased = Boolean(sceneField && captionField);
   const sceneMediaSrc = useMemo(
     () =>
       (sceneField?.itemFields ?? [])
@@ -525,9 +535,12 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                           : setWordsPerCue(n)
                       }
                       perWordTiming={
-                        studio ? props.revealMode === "word" : true
+                        studio
+                          ? props.revealMode === "word"
+                          : wantsWordLevel(template.meta)
                       }
                       styles={studio ? TEXT_STYLES : []}
+                      showPosition={studio}
                       defaultStyle={props.textStyle}
                       granularity={wordCueTemplate ? "word" : "line"}
                       perLineMin={
