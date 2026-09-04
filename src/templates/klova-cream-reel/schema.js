@@ -66,6 +66,16 @@ export const templateSchema = z.object({
     .min(0.05)
     .max(0.4)
     .describe("عرض الشعار كنسبة من عرض الإطار"),
+  logoLeftRatio: z
+    .number()
+    .min(0)
+    .max(0.3)
+    .describe("بُعد الشعار عن يسار الإطار كنسبة من العرض"),
+  logoTopRatio: z
+    .number()
+    .min(0)
+    .max(0.3)
+    .describe("بُعد الشعار عن أعلى الإطار كنسبة من الارتفاع"),
   media: z.string().nullable().optional().describe("مقطع أو صورة داخل البطاقة"),
   mediaFit: z
     .enum(["cover", "contain"])
@@ -94,6 +104,13 @@ export const templateSchema = z.object({
     .min(0)
     .max(0.2)
     .describe("نصف قطر زوايا البطاقة كنسبة من عرضها"),
+  cardShadowOpacity: z
+    .number()
+    .min(0)
+    .max(0.5)
+    .describe(
+      "شدة ظل البطاقة. المرجع يكاد يكون بلا ظل — القياس أظهر الخلفية نقيّة على بُعد بكسلين من الحافة",
+    ),
   captionBottomRatio: z
     .number()
     .min(0.1)
@@ -109,18 +126,69 @@ export const templateSchema = z.object({
   captionFontRatio: z
     .number()
     .min(0.03)
-    .max(0.12)
-    .describe("حجم خط الكابشن كنسبة من عرض الإطار"),
+    .max(0.14)
+    .describe("حجم خط الكابشن كنسبة من عرض الإطار (0.077 في المرجع)"),
+  captionLineHeight: z
+    .number()
+    .min(1)
+    .max(2)
+    .describe("المسافة بين سطري الكابشن كمضاعف لحجم الخط (1.42 — تعطي مسافة 133 بكسل بين السطرين كما في المرجع)"),
+  underlineThicknessRatio: z
+    .number()
+    .min(0)
+    .max(0.2)
+    .describe("سماكة الخط الذهبي كنسبة من حجم الخط"),
+  underlineOffsetRatio: z
+    .number()
+    .min(0)
+    .max(0.6)
+    .describe("بُعد الخط الذهبي عن أسفل صندوق الكلمة كنسبة من حجم الخط"),
   stackFontRatio: z
     .number()
     .min(0.05)
-    .max(0.25)
-    .describe("حجم خط الكلمات الضخمة في مشهد stack"),
+    .max(0.3)
+    .describe("حجم خط الكلمات الضخمة في مشهد stack (0.195 في المرجع)"),
+  stackTopRatio: z
+    .number()
+    .min(0)
+    .max(0.6)
+    .describe(
+      "أعلى كتلة الكلمات الضخمة كنسبة من الارتفاع. الكتلة مثبّتة من أعلاها وتنمو لأسفل كلما ظهرت كلمة، كما في المرجع",
+    ),
+  stackLineHeight: z
+    .number()
+    .min(1)
+    .max(2)
+    .describe("المسافة بين الكلمات الضخمة كمضاعف لحجم الخط"),
   echoFontRatio: z
     .number()
     .min(0.03)
     .max(0.15)
     .describe("حجم خط النص داخل البطاقة الملوّنة"),
+  echoWidthRatio: z
+    .number()
+    .min(0.4)
+    .max(1)
+    .describe(
+      "عرض البطاقة الملوّنة كنسبة من عرض الإطار — أوسع قليلاً من بطاقة المقطع في المرجع",
+    ),
+  echoAspect: z
+    .number()
+    .min(0.3)
+    .max(2)
+    .describe("نسبة عرض البطاقة الملوّنة إلى ارتفاعها"),
+  echoCenterYRatio: z
+    .number()
+    .min(0.2)
+    .max(0.9)
+    .describe("مركز البطاقة الملوّنة رأسياً — أعلى من بطاقة المقطع في المرجع"),
+  echoTextShiftRatio: z
+    .number()
+    .min(-0.4)
+    .max(0.4)
+    .describe(
+      "إزاحة كتلة النص داخل البطاقة الملوّنة كنسبة من ارتفاعها — سالب يرفعها",
+    ),
   echoRepeatCount: z
     .number()
     .int()
@@ -161,8 +229,8 @@ export const templateSchema = z.object({
 
 export const defaultProps = {
   backgroundColor: "#EBE9DC",
-  fontColor: "#211D14",
-  mutedFontColor: "#6E675A",
+  fontColor: "#272317",
+  mutedFontColor: "#666354",
   accentColor: "#C3A656",
   cardPlaceholderColor: "#D3CEC0",
   echoCardColor: "#B98F7C",
@@ -170,7 +238,9 @@ export const defaultProps = {
 
   headline: "وسؤالنا لك ؟",
   logo: "klova/logo.png",
-  logoWidthRatio: 0.137,
+  logoWidthRatio: 0.146,
+  logoLeftRatio: 0.025,
+  logoTopRatio: 0.005,
   media: null,
   mediaFit: "cover",
   mediaMuted: true,
@@ -184,11 +254,21 @@ export const defaultProps = {
   cardAspect: 0.75,
   cardCenterYRatio: 0.591,
   cardRadiusRatio: 0.04,
+  cardShadowOpacity: 0.07,
   captionBottomRatio: 0.209,
   captionWidthRatio: 0.78,
-  captionFontRatio: 0.067,
-  stackFontRatio: 0.115,
-  echoFontRatio: 0.052,
+  captionFontRatio: 0.077,
+  captionLineHeight: 1.42,
+  underlineThicknessRatio: 0.065,
+  underlineOffsetRatio: 0.19,
+  stackFontRatio: 0.195,
+  stackTopRatio: 0.106,
+  stackLineHeight: 1.2,
+  echoFontRatio: 0.1,
+  echoWidthRatio: 0.83,
+  echoAspect: 0.752,
+  echoCenterYRatio: 0.534,
+  echoTextShiftRatio: -0.008,
   echoRepeatCount: 3,
 
   wordEnterFrames: 4,

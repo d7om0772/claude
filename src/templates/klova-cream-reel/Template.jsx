@@ -57,6 +57,8 @@ const CaptionWord = ({
   colors,
   enterFrames,
   underline,
+  underlineThickness,
+  underlineOffset,
   fontSize,
 }) => {
   const frame = useCurrentFrame();
@@ -88,7 +90,9 @@ const CaptionWord = ({
         opacity: progress,
         transform: `translateY(${(1 - progress) * fontSize * 0.12}px)`,
         color: active ? colors.font : colors.muted,
-        fontWeight: active ? FONT_WEIGHT_BLACK : FONT_WEIGHT_MEDIUM,
+        // وزنٌ واحد للجميع: قياس سماكة الحروف في المرجع أعطى نفس القيمة
+        // للكلمة الخافتة والنشطة، فالفرق لونٌ لا وزن
+        fontWeight: FONT_WEIGHT_BLACK,
       }}
     >
       {word}
@@ -98,9 +102,11 @@ const CaptionWord = ({
             position: "absolute",
             left: 0,
             right: 0,
-            bottom: -fontSize * 0.16,
-            height: fontSize * 0.07,
-            borderRadius: fontSize * 0.04,
+            // الخط تحت حروف الكلمة مباشرة: صندوق الكلمة أطول منها بمقدار
+            // ارتفاع السطر، فبُعدٌ سالب كان يرمي الخط بعيداً تحتها
+            bottom: fontSize * underlineOffset,
+            height: underlineThickness,
+            borderRadius: underlineThickness / 2,
             backgroundColor: colors.accent,
             transform: `scaleX(${sweep})`,
             transformOrigin: "right",
@@ -115,10 +121,13 @@ const CaptionLayer = ({
   cue,
   colors,
   fontSize,
+  lineHeight,
   widthPx,
   bottomPx,
   enterFrames,
   underline,
+  underlineThickness,
+  underlineOffset,
   revealShare,
 }) => {
   const frame = useCurrentFrame();
@@ -144,7 +153,7 @@ const CaptionLayer = ({
         textAlign: "center",
         fontFamily: FONT_STACK,
         fontSize,
-        lineHeight: 1.55,
+        lineHeight,
       }}
     >
       {words.map((word, i) => (
@@ -156,6 +165,8 @@ const CaptionLayer = ({
           colors={colors}
           enterFrames={enterFrames}
           underline={underline}
+          underlineThickness={underlineThickness}
+          underlineOffset={underlineOffset}
           fontSize={fontSize}
         />
       ))}
@@ -167,7 +178,15 @@ const CaptionLayer = ({
  * 3) المشاهد الخلفية
  * ========================================================================== */
 
-const MediaCard = ({ src, fit, muted, box, radius, placeholderColor }) => (
+const MediaCard = ({
+  src,
+  fit,
+  muted,
+  box,
+  radius,
+  placeholderColor,
+  shadowOpacity,
+}) => (
   <div
     style={{
       position: "absolute",
@@ -178,8 +197,12 @@ const MediaCard = ({ src, fit, muted, box, radius, placeholderColor }) => (
       borderRadius: radius,
       overflow: "hidden",
       backgroundColor: placeholderColor,
-      // ظل خفيف جداً: البطاقة في المرجع تكاد تكون مسطّحة على الكريمي
-      boxShadow: `0 ${box.width * 0.014}px ${box.width * 0.05}px rgba(60, 52, 35, 0.16)`,
+      // البطاقة في المرجع تكاد تكون مسطّحة على الكريمي: القياس على بُعد
+      // بكسلين من حافتها أعطى لون الخلفية نفسه
+      boxShadow:
+        shadowOpacity > 0
+          ? `0 ${box.width * 0.008}px ${box.width * 0.022}px rgba(60, 52, 35, ${shadowOpacity})`
+          : "none",
     }}
   >
     {src ? (
@@ -201,7 +224,14 @@ const MediaCard = ({ src, fit, muted, box, radius, placeholderColor }) => (
 );
 
 /** كلمات ضخمة، كلٌّ في سطر، تتراكم والأحدث أغمق */
-const StackScene = ({ text, colors, fontSize, durationInFrames }) => {
+const StackScene = ({
+  text,
+  colors,
+  fontSize,
+  lineHeight,
+  topPx,
+  durationInFrames,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const words = toWords(text);
@@ -212,9 +242,11 @@ const StackScene = ({ text, colors, fontSize, durationInFrames }) => {
     <AbsoluteFill
       style={{
         alignItems: "center",
-        justifyContent: "center",
+        // الكتلة تبدأ من أعلى ثابت وتنمو لأسفل كلما ظهرت كلمة — هكذا في
+        // المرجع: ثلاث كلمات وخمس كلمات تبدآن عند الخط نفسه
+        justifyContent: "flex-start",
+        paddingTop: topPx,
         flexDirection: "column",
-        gap: fontSize * 0.16,
         direction: "rtl",
         fontFamily: FONT_STACK,
       }}
@@ -231,6 +263,7 @@ const StackScene = ({ text, colors, fontSize, durationInFrames }) => {
             key={`${word}-${index}`}
             style={{
               fontSize,
+              lineHeight,
               fontWeight: FONT_WEIGHT_BLACK,
               color: index === newest ? colors.font : colors.muted,
               opacity: progress,
@@ -246,7 +279,16 @@ const StackScene = ({ text, colors, fontSize, durationInFrames }) => {
 };
 
 /** بطاقة ملوّنة يتكرّر نصّها — أبرز لقطة في المرجع */
-const EchoScene = ({ text, box, radius, colors, fontSize, repeatCount }) => {
+const EchoScene = ({
+  text,
+  box,
+  radius,
+  colors,
+  fontSize,
+  repeatCount,
+  textShift,
+  shadowOpacity,
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const enter = spring({
@@ -267,12 +309,14 @@ const EchoScene = ({ text, box, radius, colors, fontSize, repeatCount }) => {
           height: box.height,
           borderRadius: radius,
           backgroundColor: colors.echoCard,
-          boxShadow: `0 ${box.width * 0.016}px ${box.width * 0.05}px rgba(60, 52, 35, 0.18)`,
+          boxShadow:
+            shadowOpacity > 0
+              ? `0 ${box.width * 0.008}px ${box.width * 0.022}px rgba(60, 52, 35, ${shadowOpacity})`
+              : "none",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: fontSize * 0.5,
           direction: "rtl",
           fontFamily: FONT_STACK,
           fontSize,
@@ -282,9 +326,20 @@ const EchoScene = ({ text, box, radius, colors, fontSize, repeatCount }) => {
           transform: `translateY(${(1 - enter) * box.height * 0.12}px)`,
         }}
       >
-        {Array.from({ length: repeatCount }, (_, i) => (
-          <div key={i}>{text}</div>
-        ))}
+        {/* كتلة السطور مرفوعة قليلاً عن مركز البطاقة كما في المرجع */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: fontSize * 0.4,
+            transform: `translateY(${textShift * box.height}px)`,
+          }}
+        >
+          {Array.from({ length: repeatCount }, (_, i) => (
+            <div key={i}>{text}</div>
+          ))}
+        </div>
       </div>
     </AbsoluteFill>
   );
@@ -305,6 +360,8 @@ export const Template = ({
   headline,
   logo,
   logoWidthRatio,
+  logoLeftRatio,
+  logoTopRatio,
   media,
   mediaFit,
   mediaMuted,
@@ -313,11 +370,21 @@ export const Template = ({
   cardAspect,
   cardCenterYRatio,
   cardRadiusRatio,
+  cardShadowOpacity,
   captionBottomRatio,
   captionWidthRatio,
   captionFontRatio,
+  captionLineHeight,
+  underlineThicknessRatio,
+  underlineOffsetRatio,
   stackFontRatio,
+  stackTopRatio,
+  stackLineHeight,
   echoFontRatio,
+  echoWidthRatio,
+  echoAspect,
+  echoCenterYRatio,
+  echoTextShiftRatio,
   echoRepeatCount,
   wordEnterFrames,
   captionUnderline,
@@ -341,6 +408,16 @@ export const Template = ({
     height: cardHeight,
   };
   const radius = cardWidth * cardRadiusRatio;
+
+  // البطاقة الملوّنة صندوقها الخاص: في المرجع أوسع قليلاً وأعلى من بطاقة المقطع
+  const echoWidth = width * echoWidthRatio;
+  const echoHeight = echoWidth / echoAspect;
+  const echoBox = {
+    left: (width - echoWidth) / 2,
+    top: height * echoCenterYRatio - echoHeight / 2,
+    width: echoWidth,
+    height: echoHeight,
+  };
 
   // آخر مشهد يتمدّد ليغطي بقية المدة، فلا يبقى فراغ حين يطول الصوت
   const timeline = useMemo(() => {
@@ -410,6 +487,7 @@ export const Template = ({
               box={box}
               radius={radius}
               placeholderColor={cardPlaceholderColor}
+              shadowOpacity={cardShadowOpacity}
             />
           ) : null}
 
@@ -418,6 +496,8 @@ export const Template = ({
               text={scene.text ?? headline}
               colors={colors}
               fontSize={width * stackFontRatio}
+              lineHeight={stackLineHeight}
+              topPx={height * stackTopRatio}
               durationInFrames={span}
             />
           ) : null}
@@ -425,11 +505,13 @@ export const Template = ({
           {scene.type === "echo" ? (
             <EchoScene
               text={scene.text ?? headline}
-              box={box}
-              radius={radius}
+              box={echoBox}
+              radius={echoWidth * cardRadiusRatio}
               colors={colors}
               fontSize={width * echoFontRatio}
               repeatCount={echoRepeatCount}
+              textShift={echoTextShiftRatio}
+              shadowOpacity={cardShadowOpacity}
             />
           ) : null}
         </Sequence>
@@ -441,6 +523,11 @@ export const Template = ({
           cue={activeCue}
           colors={colors}
           fontSize={width * captionFontRatio}
+          lineHeight={captionLineHeight}
+          underlineThickness={
+            width * captionFontRatio * underlineThicknessRatio
+          }
+          underlineOffset={underlineOffsetRatio}
           widthPx={width * captionWidthRatio}
           bottomPx={height * (1 - captionBottomRatio)}
           enterFrames={wordEnterFrames}
@@ -455,8 +542,8 @@ export const Template = ({
           src={resolveAsset(logo, staticFile)}
           style={{
             position: "absolute",
-            left: width * 0.03,
-            top: height * 0.008,
+            left: width * logoLeftRatio,
+            top: height * logoTopRatio,
             width: width * logoWidthRatio,
             objectFit: "contain",
           }}
