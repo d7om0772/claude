@@ -1,0 +1,467 @@
+import React, { useMemo } from "react";
+import {
+  AbsoluteFill,
+  Img,
+  Sequence,
+  interpolate,
+  spring,
+  staticFile,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
+import { Audio, Video } from "../../lib/media.js";
+import {
+  FONT_STACK,
+  FONT_WEIGHT_BLACK,
+  FONT_WEIGHT_MEDIUM,
+} from "../../lib/fonts.js";
+import { resolveAsset } from "../../lib/asset-url.js";
+import { isVideoSource } from "../../lib/duration.js";
+import { WordClicks } from "../../lib/word-clicks.jsx";
+
+/* ==========================================================================
+ * 1) الكلمات وتوقيتها
+ * ========================================================================== */
+
+const toWords = (text) =>
+  String(text ?? "")
+    .split(/\s+/u)
+    .filter((w) => w.length > 0);
+
+/**
+ * لحظات ظهور كلمات السطر بالملي ثانية.
+ *
+ * التوقيت الصريح — الذي يكتبه محرّر الكلمات أو يأتي من ملف SRT على مستوى
+ * الكلمة — يُقدَّم على أي توزيع. وإلا وُزّعت الكلمات على نسبة من مدّة السطر
+ * ويبقى الباقي وقت قراءة، كما في الفيديو المرجعي.
+ *
+ * تُستعمل للرسم وللنقرات معاً، فلا ينفصل الصوت عن الصورة.
+ */
+export const wordOnsetsMs = (cue, revealShare) => {
+  const words = toWords(cue.text);
+  if (words.length === 0) return [];
+  const explicit = cue.wordStartsMs ?? [];
+  if (explicit.length >= words.length) return explicit.slice(0, words.length);
+  const span = Math.max(cue.endMs - cue.startMs, 1) * revealShare;
+  return words.map((_, i) => cue.startMs + (span * i) / words.length);
+};
+
+/* ==========================================================================
+ * 2) الكابشن — الكلمة النشطة داكنة وتحتها خط ذهبي يمسح
+ * ========================================================================== */
+
+const CaptionWord = ({
+  word,
+  appearFrame,
+  active,
+  colors,
+  enterFrames,
+  underline,
+  fontSize,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const local = frame - appearFrame;
+  const progress =
+    enterFrames <= 0
+      ? local >= 0
+        ? 1
+        : 0
+      : spring({
+          frame: local,
+          fps,
+          durationInFrames: enterFrames,
+          config: { damping: 200, mass: 0.5 },
+        });
+  // الخط الذهبي يمسح من جهة البداية (يمين في العربية)
+  const sweep = interpolate(local, [0, Math.max(enterFrames, 1) + 3], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        position: "relative",
+        margin: `0 ${fontSize * 0.09}px`,
+        opacity: progress,
+        transform: `translateY(${(1 - progress) * fontSize * 0.12}px)`,
+        color: active ? colors.font : colors.muted,
+        fontWeight: active ? FONT_WEIGHT_BLACK : FONT_WEIGHT_MEDIUM,
+      }}
+    >
+      {word}
+      {underline && active ? (
+        <span
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: -fontSize * 0.16,
+            height: fontSize * 0.07,
+            borderRadius: fontSize * 0.04,
+            backgroundColor: colors.accent,
+            transform: `scaleX(${sweep})`,
+            transformOrigin: "right",
+          }}
+        />
+      ) : null}
+    </span>
+  );
+};
+
+const CaptionLayer = ({
+  cue,
+  colors,
+  fontSize,
+  widthPx,
+  bottomPx,
+  enterFrames,
+  underline,
+  revealShare,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps, width } = useVideoConfig();
+  const words = toWords(cue.text);
+  const onsets = wordOnsetsMs(cue, revealShare);
+  const currentMs = (frame / fps) * 1000;
+
+  let activeIndex = -1;
+  for (let i = 0; i < onsets.length; i += 1) {
+    if (currentMs >= onsets[i]) activeIndex = i;
+  }
+
+  return (
+    <div
+      dir="rtl"
+      style={{
+        position: "absolute",
+        left: (width - widthPx) / 2,
+        // مثبّتة من أسفلها: السطر الواحد والسطران ينتهيان عند نفس الخط
+        bottom: bottomPx,
+        width: widthPx,
+        textAlign: "center",
+        fontFamily: FONT_STACK,
+        fontSize,
+        lineHeight: 1.55,
+      }}
+    >
+      {words.map((word, i) => (
+        <CaptionWord
+          key={`${cue.startMs}-${i}`}
+          word={word}
+          appearFrame={(onsets[i] / 1000) * fps}
+          active={i === activeIndex}
+          colors={colors}
+          enterFrames={enterFrames}
+          underline={underline}
+          fontSize={fontSize}
+        />
+      ))}
+    </div>
+  );
+};
+
+/* ==========================================================================
+ * 3) المشاهد الخلفية
+ * ========================================================================== */
+
+const MediaCard = ({ src, fit, muted, box, radius, placeholderColor }) => (
+  <div
+    style={{
+      position: "absolute",
+      left: box.left,
+      top: box.top,
+      width: box.width,
+      height: box.height,
+      borderRadius: radius,
+      overflow: "hidden",
+      backgroundColor: placeholderColor,
+      // ظل خفيف جداً: البطاقة في المرجع تكاد تكون مسطّحة على الكريمي
+      boxShadow: `0 ${box.width * 0.014}px ${box.width * 0.05}px rgba(60, 52, 35, 0.16)`,
+    }}
+  >
+    {src ? (
+      isVideoSource(src) ? (
+        <Video
+          src={src}
+          muted={muted}
+          objectFit={fit}
+          style={{ width: "100%", height: "100%" }}
+        />
+      ) : (
+        <Img
+          src={src}
+          style={{ width: "100%", height: "100%", objectFit: fit }}
+        />
+      )
+    ) : null}
+  </div>
+);
+
+/** كلمات ضخمة، كلٌّ في سطر، تتراكم والأحدث أغمق */
+const StackScene = ({ text, colors, fontSize, durationInFrames }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const words = toWords(text);
+  const step = words.length > 0 ? (durationInFrames * 0.7) / words.length : 1;
+  const newest = Math.min(Math.floor(frame / step), words.length - 1);
+
+  return (
+    <AbsoluteFill
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: fontSize * 0.16,
+        direction: "rtl",
+        fontFamily: FONT_STACK,
+      }}
+    >
+      {words.map((word, index) => {
+        const progress = spring({
+          frame: frame - index * step,
+          fps,
+          durationInFrames: 8,
+          config: { damping: 200, mass: 0.6 },
+        });
+        return (
+          <div
+            key={`${word}-${index}`}
+            style={{
+              fontSize,
+              fontWeight: FONT_WEIGHT_BLACK,
+              color: index === newest ? colors.font : colors.muted,
+              opacity: progress,
+              transform: `translateY(${(1 - progress) * fontSize * 0.22}px)`,
+            }}
+          >
+            {word}
+          </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+
+/** بطاقة ملوّنة يتكرّر نصّها — أبرز لقطة في المرجع */
+const EchoScene = ({ text, box, radius, colors, fontSize, repeatCount }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const enter = spring({
+    frame,
+    fps,
+    durationInFrames: 12,
+    config: { damping: 200, mass: 0.7 },
+  });
+
+  return (
+    <AbsoluteFill>
+      <div
+        style={{
+          position: "absolute",
+          left: box.left,
+          top: box.top,
+          width: box.width,
+          height: box.height,
+          borderRadius: radius,
+          backgroundColor: colors.echoCard,
+          boxShadow: `0 ${box.width * 0.016}px ${box.width * 0.05}px rgba(60, 52, 35, 0.18)`,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: fontSize * 0.5,
+          direction: "rtl",
+          fontFamily: FONT_STACK,
+          fontSize,
+          fontWeight: FONT_WEIGHT_BLACK,
+          color: colors.echoText,
+          opacity: enter,
+          transform: `translateY(${(1 - enter) * box.height * 0.12}px)`,
+        }}
+      >
+        {Array.from({ length: repeatCount }, (_, i) => (
+          <div key={i}>{text}</div>
+        ))}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+/* ==========================================================================
+ * 4) القالب
+ * ========================================================================== */
+
+export const Template = ({
+  backgroundColor,
+  fontColor,
+  mutedFontColor,
+  accentColor,
+  cardPlaceholderColor,
+  echoCardColor,
+  echoTextColor,
+  headline,
+  logo,
+  logoWidthRatio,
+  media,
+  mediaFit,
+  mediaMuted,
+  captions,
+  cardWidthRatio,
+  cardAspect,
+  cardCenterYRatio,
+  cardRadiusRatio,
+  captionBottomRatio,
+  captionWidthRatio,
+  captionFontRatio,
+  stackFontRatio,
+  echoFontRatio,
+  echoRepeatCount,
+  wordEnterFrames,
+  captionUnderline,
+  wordRevealShare,
+  voiceover,
+  voiceoverVolume,
+  clickSfx,
+  clickVolume,
+  scenes,
+}) => {
+  const frame = useCurrentFrame();
+  const { width, height, fps, durationInFrames } = useVideoConfig();
+  const currentMs = (frame / fps) * 1000;
+
+  const cardWidth = width * cardWidthRatio;
+  const cardHeight = cardWidth / cardAspect;
+  const box = {
+    left: (width - cardWidth) / 2,
+    top: height * cardCenterYRatio - cardHeight / 2,
+    width: cardWidth,
+    height: cardHeight,
+  };
+  const radius = cardWidth * cardRadiusRatio;
+
+  // آخر مشهد يتمدّد ليغطي بقية المدة، فلا يبقى فراغ حين يطول الصوت
+  const timeline = useMemo(() => {
+    const entries = [];
+    let cursor = 0;
+    scenes.forEach((scene, index) => {
+      const last = index === scenes.length - 1;
+      const span = last
+        ? Math.max(scene.durationInFrames, durationInFrames - cursor)
+        : scene.durationInFrames;
+      entries.push({ scene, from: cursor, span });
+      cursor += span;
+    });
+    return entries;
+  }, [scenes, durationInFrames]);
+
+  const activeCue = captions.find(
+    (cue) => currentMs >= cue.startMs && currentMs < cue.endMs,
+  );
+
+  const clickOnsets = useMemo(
+    () =>
+      clickSfx
+        ? captions.flatMap((cue) => wordOnsetsMs(cue, wordRevealShare))
+        : [],
+    [captions, clickSfx, wordRevealShare],
+  );
+
+  const colors = {
+    font: fontColor,
+    muted: mutedFontColor,
+    accent: accentColor,
+    echoCard: echoCardColor,
+    echoText: echoTextColor,
+  };
+
+  return (
+    <AbsoluteFill style={{ backgroundColor }}>
+      {voiceover ? (
+        <Audio
+          src={resolveAsset(voiceover, staticFile)}
+          volume={voiceoverVolume}
+        />
+      ) : null}
+
+      {/* نقرة مع كل كلمة، بنفس جدول ظهورها على الشاشة */}
+      <WordClicks
+        src={clickSfx}
+        volume={clickVolume}
+        onsetsMs={clickOnsets}
+        fps={fps}
+      />
+
+      {timeline.map(({ scene, from, span }, index) => (
+        <Sequence
+          key={`scene-${index}`}
+          from={from}
+          durationInFrames={span}
+          layout="none"
+          name={`${scene.type} #${index + 1}`}
+        >
+          {scene.type === "media" ? (
+            <MediaCard
+              src={media ? resolveAsset(media, staticFile) : null}
+              fit={mediaFit}
+              muted={mediaMuted}
+              box={box}
+              radius={radius}
+              placeholderColor={cardPlaceholderColor}
+            />
+          ) : null}
+
+          {scene.type === "stack" ? (
+            <StackScene
+              text={scene.text ?? headline}
+              colors={colors}
+              fontSize={width * stackFontRatio}
+              durationInFrames={span}
+            />
+          ) : null}
+
+          {scene.type === "echo" ? (
+            <EchoScene
+              text={scene.text ?? headline}
+              box={box}
+              radius={radius}
+              colors={colors}
+              fontSize={width * echoFontRatio}
+              repeatCount={echoRepeatCount}
+            />
+          ) : null}
+        </Sequence>
+      ))}
+
+      {/* الكابشن فوق كل المشاهد ويجري بتوقيته من أول الفيديو إلى آخره */}
+      {activeCue ? (
+        <CaptionLayer
+          cue={activeCue}
+          colors={colors}
+          fontSize={width * captionFontRatio}
+          widthPx={width * captionWidthRatio}
+          bottomPx={height * (1 - captionBottomRatio)}
+          enterFrames={wordEnterFrames}
+          underline={captionUnderline}
+          revealShare={wordRevealShare}
+        />
+      ) : null}
+
+      {/* اللوقو آخر طبقة: يبقى ظاهراً فوق كل شيء كما في المرجع */}
+      {logo ? (
+        <Img
+          src={resolveAsset(logo, staticFile)}
+          style={{
+            position: "absolute",
+            left: width * 0.03,
+            top: height * 0.008,
+            width: width * logoWidthRatio,
+            objectFit: "contain",
+          }}
+        />
+      ) : null}
+    </AbsoluteFill>
+  );
+};

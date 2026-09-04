@@ -1,0 +1,27 @@
+{
+  "id": "klova-cream-reel",
+  "kind": "template",
+  "name": "KLOVA Cream Reel",
+  "nameAr": "ريل كلوفا الكريمي",
+  "description": "Vertical reel on a still cream canvas measured from the reference video: wordmark in the top corner, captions revealing word by word at the top with a gold underline sweeping under the active word, and a rounded media card below. Scenes swap what sits behind the caption — the card, an empty canvas, stacked words, or a colour card whose line repeats — with a click on every word.",
+  "descriptionAr": "ريل عمودي على خلفية كريمية ثابتة، مقاس من الفيديو المرجعي: الشعار في الزاوية العليا، والكابشن يظهر كلمة كلمة في أعلى الإطار مع خط ذهبي يمسح تحت الكلمة النشطة، وبطاقة المقطع بحواف دائرية تحته. المشاهد تبدّل ما خلف الكابشن — البطاقة، أو كريمي فاضٍ، أو كلمات ضخمة متراكمة، أو بطاقة ملوّنة يتكرّر نصّها — ونقرة صوتية مع كل كلمة.",
+  "category": "social-vertical",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "defaultDurationInFrames": 630,
+  "tags": [
+    "arabic",
+    "rtl",
+    "vertical",
+    "9:16",
+    "reels",
+    "tiktok",
+    "word-by-word",
+    "captions",
+    "srt",
+    "klova",
+    "cream",
+    "brand"
+  ]
+}

@@ -67,6 +67,13 @@ import {
   calculateMetadata as creamCardMetadata,
 } from "../templates/cream-card-kinetic-ar/schema.js";
 import creamCardMeta from "../templates/cream-card-kinetic-ar/template.json";
+import { Template as KlovaCreamTemplate } from "../templates/klova-cream-reel/Template.jsx";
+import {
+  templateSchema as klovaCreamSchema,
+  defaultProps as klovaCreamDefaults,
+  calculateMetadata as klovaCreamMetadata,
+} from "../templates/klova-cream-reel/schema.js";
+import klovaCreamMeta from "../templates/klova-cream-reel/template.json";
 /**
  * كل قالب له props مختلفة تماماً، فالسجلّ غير متجانس بطبيعته ولا يمكن تمثيله
  * بنوع واحد دقيق. هذه الدالة تتحقق من اتساق القالب داخلياً — أن props المكوّن
@@ -130,6 +137,13 @@ export const templates = [
     component: CreamCardTemplate,
     defaultProps: creamCardDefaults,
     calculateMetadata: creamCardMetadata,
+  }),
+  defineTemplate({
+    meta: klovaCreamMeta,
+    schema: klovaCreamSchema,
+    component: KlovaCreamTemplate,
+    defaultProps: klovaCreamDefaults,
+    calculateMetadata: klovaCreamMetadata,
   }),
   defineTemplate({
     meta: customCanvasMeta,

@@ -6,6 +6,7 @@ import paperCardReveal from "../templates/paper-card-reveal/template.json" with 
 import klovaWordRevealReel from "../templates/klova-word-reveal-reel/template.json" with { type: "json" };
 import echoCard from "../templates/echo-card-vertical/template.json" with { type: "json" };
 import creamCard from "../templates/cream-card-kinetic-ar/template.json" with { type: "json" };
+import klovaCream from "../templates/klova-cream-reel/template.json" with { type: "json" };
 import customCanvas from "../templates/custom-canvas/template.json" with { type: "json" };
 
 /**
@@ -24,6 +25,7 @@ export const templateMetas = [
   klovaWordRevealReel,
   echoCard,
   creamCard,
+  klovaCream,
   customCanvas,
 ];
 
