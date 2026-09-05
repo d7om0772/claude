@@ -393,6 +393,7 @@ export const Template = ({
   voiceoverVolume,
   clickSfx,
   clickVolume,
+  sceneClicks,
   scenes,
 }) => {
   const frame = useCurrentFrame();
@@ -437,14 +438,46 @@ export const Template = ({
   const activeCue = captions.find(
     (cue) => currentMs >= cue.startMs && currentMs < cue.endMs,
   );
-
-  const clickOnsets = useMemo(
-    () =>
-      clickSfx
-        ? captions.flatMap((cue) => wordOnsetsMs(cue, wordRevealShare))
-        : [],
-    [captions, clickSfx, wordRevealShare],
+  // موضع الكابشن يتبع اللقطة الظاهرة إن حدّدت موضعها، وإلا فموضع القالب
+  const activeScene = timeline.find(
+    (entry) => frame >= entry.from && frame < entry.from + entry.span,
   );
+  const captionBottom =
+    activeScene?.scene.captionBottomRatio ?? captionBottomRatio;
+
+  /**
+   * النقرات تتبع كل ما يظهر، لا الكابشن وحده.
+   *
+   * المرجع ينقر مع كلمات المشهد الضخم ومع دخول البطاقة الملوّنة أيضاً —
+   * سُمعت نبضاته هناك عند 14.5 و15.0 و15.2 و16.0 و16.9 — وكان القالب صامتاً
+   * في تلك اللحظات لأن الكابشن غائب فيها.
+   */
+  const clickOnsets = useMemo(() => {
+    if (!clickSfx) return [];
+    const onsets = captions.flatMap((cue) =>
+      wordOnsetsMs(cue, wordRevealShare),
+    );
+    if (!sceneClicks) return onsets;
+    for (const { scene, from, span } of timeline) {
+      if (scene.clicks === false) continue;
+      const startMs = (from / fps) * 1000;
+      if (scene.type === "stack") {
+        const words = toWords(scene.text ?? headline);
+        const step = words.length > 0 ? (span * 0.7) / words.length : 1;
+        words.forEach((_, i) => onsets.push(startMs + (i * step * 1000) / fps));
+      }
+      if (scene.type === "echo") onsets.push(startMs);
+    }
+    return onsets.sort((a, b) => a - b);
+  }, [
+    captions,
+    clickSfx,
+    wordRevealShare,
+    sceneClicks,
+    timeline,
+    fps,
+    headline,
+  ]);
 
   const colors = {
     font: fontColor,
@@ -537,7 +570,7 @@ export const Template = ({
           }
           underlineOffset={underlineOffsetRatio}
           widthPx={width * captionWidthRatio}
-          bottomPx={height * (1 - captionBottomRatio)}
+          bottomPx={height * (1 - captionBottom)}
           enterFrames={wordEnterFrames}
           underline={captionUnderline}
           revealShare={wordRevealShare}

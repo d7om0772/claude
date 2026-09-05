@@ -49,6 +49,22 @@ export const sceneSchema = z.object({
     .max(60)
     .optional()
     .describe("نص مشهدَي stack و echo. الفارغ يأخذ العنوان الرئيسي"),
+  captionBottomRatio: z
+    .number()
+    .min(0.1)
+    .max(0.9)
+    .nullable()
+    .optional()
+    .describe(
+      "موضع الكابشن في هذه اللقطة وحدها — أسفل كتلته كنسبة من الارتفاع. الفارغ يأخذ موضع القالب العام",
+    ),
+  clicks: z
+    .boolean()
+    .nullable()
+    .optional()
+    .describe(
+      "نقرات هذه اللقطة. الفارغ يعني اتباع الإعداد العام: نقرة مع كل كلمة تظهر فيها، ومع دخول البطاقة الملوّنة",
+    ),
 });
 
 export const templateSchema = z.object({
@@ -228,6 +244,11 @@ export const templateSchema = z.object({
     .nullable()
     .describe("صوت نقرة يشتغل مع كل كلمة تظهر. فارغ يوقفه"),
   clickVolume: z.number().min(0).max(1).describe("مستوى صوت النقرة"),
+  sceneClicks: z
+    .boolean()
+    .describe(
+      "نقرة مع كلمات المشاهد النصية أيضاً (الكلمات الضخمة ودخول البطاقة الملوّنة)، لا مع الكابشن وحده — وهو ما يفعله المرجع",
+    ),
 
   /* ---------------------------------------------------------- التسلسل */
   scenes: z
@@ -345,6 +366,7 @@ export const defaultProps = {
   voiceoverVolume: 1,
   clickSfx: "klova/click.wav",
   clickVolume: 0.7,
+  sceneClicks: true,
 
   // التسلسل مقيس من الفيديو المرجعي: قِست لحظات ظهور البطاقة واختفائها
   // ولحظات القطع داخلها، فجاءت اللقطات ست والمشهدان النصيّان بينها.
