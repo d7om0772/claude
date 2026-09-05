@@ -481,7 +481,15 @@ export const Template = ({
         >
           {scene.type === "media" ? (
             <MediaCard
-              src={media ? resolveAsset(media, staticFile) : null}
+              /* لكل لقطة مقطعها، وإن خلت أخذت المقطع العام، وإن خلا الاثنان
+                 ظهرت البطاقة فارغة — وهو ما يعرضه القالب قبل إرفاق شيء */
+              src={
+                scene.media
+                  ? resolveAsset(scene.media, staticFile)
+                  : media
+                    ? resolveAsset(media, staticFile)
+                    : null
+              }
               fit={mediaFit}
               muted={mediaMuted}
               box={box}

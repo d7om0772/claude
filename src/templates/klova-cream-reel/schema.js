@@ -37,6 +37,13 @@ export const sceneSchema = z.object({
       "media = بطاقة المقطع، empty = كريمي فاضٍ والكابشن وحده، stack = كلمات ضخمة كلٌّ في سطر، echo = بطاقة ملوّنة يتكرّر نصّها",
     ),
   durationInFrames: z.number().int().min(1).describe("طول المشهد بالفريمات"),
+  media: z
+    .string()
+    .nullable()
+    .optional()
+    .describe(
+      "مقطع هذه اللقطة وحدها. المرجع يقطع بين ست لقطات مختلفة، فلكل مشهد مقطعه؛ والفارغ يعرض البطاقة خالية أو يأخذ المقطع العام",
+    ),
   text: z
     .string()
     .max(60)
@@ -132,7 +139,9 @@ export const templateSchema = z.object({
     .number()
     .min(1)
     .max(2)
-    .describe("المسافة بين سطري الكابشن كمضاعف لحجم الخط (1.42 — تعطي مسافة 133 بكسل بين السطرين كما في المرجع)"),
+    .describe(
+      "المسافة بين سطري الكابشن كمضاعف لحجم الخط (1.42 — تعطي مسافة 133 بكسل بين السطرين كما في المرجع)",
+    ),
   underlineThicknessRatio: z
     .number()
     .min(0)
@@ -244,9 +253,66 @@ export const defaultProps = {
   media: null,
   mediaFit: "cover",
   mediaMuted: true,
+  // النص وتوقيتاته مقروءان من الفيديو المرجعي: كل كلمة ولحظة ظهورها.
+  // الفجوتان (14.4 → 18.0) مقصودتان: هناك تتكلّم الكلمات الضخمة والبطاقة
+  // الملوّنة، ولا كابشن فوقهما في المرجع.
   captions: [
-    { text: "قد سألت نفسك", startMs: 200, endMs: 1800 },
-    { text: "ليش التيشيرت يكون أخف بعد الغسيل ؟", startMs: 1900, endMs: 5200 },
+    {
+      text: "قد سألت نفسك",
+      startMs: 50,
+      endMs: 1000,
+      wordStartsMs: [50, 300, 550],
+    },
+    {
+      text: "ليش التيشيرت يكون أخف بعد الغسيل ؟",
+      startMs: 1000,
+      endMs: 3500,
+      wordStartsMs: [1000, 1350, 1750, 2000, 2300, 2550, 2800],
+    },
+    {
+      text: "السبب يرجع إن القماش",
+      startMs: 3500,
+      endMs: 5000,
+      wordStartsMs: [3500, 3900, 4300, 4500],
+    },
+    {
+      text: "شبكة من خيوط متشابكة",
+      startMs: 5000,
+      endMs: 6500,
+      wordStartsMs: [5000, 5350, 5600, 5900],
+    },
+    {
+      text: "ويكون داخلها هوا محبوس",
+      startMs: 6500,
+      endMs: 8800,
+      wordStartsMs: [6500, 6900, 7400, 7900],
+    },
+    {
+      text: "أول ما تغسله بمياه ساخن،",
+      startMs: 9000,
+      endMs: 10500,
+      wordStartsMs: [9000, 9250, 9450, 9750, 9950],
+    },
+    {
+      text: "الألياف تنكمش وتنضغط على بعض",
+      startMs: 10500,
+      endMs: 12800,
+      wordStartsMs: [10500, 10900, 11400, 11700, 11900],
+    },
+    {
+      text: "وبعد عشرين غسلة تقريباً",
+      startMs: 12900,
+      endMs: 14400,
+      wordStartsMs: [12900, 13150, 13400, 13850],
+    },
+    {
+      text: "هل تفضل إن تيشيرتك ينظف زين ولا يعيش معك أطول؟",
+      startMs: 18000,
+      endMs: 21400,
+      wordStartsMs: [
+        18000, 18200, 18450, 18600, 18950, 19400, 19900, 20300, 20550, 20800,
+      ],
+    },
   ],
 
   // النِسب مقيسة من الفيديو المرجعي: 860÷1080، و860÷1147، ومركز 1134÷1920
@@ -280,13 +346,24 @@ export const defaultProps = {
   clickSfx: "klova/click.wav",
   clickVolume: 0.7,
 
+  // التسلسل مقيس من الفيديو المرجعي: قِست لحظات ظهور البطاقة واختفائها
+  // ولحظات القطع داخلها، فجاءت اللقطات ست والمشهدان النصيّان بينها.
+  // مجموعها 642 فريماً = 21.4 ثانية، وهي مدة المرجع بالضبط.
   scenes: [
-    { type: "media", durationInFrames: 150 },
-    { type: "empty", durationInFrames: 60 },
-    { type: "media", durationInFrames: 150 },
-    { type: "stack", durationInFrames: 90, text: "القماش يفقد الكثير" },
-    { type: "echo", durationInFrames: 60 },
-    { type: "media", durationInFrames: 120 },
+    { type: "media", durationInFrames: 108, media: null }, // 0 → 3.6
+    { type: "media", durationInFrames: 48, media: null }, // 3.6 → 5.2
+    { type: "media", durationInFrames: 39, media: null }, // 5.2 → 6.5
+    { type: "media", durationInFrames: 69, media: null }, // 6.5 → 8.8
+    { type: "empty", durationInFrames: 45 }, // 8.8 → 10.3
+    { type: "media", durationInFrames: 75, media: null }, // 10.3 → 12.8
+    { type: "empty", durationInFrames: 48 }, // 12.8 → 14.4
+    {
+      type: "stack",
+      durationInFrames: 75,
+      text: "القماش يفقد الكثير من سماكته",
+    }, // 14.4 → 16.9
+    { type: "echo", durationInFrames: 33 }, // 16.9 → 18.0
+    { type: "media", durationInFrames: 102, media: null }, // 18.0 → 21.4
   ],
 };
 

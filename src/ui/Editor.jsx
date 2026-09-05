@@ -258,11 +258,15 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const studio = template.meta.kind === "studio";
   const sceneField = useMemo(
     () =>
+      // محرّر اللقطات مبنيّ على لقطات موقّتة بالملي ثانية (ريل كلوفا). قالبٌ
+      // آخر مشاهدُه بمدد فريمات ولكلٍّ مقطعه ليس «قائم على لقطات» بهذا المعنى،
+      // ولو صنّفناه كذلك اختفى محرّر مشاهده تماماً
       fields.find(
         (f) =>
           f.name === "scenes" &&
           f.kind === "objectList" &&
-          (f.itemFields ?? []).some((s) => s.name === "media"),
+          (f.itemFields ?? []).some((s) => s.name === "media") &&
+          (f.itemFields ?? []).some((s) => s.name === "startMs"),
       ),
     [fields],
   );
