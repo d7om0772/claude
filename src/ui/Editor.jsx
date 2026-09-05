@@ -10,6 +10,7 @@ import {
 } from "./form/srt-cues.js";
 import { FieldControl } from "./form/Fields.jsx";
 import { Scenes } from "./form/Scenes.jsx";
+import { FrameScenes } from "./form/FrameScenes.jsx";
 import { CanvasStage } from "./form/CanvasStage.jsx";
 import { WordLines } from "./form/WordLines.jsx";
 import { mediaGeometry } from "./form/media-geometry.js";
@@ -361,13 +362,6 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const wordCueTemplate =
     !studio && wantsWordLevel(template.meta) && perLineField !== undefined;
   /**
-   * القوالب التي مقاطعها أسطرٌ من كلمات — يُعرف ذلك بوجود `wordStartsMs` في
-   * مقطعها — تُحرَّر بنفس الصناديق: السطر مقطع، وأطواله تختلف كما يشاء
-   * المستخدم. القوالب المبنية على لقطات مستثناة لأن لكل لقطة كابشنها.
-   */
-  const lineCueTemplate = !studio && !sceneBased && wordTimed;
-  const wordEditor = studio || wordCueTemplate || lineCueTemplate;
-  /**
    * بعض القوالب (ريل كلوفا الكريمي، الكرت الكريمي) مشاهدها مدداً بالفريمات
    * لا نطاقات ms — فتوقيت الكلمة بالملي ثانية وسط لوحة كل أرقامها فريمات
    * يصير وحدة غريبة يحسبها المستخدم يدوياً. حين توجد `durationInFrames`
@@ -385,6 +379,19 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     [fields],
   );
   const wordTimeUnit = frameScenesField ? "frames" : "ms";
+  /**
+   * قوالب المشاهد المبنية على مدد بالفريمات (ريل كلوفا الكريمي، الكرت
+   * الكريمي) تُحرَّر بصندوق مختلف عن sceneBased: كل مشهد صندوقه المستقل —
+   * نصّه ومقاطعه ومدّته معاً — بدل توزيع النص في لوحة منفصلة عن اللقطات.
+   */
+  const frameSceneBased = Boolean(frameScenesField && captionField);
+  /**
+   * القوالب التي مقاطعها أسطرٌ من كلمات — يُعرف ذلك بوجود `wordStartsMs` في
+   * مقطعها — تُحرَّر بنفس الصناديق: السطر مقطع، وأطواله تختلف كما يشاء
+   * المستخدم. القوالب المبنية على لقطات مستثناة لأن لكل لقطة كابشنها.
+   */
+  const lineCueTemplate = !studio && !sceneBased && !frameSceneBased && wordTimed;
+  const wordEditor = studio || wordCueTemplate || lineCueTemplate;
 
   // «جملة كاملة» تعرض كلمات المقطع معاً، فلا معنى لتقطيعها إلى أسطر
   const cueOptions = useMemo(
@@ -543,6 +550,10 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         ?.itemFields?.find((f) => f.name === "src"),
     [sceneField],
   );
+  const frameSceneMedia = useMemo(
+    () => (frameScenesField?.itemFields ?? []).find((f) => f.name === "media"),
+    [frameScenesField],
+  );
   const captionStyles = useMemo(() => {
     const styleField = (captionField?.itemFields ?? []).find(
       (f) => f.name === "style",
@@ -558,7 +569,10 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     if (wordEditor) map.set(WORDS_GROUP, []);
     for (const f of fields) {
       if (f.kind === "unsupported") continue;
-      if (sceneBased && (f.name === "scenes" || f.kind === "captions")) {
+      if (
+        (sceneBased || frameSceneBased) &&
+        (f.name === "scenes" || f.kind === "captions")
+      ) {
         map.set(SCENES_GROUP, [...(map.get(SCENES_GROUP) ?? []), f]);
         continue;
       }
@@ -566,7 +580,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       map.set(g, [...(map.get(g) ?? []), f]);
     }
     return map;
-  }, [fields, sceneBased, wordEditor]);
+  }, [fields, sceneBased, frameSceneBased, wordEditor]);
   return (
     <div className="editor">
       <aside className="controls">
@@ -698,7 +712,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                   />
                 ) : null}
 
-                {groupName === SCENES_GROUP ? (
+                {groupName === SCENES_GROUP && sceneBased ? (
                   <Scenes
                     scenes={props.scenes ?? []}
                     captions={captions}
@@ -708,6 +722,20 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                     accept={sceneMediaSrc?.accept ?? "video/*"}
                     pickedAt={pickedAt}
                     pickAsset={pickAsset}
+                  />
+                ) : null}
+
+                {groupName === SCENES_GROUP && frameSceneBased ? (
+                  <FrameScenes
+                    scenes={props.scenes ?? []}
+                    captions={captions}
+                    setScenes={(v) => set("scenes", v)}
+                    setCaptions={(v) => set("captions", v)}
+                    accept={frameSceneMedia?.accept ?? "image/*,video/*"}
+                    pickedAt={pickedAt}
+                    pickAsset={pickAsset}
+                    fps={template.meta.fps}
+                    totalFrames={duration}
                   />
                 ) : null}
 
@@ -734,7 +762,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                   <>
                     {/* لمن له محرّر كلمات: صفّ الاستيراد هناك، فتكراره هنا
                         زرّان لعمل واحد */}
-                    {wordEditor ? null : (
+                    {wordEditor || frameSceneBased ? null : (
                       <div className="field">
                         <label>
                           ملف الترجمة SRT — منه تُشتقّ توقيتات الكلمات
