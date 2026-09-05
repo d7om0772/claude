@@ -56,6 +56,27 @@ const Frame = ({ value, onChange, title }) => (
   />
 );
 
+/** عدّاد +/- لعدد كلمات السطر — الزائد ينزل للسطر التالي والناقص يُسحب منه. */
+const Stepper = ({ value, onChange, min = 1, max = 12, title }) => (
+  <div className="stepper" title={title}>
+    <button
+      type="button"
+      className="btn ghost tiny"
+      onClick={() => onChange(Math.max(min, value - 1))}
+    >
+      −
+    </button>
+    <span className="stepper-value">{value}</span>
+    <button
+      type="button"
+      className="btn ghost tiny"
+      onClick={() => onChange(Math.min(max, value + 1))}
+    >
+      +
+    </button>
+  </div>
+);
+
 const TYPE_LABELS = {
   media: "بطاقة المقطع",
   empty: "كريمي فاضٍ",
@@ -63,12 +84,20 @@ const TYPE_LABELS = {
   echo: "بطاقة ملوّنة",
 };
 
-const FrameCue = ({ cue, fps, onChange, onRemove }) => {
+const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize }) => {
   const words = wordsOf(cue);
   const setWords = (next) => onChange(cueFromWords(cue, next));
   return (
     <div className="cue">
       <div className="cue-head">
+        <span className="stage-label" style={{ position: "static" }}>
+          سطر {index + 1}
+        </span>
+        <Stepper
+          value={words.length}
+          onChange={(count) => onResize(count)}
+          title="كلمات هذا السطر — الزائد ينزل للسطر التالي والناقص يُسحب منه"
+        />
         <span className="cue-range" dir="ltr">
           <Frame
             value={msToFrame(cue.startMs, fps)}
@@ -196,6 +225,67 @@ export const FrameScenes = ({
     setCaptions(captions.map((c, i) => (i === index ? cue : c)));
   const removeCue = (index) =>
     setCaptions(captions.filter((_, i) => i !== index));
+
+  /**
+   * يغيّر عدد كلمات سطر واحد بتحريك حدّه مع السطر الذي يليه فقط، ضمن نفس
+   * مجموعة الأسطر (لقطة واحدة أو «خارج اللقطات») — نفس فكرة عدّاد الأسطر في
+   * محرّر الكلمات المسطّح: الزائد يُسحب من أول التالي، والناقص ينزل إليه.
+   */
+  const resizeGroup = (groupIndices, cuePos, count, fallbackEndMs) => {
+    const lines = groupIndices.map((idx) => ({
+      base: captions[idx],
+      words: wordsOf(captions[idx]),
+    }));
+    const next = lines.map((l) => ({ ...l, words: l.words.slice() }));
+    const target = next[cuePos];
+    const delta = Math.max(1, count) - target.words.length;
+
+    if (delta < 0) {
+      const moved = target.words.splice(delta);
+      const below = next[cuePos + 1];
+      if (below) below.words.unshift(...moved);
+      else next.push({ base: null, words: moved });
+    } else {
+      let need = delta;
+      for (let i = cuePos + 1; i < next.length && need > 0; i += 1) {
+        const taken = next[i].words.splice(0, need);
+        target.words.push(...taken);
+        need -= taken.length;
+      }
+    }
+
+    const kept = next.filter((line) => line.words.length > 0);
+    const rebuilt = kept.map((line, i) => {
+      const first = line.words[0];
+      const below = kept[i + 1];
+      const endMs = below ? below.words[0].startMs : fallbackEndMs(first.startMs);
+      const base = line.base ?? {
+        text: "",
+        startMs: 0,
+        endMs: 0,
+        wordStartsMs: [],
+      };
+      return cueFromWords(
+        { ...base, startMs: first.startMs, endMs },
+        line.words,
+      );
+    });
+
+    const groupSet = new Set(groupIndices);
+    setCaptions([...captions.filter((_, i) => !groupSet.has(i)), ...rebuilt]);
+  };
+
+  const resizeCueInScene = (sceneIndex, cuePos, count) => {
+    const mine = grouped.map.get(sceneIndex) ?? [];
+    const t = timeline[sceneIndex];
+    resizeGroup(mine, cuePos, count, (startMs) =>
+      Math.max(startMs + 500, frameToMs(t.toFrame, fps)),
+    );
+  };
+
+  const resizeOrphanCue = (cuePos, count) => {
+    resizeGroup(grouped.orphans, cuePos, count, (startMs) => startMs + 700);
+  };
 
   const addCue = (sceneIndex) => {
     const t = timeline[sceneIndex];
@@ -340,13 +430,15 @@ export const FrameScenes = ({
             {mine.length === 0 ? (
               <p className="file-empty">لا كلمات في هذه اللقطة بعد.</p>
             ) : (
-              mine.map((cueIndex) => (
+              mine.map((cueIndex, cuePos) => (
                 <FrameCue
                   key={cueIndex}
                   cue={captions[cueIndex]}
+                  index={cuePos}
                   fps={fps}
                   onChange={(cue) => replaceCue(cueIndex, cue)}
                   onRemove={() => removeCue(cueIndex)}
+                  onResize={(count) => resizeCueInScene(index, cuePos, count)}
                 />
               ))
             )}
@@ -371,13 +463,15 @@ export const FrameScenes = ({
             مقاطع توقيتها لا يقع داخل أي لقطة — تظهر في الفيديو لكن لا لقطة
             تحتها.
           </p>
-          {grouped.orphans.map((cueIndex) => (
+          {grouped.orphans.map((cueIndex, cuePos) => (
             <FrameCue
               key={cueIndex}
               cue={captions[cueIndex]}
+              index={cuePos}
               fps={fps}
               onChange={(cue) => replaceCue(cueIndex, cue)}
               onRemove={() => removeCue(cueIndex)}
+              onResize={(count) => resizeOrphanCue(cuePos, count)}
             />
           ))}
         </div>
