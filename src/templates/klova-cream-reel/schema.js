@@ -48,7 +48,9 @@ export const sceneSchema = z.object({
     .string()
     .max(60)
     .optional()
-    .describe("نص مشهدَي stack و echo. الفارغ يأخذ العنوان الرئيسي"),
+    .describe(
+      "نص مشهدَي stack و echo — اتركه فارغاً: الفراغ هو الوضع الطبيعي، فيأخذ المشهد نصّه تلقائياً من مقطع الكابشن الذي يقع في زمنه، فتعديل السكربت يغيّر ما يظهر هنا معه. اكتب نصّاً هنا فقط لتجاوز ذلك بنصّ ثابت لا يتبع السكربت",
+    ),
   captionBottomRatio: z
     .number()
     .min(0.1)
@@ -326,6 +328,21 @@ export const defaultProps = {
       endMs: 14400,
       wordStartsMs: [12900, 13150, 13400, 13850],
     },
+    // هذا المقطع ومقطع البطاقة الملوّنة بعده يقعان في زمن مشهدَي stack
+    // وecho: القالب يقرأ نصّهما من هنا مباشرة عوض حقل ثابت منفصل، فتعديل
+    // الكلمات هنا — كأي مقطع آخر — يغيّر ما يظهر في ذينك المشهدين بلا فرق
+    {
+      text: "القماش يفقد الكثير من سماكته",
+      startMs: 14400,
+      endMs: 16900,
+      wordStartsMs: [14400, 14900, 15400, 15800, 16100],
+    },
+    {
+      text: "وسؤالنا لك ؟",
+      startMs: 16900,
+      endMs: 18000,
+      wordStartsMs: [16900],
+    },
     {
       text: "هل تفضل إن تيشيرتك ينظف زين ولا يعيش معك أطول؟",
       startMs: 18000,
@@ -379,11 +396,7 @@ export const defaultProps = {
     { type: "empty", durationInFrames: 45 }, // 8.8 → 10.3
     { type: "media", durationInFrames: 75, media: null }, // 10.3 → 12.8
     { type: "empty", durationInFrames: 48 }, // 12.8 → 14.4
-    {
-      type: "stack",
-      durationInFrames: 75,
-      text: "القماش يفقد الكثير من سماكته",
-    }, // 14.4 → 16.9
+    { type: "stack", durationInFrames: 75 }, // 14.4 → 16.9 — نصّه من الكابشن
     { type: "echo", durationInFrames: 33 }, // 16.9 → 18.0
     { type: "media", durationInFrames: 102, media: null }, // 18.0 → 21.4
   ],

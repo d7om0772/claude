@@ -37,6 +37,19 @@ const toWords = (text) =>
  *
  * تُستعمل للرسم وللنقرات معاً، فلا ينفصل الصوت عن الصورة.
  */
+/**
+ * نص كل مقاطع الكابشن التي تتداخل مع نافذة زمنية.
+ *
+ * مشهدَا stack وecho لا نصّ مستقلاً لهما: تعديل السكربت (مقاطع الكابشن) هو
+ * ما يُفترض أن يغيّر ما يظهر فيهما، لا حقل `text` منفصل يظل كما هو مهما
+ * عُدِّل السكربت. الفراغ لو لم تتداخل نافذة المشهد مع أي مقطع.
+ */
+const textForWindow = (captions, startMs, endMs) =>
+  captions
+    .filter((cue) => cue.startMs < endMs && cue.endMs > startMs)
+    .map((cue) => cue.text)
+    .join(" ");
+
 export const wordOnsetsMs = (cue, revealShare) => {
   const words = toWords(cue.text);
   if (words.length === 0) return [];
@@ -435,15 +448,22 @@ export const Template = ({
     return entries;
   }, [scenes, durationInFrames]);
 
-  const activeCue = captions.find(
-    (cue) => currentMs >= cue.startMs && currentMs < cue.endMs,
-  );
   // موضع الكابشن يتبع اللقطة الظاهرة إن حدّدت موضعها، وإلا فموضع القالب
   const activeScene = timeline.find(
     (entry) => frame >= entry.from && frame < entry.from + entry.span,
   );
   const captionBottom =
     activeScene?.scene.captionBottomRatio ?? captionBottomRatio;
+  /**
+   * مشهدا stack وecho يعرضان نصّ الكابشن نفسه بشكلهما الخاص (كلمات ضخمة، أو
+   * سطر متكرّر داخل بطاقة) — فظهور شريط الكابشن الصغير فوقهما كان يكرّر
+   * النص مرتين على الشاشة معاً بدل أن يحلّ أحدهما محلّ الآخر.
+   */
+  const activeSceneHasOwnText =
+    activeScene?.scene.type === "stack" || activeScene?.scene.type === "echo";
+  const activeCue = activeSceneHasOwnText
+    ? undefined
+    : captions.find((cue) => currentMs >= cue.startMs && currentMs < cue.endMs);
 
   /**
    * النقرات تتبع كل ما يظهر، لا الكابشن وحده.
@@ -462,7 +482,10 @@ export const Template = ({
       if (scene.clicks === false) continue;
       const startMs = (from / fps) * 1000;
       if (scene.type === "stack") {
-        const words = toWords(scene.text ?? headline);
+        const endMs = ((from + span) / fps) * 1000;
+        const words = toWords(
+          scene.text || textForWindow(captions, startMs, endMs) || headline,
+        );
         const step = words.length > 0 ? (span * 0.7) / words.length : 1;
         words.forEach((_, i) => onsets.push(startMs + (i * step * 1000) / fps));
       }
@@ -534,7 +557,15 @@ export const Template = ({
 
           {scene.type === "stack" ? (
             <StackScene
-              text={scene.text ?? headline}
+              text={
+                scene.text ||
+                textForWindow(
+                  captions,
+                  (from / fps) * 1000,
+                  ((from + span) / fps) * 1000,
+                ) ||
+                headline
+              }
               colors={colors}
               fontSize={width * stackFontRatio}
               lineHeight={stackLineHeight}
@@ -545,7 +576,15 @@ export const Template = ({
 
           {scene.type === "echo" ? (
             <EchoScene
-              text={scene.text ?? headline}
+              text={
+                scene.text ||
+                textForWindow(
+                  captions,
+                  (from / fps) * 1000,
+                  ((from + span) / fps) * 1000,
+                ) ||
+                headline
+              }
               box={echoBox}
               radius={echoWidth * cardRadiusRatio}
               colors={colors}
