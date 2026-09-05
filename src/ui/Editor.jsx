@@ -23,6 +23,7 @@ import {
 import { submitRender } from "./render.js";
 import { pickOutputFormat, renderInBrowser } from "./web-render.js";
 import { saveFile } from "./save-file.js";
+import { saveProgress, loadProgress, clearProgress } from "./save-progress.js";
 /**
  * مسار blob بلا امتداد، والقوالب تميّز الفيديو من الصورة بالامتداد — فبدون
  * لاحقة يُعرض أي فيديو مرفوع كصورة ثابتة ولا تُحتسب مدّته. الجزء بعد # لا
@@ -52,6 +53,18 @@ const describeRenderFailure = (err) => {
   }
 
   return raw;
+};
+
+/** وقت نسبي مختصر بالعربية — لبطاقة «تقدّم محفوظ» فقط. */
+const relativeTime = (ms) => {
+  const diff = Date.now() - ms;
+  const mins = Math.round(diff / 60000);
+  if (mins < 1) return "الآن";
+  if (mins < 60) return `قبل ${mins} دقيقة`;
+  const hours = Math.round(mins / 60);
+  if (hours < 24) return `قبل ${hours} ساعة`;
+  const days = Math.round(hours / 24);
+  return `قبل ${days} يوم`;
 };
 
 const extensionSuffix = (fileName) => {
@@ -176,6 +189,9 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const fields = useMemo(() => describeSchema(template.schema), [template]);
   const [props, setProps] = useState(() => ({ ...template.defaultProps }));
   const [picked, setPicked] = useState({});
+  // تقدّم محفوظ لهذا القالب بعينه — سجلّ في IndexedDB لا في الحالة الحالية
+  const [savedProgress, setSavedProgress] = useState(null);
+  const [saveNote, setSaveNote] = useState(null);
   const [srtName, setSrtName] = useState(null);
   const [srtKind, setSrtKind] = useState(null);
   const [srtText, setSrtText] = useState(null);
@@ -251,6 +267,63 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
 
   const pickedAt = useCallback((key) => picked[key], [picked]);
 
+  // عند فتح القالب: هل له تقدّم محفوظ من زيارة سابقة؟ لا يُسترجع تلقائياً —
+  // الاسترجاع الصامت قد يطيح بتعديل شرع المستخدم فيه للتوّ دون أن يقصد فتح
+  // نسخة قديمة
+  useEffect(() => {
+    let cancelled = false;
+    loadProgress(template.meta.id).then((rec) => {
+      if (!cancelled && rec) setSavedProgress(rec);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSaveProgress = useCallback(() => {
+    saveProgress(template.meta.id, props, picked).then(() => {
+      setSaveNote("تم الحفظ");
+      setTimeout(() => setSaveNote(null), 2500);
+    });
+  }, [template.meta.id, props, picked]);
+
+  /**
+   * الاسترجاع يعيد بناء رابط blob جديد لكل ملف محفوظ — الرابط القديم مات مع
+   * إغلاق الصفحة — ويضعه في مكانه بالضبط عبر نفس المسار الذي حُفظ به
+   * (`setIn`)، فيعمل مع الحقول المتداخلة (`scenes.2.media.src`) كما يعمل
+   * مع الحقول المباشرة.
+   */
+  const onRestoreProgress = useCallback(() => {
+    if (!savedProgress) return;
+    let nextProps = { ...template.defaultProps, ...savedProgress.props };
+    const nextPicked = {};
+    for (const [path, file] of Object.entries(savedProgress.files ?? {})) {
+      const url = URL.createObjectURL(file) + extensionSuffix(file.name);
+      registerBlob(url, file);
+      nextPicked[path] = { url, name: file.name, file };
+      nextProps = setIn(nextProps, path, url);
+    }
+    setProps(nextProps);
+    setPicked(nextPicked);
+    setSavedProgress(null);
+    if (nextPicked.media && "mediaAspect" in template.defaultProps) {
+      readMediaAspect(nextPicked.media.url)
+        .then((value) => set("mediaAspect", value))
+        .catch(() => set("mediaAspect", null));
+    }
+    if (nextPicked.voiceover) {
+      readAudioDuration(nextPicked.voiceover.url)
+        .then(setAudioSeconds)
+        .catch(() => setAudioSeconds(null));
+    }
+  }, [savedProgress, template.defaultProps, set]);
+
+  const onDismissProgress = useCallback(() => {
+    clearProgress(template.meta.id);
+    setSavedProgress(null);
+  }, [template.meta.id]);
+
   const captionField = useMemo(
     () => fields.find((f) => f.kind === "captions"),
     [fields],
@@ -294,6 +367,24 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
    */
   const lineCueTemplate = !studio && !sceneBased && wordTimed;
   const wordEditor = studio || wordCueTemplate || lineCueTemplate;
+  /**
+   * بعض القوالب (ريل كلوفا الكريمي، الكرت الكريمي) مشاهدها مدداً بالفريمات
+   * لا نطاقات ms — فتوقيت الكلمة بالملي ثانية وسط لوحة كل أرقامها فريمات
+   * يصير وحدة غريبة يحسبها المستخدم يدوياً. حين توجد `durationInFrames`
+   * تُعرض توقيتات الكلمات بالفريم أيضاً، والتخزين الداخلي يبقى ms كما يتوقعه
+   * القالب.
+   */
+  const frameScenesField = useMemo(
+    () =>
+      fields.find(
+        (f) =>
+          f.name === "scenes" &&
+          f.kind === "objectList" &&
+          (f.itemFields ?? []).some((s) => s.name === "durationInFrames"),
+      ),
+    [fields],
+  );
+  const wordTimeUnit = frameScenesField ? "frames" : "ms";
 
   // «جملة كاملة» تعرض كلمات المقطع معاً، فلا معنى لتقطيعها إلى أسطر
   const cueOptions = useMemo(
@@ -479,6 +570,27 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   return (
     <div className="editor">
       <aside className="controls">
+        {savedProgress ? (
+          <div className="note warn" style={{ margin: "0 0 14px" }}>
+            <b>لديك تقدّم محفوظ</b> — {relativeTime(savedProgress.savedAt)}.
+            <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+              <button
+                type="button"
+                className="btn ghost tiny"
+                onClick={onRestoreProgress}
+              >
+                استرجاعه
+              </button>
+              <button
+                type="button"
+                className="btn ghost tiny"
+                onClick={onDismissProgress}
+              >
+                تجاهله
+              </button>
+            </div>
+          </div>
+        ) : null}
         {GROUP_ORDER.map((groupName, index) => {
           const groupFields = grouped.get(groupName);
           // مجموعة الكلمات محرّرها مرسوم يدوياً لا من حقول الـ schema، فشرط
@@ -553,6 +665,8 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                       perLineMax={
                         wordCueTemplate ? (perLineField?.max ?? 10) : 10
                       }
+                      timeUnit={wordTimeUnit}
+                      fps={template.meta.fps}
                     />
                   </>
                 ) : null}
@@ -741,6 +855,10 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                 : `يُرندر… ${Math.round(webProgress * 100)}%`}
             </button>
           ) : null}
+
+          <button className="btn ghost" onClick={onSaveProgress}>
+            {saveNote ?? "حفظ التقدّم"}
+          </button>
 
           <button className="btn ghost" onClick={onBack}>
             ← رجوع للمعرض

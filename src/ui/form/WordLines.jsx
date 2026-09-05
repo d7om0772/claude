@@ -121,18 +121,30 @@ const cut = (words, lengths) => {
   return out;
 };
 
-const MS = ({ value, onChange, title }) => (
-  <input
-    type="number"
-    className="ms-input"
-    dir="ltr"
-    step={10}
-    min={0}
-    value={Math.round(value)}
-    title={title}
-    onChange={(e) => onChange(Number(e.target.value))}
-  />
-);
+/**
+ * حقل توقيت واحد يعرض القيمة بالوحدة التي يفهمها القالب.
+ *
+ * التخزين الداخلي دائماً بالملي ثانية (عقد الـ schema)، لكن قوالب مشاهدها
+ * بالفريمات (`durationInFrames`) تجعل توقيت الكلمة بالملي ثانية وحدةً غريبة
+ * وسط لوحة كل أرقامها فريمات — فتُعرض هنا بالفريم أيضاً وتُحوَّل عند الكتابة.
+ */
+const MS = ({ value, onChange, title, unit = "ms", fps = 30 }) => {
+  const toDisplay = (ms) =>
+    unit === "frames" ? Math.round((ms / 1000) * fps) : Math.round(ms);
+  const fromDisplay = (v) => (unit === "frames" ? (v / fps) * 1000 : v);
+  return (
+    <input
+      type="number"
+      className="ms-input"
+      dir="ltr"
+      step={unit === "frames" ? 1 : 10}
+      min={0}
+      value={toDisplay(value)}
+      title={title}
+      onChange={(e) => onChange(fromDisplay(Number(e.target.value)))}
+    />
+  );
+};
 
 /** مواضع السطر الجاهزة — نِسب من ارتفاع الإطار. */
 const POSITIONS = [
@@ -176,6 +188,10 @@ export const WordLines = ({
   showPosition = false,
   perLineMin = 1,
   perLineMax = 10,
+  // القوالب التي مشاهدها بالفريمات (durationInFrames) تعرض توقيت الكلمة
+  // بالفريم أيضاً، فتتّحد وحدة القياس عبر اللوحة كلها بدل ملي ثانية وسط فريمات
+  timeUnit = "ms",
+  fps = 30,
 }) => {
   const byWord = granularity === "word";
   const wordCues = byWord ? wordsOfWordCues(cues) : [];
@@ -354,7 +370,13 @@ export const WordLines = ({
                 <span className="cue-range">
                   <MS
                     value={line.words[0].startMs}
-                    title="لحظة ظهور السطر بالملي ثانية"
+                    title={
+                      timeUnit === "frames"
+                        ? "لحظة ظهور السطر بالفريم"
+                        : "لحظة ظهور السطر بالملي ثانية"
+                    }
+                    unit={timeUnit}
+                    fps={fps}
                     onChange={(v) => setLineProp(lineIndex, { startMs: v })}
                   />
                 </span>
@@ -440,7 +462,13 @@ export const WordLines = ({
                   {perWordTiming ? (
                     <MS
                       value={word.startMs}
-                      title="لحظة ظهور الكلمة بالملي ثانية"
+                      title={
+                        timeUnit === "frames"
+                          ? "لحظة ظهور الكلمة بالفريم"
+                          : "لحظة ظهور الكلمة بالملي ثانية"
+                      }
+                      unit={timeUnit}
+                      fps={fps}
                       onChange={(v) =>
                         replaceWord(lineIndex, i, { startMs: v })
                       }
