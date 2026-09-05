@@ -216,8 +216,28 @@ export const FrameScenes = ({
       if (i === -1) orphans.push(index);
       else map.get(i).push(index);
     });
+    // ترتيب زمني ثابت داخل كل لقطة، فسلسلة الأسطر عبر اللقطات (أدناه) تطابق
+    // ترتيب العرض ولا يهم ترتيب `captions` نفسه.
+    map.forEach((list) =>
+      list.sort((a, b) => captions[a].startMs - captions[b].startMs),
+    );
     return { map, orphans };
   }, [scenes, captions, timeline, fps]);
+
+  /**
+   * كل أسطر اللقطات في سلسلة زمنية واحدة متصلة عبر اللقطات كلّها — بها
+   * يعرف العدّاد أن آخر سطر في لقطة وأول سطر في التي تليها متجاوران، فينتقل
+   * الفائض بينهما تلقائياً.
+   */
+  const sceneLines = useMemo(() => {
+    const out = [];
+    scenes.forEach((_, sceneIdx) => {
+      (grouped.map.get(sceneIdx) ?? []).forEach((cueIndex) =>
+        out.push({ sceneIdx, cueIndex }),
+      );
+    });
+    return out;
+  }, [scenes, grouped]);
 
   const setScene = (index, patch) =>
     setScenes(scenes.map((s, i) => (i === index ? { ...s, ...patch } : s)));
@@ -275,12 +295,67 @@ export const FrameScenes = ({
     setCaptions([...captions.filter((_, i) => !groupSet.has(i)), ...rebuilt]);
   };
 
-  const resizeCueInScene = (sceneIndex, cuePos, count) => {
+  /**
+   * عدّاد سطر داخل لقطة — لكن الأسطر كلها متصلة عبر اللقطات، فآخر سطر في
+   * لقطة يسحب من أول سطر في التي تليها أو يدفع إليه، لا يتوقف عند حدود
+   * لقطته وحدها.
+   */
+  const resizeSceneCue = (sceneIndex, cuePos, count) => {
     const mine = grouped.map.get(sceneIndex) ?? [];
-    const t = timeline[sceneIndex];
-    resizeGroup(mine, cuePos, count, (startMs) =>
-      Math.max(startMs + 500, frameToMs(t.toFrame, fps)),
+    const targetCueIndex = mine[cuePos];
+    const flatIndex = sceneLines.findIndex(
+      (l) => l.cueIndex === targetCueIndex,
     );
+    if (flatIndex === -1) return;
+
+    const lines = sceneLines.map((l) => ({
+      sceneIdx: l.sceneIdx,
+      words: wordsOf(captions[l.cueIndex]),
+    }));
+    const target = lines[flatIndex];
+    const delta = Math.max(1, count) - target.words.length;
+
+    if (delta < 0) {
+      const moved = target.words.splice(delta);
+      const below = lines[flatIndex + 1];
+      if (below) below.words.unshift(...moved);
+      else lines.push({ sceneIdx: target.sceneIdx, words: moved });
+    } else {
+      let need = delta;
+      for (let i = flatIndex + 1; i < lines.length && need > 0; i += 1) {
+        const taken = lines[i].words.splice(0, need);
+        target.words.push(...taken);
+        need -= taken.length;
+      }
+    }
+
+    const kept = lines.filter((line) => line.words.length > 0);
+    // كل سطر يُشدّ إلى بداية لقطته على الأقل — بلا هذا يبقى سطرٌ انتقل
+    // إلى لقطة تالية مصنّفاً على توقيته القديم فيُحسب على لقطته السابقة
+    const clamped = kept.map((line) => ({
+      ...line,
+      startMs: Math.max(
+        line.words[0].startMs,
+        frameToMs(timeline[line.sceneIdx].fromFrame, fps),
+      ),
+    }));
+    const rebuilt = clamped.map((line, i) => {
+      const below = clamped[i + 1];
+      const window = timeline[line.sceneIdx];
+      const endMs = below
+        ? below.startMs
+        : Math.max(line.startMs + 500, frameToMs(window.toFrame, fps));
+      return cueFromWords(
+        { text: "", startMs: line.startMs, endMs, wordStartsMs: [] },
+        line.words,
+      );
+    });
+
+    const sceneCueSet = new Set(sceneLines.map((l) => l.cueIndex));
+    setCaptions([
+      ...captions.filter((_, i) => !sceneCueSet.has(i)),
+      ...rebuilt,
+    ]);
   };
 
   const resizeOrphanCue = (cuePos, count) => {
@@ -438,7 +513,7 @@ export const FrameScenes = ({
                   fps={fps}
                   onChange={(cue) => replaceCue(cueIndex, cue)}
                   onRemove={() => removeCue(cueIndex)}
-                  onResize={(count) => resizeCueInScene(index, cuePos, count)}
+                  onResize={(count) => resizeSceneCue(index, cuePos, count)}
                 />
               ))
             )}
