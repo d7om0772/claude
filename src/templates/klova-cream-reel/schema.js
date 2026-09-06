@@ -36,7 +36,13 @@ export const sceneSchema = z.object({
     .describe(
       "media = بطاقة المقطع، empty = كريمي فاضٍ والكابشن وحده، stack = كلمات ضخمة كلٌّ في سطر، echo = بطاقة ملوّنة يتكرّر نصّها",
     ),
-  durationInFrames: z.number().int().min(1).describe("طول المشهد بالفريمات"),
+  durationInFrames: z
+    .number()
+    .int()
+    .min(1)
+    .describe(
+      "طول المشهد بالفريمات — يشتقّه محرّر اللقطات من الكلمات: المشهد يبدأ مع أول كلمة فيه وينتهي قبل أول كلمة في الذي يليه بفريم، والمشهد الذي لا كلمات فيه يبقى بطوله المكتوب هنا",
+    ),
   media: z
     .string()
     .nullable()

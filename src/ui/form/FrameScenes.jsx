@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { cuesFromSrt } from "./srt-cues.js";
 
 /**
@@ -241,10 +241,82 @@ export const FrameScenes = ({
 
   const setScene = (index, patch) =>
     setScenes(scenes.map((s, i) => (i === index ? { ...s, ...patch } : s)));
+
+  /**
+   * مدد اللقطات تُشتقّ من الكلمات، فلا رقم يكتبه المستخدم.
+   *
+   * اللقطة تبدأ مع أول كلمة فيها وتنتهي قبل أول كلمة في التي تليها بفريم —
+   * وهو ما يعنيه في التسلسل التراكمي: طولُها = فريمُ أول كلمة في التالية
+   * ناقص بدايتها. أما اللقطة الأولى فبدايتها صفر الفيديو حتماً، وآخر لقطة
+   * تتمدّد لتغطي ما بقي (يفعله القالب نفسه)، ولقطةٌ بلا كلمات لا بداية
+   * تُشتقّ لها فتبقى بطولها كما هو ويُحسب لها مكانها في السلسلة.
+   */
+  const derivedScenes = (nextCaptions) => {
+    const firstWordMs = new Map();
+    nextCaptions.forEach((cue) => {
+      const i = timeline.findIndex(
+        (t) =>
+          cue.startMs >= frameToMs(t.fromFrame, fps) &&
+          cue.startMs < frameToMs(t.toFrame, fps),
+      );
+      if (i === -1) return;
+      const seen = firstWordMs.get(i);
+      if (seen === undefined || cue.startMs < seen) {
+        firstWordMs.set(i, cue.startMs);
+      }
+    });
+
+    const out = scenes.map((scene) => ({ ...scene }));
+    let cursor = 0;
+    for (let i = 0; i < out.length - 1; i += 1) {
+      if (!firstWordMs.has(i)) {
+        cursor += out[i].durationInFrames;
+        continue;
+      }
+      // أقرب لقطة تالية فيها كلمات هي المرساة، وما بينهما من لقطات بلا
+      // كلمات يحتفظ بطوله فيُطرح من المسافة
+      let anchor = null;
+      let gap = 0;
+      for (let j = i + 1; j < out.length; j += 1) {
+        const start = firstWordMs.get(j);
+        if (start !== undefined) {
+          anchor = Math.round((start / 1000) * fps);
+          break;
+        }
+        gap += out[j].durationInFrames;
+      }
+      out[i].durationInFrames =
+        anchor === null
+          ? out[i].durationInFrames
+          : Math.max(1, anchor - gap - cursor);
+      cursor += out[i].durationInFrames;
+    }
+    return out;
+  };
+
+  /**
+   * القيم المحفوظة في القالب قد تكون مكتوبة يدوياً من قبل، فتُضبط على القاعدة
+   * أول ما تُفتح اللوحة — وإلا رأى المستخدم «تلقائي» مكتوباً وحدوداً لا تطابق
+   * كلماتها. الاشتقاق نقطةٌ ثابتة: يكتب مرّة ثم يتّفق مع نفسه فيتوقّف.
+   */
+  useEffect(() => {
+    const derived = derivedScenes(captions);
+    const changed = derived.some(
+      (scene, i) => scene.durationInFrames !== scenes[i].durationInFrames,
+    );
+    if (changed) setScenes(derived);
+  });
+
+  /** كل تغيير على الكلمات يعيد اشتقاق مدد اللقطات معه، فلا يفترقان. */
+  const commitCaptions = (next) => {
+    setCaptions(next);
+    setScenes(derivedScenes(next));
+  };
+
   const replaceCue = (index, cue) =>
-    setCaptions(captions.map((c, i) => (i === index ? cue : c)));
+    commitCaptions(captions.map((c, i) => (i === index ? cue : c)));
   const removeCue = (index) =>
-    setCaptions(captions.filter((_, i) => i !== index));
+    commitCaptions(captions.filter((_, i) => i !== index));
 
   /**
    * يغيّر عدد كلمات سطر واحد بتحريك حدّه مع السطر الذي يليه فقط، ضمن نفس
@@ -294,7 +366,10 @@ export const FrameScenes = ({
     });
 
     const groupSet = new Set(groupIndices);
-    setCaptions([...captions.filter((_, i) => !groupSet.has(i)), ...rebuilt]);
+    commitCaptions([
+      ...captions.filter((_, i) => !groupSet.has(i)),
+      ...rebuilt,
+    ]);
   };
 
   /**
@@ -368,7 +443,7 @@ export const FrameScenes = ({
     });
 
     const sceneCueSet = new Set(sceneLines.map((l) => l.cueIndex));
-    setCaptions([
+    commitCaptions([
       ...captions.filter((_, i) => !sceneCueSet.has(i)),
       ...rebuilt,
     ]);
@@ -404,7 +479,7 @@ export const FrameScenes = ({
     });
 
     if (freeStart <= latestStart) {
-      setCaptions([...captions, newCue(freeStart)]);
+      commitCaptions([...captions, newCue(freeStart)]);
       return;
     }
 
@@ -415,7 +490,7 @@ export const FrameScenes = ({
       latestStart,
       Math.max(last.startMs + frameToMs(1, fps), (last.startMs + toMs) / 2),
     );
-    setCaptions([
+    commitCaptions([
       ...captions.map((cue, i) =>
         i === lastIndex ? { ...cue, endMs: split } : cue,
       ),
@@ -437,7 +512,7 @@ export const FrameScenes = ({
       maxWords: DEFAULT_IMPORT_MAX_WORDS,
     });
     const mine = new Set(grouped.map.get(sceneIndex) ?? []);
-    setCaptions([...captions.filter((_, i) => !mine.has(i)), ...imported]);
+    commitCaptions([...captions.filter((_, i) => !mine.has(i)), ...imported]);
   };
 
   /** SRT كامل القالب: يستبدل كل الكلمات في كل اللقطات دفعة واحدة. */
@@ -448,7 +523,7 @@ export const FrameScenes = ({
       limitMs: Number.POSITIVE_INFINITY,
       maxWords: DEFAULT_IMPORT_MAX_WORDS,
     });
-    setCaptions(imported);
+    commitCaptions(imported);
   };
 
   const pickMedia = (index, file) => {
@@ -503,21 +578,19 @@ export const FrameScenes = ({
             </div>
 
             <div className="scene-row">
-              <span className="file-empty">وقت اللقطة</span>
-              <Frame
-                value={scene.durationInFrames}
+              <span
+                className="file-empty"
                 title={
                   t.isLast
-                    ? "طول اللقطة بالفريمات — آخر لقطة تتمدّد تلقائياً لتغطية بقية الفيديو مهما كتبت هنا"
-                    : "طول اللقطة بالفريمات"
+                    ? "آخر لقطة تتمدّد لتغطية بقية الفيديو"
+                    : mine.length === 0
+                      ? "لقطة بلا كلمات: لا بداية تُشتقّ لها فتبقى بطولها الحالي — أضف لها سطراً ليبدأ وقتها مع أول كلمة فيه"
+                      : "وقت اللقطة تلقائي: يبدأ مع أول كلمة فيها وينتهي قبل أول كلمة في التي تليها بفريم"
                 }
-                onChange={(v) =>
-                  setScene(index, { durationInFrames: Math.max(1, v) })
-                }
-              />
-              <span className="file-empty">
-                من الفريم {t.fromFrame} إلى{" "}
-                {t.isLast ? "نهاية الفيديو" : t.toFrame}
+              >
+                وقت اللقطة تلقائي — من الفريم {t.fromFrame} إلى{" "}
+                {t.isLast ? "نهاية الفيديو" : t.toFrame - 1} (
+                {t.toFrame - t.fromFrame} فريم)
               </span>
             </div>
 
