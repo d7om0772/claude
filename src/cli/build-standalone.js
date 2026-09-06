@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, mkdirSync } from "node:fs";
 import { basename, join, posix } from "node:path";
 /**
  * يبني الواجهة كملف HTML واحد مكتفٍ بذاته: كل شيء مضمّن، صفر طلبات شبكة.
@@ -87,6 +87,13 @@ const page = `<meta charset="utf-8" />
 <script type="module">${js}</script>
 `;
 writeFileSync(OUT, page, "utf8");
+/**
+ * نسخة النشر: نتليفاي يخدم `index.html` من مجلد النشر، وبناء Vite يمسح
+ * dist-ui كلّه في كل مرة — فتُكتب هنا بعد البناء مباشرة ليبقى المجلد
+ * جاهزاً للنشر بلا خطوة يدوية تُنسى (انظر netlify.toml).
+ */
+mkdirSync(`${DIST}/site`, { recursive: true });
+writeFileSync(`${DIST}/site/index.html`, page, "utf8");
 process.stderr.write(
   `${OUT} — ${kb(Buffer.byteLength(page))} (js ${kb(js.length)}، أصول ${kb(Object.values(assets).reduce((n, v) => n + v.length, 0))})\n`,
 );
