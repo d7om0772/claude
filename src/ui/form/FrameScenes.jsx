@@ -390,6 +390,17 @@ export const FrameScenes = ({
     setCaptions([...captions.filter((_, i) => !mine.has(i)), ...imported]);
   };
 
+  /** SRT كامل القالب: يستبدل كل الكلمات في كل اللقطات دفعة واحدة. */
+  const importFullSrt = async (file) => {
+    if (!file) return;
+    const imported = cuesFromSrt(await file.text(), {
+      offsetMs: 0,
+      limitMs: Number.POSITIVE_INFINITY,
+      maxWords: DEFAULT_IMPORT_MAX_WORDS,
+    });
+    setCaptions(imported);
+  };
+
   const pickMedia = (index, file) => {
     const url = pickAsset(`scenes.${index}.media`, file);
     setScene(index, { media: url });
@@ -397,6 +408,22 @@ export const FrameScenes = ({
 
   return (
     <div className="scenes">
+      <div className="scene-row">
+        <label className="btn ghost tiny">
+          استيراد SRT لكامل القالب
+          <input
+            type="file"
+            accept=".srt,.vtt,text/plain"
+            style={{ display: "none" }}
+            onChange={(e) => void importFullSrt(e.target.files?.[0] ?? null)}
+          />
+        </label>
+        <span className="file-empty">
+          يستبدل كلمات كل اللقطات دفعة واحدة وتُوزَّع كل لقطة على توقيتها —
+          استيراد اللقطة الواحدة أدناه ما زال متاحاً لتعديل لقطة بعينها بعده
+        </span>
+      </div>
+
       {scenes.map((scene, index) => {
         const mine = grouped.map.get(index) ?? [];
         const picked = pickedAt(`scenes.${index}.media`);
