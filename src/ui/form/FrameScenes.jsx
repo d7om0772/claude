@@ -366,7 +366,16 @@ export const FrameScenes = ({
       for (let j = i + 1; j < out.length; j += 1) {
         const start = firstWordMs.get(j);
         if (start !== undefined) {
-          anchor = Math.round((start / 1000) * fps);
+          /**
+           * الفريم الذي لا يتجاوز الكلمة (floor) لا الأقرب إليها.
+           *
+           * الحدّ فريمٌ صحيح والانتماء يُقاس بالملي ثانية: فكلمةٌ عند
+           * 4451ms (فريم 133.53) لو قُرِّب حدُّها إلى 134 بدأت لقطتها بعدها
+           * فسقطت الكلمة في اللقطة السابقة — وهذا ما كان يُلغي نقل الأسطر
+           * بعد استيراد SRT، لأن توقيتاته لا تقع على الفريمات كالنص
+           * الافتراضي. وبالتقريب نزولاً تبدأ اللقطة عند كلمتها أو قبلها.
+           */
+          anchor = Math.floor((start / 1000) * fps);
           break;
         }
         gap += out[j].durationInFrames;
