@@ -396,9 +396,9 @@ export const defaultProps = {
   // مجموعها 642 فريماً = 21.4 ثانية، وهي مدة المرجع بالضبط.
   scenes: [
     { type: "media", durationInFrames: 108, media: null }, // 0 → 3.6
-    { type: "media", durationInFrames: 48, media: null }, // 3.6 → 5.2
-    { type: "media", durationInFrames: 39, media: null }, // 5.2 → 6.5
-    { type: "media", durationInFrames: 69, media: null }, // 6.5 → 8.8
+    // لقطة واحدة بدل ثلاث متتابعة كانت تقطع بين 3.6 و5.2 و6.5: مقطعٌ واحد
+    // يمتدّ على أسطرها الثلاثة بدل ثلاثة مقاطع لكلٍّ سطره
+    { type: "media", durationInFrames: 156, media: null }, // 3.6 → 8.8
     { type: "empty", durationInFrames: 45 }, // 8.8 → 10.3
     { type: "media", durationInFrames: 75, media: null }, // 10.3 → 12.8
     { type: "empty", durationInFrames: 48 }, // 12.8 → 14.4
