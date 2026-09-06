@@ -1,0 +1,7 @@
+# الموقع صفحة واحدة مكتفية بذاتها: `npm run ui:standalone` يبنيها محلياً في
+# dist-ui/standalone.html، وتُنشر نسخةً باسم index.html. لا بناء على نتليفاي
+# لأن خطوط العرض العربية خارج المستودع (انظر public/fonts/README.md)، فبناءٌ
+# بعيد يُخرج صفحة بلا خطّها.
+[build]
+  command = "echo 'الصفحة مبنية مسبقاً — لا بناء هنا'"
+  publish = "dist-ui/site"
