@@ -940,3 +940,18 @@ textarea {
      عربية اتجاهها RTL كانت تُزيح الإطار خارج الصندوق فيظهر فارغاً. */
   direction: ltr;
 }
+
+/* زرّا نقل السطر بين اللقطات — متلاصقان صغيران بجانب رقم السطر */
+.cue-move {
+  display: inline-flex;
+  gap: 2px;
+}
+.cue-move .icon-btn {
+  font-size: 10px;
+  line-height: 1;
+  padding: 3px 5px;
+}
+.cue-move .icon-btn:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+}

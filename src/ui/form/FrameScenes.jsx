@@ -131,7 +131,7 @@ const SceneThumb = ({
   );
 };
 
-const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize }) => {
+const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize, move }) => {
   const words = wordsOf(cue);
   const setWords = (next) => onChange(cueFromWords(cue, next));
   return (
@@ -140,6 +140,36 @@ const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize }) => {
         <span className="stage-label" style={{ position: "static" }}>
           سطر {index + 1}
         </span>
+        {move ? (
+          <span className="cue-move">
+            <button
+              type="button"
+              className="icon-btn"
+              disabled={!move.up}
+              title={
+                move.up
+                  ? `نقل السطر كاملاً إلى اللقطة ${move.up}${move.sole ? " — وتُطوى هذه اللقطة لأنها تبقى بلا كلمات ولا وقت" : ""}`
+                  : "لا يُنقل إلى ما قبلها إلا أول سطر في اللقطة — انقل ما فوقه أولاً"
+              }
+              onClick={() => move.onUp()}
+            >
+              ▲
+            </button>
+            <button
+              type="button"
+              className="icon-btn"
+              disabled={!move.down}
+              title={
+                move.down
+                  ? `نقل السطر كاملاً إلى اللقطة ${move.down}${move.sole ? " — وتُطوى هذه اللقطة لأنها تبقى بلا كلمات ولا وقت" : ""}`
+                  : "لا يُنقل إلى ما بعدها إلا آخر سطر في اللقطة — انقل ما تحته أولاً"
+              }
+              onClick={() => move.onDown()}
+            >
+              ▼
+            </button>
+          </span>
+        ) : null}
         <Stepper
           value={words.length}
           onChange={(count) => onResize(count)}
@@ -312,21 +342,8 @@ export const FrameScenes = ({
    * تتمدّد لتغطي ما بقي (يفعله القالب نفسه)، ولقطةٌ بلا كلمات لا بداية
    * تُشتقّ لها فتبقى بطولها كما هو ويُحسب لها مكانها في السلسلة.
    */
-  const derivedScenes = (nextCaptions) => {
-    const firstWordMs = new Map();
-    nextCaptions.forEach((cue) => {
-      const i = timeline.findIndex(
-        (t) =>
-          cue.startMs >= frameToMs(t.fromFrame, fps) &&
-          cue.startMs < frameToMs(t.toFrame, fps),
-      );
-      if (i === -1) return;
-      const seen = firstWordMs.get(i);
-      if (seen === undefined || cue.startMs < seen) {
-        firstWordMs.set(i, cue.startMs);
-      }
-    });
-
+  /** أول كلمة في كل لقطة حسب توزيعٍ معطى: لقطة → مصفوفة مقاطعها. */
+  const scenesFromFirstWords = (firstWordMs) => {
     const out = scenes.map((scene) => ({ ...scene }));
     let cursor = 0;
     for (let i = 0; i < out.length - 1; i += 1) {
@@ -353,6 +370,86 @@ export const FrameScenes = ({
       cursor += out[i].durationInFrames;
     }
     return out;
+  };
+
+  const derivedScenes = (nextCaptions) => {
+    const firstWordMs = new Map();
+    nextCaptions.forEach((cue) => {
+      const i = timeline.findIndex(
+        (t) =>
+          cue.startMs >= frameToMs(t.fromFrame, fps) &&
+          cue.startMs < frameToMs(t.toFrame, fps),
+      );
+      if (i === -1) return;
+      const seen = firstWordMs.get(i);
+      if (seen === undefined || cue.startMs < seen) {
+        firstWordMs.set(i, cue.startMs);
+      }
+    });
+    return scenesFromFirstWords(firstWordMs);
+  };
+
+  /**
+   * نقل سطر كامل إلى اللقطة المجاورة.
+   *
+   * لا يُمسّ توقيت السطر ولا كلماته: ما ينتقل هو **الحدّ** بين اللقطتين
+   * فيقع السطر في الأخرى — فيبقى الكلام في لحظته من الفيديو ويتغيّر المشهد
+   * الذي تحته، وهو المقصود من «انقل السطر إلى لقطة أخرى».
+   *
+   * ولهذا لا يُنقل إلا طرفُ اللقطة: أوّلُ أسطرها إلى ما قبلها، وآخرُها إلى
+   * ما بعدها. سطرٌ بين سطرين نقلُه يعني قفزه فوق جاره في الزمن — أي إعادة
+   * ترتيب السكربت لا نقل لقطة.
+   */
+  const moveCueToNeighbour = (sceneIndex, cuePos, direction) => {
+    const targetIndex = sceneIndex + direction;
+    if (targetIndex < 0 || targetIndex >= scenes.length) return;
+    const mine = grouped.map.get(sceneIndex) ?? [];
+    const cueIndex = mine[cuePos];
+    if (cueIndex === undefined) return;
+    const cue = captions[cueIndex];
+
+    /**
+     * الحدّ الجديد: نازلاً يقع عند بداية السطر فيخرج من لقطته إلى التالية،
+     * وصاعداً عند بداية السطر الذي يليه في لقطته — أو نهايةِ المنقول نفسه إن
+     * كان وحده — فتبتلعه اللقطة السابقة. والمجموع محفوظ: ما تأخذه واحدة
+     * تعطيه الأخرى، فلا يزحف باقي الفيديو.
+     */
+    const leftIndex = direction === 1 ? sceneIndex : sceneIndex - 1;
+    const wanted =
+      direction === 1
+        ? msToFrame(cue.startMs, fps)
+        : msToFrame(captions[mine[cuePos + 1]]?.startMs ?? cue.endMs, fps);
+
+    const left = timeline[leftIndex];
+    const right = timeline[leftIndex + 1];
+    const boundary = Math.min(
+      Math.max(wanted, left.fromFrame + 1),
+      right.toFrame - 1,
+    );
+    let next = scenes.map((scene, i) => {
+      if (i === leftIndex) {
+        return { ...scene, durationInFrames: boundary - left.fromFrame };
+      }
+      if (i === leftIndex + 1) {
+        return { ...scene, durationInFrames: right.toFrame - boundary };
+      }
+      return { ...scene };
+    });
+
+    // لقطة خرجت منها كلماتها كلّها ولم يبقَ لها وقت يُذكر: وجودُها وميضُ
+    // فريمٍ لا معنى له، فتُطوى مع جارتها
+    const emptied = mine.length === 1;
+    if (emptied && next[sceneIndex].durationInFrames < 2) {
+      const absorb = next[sceneIndex].durationInFrames;
+      next = next
+        .map((scene, i) =>
+          i === sceneIndex - 1 || (sceneIndex === 0 && i === 1)
+            ? { ...scene, durationInFrames: scene.durationInFrames + absorb }
+            : scene,
+        )
+        .filter((_, i) => i !== sceneIndex);
+    }
+    setScenes(next);
   };
 
   /**
@@ -769,6 +866,17 @@ export const FrameScenes = ({
                   onChange={(cue) => replaceCue(cueIndex, cue)}
                   onRemove={() => removeCue(cueIndex)}
                   onResize={(count) => resizeSceneCue(index, cuePos, count)}
+                  move={{
+                    // الطرف وحده ينتقل: الأول لما قبلها والأخير لما بعدها
+                    up: cuePos === 0 && index > 0 ? index : null,
+                    down:
+                      cuePos === mine.length - 1 && index < scenes.length - 1
+                        ? index + 2
+                        : null,
+                    sole: mine.length === 1,
+                    onUp: () => moveCueToNeighbour(index, cuePos, -1),
+                    onDown: () => moveCueToNeighbour(index, cuePos, 1),
+                  }}
                 />
               ))
             )}
