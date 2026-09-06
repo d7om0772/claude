@@ -497,15 +497,22 @@ export const Template = ({
   };
   const radius = cardWidth * cardRadiusRatio;
 
+  /**
+   * ارتفاع النص لكل لقطة على حدة.
+   *
+   * `textYRatio` في اللقطة يزيح ما تعرضه هي وحدها، والفارغ يأخذ موضع القالب
+   * العام — ولكلّ نوعٍ مرساتُه التي يعنيها الرقم نفسه: أسفلُ كتلة الكابشن،
+   * وأعلى الكلمات الضخمة، ومركزُ البطاقة الملوّنة. وفي الثلاثة الأكبرُ أنزل.
+   */
   // البطاقة الملوّنة صندوقها الخاص: في المرجع أوسع قليلاً وأعلى من بطاقة المقطع
   const echoWidth = width * echoWidthRatio;
   const echoHeight = echoWidth / echoAspect;
-  const echoBox = {
+  const echoBoxAt = (centerYRatio) => ({
     left: (width - echoWidth) / 2,
-    top: height * echoCenterYRatio - echoHeight / 2,
+    top: height * centerYRatio - echoHeight / 2,
     width: echoWidth,
     height: echoHeight,
-  };
+  });
 
   // آخر مشهد يتمدّد ليغطي بقية المدة، فلا يبقى فراغ حين يطول الصوت
   const timeline = useMemo(() => {
@@ -585,8 +592,7 @@ export const Template = ({
   const activeScene = timeline.find(
     (entry) => frame >= entry.from && frame < entry.from + entry.span,
   );
-  const captionBottom =
-    activeScene?.scene.captionBottomRatio ?? captionBottomRatio;
+  const captionBottom = activeScene?.scene.textYRatio ?? captionBottomRatio;
   /**
    * المشاهد النصية تملك الشاشة وحدها: شريط الكابشن فوق كلماتها الضخمة كان
    * يعرض نصّين معاً. ويُخفى كذلك أيُّ مقطع تعرضه هي بشكلها الخاص، ولو امتدّ
@@ -706,7 +712,7 @@ export const Template = ({
               colors={colors}
               fontSize={width * stackFontRatio}
               lineHeight={stackLineHeight}
-              topPx={height * stackTopRatio}
+              topPx={height * (scene.textYRatio ?? stackTopRatio)}
               bottomMarginPx={height * 0.04}
               maxWidthPx={width * 0.92}
             />
@@ -715,7 +721,7 @@ export const Template = ({
           {scene.type === "echo" ? (
             <EchoScene
               text={sceneTexts.get(index)?.text ?? headline}
-              box={echoBox}
+              box={echoBoxAt(scene.textYRatio ?? echoCenterYRatio)}
               radius={echoWidth * cardRadiusRatio}
               colors={colors}
               fontSize={width * echoFontRatio}

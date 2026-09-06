@@ -188,7 +188,17 @@ export const FrameScenes = ({
   pickAsset,
   fps,
   totalFrames,
+  textYDefaults = {},
 }) => {
+  /**
+   * ارتفاع نص اللقطة كنسبة مئوية من الإطار. الفارغ يعني موضع القالب العام،
+   * فيُعرض رقمه كما هو ليبدأ المستخدم من الموضع الحالي لا من صفر.
+   */
+  const heightPercent = (scene) => {
+    const ratio = scene.textYRatio ?? textYDefaults[scene.type];
+    return ratio === undefined || ratio === null ? "" : Math.round(ratio * 100);
+  };
+
   /** حدود كل لقطة بالفريم — نفس حساب القالب: آخر لقطة تتمدّد للنهاية. */
   const timeline = useMemo(() => {
     const entries = [];
@@ -592,6 +602,41 @@ export const FrameScenes = ({
                 {t.isLast ? "نهاية الفيديو" : t.toFrame - 1} (
                 {t.toFrame - t.fromFrame} فريم)
               </span>
+            </div>
+
+            <div className="scene-row">
+              <span className="file-empty">ارتفاع النص</span>
+              <input
+                type="number"
+                className="ms-input"
+                dir="ltr"
+                step={1}
+                min={2}
+                max={98}
+                value={heightPercent(scene)}
+                title="ارتفاع نصّ هذه اللقطة كنسبة من ارتفاع الإطار — الأكبر أنزل. لكل لقطة ارتفاعها"
+                onChange={(e) =>
+                  setScene(index, {
+                    textYRatio: Math.min(
+                      0.98,
+                      Math.max(0.02, Number(e.target.value) / 100),
+                    ),
+                  })
+                }
+              />
+              <span className="file-empty">٪ من ارتفاع الإطار</span>
+              {scene.textYRatio === undefined || scene.textYRatio === null ? (
+                <span className="file-empty">— موضع القالب</span>
+              ) : (
+                <button
+                  type="button"
+                  className="btn ghost tiny"
+                  title="إرجاع النص إلى موضع القالب العام"
+                  onClick={() => setScene(index, { textYRatio: null })}
+                >
+                  ↺ موضع القالب
+                </button>
+              )}
             </div>
 
             {scene.type === "media" ? (

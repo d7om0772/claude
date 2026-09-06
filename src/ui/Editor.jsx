@@ -390,7 +390,8 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
    * مقطعها — تُحرَّر بنفس الصناديق: السطر مقطع، وأطواله تختلف كما يشاء
    * المستخدم. القوالب المبنية على لقطات مستثناة لأن لكل لقطة كابشنها.
    */
-  const lineCueTemplate = !studio && !sceneBased && !frameSceneBased && wordTimed;
+  const lineCueTemplate =
+    !studio && !sceneBased && !frameSceneBased && wordTimed;
   const wordEditor = studio || wordCueTemplate || lineCueTemplate;
 
   // «جملة كاملة» تعرض كلمات المقطع معاً، فلا معنى لتقطيعها إلى أسطر
@@ -736,6 +737,14 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                     pickAsset={pickAsset}
                     fps={template.meta.fps}
                     totalFrames={duration}
+                    /* موضع النص العام لكل نوع لقطة، ليبدأ عدّاد ارتفاع
+                       اللقطة من الموضع الحالي لا من فراغ */
+                    textYDefaults={{
+                      media: props.captionBottomRatio,
+                      empty: props.captionBottomRatio,
+                      stack: props.stackTopRatio,
+                      echo: props.echoCenterYRatio,
+                    }}
                   />
                 ) : null}
 
