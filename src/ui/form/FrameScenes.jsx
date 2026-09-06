@@ -278,7 +278,9 @@ export const FrameScenes = ({
     const rebuilt = kept.map((line, i) => {
       const first = line.words[0];
       const below = kept[i + 1];
-      const endMs = below ? below.words[0].startMs : fallbackEndMs(first.startMs);
+      const endMs = below
+        ? below.words[0].startMs
+        : fallbackEndMs(first.startMs);
       const base = line.base ?? {
         text: "",
         startMs: 0,
@@ -380,7 +382,9 @@ export const FrameScenes = ({
     if (!file) return;
     const t = timeline[sceneIndex];
     const offsetMs = frameToMs(t.fromFrame, fps);
-    const limitMs = t.isLast ? Number.POSITIVE_INFINITY : frameToMs(t.toFrame, fps);
+    const limitMs = t.isLast
+      ? Number.POSITIVE_INFINITY
+      : frameToMs(t.toFrame, fps);
     const imported = cuesFromSrt(await file.text(), {
       offsetMs,
       limitMs,
@@ -583,7 +587,10 @@ export const FrameScenes = ({
         type="button"
         className="btn ghost tiny"
         onClick={() =>
-          setScenes([...scenes, { type: "media", durationInFrames: 60, media: null }])
+          setScenes([
+            ...scenes,
+            { type: "media", durationInFrames: 60, media: null },
+          ])
         }
       >
         + لقطة جديدة
