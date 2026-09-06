@@ -364,16 +364,48 @@ export const FrameScenes = ({
     resizeGroup(grouped.orphans, cuePos, count, (startMs) => startMs + 700);
   };
 
+  /**
+   * سطر جديد داخل اللقطة نفسها لا في التي تليها.
+   *
+   * اللقطة تضمّ ما **يبدأ** داخل نافذتها، ونهاية آخر سطر فيها تساوي عادةً
+   * نهاية النافذة (هكذا تبنيها الاستيرادات والعدّاد)، فبدءُ الجديد عندها
+   * كان يقع في نافذة اللقطة التالية فيظهر في مربّعها. فيبدأ الجديد قبل
+   * نهاية اللقطة بفريم على الأقل، وإن لم يبقَ متّسع اقتُسم آخرُ سطر معه.
+   */
   const addCue = (sceneIndex) => {
     const t = timeline[sceneIndex];
+    const fromMs = frameToMs(t.fromFrame, fps);
+    const toMs = frameToMs(t.toFrame, fps);
+    const latestStart = Math.max(fromMs, toMs - frameToMs(1, fps));
     const mine = grouped.map.get(sceneIndex) ?? [];
-    const startMs = mine.length
-      ? Math.max(...mine.map((i) => captions[i].endMs))
-      : frameToMs(t.fromFrame, fps);
-    const endMs = Math.max(startMs + 500, frameToMs(t.toFrame, fps));
+
+    const freeStart = mine.length
+      ? Math.max(fromMs, ...mine.map((i) => captions[i].endMs))
+      : fromMs;
+    const newCue = (startMs) => ({
+      text: "سطر جديد",
+      startMs,
+      endMs: Math.max(startMs + 200, toMs),
+      wordStartsMs: [],
+    });
+
+    if (freeStart <= latestStart) {
+      setCaptions([...captions, newCue(freeStart)]);
+      return;
+    }
+
+    // لا متّسع بعد آخر سطر: يُقسم ما بقي من زمنه بينه وبين الجديد
+    const lastIndex = mine[mine.length - 1];
+    const last = captions[lastIndex];
+    const split = Math.min(
+      latestStart,
+      Math.max(last.startMs + frameToMs(1, fps), (last.startMs + toMs) / 2),
+    );
     setCaptions([
-      ...captions,
-      { text: "سطر جديد", startMs, endMs, wordStartsMs: [] },
+      ...captions.map((cue, i) =>
+        i === lastIndex ? { ...cue, endMs: split } : cue,
+      ),
+      newCue(split),
     ]);
   };
 
