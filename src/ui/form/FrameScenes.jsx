@@ -131,6 +131,14 @@ const SceneThumb = ({
   );
 };
 
+/** تلميح زرّ النقل: إلى أين، ومعه كم سطراً، وهل تفرغ اللقطة بعده. */
+const moveTitle = (shot, companions, empties) =>
+  [
+    `نقل السطر إلى اللقطة ${shot}`,
+    companions > 0 ? ` ومعه ${companions} من أسطر لقطته` : "",
+    empties ? " — وتُطوى هذه اللقطة لأنها تبقى بلا كلمات ولا وقت" : "",
+  ].join("");
+
 const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize, move }) => {
   const words = wordsOf(cue);
   const setWords = (next) => onChange(cueFromWords(cue, next));
@@ -148,8 +156,8 @@ const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize, move }) => {
               disabled={!move.up}
               title={
                 move.up
-                  ? `نقل السطر كاملاً إلى اللقطة ${move.up}${move.sole ? " — وتُطوى هذه اللقطة لأنها تبقى بلا كلمات ولا وقت" : ""}`
-                  : "لا يُنقل إلى ما قبلها إلا أول سطر في اللقطة — انقل ما فوقه أولاً"
+                  ? moveTitle(move.up, move.withUp, move.emptiesUp)
+                  : "هذه أول لقطة — لا شيء قبلها"
               }
               onClick={() => move.onUp()}
             >
@@ -161,8 +169,8 @@ const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize, move }) => {
               disabled={!move.down}
               title={
                 move.down
-                  ? `نقل السطر كاملاً إلى اللقطة ${move.down}${move.sole ? " — وتُطوى هذه اللقطة لأنها تبقى بلا كلمات ولا وقت" : ""}`
-                  : "لا يُنقل إلى ما بعدها إلا آخر سطر في اللقطة — انقل ما تحته أولاً"
+                  ? moveTitle(move.down, move.withDown, move.emptiesDown)
+                  : "هذه آخر لقطة — لا شيء بعدها"
               }
               onClick={() => move.onDown()}
             >
@@ -411,14 +419,30 @@ export const FrameScenes = ({
     /**
      * الحدّ الجديد: نازلاً يقع عند بداية السطر فيخرج من لقطته إلى التالية،
      * وصاعداً عند بداية السطر الذي يليه في لقطته — أو نهايةِ المنقول نفسه إن
-     * كان وحده — فتبتلعه اللقطة السابقة. والمجموع محفوظ: ما تأخذه واحدة
+     * كان آخرها — فتبتلعه اللقطة السابقة. والمجموع محفوظ: ما تأخذه واحدة
      * تعطيه الأخرى، فلا يزحف باقي الفيديو.
+     *
+     * واللقطة مدى زمنيّ متصل، فالحدّ حين ينتقل يأخذ معه ما بعده: سطرٌ بين
+     * سطرين ينزل ومعه ما تحته في لقطته، ويصعد ومعه ما فوقه — وإلا لقفز فوق
+     * جاره في الزمن فانقلب ترتيب السكربت. التلميح على الزر يقول كم سطراً
+     * ينتقل قبل الضغط.
+     */
+    /**
+     * التقريب هنا في اتجاه واحد لا إلى الأقرب.
+     *
+     * الحدّ فريمٌ صحيح، وانتماء السطر يُقاس بالملي ثانية: فسطرٌ يبدأ عند 50ms
+     * (فريم 1.5) لو قُرِّب حدُّه إلى 2 صار الحدّ بعده بملي ثانية فيبقى مكانه
+     * ولا ينتقل — وهو ما كان يعطّل نزول أسطر اللقطة الأولى. فالنازل يأخذ
+     * الفريم الذي لا يتجاوزه (floor) ليقع الحدّ عنده أو قبله، والصاعد يأخذ
+     * ما لا يقصر عنه (ceil) ليقع بعد السطر المنقول وقبل الذي يليه.
      */
     const leftIndex = direction === 1 ? sceneIndex : sceneIndex - 1;
     const wanted =
       direction === 1
-        ? msToFrame(cue.startMs, fps)
-        : msToFrame(captions[mine[cuePos + 1]]?.startMs ?? cue.endMs, fps);
+        ? Math.floor((cue.startMs / 1000) * fps)
+        : Math.ceil(
+            ((captions[mine[cuePos + 1]]?.startMs ?? cue.endMs) / 1000) * fps,
+          );
 
     const left = timeline[leftIndex];
     const right = timeline[leftIndex + 1];
@@ -438,7 +462,7 @@ export const FrameScenes = ({
 
     // لقطة خرجت منها كلماتها كلّها ولم يبقَ لها وقت يُذكر: وجودُها وميضُ
     // فريمٍ لا معنى له، فتُطوى مع جارتها
-    const emptied = mine.length === 1;
+    const emptied = direction === 1 ? cuePos === 0 : cuePos === mine.length - 1;
     if (emptied && next[sceneIndex].durationInFrames < 2) {
       const absorb = next[sceneIndex].durationInFrames;
       next = next
@@ -867,13 +891,13 @@ export const FrameScenes = ({
                   onRemove={() => removeCue(cueIndex)}
                   onResize={(count) => resizeSceneCue(index, cuePos, count)}
                   move={{
-                    // الطرف وحده ينتقل: الأول لما قبلها والأخير لما بعدها
-                    up: cuePos === 0 && index > 0 ? index : null,
-                    down:
-                      cuePos === mine.length - 1 && index < scenes.length - 1
-                        ? index + 2
-                        : null,
-                    sole: mine.length === 1,
+                    up: index > 0 ? index : null,
+                    down: index < scenes.length - 1 ? index + 2 : null,
+                    // ما يصحبه من أسطر لقطته، وهل تفرغ اللقطة بعده
+                    withUp: cuePos,
+                    withDown: mine.length - 1 - cuePos,
+                    emptiesUp: cuePos === mine.length - 1,
+                    emptiesDown: cuePos === 0,
                     onUp: () => moveCueToNeighbour(index, cuePos, -1),
                     onDown: () => moveCueToNeighbour(index, cuePos, 1),
                   }}
