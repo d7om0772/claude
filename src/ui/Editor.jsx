@@ -745,6 +745,12 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                       stack: props.stackTopRatio,
                       echo: props.echoCenterYRatio,
                     }}
+                    /* المعاينة المصغّرة لكل لقطة تُرسم بالقالب نفسه
+                       وبالخصائص الحيّة، فما فيها هو ما سيُرندَر */
+                    component={template.component}
+                    inputProps={props}
+                    compositionWidth={template.meta.width}
+                    compositionHeight={template.meta.height}
                   />
                 ) : null}
 

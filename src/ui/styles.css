@@ -924,3 +924,19 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 8px;
 }
+
+/* المعاينة المصغّرة داخل رأس اللقطة: بنسبة الإطار الرأسية 9:16، صغيرة
+   بما يكفي ألا تزاحم الحقول وواضحة بما يكفي لتُعرف اللقطة منها */
+.scene-thumb {
+  width: 44px;
+  aspect-ratio: 9 / 16;
+  flex: 0 0 auto;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  pointer-events: none;
+  /* مشغّل Remotion يوسّط لقطته بهوامش سالبة تفترض اتجاه LTR، وفي لوحةٍ
+     عربية اتجاهها RTL كانت تُزيح الإطار خارج الصندوق فيظهر فارغاً. */
+  direction: ltr;
+}

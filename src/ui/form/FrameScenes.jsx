@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { Thumbnail } from "@remotion/player";
 import { cuesFromSrt } from "./srt-cues.js";
 
 /**
@@ -82,6 +83,52 @@ const TYPE_LABELS = {
   empty: "كريمي فاضٍ",
   stack: "كلمات ضخمة",
   echo: "بطاقة ملوّنة",
+};
+
+/**
+ * الفريم الذي تمثّله المعاينة المصغّرة: منتصفُ اللقطة تقريباً.
+ *
+ * أوّلُها لا يصلح — الكلمات تكون في أول ظهورها أو لم تظهر بعد، فتخرج
+ * مصغّرات متشابهة فارغة لا تدلّ على شيء.
+ */
+const thumbFrameOf = (window) =>
+  Math.max(
+    window.fromFrame,
+    Math.min(
+      window.toFrame - 1,
+      window.fromFrame + Math.round((window.toFrame - window.fromFrame) * 0.6),
+    ),
+  );
+
+/**
+ * معاينة مصغّرة للّقطة — إطارٌ واحد من القالب نفسه بنفس الخصائص الحيّة، فما
+ * يظهر في المصغّرة هو ما سيُرندَر فعلاً، ويعرف المستخدم أي لقطة يعدّل.
+ */
+const SceneThumb = ({
+  component,
+  inputProps,
+  width,
+  height,
+  fps,
+  totalFrames,
+  frame,
+}) => {
+  if (!component) return null;
+  return (
+    <div className="scene-thumb" aria-hidden="true">
+      <Thumbnail
+        component={component}
+        inputProps={inputProps}
+        compositionWidth={width}
+        compositionHeight={height}
+        durationInFrames={Math.max(totalFrames, frame + 1)}
+        frameToDisplay={frame}
+        fps={fps}
+        style={{ width: "100%", height: "100%" }}
+        acknowledgeRemotionLicense
+      />
+    </div>
+  );
 };
 
 const FrameCue = ({ cue, index, fps, onChange, onRemove, onResize }) => {
@@ -189,6 +236,10 @@ export const FrameScenes = ({
   fps,
   totalFrames,
   textYDefaults = {},
+  component,
+  inputProps,
+  compositionWidth,
+  compositionHeight,
 }) => {
   /**
    * ارتفاع نص اللقطة كنسبة مئوية من الإطار. الفارغ يعني موضع القالب العام،
@@ -566,6 +617,15 @@ export const FrameScenes = ({
         return (
           <div className="scene" key={index}>
             <div className="scene-head">
+              <SceneThumb
+                component={component}
+                inputProps={inputProps}
+                width={compositionWidth}
+                height={compositionHeight}
+                fps={fps}
+                totalFrames={totalFrames}
+                frame={thumbFrameOf(t)}
+              />
               <h4>اللقطة {index + 1}</h4>
               <select
                 value={scene.type}
