@@ -298,9 +298,11 @@ export const FrameScenes = ({
   };
 
   /**
-   * عدّاد سطر داخل لقطة — لكن الأسطر كلها متصلة عبر اللقطات، فآخر سطر في
-   * لقطة يسحب من أول سطر في التي تليها أو يدفع إليه، لا يتوقف عند حدود
-   * لقطته وحدها.
+   * عدّاد سطر داخل لقطة — الكلمات وحدها هي التي تنتقل.
+   *
+   * الأسطر كلها متصلة عبر اللقطات، فآخر سطر في لقطة يسحب من أول سطر في التي
+   * تليها أو يدفع إليه، لا يتوقف عند حدود لقطته. لكن السطر نفسه لا يغادر
+   * مربّعه: توزيع الأسطر على اللقطات بيد المستخدم وحده.
    */
   const resizeSceneCue = (sceneIndex, cuePos, count) => {
     const mine = grouped.map.get(sceneIndex) ?? [];
@@ -332,20 +334,32 @@ export const FrameScenes = ({
     }
 
     const kept = lines.filter((line) => line.words.length > 0);
-    // كل سطر يُشدّ إلى بداية لقطته على الأقل — بلا هذا يبقى سطرٌ انتقل
-    // إلى لقطة تالية مصنّفاً على توقيته القديم فيُحسب على لقطته السابقة
-    const clamped = kept.map((line) => ({
-      ...line,
-      startMs: Math.max(
-        line.words[0].startMs,
-        frameToMs(timeline[line.sceneIdx].fromFrame, fps),
-      ),
-    }));
+    /**
+     * السطر يبقى في لقطته مهما تحرّكت كلماته.
+     *
+     * بداية السطر تُحسب من أول كلماته، وكلماتُه تتبدّل بالعدّاد — فسطرٌ
+     * قصير كانت بدايته تزحف حتى تخرج من نافذة لقطته فينتقل وحده إلى مربّع
+     * اللقطة التالية (أو السابقة) بلا أن يطلب المستخدم ذلك. فتُحصر البداية
+     * داخل نافذة لقطته: الكلمات تنتقل بين الأسطر كما هي، والأسطر لا تنتقل
+     * بين اللقطات إلا بأمرٍ صريح — تعديلِ توقيت السطر أو مدّة اللقطة.
+     */
+    const frameMs = frameToMs(1, fps);
+    let previous = Number.NEGATIVE_INFINITY;
+    const clamped = kept.map((line) => {
+      const window = timeline[line.sceneIdx];
+      const fromMs = frameToMs(window.fromFrame, fps);
+      const latest = Math.max(fromMs, frameToMs(window.toFrame, fps) - frameMs);
+      const inShot = Math.min(Math.max(line.words[0].startMs, fromMs), latest);
+      // سطران في لقطة واحدة لا يبدآن معاً، ما دام في نافذتها متّسع
+      const startMs = Math.min(Math.max(inShot, previous + frameMs), latest);
+      previous = startMs;
+      return { ...line, startMs };
+    });
     const rebuilt = clamped.map((line, i) => {
       const below = clamped[i + 1];
       const window = timeline[line.sceneIdx];
       const endMs = below
-        ? below.startMs
+        ? Math.max(below.startMs, line.startMs + frameMs)
         : Math.max(line.startMs + 500, frameToMs(window.toFrame, fps));
       return cueFromWords(
         { text: "", startMs: line.startMs, endMs, wordStartsMs: [] },
