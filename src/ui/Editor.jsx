@@ -861,18 +861,33 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
             set={set}
             meta={template.meta}
           >
-            <Player
-              component={template.component}
-              inputProps={props}
-              durationInFrames={duration}
-              fps={template.meta.fps}
-              compositionWidth={template.meta.width}
-              compositionHeight={template.meta.height}
-              style={{ width: "100%" }}
-              controls
-              loop
-              acknowledgeRemotionLicense
-            />
+            {/* أثناء الرندر في المتصفح تُرفع المعاينة من الصفحة.
+                المعاينة تفكّ ترميز المقطع نفسه الذي يرندره المحرّك، وعدد
+                مفكّكات الأجهزة محدود (خاصةً H.264 على ويندوز)، فبقاؤها
+                يزاحمه على مفكّك الملف نفسه حتى يتجاوز استخراجُ الفريم مهلته
+                فيسقط الرندر. ويبقى شريط التقدّم وحده وهو ما ينظر إليه. */}
+            {webProgress === null ? (
+              <Player
+                component={template.component}
+                inputProps={props}
+                durationInFrames={duration}
+                fps={template.meta.fps}
+                compositionWidth={template.meta.width}
+                compositionHeight={template.meta.height}
+                style={{ width: "100%" }}
+                controls
+                loop
+                acknowledgeRemotionLicense
+              />
+            ) : (
+              <div className="player-rendering">
+                <span>يُرندر… {Math.round(webProgress * 100)}%</span>
+                <p>
+                  المعاينة متوقفة أثناء الرندر ليأخذ المحرّك المقطع لنفسه — تعود
+                  فور انتهائه.
+                </p>
+              </div>
+            )}
           </StageWrap>
         </div>
         <div className="render-bar">

@@ -955,3 +955,30 @@ textarea {
   opacity: 0.28;
   cursor: not-allowed;
 }
+
+/* بديل المعاينة أثناء الرندر في المتصفح — بنسبة الإطار نفسها فلا يقفز
+   التخطيط حين تختفي المعاينة وتعود */
+.player-rendering {
+  aspect-ratio: 9 / 16;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 24px;
+  background: var(--panel-2);
+  color: var(--text);
+  direction: rtl;
+}
+.player-rendering span {
+  font-size: 17px;
+  font-weight: 600;
+}
+.player-rendering p {
+  margin: 0;
+  max-width: 26ch;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}

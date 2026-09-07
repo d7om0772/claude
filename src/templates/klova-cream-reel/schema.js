@@ -409,20 +409,39 @@ export const defaultProps = {
 };
 
 /**
- * طول الفيديو: أطول ما أُرفق — تعليق أو مقطع أو آخر كابشن — وبحدٍّ أدنى
- * مجموع مدد المشاهد، وآخر مشهد يتمدّد ليغطي الفارق.
+ * طول الفيديو ينتهي بانتهاء الصوت.
+ *
+ * التعليق الصوتي حين يُرفق هو الحدّ وحده: الفيديو يبدأ معه وينتهي بانتهائه،
+ * فلا ذيلٌ صامت بعده ولا قطعٌ قبل آخر كلمة. وبلا تعليق ينتهي بآخر ما يُقال —
+ * مجموعُ اللقطات أو آخر سطر كابشن، أيّهما أبعد.
+ *
+ * والمقطع المرفق لا يمدّ الفيديو: مقطعُ 26 ثانية في سكربتٍ من 21 كان يجرّ
+ * المدة إلى طوله فيبقى آخره بلا كلام، وإنما يُقتطع على مدّة لقطته.
  */
 export const calculateMetadata = async ({ props }) => {
   const scenesFrames = props.scenes.reduce(
     (total, scene) => total + scene.durationInFrames,
     0,
   );
-  const attached = await contentDurationInFrames({
+
+  if (props.voiceover) {
+    const withVoice = await contentDurationInFrames({
+      fps: FPS,
+      voiceover: props.voiceover,
+      media: null,
+      captions: null,
+      // تعذّرت قراءة الملف: نعود إلى مجموع اللقطات بدل مدةٍ صفرية
+      fallbackInFrames: scenesFrames,
+    });
+    return { durationInFrames: Math.max(1, withVoice), fps: FPS };
+  }
+
+  const spoken = await contentDurationInFrames({
     fps: FPS,
-    voiceover: props.voiceover ?? null,
-    media: props.media ?? null,
+    voiceover: null,
+    media: null,
     captions: props.captions,
     fallbackInFrames: scenesFrames,
   });
-  return { durationInFrames: Math.max(scenesFrames, attached, 1), fps: FPS };
+  return { durationInFrames: Math.max(scenesFrames, spoken, 1), fps: FPS };
 };

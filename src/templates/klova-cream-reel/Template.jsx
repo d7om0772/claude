@@ -236,6 +236,7 @@ const MediaCard = ({
   radius,
   placeholderColor,
   shadowOpacity,
+  spanInFrames,
 }) => (
   <div
     style={{
@@ -262,9 +263,17 @@ const MediaCard = ({
           muted={muted}
           objectFit={fit}
           style={{ width: "100%", height: "100%" }}
-          /* استخراج الفريم من مقطع طويل عالي الدقة قد يتجاوز المهلة
-             الافتراضية (٢٨ ثانية) على جهازٍ بطيء، فيسقط الرندر كلّه بدل أن
-             يبطئ. مهلة أوسع تجعل البطء بطئاً لا فشلاً */
+          /**
+           * المقطع يُقتطع على مدّة لقطته.
+           *
+           * لقطةٌ طولها 60 فريماً ومقطعٌ فيها 90 لا يُعرض منه إلا الستون
+           * الأولى أصلاً — والباقي كان يُفكّ ترميزه بلا أن يُرى. والقصّ هنا
+           * ليس تجميلاً: فكّ ما لا يُعرض هو ما كان يُبطئ استخراج الفريم حتى
+           * يتجاوز مهلته فيسقط الرندر في المتصفح.
+           */
+          trimAfter={spanInFrames}
+          /* ومع ذلك تبقى المهلة أوسع من الافتراضية (٢٨ ثانية): مقطع ثقيل على
+             جهاز بطيء قد يحتاج أكثر، فيبطؤ الرندر ولا يسقط */
           delayRenderTimeoutInMilliseconds={120000}
         />
       ) : (
@@ -703,6 +712,7 @@ export const Template = ({
               radius={radius}
               placeholderColor={cardPlaceholderColor}
               shadowOpacity={cardShadowOpacity}
+              spanInFrames={span}
             />
           ) : null}
 
