@@ -262,6 +262,10 @@ const MediaCard = ({
           muted={muted}
           objectFit={fit}
           style={{ width: "100%", height: "100%" }}
+          /* استخراج الفريم من مقطع طويل عالي الدقة قد يتجاوز المهلة
+             الافتراضية (٢٨ ثانية) على جهازٍ بطيء، فيسقط الرندر كلّه بدل أن
+             يبطئ. مهلة أوسع تجعل البطء بطئاً لا فشلاً */
+          delayRenderTimeoutInMilliseconds={120000}
         />
       ) : (
         <Img

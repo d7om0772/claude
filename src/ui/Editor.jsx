@@ -751,6 +751,9 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                     inputProps={props}
                     compositionWidth={template.meta.width}
                     compositionHeight={template.meta.height}
+                    /* المصغّرات تركيبات حيّة تفكّ ترميز المقاطع، فتُطفأ أثناء
+                       الرندر في المتصفح لئلا تزاحمه على وحدات الفكّ */
+                    thumbsPaused={webProgress !== null}
                   />
                 ) : null}
 

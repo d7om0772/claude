@@ -112,8 +112,18 @@ const SceneThumb = ({
   fps,
   totalFrames,
   frame,
+  paused,
 }) => {
-  if (!component) return null;
+  /**
+   * أثناء الرندر في المتصفح تُطفأ المصغّرات.
+   *
+   * كلٌّ منها تركيبةٌ حيّة تفكّ ترميز مقطع اللقطة بـWebCodecs، فثمانيةٌ منها
+   * تزاحم الرندرَ نفسه على وحدات الفكّ والمعالج — وقد يتجاوز استخراج الفريم
+   * مهلته فيسقط الرندر. والمستخدم وقتها ينظر إلى شريط التقدّم لا إليها.
+   */
+  if (!component || paused) {
+    return <div className="scene-thumb" aria-hidden="true" />;
+  }
   return (
     <div className="scene-thumb" aria-hidden="true">
       <Thumbnail
@@ -278,6 +288,7 @@ export const FrameScenes = ({
   inputProps,
   compositionWidth,
   compositionHeight,
+  thumbsPaused = false,
 }) => {
   /**
    * ارتفاع نص اللقطة كنسبة مئوية من الإطار. الفارغ يعني موضع القالب العام،
@@ -802,6 +813,7 @@ export const FrameScenes = ({
                 fps={fps}
                 totalFrames={totalFrames}
                 frame={thumbFrameOf(t)}
+                paused={thumbsPaused}
               />
               <h4>اللقطة {index + 1}</h4>
               <select
