@@ -45,6 +45,19 @@ const describeRenderFailure = (err) => {
     );
   }
 
+  /**
+   * انتهاء مهلة استخراج فريم من مقطع مرفق: الرندر ينتظر عند كل فريم أن يجهز،
+   * فإن تأخّر المقطع سقط بهذه الرسالة. المهلة موسّعة أصلاً في web-render.js،
+   * فبلوغها يعني أن المقطع أثقل مما يحتمله هذا الجهاز.
+   */
+  if (/Extracting frame at time|Timeout while extracting frame/iu.test(raw)) {
+    return (
+      "تعذّر تجهيز فريم من المقطع المرفق داخل المهلة. المقطع ثقيل على هذا " +
+      "الجهاز (دقة عالية أو طول كبير). جرّب مقطعاً أقصر أو أخفّ دقة، أو " +
+      "قلّل عدد اللقطات التي فيها فيديو."
+    );
+  }
+
   if (
     /WebCodecs|VideoEncoder|not supported in @remotion\/web-renderer/iu.test(
       raw,

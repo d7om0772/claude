@@ -35,6 +35,20 @@ export const pickOutputFormat = async ({ width, height, muted }) => {
   return null;
 };
 
+/**
+ * مهلة الفريم الواحد أثناء الرندر.
+ *
+ * ‏renderMediaOnWeb ينتظر عند كل فريم أن تُحلّ كل نداءات delayRender، ومهلته
+ * الافتراضية ٣٠ ثانية. هذه المهلة مستقلة تماماً عن
+ * delayRenderTimeoutInMilliseconds الموضوعة على <Video>: تلك تحكم متى يستسلم
+ * المكوّن نفسه، وهذه تحكم متى يستسلم الرندر — فرفع الأولى وحدها لا يغيّر شيئاً،
+ * والرندر يسقط عند ٣٠ ثانية برسالة «Extracting frame at time … from blob:…».
+ *
+ * استخراج أول فريم من مقطع طويل أو عالي الدقة (تحميل الرأس، ثم الفكّ من أقرب
+ * إطار مفتاحي) يتجاوز ٣٠ ثانية على أجهزة كثيرة، فنمنحه دقيقتين.
+ */
+const FRAME_TIMEOUT_MS = 120000;
+
 export const renderInBrowser = async ({
   template,
   props,
@@ -61,6 +75,7 @@ export const renderInBrowser = async ({
     videoCodec: format.videoCodec,
     onProgress: onProgress ?? null,
     signal: signal ?? null,
+    delayRenderTimeoutInMilliseconds: FRAME_TIMEOUT_MS,
   });
 
   return {
