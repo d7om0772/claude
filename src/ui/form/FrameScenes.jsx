@@ -486,6 +486,53 @@ export const FrameScenes = ({
   };
 
   /**
+   * تبديل لقطة بجارتها — تصعد في الترتيب أو تنزل.
+   *
+   * اللقطة تنتقل بكلّ ما فيها: نوعها ومقطعها وارتفاع نصّها، **وكلماتها**.
+   * فالكلمات تُزاح زمنياً بمقدار طول الجارة، وتلك بمقدار طول هذه — أي أن
+   * الاثنتين تتبادلان موضعهما في الشريط بلا أن يتغيّر طول أيٍّ منهما ولا
+   * مجموع الفيديو، فما كان يُقال على هذه اللقطة يُقال عليها في مكانها الجديد.
+   */
+  const moveScene = (index, direction) => {
+    const other = index + direction;
+    if (other < 0 || other >= scenes.length) return;
+    const first = Math.min(index, other);
+    const second = first + 1;
+    // الطول الفعلي من الشريط لا المخزَّن: آخر لقطة تتمدّد لتغطية ما بقي
+    const spanFirst = timeline[first].toFrame - timeline[first].fromFrame;
+    const spanSecond = timeline[second].toFrame - timeline[second].fromFrame;
+
+    const shift = (cue, deltaMs) => ({
+      ...cue,
+      startMs: Math.max(0, cue.startMs + deltaMs),
+      endMs: Math.max(0, cue.endMs + deltaMs),
+      wordStartsMs: (cue.wordStartsMs ?? []).map((ms) =>
+        Math.max(0, ms + deltaMs),
+      ),
+    });
+    const inFirst = new Set(grouped.map.get(first) ?? []);
+    const inSecond = new Set(grouped.map.get(second) ?? []);
+    const nextCaptions = captions.map((cue, i) => {
+      if (inFirst.has(i)) return shift(cue, frameToMs(spanSecond, fps));
+      if (inSecond.has(i)) return shift(cue, -frameToMs(spanFirst, fps));
+      return cue;
+    });
+
+    const nextScenes = scenes.map((scene, i) => {
+      if (i === first) {
+        return { ...scenes[second], durationInFrames: spanSecond };
+      }
+      if (i === second) {
+        return { ...scenes[first], durationInFrames: spanFirst };
+      }
+      return scene;
+    });
+
+    setCaptions(nextCaptions);
+    setScenes(nextScenes);
+  };
+
+  /**
    * القيم المحفوظة في القالب قد تكون مكتوبة يدوياً من قبل، فتُضبط على القاعدة
    * أول ما تُفتح اللوحة — وإلا رأى المستخدم «تلقائي» مكتوباً وحدوداً لا تطابق
    * كلماتها. الاشتقاق نقطةٌ ثابتة: يكتب مرّة ثم يتّفق مع نفسه فيتوقّف.
@@ -767,6 +814,34 @@ export const FrameScenes = ({
                   </option>
                 ))}
               </select>
+              <span className="cue-move">
+                <button
+                  type="button"
+                  className="icon-btn"
+                  disabled={index === 0}
+                  title={
+                    index === 0
+                      ? "هذه أول لقطة — لا شيء قبلها"
+                      : `تصعد اللقطة فتبادل مكانها مع اللقطة ${index} — بكلماتها ومقطعها`
+                  }
+                  onClick={() => moveScene(index, -1)}
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  className="icon-btn"
+                  disabled={index === scenes.length - 1}
+                  title={
+                    index === scenes.length - 1
+                      ? "هذه آخر لقطة — لا شيء بعدها"
+                      : `تنزل اللقطة فتبادل مكانها مع اللقطة ${index + 2} — بكلماتها ومقطعها`
+                  }
+                  onClick={() => moveScene(index, 1)}
+                >
+                  ▼
+                </button>
+              </span>
               <button
                 type="button"
                 className="icon-btn"
