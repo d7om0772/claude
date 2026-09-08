@@ -243,6 +243,14 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
   const [renderError, setRenderError] = useState(null);
   // الرندر في المتصفح: تقدّم من ٠ إلى ١، وnull حين لا يجري رندر
   const [webProgress, setWebProgress] = useState(null);
+  /**
+   * عدّادا الرندر: كم فريماً رُسم وكم رُمّز.
+   *
+   * النسبة وحدها لا تكفي حين يقف الرندر: هي مزيج من الرسم والترميز بوزن
+   * ٧٠ إلى ٣٠، فوقوفها عند رقم واحد قد يعني «تعثّر الرسم عند فريم» أو
+   * «الرسم انتهى والترميز متأخّر». والعدّادان يفصلان بينهما بنظرة.
+   */
+  const [webFrames, setWebFrames] = useState(null);
   const [webNote, setWebNote] = useState(null);
   const set = useCallback((name, value) => {
     setProps((prev) => ({ ...prev, [name]: value }));
@@ -438,15 +446,28 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     if (!savedProgress) return;
     let nextProps = { ...template.defaultProps, ...savedProgress.props };
     const nextPicked = {};
+    /**
+     * التقدّم المحفوظ قد يسبق التجهيز.
+     *
+     * ما حُفظ بعد التجهيز محفوظٌ مجهّزاً — النسخة المجهّزة هي التي تحلّ محلّ
+     * الأصل في `picked` فتُحفظ هي. لكن ما حُفظ قبل أن يوجد التجهيز، أو حُفظ
+     * والتجهيز ما زال جارياً، يعود خاماً. فنجهّز عند الاسترجاع كل فيديو ليس
+     * webm أصلاً، وإلا عاد المستخدم إلى العطل نفسه من حيث لا يدري.
+     */
+    const toPrepare = [];
     for (const [path, file] of Object.entries(savedProgress.files ?? {})) {
       const url = URL.createObjectURL(file) + extensionSuffix(file.name);
       registerBlob(url, file);
       nextPicked[path] = { url, name: file.name, file };
       nextProps = setIn(nextProps, path, url);
+      if (isVideoFile(file) && file.type !== "video/webm") {
+        toPrepare.push([path, file, url]);
+      }
     }
     setProps(nextProps);
     setPicked(nextPicked);
     setSavedProgress(null);
+    for (const [path, file, url] of toPrepare) prepareClip(path, file, url);
     if (nextPicked.media && "mediaAspect" in template.defaultProps) {
       readMediaAspect(nextPicked.media.url)
         .then((value) => set("mediaAspect", value))
@@ -457,7 +478,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         .then(setAudioSeconds)
         .catch(() => setAudioSeconds(null));
     }
-  }, [savedProgress, template.defaultProps, set]);
+  }, [savedProgress, template.defaultProps, set, prepareClip]);
 
   const onDismissProgress = useCallback(() => {
     clearProgress(template.meta.id);
@@ -645,7 +666,10 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         template,
         props,
         format,
-        onProgress: ({ progress }) => setWebProgress(progress),
+        onProgress: ({ progress, renderedFrames, encodedFrames }) => {
+          setWebProgress(progress);
+          setWebFrames({ rendered: renderedFrames, encoded: encodedFrames });
+        },
       });
       const message = await saveFile(`${template.meta.id}.${extension}`, blob);
       setWebNote(
@@ -655,6 +679,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       setRenderError(describeRenderFailure(err));
     } finally {
       setWebProgress(null);
+      setWebFrames(null);
     }
   }, [template, props]);
 
@@ -1030,7 +1055,12 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
               />
             ) : (
               <div className="player-rendering">
-                <span>يُرندر… {Math.round(webProgress * 100)}%</span>
+                <span>
+                  يُرندر… {Math.round(webProgress * 100)}%
+                  {webFrames
+                    ? ` — الفريم ${webFrames.rendered} من ${duration}`
+                    : ""}
+                </span>
                 <p>
                   المعاينة متوقفة أثناء الرندر ليأخذ المحرّك المقطع لنفسه — تعود
                   فور انتهائه.
@@ -1077,9 +1107,20 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
           </button>
         </div>
         {webProgress !== null ? (
-          <div className="bar" style={{ marginTop: 12, width: 300 }}>
-            <span style={{ width: `${Math.round(webProgress * 100)}%` }} />
-          </div>
+          <>
+            <div className="bar" style={{ marginTop: 12, width: 300 }}>
+              <span style={{ width: `${Math.round(webProgress * 100)}%` }} />
+            </div>
+            {/* الرقمان هما ما يُقرأ حين يقف الرندر، لا النسبة */}
+            {webFrames ? (
+              <div
+                style={{ color: "var(--muted)", fontSize: 12, marginTop: 6 }}
+              >
+                رُسم {webFrames.rendered} من {duration} فريماً · رُمّز{" "}
+                {webFrames.encoded}
+              </div>
+            ) : null}
+          </>
         ) : null}
         {prepareNote ? (
           <div className="note bad" style={{ marginTop: 10, maxWidth: 420 }}>
