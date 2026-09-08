@@ -134,7 +134,10 @@ export default async (req) => {
     if (action === "status") {
       const id = url.searchParams.get("id");
       if (!id) return json(400, { error: "bad-request" });
-      const result = await callApi(key, `/v1/transcodes/${encodeURIComponent(id)}`);
+      const result = await callApi(
+        key,
+        `/v1/transcodes/${encodeURIComponent(id)}`,
+      );
       if (!result.ok) return upstreamError(result);
       return json(200, {
         status: result.body?.status ?? null,

@@ -30,7 +30,9 @@ const call = async (search, init) => {
   const response = await fetch(`${ENDPOINT}?${search}`, init);
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
-    const error = new Error(body.message || `تعذّر الاتصال (${response.status})`);
+    const error = new Error(
+      body.message || `تعذّر الاتصال (${response.status})`,
+    );
     // ٥٠٣ تعني «لا مفتاح مضبوط»: لا خدمة أصلاً، فلا تُعرض كعطل
     error.notConfigured = response.status === 503;
     throw error;
