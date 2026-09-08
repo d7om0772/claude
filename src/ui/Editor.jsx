@@ -1,6 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Player } from "@remotion/player";
 import { registerBlob, unregisterBlob } from "./blob-source.js";
+import { isStalledClipError, normalizeClip } from "./normalize-clip.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
 import {
@@ -84,6 +91,17 @@ const relativeTime = (ms) => {
 const extensionSuffix = (fileName) => {
   const dot = fileName.lastIndexOf(".");
   return dot > 0 ? `#${fileName.slice(dot)}` : "";
+};
+
+/** ملفات الفيديو وحدها تُجهَّز؛ الصور والصوت تمرّ كما هي. */
+const isVideoFile = (file) =>
+  file.type.startsWith("video/") ||
+  /\.(mp4|m4v|mov|webm|mkv|avi|3gp)$/iu.test(file.name);
+
+/** اسم النسخة المجهّزة — يبقى قريباً من الأصل ليعرفه المستخدم في القائمة */
+const preparedName = (fileName) => {
+  const dot = fileName.lastIndexOf(".");
+  return `${dot > 0 ? fileName.slice(0, dot) : fileName}.webm`;
 };
 /**
  * تقسيم الحقول إلى مجموعات مفهومة. الترتيب مقصود: ما يعدّله المستخدم كثيراً
@@ -229,6 +247,77 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     setProps((prev) => ({ ...prev, [name]: value }));
   }, []);
   /**
+   * تجهيز المقاطع الجارية: المفتاح مسار الحقل، والقيمة تقدّم من ٠ إلى ١.
+   * الرندر يُمنع ما دام فيها شيء — الرندر بالملف الخام هو ما كان يسقط.
+   */
+  const [preparing, setPreparing] = useState({});
+  // سبب فشل التجهيز، إن فشل — يبقى معروضاً لأن الرندر بعده مهدّد
+  const [prepareNote, setPrepareNote] = useState(null);
+  // مرآة `picked` للقراءة داخل عمليات غير متزامنة بلا إعادة إنشاء الدوال
+  const pickedRef = useRef(picked);
+  useEffect(() => {
+    pickedRef.current = picked;
+  }, [picked]);
+  const prepareControllers = useRef({});
+  /**
+   * يجهّز المقطع في الخلفية ثم يبدّله بالأصل في مكانه.
+   *
+   * الأصل يُرفق فوراً فتعمل المعاينة بلا انتظار، والتبديل صامت لأن الناتج
+   * صورةٌ من الأصل لا تغييرٌ فيه. وإن غيّر المستخدم الملف أثناء التجهيز
+   * أُلغي التجهيز ولم يمسّ الملف الجديد.
+   */
+  const prepareClip = useCallback((key, file, attachedUrl) => {
+    prepareControllers.current[key]?.abort();
+    const controller = new AbortController();
+    prepareControllers.current[key] = controller;
+    setPreparing((prev) => ({ ...prev, [key]: 0 }));
+    setPrepareNote(null);
+
+    const done = () =>
+      setPreparing((prev) => {
+        const { [key]: _removed, ...rest } = prev;
+        return rest;
+      });
+
+    normalizeClip(file, {
+      signal: controller.signal,
+      onProgress: (progress) =>
+        setPreparing((prev) =>
+          key in prev ? { ...prev, [key]: progress } : prev,
+        ),
+    })
+      .then((result) => {
+        if (controller.signal.aborted || !result) return;
+        const current = pickedRef.current[key];
+        // بدّل المستخدم الملف أثناء التجهيز: الناتج لملف لم يعد مرفقاً
+        if (!current || current.url !== attachedUrl) return;
+        const prepared = new File([result.blob], preparedName(file.name), {
+          type: "video/webm",
+        });
+        const url = URL.createObjectURL(prepared) + "#.webm";
+        registerBlob(url, prepared);
+        URL.revokeObjectURL(current.url);
+        unregisterBlob(current.url);
+        setPicked((prev) => ({
+          ...prev,
+          [key]: { url, name: current.name, file: prepared },
+        }));
+        setProps((prev) => setIn(prev, key, url));
+      })
+      .catch((err) => {
+        if (controller.signal.aborted) return;
+        // التجهيز تحسين لا شرط: يبقى الأصل مرفقاً، لكن الخطر يُقال صراحة
+        setPrepareNote(
+          isStalledClipError(err)
+            ? "توقّف متصفحك عند فكّ ترميز هذا المقطع ولم يُكمله. هذا نفسه سبب " +
+                "سقوط الرندر عليه. حوّل المقطع إلى صيغة أخرى (webm مثلاً) أو " +
+                "استبدله بمقطع غيره."
+            : "تعذّر تجهيز المقطع، وسيُستعمل كما نزل. إن سقط الرندر عنده فهذا سببه.",
+        );
+      })
+      .finally(done);
+  }, []);
+  /**
    * يسجّل ملفاً مرفوعاً تحت مفتاح المسار ويعيد رابطه، ولا يكتب في props.
    *
    * الكتابة متروكة لمن نادى، لأن الحقل قد يكون متداخلاً
@@ -242,6 +331,11 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         : null;
       // يقرأ منه محرّك الوسائط مباشرة؛ بلا هذا يفشل fetch على blob: بالسياسة
       if (url && file) registerBlob(url, file);
+      if (url && file && isVideoFile(file)) {
+        prepareClip(key, file, url);
+      } else {
+        prepareControllers.current[key]?.abort();
+      }
       setPicked((prev) => {
         const old = prev[key];
         if (old) {
@@ -276,7 +370,7 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       }
       return url;
     },
-    [set, template.defaultProps],
+    [set, template.defaultProps, prepareClip],
   );
 
   const pickedAt = useCallback((key) => picked[key], [picked]);
@@ -531,6 +625,16 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
       setWebProgress(null);
     }
   }, [template, props]);
+
+  /**
+   * تجهيزٌ واحد على الأقل ما زال جارياً — الرندر ينتظره، فالمقصود من التجهيز
+   * ألّا يصل إلى الرندر ملفٌ خام
+   */
+  const preparingKeys = Object.keys(preparing);
+  const preparingProgress = preparingKeys.length
+    ? preparingKeys.reduce((sum, key) => sum + preparing[key], 0) /
+      preparingKeys.length
+    : null;
 
   const captions = props.captions ?? [];
 
@@ -922,11 +1026,13 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
             <button
               className="btn primary"
               onClick={onBrowserRender}
-              disabled={webProgress !== null}
+              disabled={webProgress !== null || preparingProgress !== null}
             >
-              {webProgress === null
-                ? "رندر في المتصفح"
-                : `يُرندر… ${Math.round(webProgress * 100)}%`}
+              {preparingProgress !== null
+                ? `جارٍ تجهيز المقطع… ${Math.round(preparingProgress * 100)}%`
+                : webProgress === null
+                  ? "رندر في المتصفح"
+                  : `يُرندر… ${Math.round(webProgress * 100)}%`}
             </button>
           ) : null}
 
@@ -941,6 +1047,17 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         {webProgress !== null ? (
           <div className="bar" style={{ marginTop: 12, width: 300 }}>
             <span style={{ width: `${Math.round(webProgress * 100)}%` }} />
+          </div>
+        ) : null}
+        {prepareNote ? (
+          <div className="note bad" style={{ marginTop: 10, maxWidth: 420 }}>
+            {prepareNote}
+          </div>
+        ) : null}
+        {preparingProgress !== null ? (
+          <div className="note" style={{ marginTop: 10, maxWidth: 420 }}>
+            يُعاد ترميز المقطع المرفق مرة واحدة ليصير القفز بين فريماته سريعاً —
+            المعاينة تعمل الآن، والرندر ينتظر انتهاء التجهيز.
           </div>
         ) : null}
         {webNote ? (
