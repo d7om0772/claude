@@ -49,6 +49,23 @@ export const pickOutputFormat = async ({ width, height, muted }) => {
  */
 const FRAME_TIMEOUT_MS = 120000;
 
+/**
+ * سقف ذاكرة الفريمات المفكوكة.
+ *
+ * محرّك الوسائط يحتفظ بالفريمات المفكوكة في الذاكرة ليتجنّب إعادة الفكّ،
+ * وسقفه الافتراضي هنا **غيغابايت كامل** — لأنه يقيسه من ذاكرة النظام حين
+ * تكون معلومة، ولا يمرّرها الرندر في المتصفح فيقع على قيمته القصوى.
+ *
+ * والفريم من مقطع عمودي 1080×1920 يشغل نحو ثلاثة ميغابايت مفكوكاً، فالسقف
+ * يعني ثلاثمئة فريم محفوظة في تبويب يحمل معها طابور الترميز والناتج نفسه.
+ * على جهاز يشتغل عليه المستخدم بأشياء أخرى، هذا ضغطٌ لا داعي له.
+ *
+ * والرندر يمشي على الفريمات إلى الأمام، فلا يحتاج إلا ما بين آخر إطار
+ * مفتاحي والفريم الحالي. والتضييق آمن: تجاوز السقف يُسقط أقدم المخزون فقط،
+ * ولا يمنع إنشاء مخزون جديد ولا يُخرج فريماً فارغاً.
+ */
+const MEDIA_CACHE_BYTES = 400 * 1024 * 1024;
+
 export const renderInBrowser = async ({
   template,
   props,
@@ -76,6 +93,7 @@ export const renderInBrowser = async ({
     onProgress: onProgress ?? null,
     signal: signal ?? null,
     delayRenderTimeoutInMilliseconds: FRAME_TIMEOUT_MS,
+    mediaCacheSizeInBytes: MEDIA_CACHE_BYTES,
   });
 
   return {
