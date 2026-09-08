@@ -8,6 +8,7 @@ import React, {
 import { Player } from "@remotion/player";
 import { registerBlob, unregisterBlob } from "./blob-source.js";
 import { isStalledClipError, normalizeClip } from "./normalize-clip.js";
+import { prepareOnServer, remotePrepAvailable } from "./remote-prep.js";
 import { describeSchema } from "../lib/schema-introspect.js";
 import { srtToCaptions } from "../lib/srt.js";
 import {
@@ -279,41 +280,72 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
         return rest;
       });
 
-    normalizeClip(file, {
-      signal: controller.signal,
-      onProgress: (progress) =>
-        setPreparing((prev) =>
-          key in prev ? { ...prev, [key]: progress } : prev,
-        ),
-    })
+    const track = (progress) =>
+      setPreparing((prev) =>
+        key in prev ? { ...prev, [key]: progress } : prev,
+      );
+
+    /** يضع الناتج مكان الأصل، إن كان الأصل ما زال هو المرفق */
+    const swapIn = (blob) => {
+      const current = pickedRef.current[key];
+      // بدّل المستخدم الملف أثناء التجهيز: الناتج لملف لم يعد مرفقاً
+      if (!current || current.url !== attachedUrl) return;
+      const prepared = new File([blob], preparedName(file.name), {
+        type: "video/webm",
+      });
+      const url = URL.createObjectURL(prepared) + "#.webm";
+      registerBlob(url, prepared);
+      URL.revokeObjectURL(current.url);
+      unregisterBlob(current.url);
+      setPicked((prev) => ({
+        ...prev,
+        [key]: { url, name: current.name, file: prepared },
+      }));
+      setProps((prev) => setIn(prev, key, url));
+    };
+
+    /**
+     * المخرج حين يقف مفكّك المتصفح: ffmpeg على الخادم.
+     *
+     * لا يُطلب إلا عند التوقّف بعينه — لا عند كل إرفاق. فالتجهيز المحلي يكفي
+     * أكثر الملفات، ويكفي بلا رفعٍ ولا انتظار طابور ولا استهلاك حصّة الخدمة.
+     */
+    const fallbackToServer = async (localError) => {
+      if (!isStalledClipError(localError)) throw localError;
+      if (!(await remotePrepAvailable())) throw localError;
+      setPrepareNote(
+        "توقّف متصفحك عند فكّ ترميز هذا المقطع، فأُرسل إلى الخادم ليجهّزه " +
+          "هناك. هذا يستغرق دقيقة أو أكثر بحسب حجمه.",
+      );
+      const { blob } = await prepareOnServer(file, {
+        signal: controller.signal,
+        onProgress: (stage, progress) =>
+          // الرفع نصف الشريط، والمهمة والتنزيل نصفه الآخر
+          track(stage === "upload" ? progress * 0.5 : 0.5 + progress * 0.5),
+      });
+      if (controller.signal.aborted) return;
+      swapIn(blob);
+      setPrepareNote(null);
+    };
+
+    normalizeClip(file, { signal: controller.signal, onProgress: track })
       .then((result) => {
         if (controller.signal.aborted || !result) return;
-        const current = pickedRef.current[key];
-        // بدّل المستخدم الملف أثناء التجهيز: الناتج لملف لم يعد مرفقاً
-        if (!current || current.url !== attachedUrl) return;
-        const prepared = new File([result.blob], preparedName(file.name), {
-          type: "video/webm",
-        });
-        const url = URL.createObjectURL(prepared) + "#.webm";
-        registerBlob(url, prepared);
-        URL.revokeObjectURL(current.url);
-        unregisterBlob(current.url);
-        setPicked((prev) => ({
-          ...prev,
-          [key]: { url, name: current.name, file: prepared },
-        }));
-        setProps((prev) => setIn(prev, key, url));
+        swapIn(result.blob);
       })
       .catch((err) => {
         if (controller.signal.aborted) return;
-        // التجهيز تحسين لا شرط: يبقى الأصل مرفقاً، لكن الخطر يُقال صراحة
-        setPrepareNote(
-          isStalledClipError(err)
-            ? "توقّف متصفحك عند فكّ ترميز هذا المقطع ولم يُكمله. هذا نفسه سبب " +
-                "سقوط الرندر عليه. حوّل المقطع إلى صيغة أخرى (webm مثلاً) أو " +
-                "استبدله بمقطع غيره."
-            : "تعذّر تجهيز المقطع، وسيُستعمل كما نزل. إن سقط الرندر عنده فهذا سببه.",
-        );
+        return fallbackToServer(err).catch((finalError) => {
+          if (controller.signal.aborted) return;
+          // التجهيز تحسين لا شرط: يبقى الأصل مرفقاً، لكن الخطر يُقال صراحة
+          setPrepareNote(
+            isStalledClipError(finalError)
+              ? "توقّف متصفحك عند فكّ ترميز هذا المقطع ولم يُكمله، ولا خادم " +
+                  "تجهيز خلف هذه الصفحة. هذا نفسه سبب سقوط الرندر عليه — " +
+                  "حوّل المقطع إلى صيغة أخرى أو استبدله."
+              : `تعذّر تجهيز المقطع (${finalError.message}). سيُستعمل كما نزل، وإن سقط الرندر عنده فهذا سببه.`,
+          );
+        });
       })
       .finally(done);
   }, []);

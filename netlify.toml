@@ -5,3 +5,8 @@
 [build]
   command = "echo 'الصفحة مبنية مسبقاً — لا بناء هنا'"
   publish = "dist-ui/site"
+
+# دالة واحدة تحمل مفتاح FFmpeg Micro بعيداً عن الصفحة — انظر
+# netlify/functions/clip-prep.mjs. مسارها معلن داخلها (config.path).
+[functions]
+  directory = "netlify/functions"
