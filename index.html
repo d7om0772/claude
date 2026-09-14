@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مستخرج الفريمات — اختر وصدّر لقطات الفيديو</title>
+<meta name="description" content="أداة تعمل داخل المتصفح: ارفع فيديو، استعرض فريماته، حدّد ما تريد، وصدّرها كصور — مع علامة تحدد فريم منتصف المقطع.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <h1>🎬 مستخرج الفريمات</h1>
+    <p class="sub">ارفع الفيديو، استعرض فريماته، حدّد اللي تبغاه، وصدّرها صور — والمنتصف معلّم لك.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 1) الرفع -->
+  <section id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="اختر ملف فيديو أو أفلته هنا">
+    <div class="dz-inner">
+      <div class="dz-icon">⬆️</div>
+      <div class="dz-title">أفلت الفيديو هنا أو اضغط للاختيار</div>
+      <div class="dz-hint">MP4 / WebM / MOV — الملف لا يُرفع لأي خادم، كل شيء يتم داخل متصفحك</div>
+    </div>
+    <input type="file" id="fileInput" accept="video/*" hidden>
+  </section>
+
+  <div id="loadError" class="alert error" hidden></div>
+
+  <!-- 2) معلومات + إعدادات -->
+  <section id="setupPanel" class="panel" hidden>
+    <div class="panel-head">
+      <h2>معلومات المقطع</h2>
+      <button id="btnChange" class="btn ghost sm" type="button">تغيير الملف</button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="panel-head">
+      <h2>إعدادات الاستخراج</h2>
+    </div>
+
+    <div class="fields">
+      <label class="field">
+        <span>معدل الاستخراج (فريم/ثانية)</span>
+        <input type="number" id="optRate" min="0.1" max="120" step="0.01" value="10">
+        <small id="rateHint">اجعلها مساوية لمعدل الفيديو لاستخراج كل الفريمات</small>
+      </label>
+
+      <label class="field">
+        <span>الحد الأقصى لعدد الفريمات</span>
+        <input type="number" id="optMax" min="10" max="20000" step="10" value="1200">
+        <small>حماية من استهلاك الذاكرة في المقاطع الطويلة</small>
+      </label>
+
+      <label class="field">
+        <span>عرض المصغّرة</span>
+        <select id="optThumb">
+          <option value="140">صغيرة (140px)</option>
+          <option value="200" selected>متوسطة (200px)</option>
+          <option value="280">كبيرة (280px)</option>
+        </select>
+        <small>لا يؤثر على جودة التصدير</small>
+      </label>
+
+      <div class="field actions-field">
+        <button id="btnExtract" class="btn primary" type="button">استخراج الفريمات</button>
+        <button id="btnAllFrames" class="btn ghost" type="button">كل الفريمات (معدل الفيديو)</button>
+      </div>
+    </div>
+
+    <div id="planNote" class="alert info"></div>
+  </section>
+
+  <!-- 3) التقدم -->
+  <section id="progressPanel" class="panel" hidden>
+    <div class="progress-row">
+      <div class="progress"><div class="bar" id="progressBar"></div></div>
+      <button id="btnCancel" class="btn danger sm" type="button">إيقاف</button>
+    </div>
+    <div class="progress-text" id="progressText">—</div>
+  </section>
+
+  <!-- 4) شريط الأدوات -->
+  <section id="toolbar" class="panel sticky" hidden>
+    <div class="tb-row">
+      <div class="tb-group">
+        <button class="btn ghost sm" data-act="all" type="button">تحديد الكل</button>
+        <button class="btn ghost sm" data-act="none" type="button">إلغاء التحديد</button>
+        <button class="btn ghost sm" data-act="invert" type="button">عكس التحديد</button>
+        <button class="btn gold sm" data-act="mid" type="button">⏺ تحديد فريم المنتصف</button>
+        <button class="btn ghost sm" data-act="gomid" type="button">↧ الانتقال للمنتصف</button>
+      </div>
+      <div class="tb-group grow-end">
+        <span class="counter" id="selCounter">0 محدد</span>
+        <button id="btnExport" class="btn primary" type="button" disabled>⬇️ تصدير المحدد</button>
+      </div>
+    </div>
+
+    <div class="tb-row">
+      <canvas id="timeline" class="timeline" height="34" aria-label="الخط الزمني: مواضع الفريمات المحددة وعلامة المنتصف"></canvas>
+    </div>
+
+    <details class="export-opts">
+      <summary>خيارات التصدير</summary>
+      <div class="fields">
+        <label class="field">
+          <span>الصيغة</span>
+          <select id="optFormat">
+            <option value="image/png">PNG (بدون فقد جودة)</option>
+            <option value="image/jpeg">JPEG (حجم أصغر)</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>الجودة (لـ JPEG/WebP)</span>
+          <input type="range" id="optQuality" min="50" max="100" value="92">
+          <small><span id="qualityVal">92</span>%</small>
+        </label>
+        <label class="field">
+          <span>الدقة</span>
+          <select id="optSize">
+            <option value="full" selected>الدقة الأصلية للفيديو</option>
+            <option value="thumb">بحجم المصغّرة</option>
+          </select>
+        </label>
+        <label class="field check-field">
+          <input type="checkbox" id="optManifest" checked>
+          <span>إرفاق ملف frames.json بالبيانات (الرقم/التوقيت/المنتصف)</span>
+        </label>
+      </div>
+    </details>
+  </section>
+
+  <!-- 5) الشبكة -->
+  <section id="gridWrap" hidden>
+    <div id="grid" class="grid"></div>
+  </section>
+
+  <footer class="foot">
+    <p>يعمل بالكامل داخل المتصفح — لا يُرفع الفيديو إلى أي خادم.</p>
+  </footer>
+</main>
+
+<!-- عارض مكبّر -->
+<div id="lightbox" class="lightbox" hidden>
+  <div class="lb-bar">
+    <span id="lbTitle">—</span>
+    <div class="lb-actions">
+      <button id="lbSelect" class="btn ghost sm" type="button">تحديد</button>
+      <button id="lbClose" class="btn ghost sm" type="button">إغلاق ✕</button>
+    </div>
+  </div>
+  <button id="lbPrev" class="lb-nav prev" type="button" aria-label="السابق">›</button>
+  <button id="lbNext" class="lb-nav next" type="button" aria-label="التالي">‹</button>
+  <div class="lb-stage"><canvas id="lbCanvas"></canvas><div id="lbLoading" class="lb-loading">جارٍ التحميل…</div></div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<video id="video" class="offscreen" muted playsinline preload="auto"></video>
+<canvas id="workCanvas" class="offscreen"></canvas>
+
+<script src="zip.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
