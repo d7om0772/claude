@@ -289,6 +289,8 @@ export const FrameScenes = ({
   compositionWidth,
   compositionHeight,
   thumbsPaused = false,
+  textStyleOptions = [],
+  templateTextStyle,
 }) => {
   /**
    * ارتفاع نص اللقطة كنسبة مئوية من الإطار. الفارغ يعني موضع القالب العام،
@@ -880,6 +882,55 @@ export const FrameScenes = ({
                 {t.toFrame - t.fromFrame} فريم)
               </span>
             </div>
+
+            {/**
+             * ستايل كشف الكلمات لهذه اللقطة.
+             *
+             * زرّ «العام» أولاً لا آخراً: هو الوضع الطبيعي لأكثر اللقطات،
+             * ويحمل اسم الستايل المتّبع فعلاً حتى يعرف المستخدم ما الذي
+             * سيرجع إليه قبل أن يضغط.
+             */}
+            {textStyleOptions.length > 0 ? (
+              <div className="field">
+                <label>ستايل كشف الكلمات</label>
+                <div className="style-picker">
+                  <button
+                    type="button"
+                    title="تتبع هذه اللقطة ستايل القالب العام"
+                    className={`style-chip${
+                      scene.textStyle === undefined || scene.textStyle === null
+                        ? " active"
+                        : ""
+                    }`}
+                    onClick={() => setScene(index, { textStyle: null })}
+                  >
+                    العام
+                    {templateTextStyle
+                      ? ` — ${
+                          textStyleOptions.find(
+                            (o) => o.value === templateTextStyle,
+                          )?.label ?? templateTextStyle
+                        }`
+                      : ""}
+                  </button>
+                  {textStyleOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      title={option.hint}
+                      className={`style-chip${
+                        scene.textStyle === option.value ? " active" : ""
+                      }`}
+                      onClick={() =>
+                        setScene(index, { textStyle: option.value })
+                      }
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="scene-row">
               <span className="file-empty">ارتفاع النص</span>

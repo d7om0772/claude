@@ -15,6 +15,8 @@ import { fontStyleOf } from "../../lib/fonts.js";
 import { resolveAsset } from "../../lib/asset-url.js";
 import { isVideoSource } from "../../lib/duration.js";
 import { WordClicks } from "../../lib/word-clicks.jsx";
+import { StyledWords } from "../../lib/text-styles.jsx";
+import { KLOVA_TEXT_STYLE } from "./schema.js";
 
 /* ==========================================================================
  * 1) الكلمات وتوقيتها
@@ -457,6 +459,7 @@ const EchoScene = ({
 
 export const Template = ({
   backgroundColor,
+  textStyle,
   fontStyle,
   fontColor,
   mutedFontColor,
@@ -608,11 +611,18 @@ export const Template = ({
     return owned;
   }, [sceneTexts]);
 
+  /* أسلوب الخط يُحلّ مرة واحدة: العائلة ووزناها معاً، فلا يتفرّق الاختيار
+     على المشاهد ولا يُنسى وزنٌ في أحدها. ويُحلّ هنا قبل كل ما يقيس النص:
+     ملاءمة الحجم تقيس بالعائلة، فلا يصحّ أن تسبق تعريفها */
+  const font = fontStyleOf(fontStyle);
+
   // موضع الكابشن يتبع اللقطة الظاهرة إن حدّدت موضعها، وإلا فموضع القالب
   const activeScene = timeline.find(
     (entry) => frame >= entry.from && frame < entry.from + entry.span,
   );
   const captionBottom = activeScene?.scene.textYRatio ?? captionBottomRatio;
+  /* ستايل اللقطة يغلب ستايل القالب، والفارغ يعني «اتبع العام» لا «بلا ستايل» */
+  const activeTextStyle = activeScene?.scene.textStyle ?? textStyle;
   /**
    * المشاهد النصية تملك الشاشة وحدها: شريط الكابشن فوق كلماتها الضخمة كان
    * يعرض نصّين معاً. ويُخفى كذلك أيُّ مقطع تعرضه هي بشكلها الخاص، ولو امتدّ
@@ -630,6 +640,59 @@ export const Template = ({
         if (currentMs < cue.startMs || currentMs >= cue.endMs) return best;
         return best === undefined || cue.startMs >= best.startMs ? cue : best;
       }, undefined);
+
+  /**
+   * كلمات السطر النشط بلحظاتها، لستايلات المحرّك المشترك.
+   *
+   * التوقيت من حسبة القالب نفسها لا من حسبة المحرّك: النقرات الصوتية تتبع
+   * هذه اللحظات بعينها، فمصدران مختلفان يعنيان نقرةً تسبق كلمتها أو تتأخّر.
+   */
+  const styledWords = useMemo(() => {
+    if (!activeCue) return [];
+    const onsets = wordOnsetsMs(activeCue, wordRevealShare);
+    return toWords(activeCue.text).map((text, i) => ({
+      text,
+      startMs: onsets[i],
+    }));
+  }, [activeCue, wordRevealShare]);
+
+  /**
+   * حجم خطّ الستايلات المشتركة.
+   *
+   * كتلة الكابشن مثبّتة من أسفلها، فما زاد منها ينمو إلى أعلى الإطار ويُقصّ
+   * عنده. وهذا لا يقع في أسلوب القالب الأصلي — سطر أو سطران — لكنه يقع في
+   * «تراص عمودي»: كل كلمة سطر، فسبع كلمات تعني سبعة أسطر تخرج من أعلى
+   * الإطار. فيُصغَّر الخط حتى تسع الكتلةُ ما فوق مثبتها، ولا يكبر أبداً عن
+   * مقاس القالب.
+   *
+   * و«كلمة واحدة» يكبّر خطّه مرة ونصفاً داخلياً، فيُقاس عرضه بذلك المعامل
+   * وإلا خرجت الكلمة الطويلة من جانبي الكتلة.
+   */
+  const styledFontSize = useMemo(() => {
+    const base = width * captionFontRatio;
+    if (styledWords.length === 0) return base;
+    const texts = styledWords.map((w) => w.text);
+    const blockWidth = width * captionWidthRatio;
+    if (activeTextStyle === "stack") {
+      return Math.min(
+        fitToHeight(base, styledWords.length, 1.18, height * captionBottom),
+        fitToWidth(base, texts, blockWidth, font),
+      );
+    }
+    if (activeTextStyle === "oneWord") {
+      return fitToWidth(base, texts, blockWidth / 1.5, font);
+    }
+    return base;
+  }, [
+    styledWords,
+    activeTextStyle,
+    width,
+    height,
+    captionFontRatio,
+    captionWidthRatio,
+    captionBottom,
+    font,
+  ]);
 
   /**
    * النقرات تتبع كل ما يظهر، لا الكابشن وحده.
@@ -668,10 +731,6 @@ export const Template = ({
     timeline,
     fps,
   ]);
-
-  /* أسلوب الخط يُحلّ مرة واحدة: العائلة ووزناها معاً، فلا يتفرّق الاختيار
-     على المشاهد ولا يُنسى وزنٌ في أحدها */
-  const font = fontStyleOf(fontStyle);
 
   const colors = {
     font: fontColor,
@@ -761,7 +820,7 @@ export const Template = ({
       ))}
 
       {/* الكابشن فوق كل المشاهد ويجري بتوقيته من أول الفيديو إلى آخره */}
-      {activeCue ? (
+      {activeCue && activeTextStyle === KLOVA_TEXT_STYLE ? (
         <CaptionLayer
           cue={activeCue}
           colors={colors}
@@ -778,6 +837,36 @@ export const Template = ({
           revealShare={wordRevealShare}
           font={font}
         />
+      ) : null}
+
+      {/**
+       * الستايلات المشتركة في موضع الكابشن نفسه.
+       *
+       * الحاوية مثبّتة من أسفلها كما في أسلوب القالب الأصلي، فتبديل الستايل
+       * لا يزحزح النص عن خطّه ولا يجعله يزحف على البطاقة حين يصير سطرين.
+       */}
+      {activeCue && activeTextStyle !== KLOVA_TEXT_STYLE ? (
+        <div
+          style={{
+            position: "absolute",
+            left: (width - width * captionWidthRatio) / 2,
+            bottom: height * (1 - captionBottom),
+            width: width * captionWidthRatio,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <StyledWords
+            words={styledWords}
+            style={activeTextStyle}
+            revealMode="word"
+            fontSize={styledFontSize}
+            widthPx={width * captionWidthRatio}
+            colors={colors}
+            enterFrames={wordEnterFrames}
+            font={font}
+          />
+        </div>
       ) : null}
 
       {/* اللوقو آخر طبقة: يبقى ظاهراً فوق كل شيء كما في المرجع */}

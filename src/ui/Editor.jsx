@@ -23,6 +23,7 @@ import { CanvasStage } from "./form/CanvasStage.jsx";
 import { WordLines } from "./form/WordLines.jsx";
 import { mediaGeometry } from "./form/media-geometry.js";
 import { setIn } from "./form/paths.js";
+import { TEXT_STYLE_HINTS, TEXT_STYLE_OPTIONS } from "../lib/text-styles.jsx";
 import {
   readAudioDuration,
   readMediaAspect,
@@ -138,26 +139,7 @@ const GROUP_ORDER = [
   "الوسائط والشعار",
   "التخطيط والحركة",
 ];
-const TEXT_STYLES = [
-  { value: "karaoke", label: "تراكم", hint: "الكلمات تتراكم والنشطة داكنة" },
-  { value: "pop", label: "قفزة", hint: "كل كلمة تكبر في مكانها" },
-  { value: "kinetic", label: "سطر متحرك", hint: "سطر واحد ينزلق مع الكلمة" },
-  { value: "boxed", label: "شريط", hint: "الكلمة النشطة على شريط ملوّن" },
-  {
-    value: "highlight",
-    label: "تظليل",
-    hint: "الجملة كلها ظاهرة، والنشطة تتلوّن — كاريوكي الأغاني",
-  },
-  { value: "underline", label: "تسطير", hint: "خط ملوّن تحت الكلمة النشطة" },
-  { value: "slide", label: "انزلاق", hint: "الكلمة تصعد من خلف قناع" },
-  { value: "stack", label: "تراص عمودي", hint: "كل كلمة في سطر مستقل" },
-  {
-    value: "oneWord",
-    label: "كلمة واحدة",
-    hint: "كلمة واحدة كبيرة في كل لحظة",
-  },
-  { value: "gradient", label: "تدرّج", hint: "تدرّج لوني على الكلمة النشطة" },
-];
+const TEXT_STYLES = TEXT_STYLE_OPTIONS;
 
 const MEDIA_STYLES = [
   { value: "plain", label: "بلا زخرفة", hint: "المقطع كما هو" },
@@ -182,6 +164,19 @@ const REVEAL_MODES = [
     hint: "كلمات المقطع تظهر معاً، فتتحكم بتوقيت كل جملة وحدها",
   },
 ];
+
+/**
+ * أزرار اختيار من حقل enum في المخطّط.
+ *
+ * الأسماء من `.meta({ labels })` والشروح من قائمة الستايلات المشتركة — فلا
+ * تُكتب أسماء الخيارات مرتين، ولا يظهر زرٌّ لستايل لا وجود له في المخطّط.
+ */
+const chipOptionsOf = (field) =>
+  (field?.options ?? []).map((value) => ({
+    value,
+    label: field.optionLabels?.[value] ?? value,
+    hint: TEXT_STYLE_HINTS[value],
+  }));
 
 /** صفّ أزرار اختيار — بديل القائمة المنسدلة حين تكون الخيارات قليلة ومرئية. */
 const ChipRow = ({ label, hint, options, value, onPick }) => (
@@ -729,6 +724,20 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     () => (frameScenesField?.itemFields ?? []).find((f) => f.name === "media"),
     [frameScenesField],
   );
+  /* ستايلات كشف الكلمات للقطة الواحدة — القالب يعلنها، والواجهة ترسم أزرارها */
+  const sceneTextStyleOptions = useMemo(
+    () =>
+      chipOptionsOf(
+        (frameScenesField?.itemFields ?? []).find(
+          (f) => f.name === "textStyle",
+        ),
+      ),
+    [frameScenesField],
+  );
+  const templateTextStyleField = useMemo(
+    () => fields.find((f) => f.name === "textStyle" && f.kind === "enum"),
+    [fields],
+  );
   const captionStyles = useMemo(() => {
     const styleField = (captionField?.itemFields ?? []).find(
       (f) => f.name === "style",
@@ -744,6 +753,9 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
     if (wordEditor) map.set(WORDS_GROUP, []);
     for (const f of fields) {
       if (f.kind === "unsupported") continue;
+      /* ستايل الكابشن العام يُرسم أزراراً فوق اللقطات، لا قائمةً منسدلة بين
+         حقول «النصوص» — فاختيار الشكل يُرى قبل أن يُنقر */
+      if (frameSceneBased && f.name === "textStyle") continue;
       if (
         (sceneBased || frameSceneBased) &&
         (f.name === "scenes" || f.kind === "captions")
@@ -901,34 +913,47 @@ export const Editor = ({ template, onBack, serverUp, onQueued }) => {
                 ) : null}
 
                 {groupName === SCENES_GROUP && frameSceneBased ? (
-                  <FrameScenes
-                    scenes={props.scenes ?? []}
-                    captions={captions}
-                    setScenes={(v) => set("scenes", v)}
-                    setCaptions={(v) => set("captions", v)}
-                    accept={frameSceneMedia?.accept ?? "image/*,video/*"}
-                    pickedAt={pickedAt}
-                    pickAsset={pickAsset}
-                    fps={template.meta.fps}
-                    totalFrames={duration}
-                    /* موضع النص العام لكل نوع لقطة، ليبدأ عدّاد ارتفاع
+                  <>
+                    {templateTextStyleField ? (
+                      <ChipRow
+                        label="ستايل كشف الكلمات — كل اللقطات"
+                        hint="كل لقطة تستطيع أن تختار ستايلها الخاص أدناه وتستثني نفسها من هذا"
+                        options={chipOptionsOf(templateTextStyleField)}
+                        value={props.textStyle}
+                        onPick={(v) => set("textStyle", v)}
+                      />
+                    ) : null}
+                    <FrameScenes
+                      textStyleOptions={sceneTextStyleOptions}
+                      templateTextStyle={props.textStyle}
+                      scenes={props.scenes ?? []}
+                      captions={captions}
+                      setScenes={(v) => set("scenes", v)}
+                      setCaptions={(v) => set("captions", v)}
+                      accept={frameSceneMedia?.accept ?? "image/*,video/*"}
+                      pickedAt={pickedAt}
+                      pickAsset={pickAsset}
+                      fps={template.meta.fps}
+                      totalFrames={duration}
+                      /* موضع النص العام لكل نوع لقطة، ليبدأ عدّاد ارتفاع
                        اللقطة من الموضع الحالي لا من فراغ */
-                    textYDefaults={{
-                      media: props.captionBottomRatio,
-                      empty: props.captionBottomRatio,
-                      stack: props.stackTopRatio,
-                      echo: props.echoCenterYRatio,
-                    }}
-                    /* المعاينة المصغّرة لكل لقطة تُرسم بالقالب نفسه
+                      textYDefaults={{
+                        media: props.captionBottomRatio,
+                        empty: props.captionBottomRatio,
+                        stack: props.stackTopRatio,
+                        echo: props.echoCenterYRatio,
+                      }}
+                      /* المعاينة المصغّرة لكل لقطة تُرسم بالقالب نفسه
                        وبالخصائص الحيّة، فما فيها هو ما سيُرندَر */
-                    component={template.component}
-                    inputProps={props}
-                    compositionWidth={template.meta.width}
-                    compositionHeight={template.meta.height}
-                    /* المصغّرات تركيبات حيّة تفكّ ترميز المقاطع، فتُطفأ أثناء
+                      component={template.component}
+                      inputProps={props}
+                      compositionWidth={template.meta.width}
+                      compositionHeight={template.meta.height}
+                      /* المصغّرات تركيبات حيّة تفكّ ترميز المقاطع، فتُطفأ أثناء
                        الرندر في المتصفح لئلا تزاحمه على وحدات الفكّ */
-                    thumbsPaused={webProgress !== null}
-                  />
+                      thumbsPaused={webProgress !== null}
+                    />
+                  </>
                 ) : null}
 
                 {groupName === "النصوص" && textOverriddenByCaptions ? (

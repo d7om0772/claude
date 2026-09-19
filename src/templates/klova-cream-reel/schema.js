@@ -2,6 +2,21 @@ import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 import { contentDurationInFrames } from "../../lib/duration.js";
 import { FONT_STYLES, FONT_STYLE_IDS } from "../../lib/fonts.js";
+import { TEXT_STYLE_IDS, TEXT_STYLE_LABELS } from "../../lib/text-styles.jsx";
+
+/**
+ * ستايلات الكابشن في هذا القالب: أسلوبه الأصلي أولاً، ثم العشرة المشتركة.
+ *
+ * `klova` ليس واحداً من العشرة بل هو ما قِيس من الفيديو المرجعي — كلمة نشطة
+ * داكنة وخط ذهبي يمسح تحتها — فيبقى الافتراضي، ويُذكر صراحةً في القائمة حتى
+ * يستطيع المستخدم الرجوع إليه بعد أن يجرّب غيره.
+ */
+export const KLOVA_TEXT_STYLE = "klova";
+export const sceneTextStyles = [KLOVA_TEXT_STYLE, ...TEXT_STYLE_IDS];
+const textStyleLabels = {
+  [KLOVA_TEXT_STYLE]: "كلوفا",
+  ...TEXT_STYLE_LABELS,
+};
 
 /**
  * ريل كلوفا الكريمي — مقاس من الفيديو المرجعي (1080×1920).
@@ -74,6 +89,21 @@ export const sceneSchema = z.object({
     .describe(
       "نقرات هذه اللقطة. الفارغ يعني اتباع الإعداد العام: نقرة مع كل كلمة تظهر فيها، ومع دخول البطاقة الملوّنة",
     ),
+  /**
+   * ستايل كشف الكلمات في هذه اللقطة وحدها.
+   *
+   * لا يمسّ ما خلف الكابشن — ذاك `type` — بل طريقة ظهور الكلمات نفسها. فارغ
+   * يعني اتباع ستايل القالب العام، وهو الوضع الطبيعي: يضبط المستخدم واحداً
+   * للكل ثم يستثني لقطة أو لقطتين.
+   */
+  /* الأسماء على الـenum نفسه لا على غلاف nullable: الواجهة تفكّ الأغلفة
+     لتصل إلى النوع الأساسي، فما عُلّق على الغلاف لا تراه */
+  textStyle: z
+    .enum(sceneTextStyles)
+    .meta({ labels: textStyleLabels })
+    .nullable()
+    .optional()
+    .describe("ستايل كشف الكلمات في هذه اللقطة. فارغ يعني ستايل القالب العام"),
 });
 
 export const templateSchema = z.object({
@@ -87,6 +117,11 @@ export const templateSchema = z.object({
   echoTextColor: zColor().describe("لون النص داخل البطاقة الملوّنة"),
 
   /* ---------------------------------------------------------- المحتوى */
+  /** ستايل كشف الكلمات العام — واللقطة تستثني نفسها منه إن شاءت */
+  textStyle: z
+    .enum(sceneTextStyles)
+    .describe("ستايل كشف الكلمات لكل اللقطات التي لم تختر ستايلها")
+    .meta({ labels: textStyleLabels }),
   /**
    * أسلوب الخط يغيّر شكل الكابشن كله — الكلمات والمشاهد الضخمة والبطاقة —
    * لأن القالب عائلةٌ واحدة بوزنين. والقياسات تتبع الأسلوب تلقائياً: الحجم
@@ -289,6 +324,7 @@ export const defaultProps = {
   echoCardColor: "#B98F7C",
   echoTextColor: "#F1E7DA",
 
+  textStyle: "klova",
   fontStyle: "thmanyah",
   headline: "وسؤالنا لك ؟",
   logo: "klova/logo.png",
