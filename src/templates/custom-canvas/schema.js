@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 import { contentDurationInFrames } from "../../lib/duration.js";
+import { FONT_STYLES, FONT_STYLE_IDS } from "../../lib/fonts.js";
 
 /**
  * لوحة حرّة: القالب لا يفرض تخطيطاً، بل يعطي طبقتين — مقطع ونص — يضعهما
@@ -108,8 +109,30 @@ export const templateSchema = z.object({
     .describe("نصف قطر زوايا المقطع كنسبة من عرضه"),
   mediaMuted: z.boolean().describe("كتم صوت المقطع"),
   mediaStyle: mediaStyleSchema,
+  /**
+   * نافذة ظهور المقطع.
+   *
+   * قبلها لا يُعرض المقطع أصلاً — وهذه هي «لحظة ظهوره» التي تُعلَّق عليها
+   * النقرة. وبدون نافذة يكون المقطع حاضراً من أول فريم إلى آخره، فلا لحظة
+   * ظهورٍ فيه تُسمع.
+   */
+  mediaStartMs: z
+    .number()
+    .min(0)
+    .describe("لحظة ظهور المقطع بالملي ثانية — صفر يعني من البداية"),
+  mediaEndMs: z
+    .number()
+    .min(0)
+    .nullable()
+    .describe("لحظة اختفاء المقطع بالملي ثانية — فارغ يعني حتى نهاية الفيديو"),
 
   /* ------------------------------------------------------------ النص */
+  fontStyle: z
+    .enum(FONT_STYLE_IDS)
+    .describe("أسلوب الخط — يسري على كل النصوص في اللوحة")
+    .meta({
+      labels: Object.fromEntries(FONT_STYLES.map((s) => [s.id, s.label])),
+    }),
   textStyle: textStyleSchema,
   revealMode: revealModeSchema,
   captions: z.array(captionCueSchema).describe("مقاطع الكلمات — عادةً من SRT"),
@@ -152,8 +175,22 @@ export const templateSchema = z.object({
   clickSfx: z
     .string()
     .nullable()
-    .describe("صوت نقرة يشتغل مع كل كلمة تظهر. فارغ يوقفه"),
+    .describe("ملف صوت النقرة. فارغ يوقف النقرات كلها مهما كانت مشغّلاتها"),
   clickVolume: z.number().min(0).max(1).describe("مستوى النقرة"),
+  /**
+   * مشغّلات النقرة — ثلاثة مستقلّة تُجمع كما يشاء المستخدم.
+   *
+   * فُصلت أعلاماً ثلاثة لا قائمةَ اختيارٍ واحدة لأنها تجتمع: نقرة مع كل كلمة
+   * ونقرة أقوى عند ظهور المقطع معاً أمرٌ مطلوب، ولا تعبّر عنه قائمة تختار
+   * واحداً.
+   *
+   * وكانت النقرة قبل هذا تتبع `revealMode` ضمناً — كلمةً في وضع الكلمة
+   * وجملةً في وضع الجملة — فلا يملك المستخدم فصلها عن طريقة الكشف. صارت
+   * مستقلّة: يكشف كلمةً كلمة وينقر مع الجملة إن شاء.
+   */
+  clickOnWord: z.boolean().describe("نقرة مع ظهور كل كلمة"),
+  clickOnLine: z.boolean().describe("نقرة مع بداية كل سطر"),
+  clickOnMedia: z.boolean().describe("نقرة مع ظهور المقطع أو الصورة"),
   tailDurationInFrames: z
     .number()
     .min(0)
@@ -172,7 +209,10 @@ export const defaultProps = {
   mediaRadiusRatio: 0.035,
   mediaMuted: true,
   mediaStyle: "shadow",
+  mediaStartMs: 0,
+  mediaEndMs: null,
 
+  fontStyle: "thmanyah",
   textStyle: "karaoke",
   revealMode: "word",
   captions: [],
@@ -190,6 +230,9 @@ export const defaultProps = {
   voiceoverVolume: 1,
   clickSfx: "klova/click.wav",
   clickVolume: 0.7,
+  clickOnWord: true,
+  clickOnLine: false,
+  clickOnMedia: false,
   tailDurationInFrames: 12,
 };
 

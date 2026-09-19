@@ -10,11 +10,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { Audio, Video } from "../../lib/media.js";
-import {
-  FONT_STACK,
-  FONT_WEIGHT_BLACK,
-  FONT_WEIGHT_MEDIUM,
-} from "../../lib/fonts.js";
+import { fontStyleOf } from "../../lib/fonts.js";
 import { resolveAsset } from "../../lib/asset-url.js";
 import { isVideoSource } from "../../lib/duration.js";
 
@@ -66,13 +62,13 @@ const useEnter = (word, enterFrames) => {
   return { opacity: progress, rise: (1 - progress) * 14, scale: progress };
 };
 
-const Word = ({ word, revealed, active, style, enterFrames, colors }) => {
+const Word = ({ word, revealed, active, style, enterFrames, colors, font }) => {
   const { opacity, rise, scale } = useEnter(word, enterFrames);
   const common = {
     display: "inline-block",
     opacity: revealed ? opacity : 0,
     color: active ? colors.font : colors.muted,
-    fontWeight: active ? FONT_WEIGHT_BLACK : FONT_WEIGHT_MEDIUM,
+    fontWeight: active ? font.heavy : font.medium,
   };
 
   if (style === "pop") {
@@ -129,7 +125,7 @@ const Word = ({ word, revealed, active, style, enterFrames, colors }) => {
           display: "inline-block",
           opacity: revealed ? 1 : 0.28,
           color: active ? colors.accent : revealed ? colors.font : colors.muted,
-          fontWeight: active ? FONT_WEIGHT_BLACK : FONT_WEIGHT_MEDIUM,
+          fontWeight: active ? font.heavy : font.medium,
         }}
       >
         {word.text}
@@ -221,6 +217,7 @@ const KineticLine = ({ words, activeIndex, fontSize, colors, enterFrames }) => {
           style="kinetic"
           enterFrames={enterFrames}
           colors={colors}
+          font={font}
         />
       ))}
     </div>
@@ -235,6 +232,7 @@ const TextBlock = ({
   widthPx,
   colors,
   enterFrames,
+  font,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -259,9 +257,9 @@ const TextBlock = ({
         style={{
           width: widthPx,
           direction: "rtl",
-          fontFamily: FONT_STACK,
+          fontFamily: font.stack,
           fontSize: fontSize * 1.5,
-          fontWeight: FONT_WEIGHT_BLACK,
+          fontWeight: font.heavy,
           color: colors.font,
           textAlign: "center",
         }}
@@ -273,6 +271,7 @@ const TextBlock = ({
           style="pop"
           enterFrames={enterFrames}
           colors={colors}
+          font={font}
         />
       </div>
     );
@@ -285,7 +284,7 @@ const TextBlock = ({
         style={{
           width: widthPx,
           direction: "rtl",
-          fontFamily: FONT_STACK,
+          fontFamily: font.stack,
           fontSize,
           lineHeight: 1.18,
           display: "flex",
@@ -302,6 +301,7 @@ const TextBlock = ({
             style="slide"
             enterFrames={enterFrames}
             colors={colors}
+            font={font}
           />
         ))}
       </div>
@@ -314,7 +314,7 @@ const TextBlock = ({
         style={{
           width: widthPx,
           direction: "rtl",
-          fontFamily: FONT_STACK,
+          fontFamily: font.stack,
           fontSize,
         }}
       >
@@ -340,7 +340,7 @@ const TextBlock = ({
         alignContent: "center",
         columnGap: fontSize * 0.26,
         rowGap: fontSize * 0.18,
-        fontFamily: FONT_STACK,
+        fontFamily: font.stack,
         fontSize,
         lineHeight: 1.25,
         textAlign: "center",
@@ -355,6 +355,7 @@ const TextBlock = ({
           style={style}
           enterFrames={enterFrames}
           colors={colors}
+          font={font}
         />
       ))}
     </div>
@@ -491,6 +492,8 @@ const MediaLayer = ({
 export const Template = ({
   backgroundColor,
   media,
+  mediaStartMs,
+  mediaEndMs,
   mediaAspect,
   mediaCenterXRatio,
   mediaCenterYRatio,
@@ -498,6 +501,7 @@ export const Template = ({
   mediaRadiusRatio,
   mediaMuted,
   mediaStyle,
+  fontStyle,
   textStyle,
   revealMode,
   captions,
@@ -514,9 +518,21 @@ export const Template = ({
   voiceoverVolume,
   clickSfx,
   clickVolume,
+  clickOnWord,
+  clickOnLine,
+  clickOnMedia,
 }) => {
-  const { width, height, fps } = useVideoConfig();
+  const { width, height, fps, durationInFrames } = useVideoConfig();
   const frame = useCurrentFrame();
+  const font = fontStyleOf(fontStyle);
+  /* نافذة المقطع بالفريمات، محصورة داخل طول الفيديو حتى لا تُنشأ لقطة فارغة */
+  const mediaFrom = Math.max(0, Math.round((mediaStartMs / 1000) * fps));
+  const mediaSpan = Math.max(
+    1,
+    (mediaEndMs === null || mediaEndMs === undefined
+      ? durationInFrames
+      : Math.round((mediaEndMs / 1000) * fps)) - mediaFrom,
+  );
   const currentMs = (frame / fps) * 1000;
 
   const cues = useMemo(() => {
@@ -549,31 +565,78 @@ export const Template = ({
     [activeCue],
   );
 
+  /**
+   * لحظات النقر — تُجمع من مشغّلاتها الثلاثة ثم تُنقّى.
+   *
+   * التنقية ضرورية لا تجميل: أول كلمة في السطر تقع على بداية السطر نفسه،
+   * فتشغيل «مع الكلمة» و«مع السطر» معاً يضاعف النقرة على نفس اللحظة فتُسمع
+   * أثقل. والتقريب إلى أقرب فريم هو حدّ التمييز الفعلي — ما دونه لا يُفصل
+   * في الرندر أصلاً.
+   */
   const clickOnsets = useMemo(() => {
     if (!clickSfx) return [];
-    if (revealMode === "cue") return cues.map((cue) => cue.startMs);
-    return cues.flatMap((cue) => wordsOf(cue).map((w) => w.startMs));
-  }, [cues, clickSfx, revealMode]);
+    const moments = [];
+    if (clickOnWord) {
+      moments.push(
+        ...cues.flatMap((cue) => wordsOf(cue).map((w) => w.startMs)),
+      );
+    }
+    if (clickOnLine) moments.push(...cues.map((cue) => cue.startMs));
+    if (clickOnMedia && media) moments.push(mediaStartMs);
+    const seen = new Set();
+    return moments
+      .filter((ms) => Number.isFinite(ms) && ms >= 0)
+      .filter((ms) => {
+        const key = Math.round((ms / 1000) * fps);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .sort((a, b) => a - b);
+  }, [
+    cues,
+    clickSfx,
+    clickOnWord,
+    clickOnLine,
+    clickOnMedia,
+    media,
+    mediaStartMs,
+    fps,
+  ]);
 
   const fontSize = width * fontSizeRatio;
   const textWidth = width * textWidthRatio;
 
   return (
     <AbsoluteFill style={{ backgroundColor }}>
+      {/**
+       * المقطع داخل نافذته الزمنية.
+       *
+       * `Sequence` لا شرطٌ على الفريم: هي التي تجعل زمن المقطع الداخلي يبدأ
+       * من ظهوره، فالفيديو يُشغَّل من أوّله لا من منتصفه كما لو كان حاضراً
+       * منذ الفريم صفر. وهي كذلك ما يجعل حركة الظهور البطيء تبدأ عنده.
+       */}
       {media ? (
-        <MediaLayer
-          src={resolveAsset(media, staticFile)}
-          aspect={mediaAspect}
-          centerX={mediaCenterXRatio}
-          centerY={mediaCenterYRatio}
-          scale={mediaScale}
-          radius={mediaRadiusRatio}
-          muted={mediaMuted}
-          style={mediaStyle}
-          accentColor={accentColor}
-          width={width}
-          height={height}
-        />
+        <Sequence
+          from={mediaFrom}
+          durationInFrames={mediaSpan}
+          layout="none"
+          name="المقطع"
+        >
+          <MediaLayer
+            src={resolveAsset(media, staticFile)}
+            aspect={mediaAspect}
+            centerX={mediaCenterXRatio}
+            centerY={mediaCenterYRatio}
+            scale={mediaScale}
+            radius={mediaRadiusRatio}
+            muted={mediaMuted}
+            style={mediaStyle}
+            accentColor={accentColor}
+            width={width}
+            height={height}
+          />
+        </Sequence>
       ) : null}
 
       <div
@@ -588,6 +651,7 @@ export const Template = ({
         }}
       >
         <TextBlock
+          font={font}
           words={words}
           style={activeStyle}
           revealMode={revealMode}
