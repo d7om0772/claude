@@ -149,7 +149,7 @@ webm تلقائياً.
 الرندر:
 
 ```bash
-npx remotion render paper-card-kinetic-line out/video.mp4 --props=examples/props.json
+npx remotion render paper-karaoke-captions out/video.mp4 --props=examples/props.json
 ```
 
 ## اللغة
@@ -207,9 +207,7 @@ Composition واحداً يطغى على الآخر بصمت فيختفي قال
 
 | المعرّف | الاسم | المقاس | الوصف |
 |---|---|---|---|
-| `paper-card-kinetic-line` | الكرت الورقي — السطر الزاحف | ١٠٨٠×١٩٢٠ | سطر عربي ضخم يزحف بمحطة وقوف لكل كلمة، ثم سطر صغير يُبنى كلمة كلمة |
 | `paper-karaoke-captions` | كابشن كاريوكي ورقي | ١٠٨٠×١٩٢٠ | كابشن كلمة-بكلمة، النشطة Black داكنة والسابقة Medium أفتح |
-| `card-stretch-reveal` | كشف بالتمدّد داخل الكرت | ١٠٨٠×١٩٢٠ | مقطع ينبطح إلى شريط رفيع ثم ينفتح عمودياً في ربع ثانية |
 | `thmanyah-word-reveal-vertical` | كشف الكلمات — عمودي | ١٠٨٠×١٩٢٠ | ترجمة تظهر كلمة بعد كلمة وتتراكم داخل بطاقة وسائط |
 | `paper-card` | لقطة البطاقة الورقية | ١٠٨٠×١٩٢٠ | بطاقة تصعد من أسفل الإطار، ثم يُقطع محتواها إلى فيديو في نفس الإحداثيات |
 
@@ -229,9 +227,9 @@ npm run srt -- examples/sample.srt --props props.json   # يحقنه في ملف
 الطابع الزمني، النص متعدد الأسطر، وسوم التنسيق `<i>`، إحداثيات الموضع، وتداخل
 المقاطع (يُقصّ تلقائياً حتى لا يختفي مقطع بلا سبب ظاهر).
 
-تفصيل مهم: `paper-card-kinetic-line` يتوقع كابشن **على مستوى الجملة**، بينما
-`paper-karaoke-captions` و `thmanyah-word-reveal-vertical` يتوقعانه **على مستوى
-الكلمة** (كل مقطع = كلمة واحدة).
+تفصيل مهم: `paper-karaoke-captions` و `thmanyah-word-reveal-vertical` يتوقعان
+الكابشن **على مستوى الكلمة** (كل مقطع = كلمة واحدة)، بينما `paper-card` يتوقعه
+**على مستوى الجملة**.
 المحوّل يخدم الحالتين — الفرق في تقطيع ملف SRT نفسه.
 
 ## مدة اللقطة
@@ -291,11 +289,12 @@ src/
   cli/
     srt-to-captions.js  أداة سطر أوامر للتحويل
   templates/
-    paper-card-kinetic-line/
     paper-karaoke-captions/
-    card-stretch-reveal/
     thmanyah-word-reveal-vertical/
     paper-card-reveal/
+    klova-word-reveal-reel/
+    klova-cream-reel/
+    custom-canvas/
 public/
   fonts/                ملفات الخطوط (محلية، بلا أي طلب شبكة وقت الرندر)
   media/                وسائط المستخدم

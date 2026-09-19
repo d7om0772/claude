@@ -1,11 +1,7 @@
-import paperCardKineticLine from "../templates/paper-card-kinetic-line/template.json" with { type: "json" };
 import paperKaraokeCaptions from "../templates/paper-karaoke-captions/template.json" with { type: "json" };
-import cardStretchReveal from "../templates/card-stretch-reveal/template.json" with { type: "json" };
 import thmanyahWordReveal from "../templates/thmanyah-word-reveal-vertical/template.json" with { type: "json" };
 import paperCardReveal from "../templates/paper-card-reveal/template.json" with { type: "json" };
 import klovaWordRevealReel from "../templates/klova-word-reveal-reel/template.json" with { type: "json" };
-import echoCard from "../templates/echo-card-vertical/template.json" with { type: "json" };
-import creamCard from "../templates/cream-card-kinetic-ar/template.json" with { type: "json" };
 import klovaCream from "../templates/klova-cream-reel/template.json" with { type: "json" };
 import customCanvas from "../templates/custom-canvas/template.json" with { type: "json" };
 
@@ -17,14 +13,10 @@ import customCanvas from "../templates/custom-canvas/template.json" with { type:
  * Node أصلاً، ويجعل تبعيات الخادم أخفّ.
  */
 export const templateMetas = [
-  paperCardKineticLine,
   paperKaraokeCaptions,
-  cardStretchReveal,
   thmanyahWordReveal,
   paperCardReveal,
   klovaWordRevealReel,
-  echoCard,
-  creamCard,
   klovaCream,
   customCanvas,
 ];

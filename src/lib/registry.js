@@ -1,13 +1,4 @@
 import {
-  Template as PaperCardTemplate,
-  calculateTemplateMetadata as paperCardMetadata,
-} from "../templates/paper-card-kinetic-line/Template.jsx";
-import {
-  templateSchema as paperCardSchema,
-  defaultProps as paperCardDefaults,
-} from "../templates/paper-card-kinetic-line/schema.js";
-import paperCardMeta from "../templates/paper-card-kinetic-line/template.json";
-import {
   Template as KaraokeTemplate,
   calculateTemplateMetadata as karaokeMetadata,
 } from "../templates/paper-karaoke-captions/Template.jsx";
@@ -16,15 +7,6 @@ import {
   defaultProps as karaokeDefaults,
 } from "../templates/paper-karaoke-captions/schema.js";
 import karaokeMeta from "../templates/paper-karaoke-captions/template.json";
-import {
-  Template as StretchTemplate,
-  calculateMetadata as stretchMetadata,
-} from "../templates/card-stretch-reveal/Template.jsx";
-import {
-  templateSchema as stretchSchema,
-  defaultProps as stretchDefaults,
-} from "../templates/card-stretch-reveal/schema.js";
-import stretchMeta from "../templates/card-stretch-reveal/template.json";
 import { Template as WordRevealTemplate } from "../templates/thmanyah-word-reveal-vertical/Template.jsx";
 import {
   templateSchema as wordRevealSchema,
@@ -53,20 +35,6 @@ import {
   calculateMetadata as customCanvasMetadata,
 } from "../templates/custom-canvas/schema.js";
 import customCanvasMeta from "../templates/custom-canvas/template.json";
-import { Template as EchoCardTemplate } from "../templates/echo-card-vertical/Template.jsx";
-import {
-  templateSchema as echoCardSchema,
-  defaultProps as echoCardDefaults,
-  calculateMetadata as echoCardMetadata,
-} from "../templates/echo-card-vertical/schema.js";
-import echoCardMeta from "../templates/echo-card-vertical/template.json";
-import { Template as CreamCardTemplate } from "../templates/cream-card-kinetic-ar/Template.jsx";
-import {
-  templateSchema as creamCardSchema,
-  defaultProps as creamCardDefaults,
-  calculateMetadata as creamCardMetadata,
-} from "../templates/cream-card-kinetic-ar/schema.js";
-import creamCardMeta from "../templates/cream-card-kinetic-ar/template.json";
 import { Template as KlovaCreamTemplate } from "../templates/klova-cream-reel/Template.jsx";
 import {
   templateSchema as klovaCreamSchema,
@@ -83,25 +51,11 @@ import klovaCreamMeta from "../templates/klova-cream-reel/template.json";
 const defineTemplate = (entry) => entry;
 export const templates = [
   defineTemplate({
-    meta: paperCardMeta,
-    schema: paperCardSchema,
-    component: PaperCardTemplate,
-    defaultProps: paperCardDefaults,
-    calculateMetadata: paperCardMetadata,
-  }),
-  defineTemplate({
     meta: karaokeMeta,
     schema: karaokeSchema,
     component: KaraokeTemplate,
     defaultProps: karaokeDefaults,
     calculateMetadata: karaokeMetadata,
-  }),
-  defineTemplate({
-    meta: stretchMeta,
-    schema: stretchSchema,
-    component: StretchTemplate,
-    defaultProps: stretchDefaults,
-    calculateMetadata: stretchMetadata,
   }),
   defineTemplate({
     meta: wordRevealMeta,
@@ -123,20 +77,6 @@ export const templates = [
     component: KlovaReelTemplate,
     defaultProps: klovaReelDefaults,
     calculateMetadata: klovaReelMetadata,
-  }),
-  defineTemplate({
-    meta: echoCardMeta,
-    schema: echoCardSchema,
-    component: EchoCardTemplate,
-    defaultProps: echoCardDefaults,
-    calculateMetadata: echoCardMetadata,
-  }),
-  defineTemplate({
-    meta: creamCardMeta,
-    schema: creamCardSchema,
-    component: CreamCardTemplate,
-    defaultProps: creamCardDefaults,
-    calculateMetadata: creamCardMetadata,
   }),
   defineTemplate({
     meta: klovaCreamMeta,
