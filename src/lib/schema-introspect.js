@@ -84,7 +84,18 @@ const classify = (name, node) => {
     case "boolean":
       return { kind: "boolean" };
     case "enum":
-      return { kind: "enum", options: Object.values(def.entries ?? {}) };
+      return {
+        kind: "enum",
+        options: Object.values(def.entries ?? {}),
+        /**
+         * أسماء عربية للخيارات، يضعها القالب بـ`.meta({ labels })`.
+         *
+         * بدونها تعرض القائمة المعرّف الإنجليزي كما هو (`cover`، `thmanyah`)
+         * وهو ما لا يقرؤه المستخدم. والوصف لا يصلح بديلاً: هو جملة واحدة
+         * للحقل كله لا اسمٌ لكل خيار.
+         */
+        optionLabels: node.meta?.()?.labels ?? null,
+      };
     case "object": {
       // كائن متداخل: نفس منطق الاشتقاق، والواجهة تعرضه كمجموعة فرعية
       const shape = def.shape;

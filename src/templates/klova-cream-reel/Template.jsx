@@ -11,11 +11,7 @@ import {
 } from "remotion";
 import { measureText } from "@remotion/layout-utils";
 import { Audio, Video } from "../../lib/media.js";
-import {
-  FONT_STACK,
-  FONT_WEIGHT_BLACK,
-  FONT_WEIGHT_MEDIUM,
-} from "../../lib/fonts.js";
+import { fontStyleOf } from "../../lib/fonts.js";
 import { resolveAsset } from "../../lib/asset-url.js";
 import { isVideoSource } from "../../lib/duration.js";
 import { WordClicks } from "../../lib/word-clicks.jsx";
@@ -78,15 +74,15 @@ const fitToHeight = (fontSize, lines, lineHeight, availablePx) => {
 };
 
 /** أكبر حجم خط لا يتجاوز به أعرضُ سطر العرضَ المتاح — بقياس فعلي للنص. */
-const fitToWidth = (fontSize, texts, availablePx) => {
+const fitToWidth = (fontSize, texts, availablePx, font) => {
   if (availablePx <= 0) return fontSize;
   let widest = 0;
   for (const text of texts) {
     if (!text) continue;
     const { width } = measureText({
       text,
-      fontFamily: FONT_STACK,
-      fontWeight: FONT_WEIGHT_BLACK,
+      fontFamily: font.stack,
+      fontWeight: font.heavy,
       fontSize,
       validateFontIsLoaded: false,
     });
@@ -110,6 +106,7 @@ const CaptionWord = ({
   underlineThickness,
   underlineOffset,
   fontSize,
+  font,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -142,7 +139,7 @@ const CaptionWord = ({
         color: active ? colors.font : colors.muted,
         // وزنٌ واحد للجميع: قياس سماكة الحروف في المرجع أعطى نفس القيمة
         // للكلمة الخافتة والنشطة، فالفرق لونٌ لا وزن
-        fontWeight: FONT_WEIGHT_BLACK,
+        fontWeight: font.heavy,
       }}
     >
       {word}
@@ -179,6 +176,7 @@ const CaptionLayer = ({
   underlineThickness,
   underlineOffset,
   revealShare,
+  font,
 }) => {
   const frame = useCurrentFrame();
   const { fps, width } = useVideoConfig();
@@ -201,7 +199,7 @@ const CaptionLayer = ({
         bottom: bottomPx,
         width: widthPx,
         textAlign: "center",
-        fontFamily: FONT_STACK,
+        fontFamily: font.stack,
         fontSize,
         lineHeight,
       }}
@@ -218,6 +216,7 @@ const CaptionLayer = ({
           underlineThickness={underlineThickness}
           underlineOffset={underlineOffset}
           fontSize={fontSize}
+          font={font}
         />
       ))}
     </div>
@@ -301,6 +300,7 @@ const StackScene = ({
   topPx,
   bottomMarginPx,
   maxWidthPx,
+  font,
 }) => {
   const frame = useCurrentFrame();
   const { fps, height } = useVideoConfig();
@@ -318,7 +318,7 @@ const StackScene = ({
       lineHeight,
       height - topPx - bottomMarginPx,
     ),
-    fitToWidth(fontSize, words, maxWidthPx),
+    fitToWidth(fontSize, words, maxWidthPx, font),
   );
   let newest = -1;
   for (let i = 0; i < appearFrames.length; i += 1) {
@@ -335,7 +335,7 @@ const StackScene = ({
         paddingTop: topPx,
         flexDirection: "column",
         direction: "rtl",
-        fontFamily: FONT_STACK,
+        fontFamily: font.stack,
       }}
     >
       {words.map((word, index) => {
@@ -352,7 +352,7 @@ const StackScene = ({
               fontSize: fitted,
               lineHeight,
               whiteSpace: "nowrap",
-              fontWeight: FONT_WEIGHT_BLACK,
+              fontWeight: font.heavy,
               color: index === newest ? colors.font : colors.muted,
               opacity: progress,
               transform: `translateY(${(1 - progress) * fitted * 0.22}px)`,
@@ -376,6 +376,7 @@ const EchoScene = ({
   repeatCount,
   textShift,
   shadowOpacity,
+  font,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -392,7 +393,7 @@ const EchoScene = ({
   const gapRatio = 0.4;
   const fitted = Math.min(
     fontSize,
-    fitToWidth(fontSize, [text], box.width * 0.88),
+    fitToWidth(fontSize, [text], box.width * 0.88, font),
     fitToHeight(
       fontSize,
       repeatCount + (repeatCount - 1) * gapRatio,
@@ -421,9 +422,9 @@ const EchoScene = ({
           alignItems: "center",
           justifyContent: "center",
           direction: "rtl",
-          fontFamily: FONT_STACK,
+          fontFamily: font.stack,
           fontSize: fitted,
-          fontWeight: FONT_WEIGHT_BLACK,
+          fontWeight: font.heavy,
           color: colors.echoText,
           opacity: enter,
           transform: `translateY(${(1 - enter) * box.height * 0.12}px)`,
@@ -456,6 +457,7 @@ const EchoScene = ({
 
 export const Template = ({
   backgroundColor,
+  fontStyle,
   fontColor,
   mutedFontColor,
   accentColor,
@@ -667,6 +669,10 @@ export const Template = ({
     fps,
   ]);
 
+  /* أسلوب الخط يُحلّ مرة واحدة: العائلة ووزناها معاً، فلا يتفرّق الاختيار
+     على المشاهد ولا يُنسى وزنٌ في أحدها */
+  const font = fontStyleOf(fontStyle);
+
   const colors = {
     font: fontColor,
     muted: mutedFontColor,
@@ -734,6 +740,7 @@ export const Template = ({
               topPx={height * (scene.textYRatio ?? stackTopRatio)}
               bottomMarginPx={height * 0.04}
               maxWidthPx={width * 0.92}
+              font={font}
             />
           ) : null}
 
@@ -747,6 +754,7 @@ export const Template = ({
               repeatCount={echoRepeatCount}
               textShift={echoTextShiftRatio}
               shadowOpacity={cardShadowOpacity}
+              font={font}
             />
           ) : null}
         </Sequence>
@@ -768,6 +776,7 @@ export const Template = ({
           enterFrames={wordEnterFrames}
           underline={captionUnderline}
           revealShare={wordRevealShare}
+          font={font}
         />
       ) : null}
 

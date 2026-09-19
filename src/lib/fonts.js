@@ -19,6 +19,87 @@ export const FONT_WEIGHT_MEDIUM = 500;
  */
 const FALLBACK = `"Noto Naskh Arabic", "Amiri", "Times New Roman", serif`;
 export const FONT_STACK = `"${FONT_FAMILY}", ${FALLBACK}`;
+
+/**
+ * أساليب الخط المتاحة للقوالب.
+ *
+ * كلها ملفات محلية في public/fonts تُحمّل بلا أي طلب شبكة، فالمظهر واحد على
+ * كل جهاز وفي كل مسار رندر. ولهذا لا نستعمل خطوط الويب من نطاق خارجي: سياسة
+ * الأمان في الصفحة المنشورة تمنع الاتصال بغير أصلها، فيسقط الخط على البديل
+ * بصمت وتنزاح القياسات.
+ *
+ * وزنان لكل أسلوب لا أكثر — عريض للكلمة النشطة وأخفّ لما حولها — وهما ما
+ * تستعمله القوالب. والوزنان يختلفان بين العائلات: ما ليس فيه 900 يُعطى 700،
+ * لأن طلب وزن غير موجود يجعل المتصفح يزيّف السماكة فيخرج الحرف مشوّهاً.
+ *
+ * ثمانية أولاً لأنه خط التصميم الأصلي، وملفاه خارج المستودع (رخصته تمنع
+ * إعادة الاستضافة). فإن غابا سقط هذا الأسلوب وحده على البديل، وبقيت البقية
+ * سليمة — وهي مرخّصة OFL ومرفوعة مع المشروع.
+ */
+export const FONT_STYLES = [
+  {
+    id: "thmanyah",
+    label: "ثمانية — سيريف عريض",
+    family: FONT_FAMILY,
+    heavy: FONT_WEIGHT_BLACK,
+    medium: FONT_WEIGHT_MEDIUM,
+    files: [
+      ["thmanyah-serif-display-Black.woff2", FONT_WEIGHT_BLACK],
+      ["thmanyah-serif-display-Medium.woff2", FONT_WEIGHT_MEDIUM],
+    ],
+  },
+  {
+    id: "cairo",
+    label: "القاهرة — سانس عصري",
+    family: "Cairo",
+    heavy: 900,
+    medium: 500,
+    files: [
+      ["cairo-900.woff2", 900],
+      ["cairo-500.woff2", 500],
+    ],
+  },
+  {
+    id: "tajawal",
+    label: "تجوّال — سانس هندسي",
+    family: "Tajawal",
+    heavy: 900,
+    medium: 500,
+    files: [
+      ["tajawal-900.woff2", 900],
+      ["tajawal-500.woff2", 500],
+    ],
+  },
+  {
+    id: "reem-kufi",
+    label: "ريم كوفي — كوفي حديث",
+    family: "Reem Kufi",
+    heavy: 700,
+    medium: 400,
+    files: [
+      ["reem-kufi-700.woff2", 700],
+      ["reem-kufi-400.woff2", 400],
+    ],
+  },
+  {
+    id: "amiri",
+    label: "أميري — نسخ كلاسيكي",
+    family: "Amiri",
+    heavy: 700,
+    medium: 400,
+    files: [
+      ["amiri-700.woff2", 700],
+      ["amiri-400.woff2", 400],
+    ],
+  },
+].map((style) => ({ ...style, stack: `"${style.family}", ${FALLBACK}` }));
+
+export const FONT_STYLE_IDS = FONT_STYLES.map((style) => style.id);
+
+const STYLE_BY_ID = new Map(FONT_STYLES.map((style) => [style.id, style]));
+
+/** الأسلوب بمعرّفه، وثمانية لأي معرّف مجهول — فلا يسقط القالب بقيمة قديمة. */
+export const fontStyleOf = (id) => STYLE_BY_ID.get(id) ?? FONT_STYLES[0];
 /**
  * الوحدة تُستورَد أيضاً في سياق Node (سكربتات السجلّ وأدوات سطر الأوامر)،
  * حيث لا DOM ولا خادم يخدم public. التحميل هناك بلا معنى ويخرج ضجيجاً
@@ -66,32 +147,54 @@ const readFontBytes = async (url) => {
   return response.arrayBuffer();
 };
 
-const loadLocalFont = async (file, weight) => {
+const loadLocalFont = async (family, file, weight) => {
   const url = assetUrl(staticFile(`fonts/${file}`));
-  const face = new FontFace(FONT_FAMILY, await readFontBytes(url), {
+  const face = new FontFace(family, await readFontBytes(url), {
     weight: String(weight),
   });
   await face.load();
   document.fonts.add(face);
 };
 
-/** يُحلّ إلى true إذا حُمّل خط ثمانية فعلاً، و false إذا سقطنا على البديل. */
+/**
+ * كل الأساليب تُحمّل دفعة واحدة عند الإقلاع.
+ *
+ * التحميل عند الاختيار كان أخفّ، لكنه يفتح ثغرة: القوالب تقيس عرض النص
+ * بـ`measureText` أثناء الرسم، فلو لم يكن الخط المختار جاهزاً لحظتها قِيس
+ * بالخط البديل وخرج الضبط منزاحاً. والحِمل هنا محلي لا شبكي — الملفات مضمّنة
+ * في الصفحة أصلاً — فالثمن أجزاء من الثانية مرة واحدة.
+ *
+ * وكل أسلوب يُنتظر على حدة: سقوط عائلة لا يُسقط البقية.
+ */
+const loadStyle = async (style) => {
+  await Promise.all(
+    style.files.map(([file, weight]) =>
+      loadLocalFont(style.family, file, weight),
+    ),
+  );
+  return style.id;
+};
+
+/** معرّفات الأساليب التي حُمّلت فعلاً؛ فارغة خارج المتصفح. */
 export const fontsReady = !inBrowser
-  ? Promise.resolve(false)
-  : Promise.all([
-      loadLocalFont("thmanyah-serif-display-Black.woff2", FONT_WEIGHT_BLACK),
-      loadLocalFont("thmanyah-serif-display-Medium.woff2", FONT_WEIGHT_MEDIUM),
-    ])
-      .then(() => true)
-      .catch((err) => {
-        // نكمل الرندر بالخط البديل بدل تعليق العملية، مع تحذير واضح في السجل
-        // لأن القياسات ستختلف عن التصميم الأصلي فتنزاح المواضع.
-        // eslint-disable-next-line no-console
-        console.warn(
-          "تعذّر تحميل خط ثمانية، سيُستخدم خط بديل والضبط سيختلف عن التصميم الأصلي.",
-          err,
-        );
-        return false;
+  ? Promise.resolve([])
+  : Promise.allSettled(FONT_STYLES.map(loadStyle))
+      .then((results) => {
+        const loaded = [];
+        results.forEach((result, index) => {
+          if (result.status === "fulfilled") {
+            loaded.push(result.value);
+            return;
+          }
+          // نكمل الرندر بالخط البديل بدل تعليق العملية، مع تحذير واضح في
+          // السجل لأن القياسات ستختلف عن التصميم الأصلي فتنزاح المواضع.
+          // eslint-disable-next-line no-console
+          console.warn(
+            `تعذّر تحميل خط «${FONT_STYLES[index].label}»، سيُستخدم خط بديل والضبط سيختلف عن التصميم الأصلي.`,
+            result.reason,
+          );
+        });
+        return loaded;
       })
       .then((loaded) => {
         if (fontHandle !== null) {

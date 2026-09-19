@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 import { contentDurationInFrames } from "../../lib/duration.js";
+import { FONT_STYLES, FONT_STYLE_IDS } from "../../lib/fonts.js";
 
 /**
  * ريل كلوفا الكريمي — مقاس من الفيديو المرجعي (1080×1920).
@@ -86,6 +87,17 @@ export const templateSchema = z.object({
   echoTextColor: zColor().describe("لون النص داخل البطاقة الملوّنة"),
 
   /* ---------------------------------------------------------- المحتوى */
+  /**
+   * أسلوب الخط يغيّر شكل الكابشن كله — الكلمات والمشاهد الضخمة والبطاقة —
+   * لأن القالب عائلةٌ واحدة بوزنين. والقياسات تتبع الأسلوب تلقائياً: الحجم
+   * يُلائَم بقياس فعلي للنص، فتغيير الخط لا يُخرج السطر عن حدّه.
+   */
+  fontStyle: z
+    .enum(FONT_STYLE_IDS)
+    .describe("أسلوب الخط — يسري على الكابشن والكلمات الضخمة والبطاقة الملوّنة")
+    .meta({
+      labels: Object.fromEntries(FONT_STYLES.map((s) => [s.id, s.label])),
+    }),
   headline: z.string().max(60).describe("النص الافتراضي لمشهدَي stack و echo"),
   logo: z
     .string()
@@ -110,7 +122,10 @@ export const templateSchema = z.object({
   media: z.string().nullable().optional().describe("مقطع أو صورة داخل البطاقة"),
   mediaFit: z
     .enum(["cover", "contain"])
-    .describe("cover يملأ البطاقة ويقصّ، contain يُظهر المقطع كاملاً"),
+    .describe("cover يملأ البطاقة ويقصّ، contain يُظهر المقطع كاملاً")
+    .meta({
+      labels: { cover: "يملأ البطاقة ويقصّ", contain: "يُظهر المقطع كاملاً" },
+    }),
   mediaMuted: z.boolean().describe("كتم صوت المقطع المرفق داخل البطاقة"),
   captions: z.array(captionCueSchema).describe("أسطر الكابشن — عادةً من SRT"),
 
@@ -274,6 +289,7 @@ export const defaultProps = {
   echoCardColor: "#B98F7C",
   echoTextColor: "#F1E7DA",
 
+  fontStyle: "thmanyah",
   headline: "وسؤالنا لك ؟",
   logo: "klova/logo.png",
   logoWidthRatio: 0.146,

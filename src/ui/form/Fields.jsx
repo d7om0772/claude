@@ -106,7 +106,7 @@ const EnumField = ({ field, value, set }) => (
     >
       {(field.options ?? []).map((o) => (
         <option key={o} value={o}>
-          {o}
+          {field.optionLabels?.[o] ?? o}
         </option>
       ))}
     </select>
