@@ -68,6 +68,34 @@ export const wordOnsetsMs = (cue, revealShare) => {
   );
 };
 
+/**
+ * أطول فجوة تُجسَر بين سطرٍ والذي يليه، بالملي ثانية.
+ *
+ * ما دونها سكوتٌ عارض من تقطيع الملف لا صمتٌ مقصود، فبقاء السطر أهدأ للعين
+ * من وميض فراغ. وما فوقها صمتٌ في السكربت نفسه، فيُترك فارغاً كما أُريد له.
+ */
+const CAPTION_BRIDGE_MS = 500;
+
+/** مدّة ظهور الكلمة في المشهد الضخم — تطابق الحركة داخل StackScene */
+const STACK_ENTER_FRAMES = 8;
+
+/**
+ * لحظات الكلمات محوَّلةً إلى فريمات داخل المشهد.
+ *
+ * الكلمة الأولى تُرجَع إلى ما قبل بداية المشهد بمقدار حركتها، فتكون مكتملة
+ * الظهور عند أول فريم منه. وبدون ذلك يبدأ المشهد والكلمة شفافة تماماً —
+ * وبطاقة اللقطة السابقة قد اختفت — فيومض الكادر فارغاً ثلاثة فريمات.
+ * قياس فيديو مرندَر أظهرها عند الثانية 17.40.
+ *
+ * والإرجاع بصريٌّ فقط: النقرات تقرأ اللحظات الأصلية، فلا تسبق كلمتها.
+ * ولا يُرجَع إلا ما بدأ مع المشهد فعلاً — كلمةٌ أُريد لها التأخّر تتأخّر.
+ */
+const stackAppearFrames = (onsets, fromFrame, fps) =>
+  onsets.map((ms, i) => {
+    const local = (ms / 1000) * fps - fromFrame;
+    return i === 0 && local < STACK_ENTER_FRAMES ? -STACK_ENTER_FRAMES : local;
+  });
+
 /** أكبر حجم خط لا يتجاوز به عددُ الأسطر الارتفاعَ المتاح. */
 const fitToHeight = (fontSize, lines, lineHeight, availablePx) => {
   if (lines <= 0 || availablePx <= 0) return fontSize;
@@ -109,12 +137,21 @@ const CaptionWord = ({
   underlineOffset,
   fontSize,
   font,
+  noFade,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const local = frame - appearFrame;
+  /**
+   * الكلمة الأولى في السطر تظهر بلا تدرّج.
+   *
+   * السطر السابق يختفي عند بدء هذا، فلو تدرّجت أولى كلماته من الشفافية بقي
+   * الكادر بلا نصّ فريماً كاملاً — وهو الوميض الذي قِيس في فيديو مرندَر عند
+   * الثواني 4.53 و10.50 و14.17. وتبديل السطر قطعٌ لا تدرّج، فالظهور الفوري
+   * أصدق له. أما بقية الكلمات فتتدرّج كما هي، وخطّها الذهبي يمسح في الحالين.
+   */
   const progress =
-    enterFrames <= 0
+    noFade || enterFrames <= 0
       ? local >= 0
         ? 1
         : 0
@@ -219,6 +256,7 @@ const CaptionLayer = ({
           underlineOffset={underlineOffset}
           fontSize={fontSize}
           font={font}
+          noFade={i === 0}
         />
       ))}
     </div>
@@ -389,6 +427,15 @@ const EchoScene = ({
     config: { damping: 200, mass: 0.7 },
   });
   /**
+   * البطاقة حاضرة من أول فريم، والحركة انزلاقٌ لا ظهور.
+   *
+   * لونها قريب من الخلفية، فبدايةُ الشفافية من الصفر تجعل أول خمسة فريمات
+   * كادراً فارغاً — قِيست في رندر القالب الافتراضي عند 16.87 — لأن اللقطة
+   * السابقة تكون قد اختفت. وتبديل اللقطة قطعٌ، فالحضور الفوري أصدق له،
+   * ويبقى الانزلاق الذي يعطيها حياتها.
+   */
+  const appear = Math.min(1, 0.35 + enter * 0.65);
+  /**
    * السطر مكرَّر داخل بطاقة محدودة: نصٌّ أطول من المرجع كان يخرج من طرفيها.
    * يُصغَّر حتى يسع عرضَ البطاقة (بهامش) وطولَ تكراراته، ولا يكبر عن المقاس.
    */
@@ -428,7 +475,7 @@ const EchoScene = ({
           fontSize: fitted,
           fontWeight: font.heavy,
           color: colors.echoText,
-          opacity: enter,
+          opacity: appear,
           transform: `translateY(${(1 - enter) * box.height * 0.12}px)`,
         }}
       >
@@ -611,6 +658,37 @@ export const Template = ({
     return owned;
   }, [sceneTexts]);
 
+  /**
+   * جسر الفجوات القصيرة بين الأسطر.
+   *
+   * السطر كان يختفي عند `endMs` بالضبط، فإن تأخّر الذي بعده ولو أجزاءً من
+   * الثانية بقيت الشاشة بلا كابشن. وقياسُ فيديو مرندَر أظهر أربع ومضاتٍ
+   * كهذه في إحدى وعشرين ثانية — فريمٌ واحد يومض فيه الكادر فارغاً ثم يعود،
+   * وهو ما يُرى ارتجافاً لا انتقالاً.
+   *
+   * فيمتدّ السطر إلى بداية الذي يليه ما دامت الفجوة قصيرة. والقيد ثلاثي:
+   * لا يتجاوز بداية السطر التالي (وإلا ظهر سطران)، ولا نهاية لقطته (وإلا
+   * تسرّب كابشنٌ فوق الكلمات الضخمة)، ولا الفجوةَ المسموحة — فالسكوت
+   * الطويل بين جملتين مقصودٌ في السكربت ولا يُملأ.
+   */
+  const displayEndMs = useMemo(() => {
+    const sorted = [...captions].sort((a, b) => a.startMs - b.startMs);
+    const ends = new Map();
+    sorted.forEach((cue, i) => {
+      const next = sorted[i + 1];
+      const own = timeline.find(
+        ({ from, span }) =>
+          cue.startMs >= (from / fps) * 1000 &&
+          cue.startMs < ((from + span) / fps) * 1000,
+      );
+      const limits = [cue.endMs + CAPTION_BRIDGE_MS];
+      if (next) limits.push(next.startMs);
+      if (own) limits.push(((own.from + own.span) / fps) * 1000);
+      ends.set(cue, Math.max(cue.endMs, Math.min(...limits)));
+    });
+    return (cue) => ends.get(cue) ?? cue.endMs;
+  }, [captions, timeline, fps]);
+
   /* أسلوب الخط يُحلّ مرة واحدة: العائلة ووزناها معاً، فلا يتفرّق الاختيار
      على المشاهد ولا يُنسى وزنٌ في أحدها. ويُحلّ هنا قبل كل ما يقيس النص:
      ملاءمة الحجم تقيس بالعائلة، فلا يصحّ أن تسبق تعريفها */
@@ -637,7 +715,9 @@ export const Template = ({
     ? undefined
     : captions.reduce((best, cue) => {
         if (sceneOwnedCues.has(cue)) return best;
-        if (currentMs < cue.startMs || currentMs >= cue.endMs) return best;
+        if (currentMs < cue.startMs || currentMs >= displayEndMs(cue)) {
+          return best;
+        }
         return best === undefined || cue.startMs >= best.startMs ? cue : best;
       }, undefined);
 
@@ -790,8 +870,10 @@ export const Template = ({
             <StackScene
               text={sceneTexts.get(index)?.text ?? headline}
               // لحظات الكلمات مطلقة، والمشهد داخل Sequence فزمنه محلّي
-              appearFrames={(sceneTexts.get(index)?.onsets ?? []).map(
-                (ms) => (ms / 1000) * fps - from,
+              appearFrames={stackAppearFrames(
+                sceneTexts.get(index)?.onsets ?? [],
+                from,
+                fps,
               )}
               colors={colors}
               fontSize={width * stackFontRatio}

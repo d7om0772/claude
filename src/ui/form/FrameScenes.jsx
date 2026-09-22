@@ -368,6 +368,19 @@ export const FrameScenes = ({
     const out = scenes.map((scene) => ({ ...scene }));
     let cursor = 0;
     for (let i = 0; i < out.length - 1; i += 1) {
+      /**
+       * مدّة مكتوبة تسبق كل اشتقاق.
+       *
+       * تُستعمل كما هي ويمضي المؤشّر بها، فتمتصّ اللقطةُ التالية الفرقَ من
+       * تلقاء نفسها — مدّتها مسافةٌ من مؤشّرها إلى كلمتها الأولى، والكلمة لم
+       * تتحرّك. فالحدّ وحده يزحف، والمجموع ثابت، والكلام على صوته.
+       */
+      const written = out[i].durationOverrideInFrames;
+      if (written) {
+        out[i].durationInFrames = Math.max(1, Math.round(written));
+        cursor += out[i].durationInFrames;
+        continue;
+      }
       if (!firstWordMs.has(i)) {
         cursor += out[i].durationInFrames;
         continue;
@@ -877,11 +890,60 @@ export const FrameScenes = ({
                       : "وقت اللقطة تلقائي: يبدأ مع أول كلمة فيها وينتهي قبل أول كلمة في التي تليها بفريم"
                 }
               >
-                وقت اللقطة تلقائي — من الفريم {t.fromFrame} إلى{" "}
-                {t.isLast ? "نهاية الفيديو" : t.toFrame - 1} (
-                {t.toFrame - t.fromFrame} فريم)
+                من الفريم {t.fromFrame} إلى{" "}
+                {t.isLast ? "نهاية الفيديو" : t.toFrame - 1}
               </span>
             </div>
+
+            {/**
+             * مدّة اللقطة — تلقائية، وتُكتب يدوياً عند الحاجة.
+             *
+             * الكتابة تحرّك الحدّ مع اللقطة التالية وحدها: مجموع الفيديو لا
+             * يتغيّر، وتوقيت الكلمات لا يُمسّ، فيبقى الكلام على صوته. وقد
+             * ينتقل سطر بين اللقطتين تبعاً للحدّ الجديد — وهو ما يُرى فوراً
+             * في قائمة الأسطر تحت كل لقطة.
+             *
+             * وآخر لقطة لا تُكتب لها مدّة: هي تتمدّد لتغطية ما بقي من الصوت.
+             */}
+            {t.isLast ? null : (
+              <div className="scene-row">
+                <span className="file-empty">مدّة اللقطة</span>
+                <input
+                  type="number"
+                  className="ms-input"
+                  dir="ltr"
+                  step={1}
+                  min={1}
+                  value={t.toFrame - t.fromFrame}
+                  title="مدّة اللقطة بالفريمات. تغييرها يحرّك الحدّ مع اللقطة التالية فقط — والكلمات لا تتحرّك"
+                  onChange={(e) => {
+                    const frames = Math.max(
+                      1,
+                      Math.round(Number(e.target.value)),
+                    );
+                    if (!Number.isFinite(frames)) return;
+                    setScene(index, { durationOverrideInFrames: frames });
+                  }}
+                />
+                <span className="file-empty">
+                  فريم · {((t.toFrame - t.fromFrame) / fps).toFixed(2)} ثانية
+                </span>
+                {scene.durationOverrideInFrames ? (
+                  <button
+                    type="button"
+                    className="btn ghost tiny"
+                    title="إرجاع المدّة إلى الاشتقاق التلقائي من الكلمات"
+                    onClick={() =>
+                      setScene(index, { durationOverrideInFrames: null })
+                    }
+                  >
+                    ↺ تلقائي
+                  </button>
+                ) : (
+                  <span className="file-empty">— تلقائي</span>
+                )}
+              </div>
+            )}
 
             {/**
              * ستايل كشف الكلمات لهذه اللقطة.

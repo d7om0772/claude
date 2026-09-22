@@ -3,9 +3,16 @@ out/
 .DS_Store
 *.log
 
+# خطوط ثمانية وحدها مستثناة — رخصتها تمنع إعادة الاستضافة العلنية.
+# أما خطوط OFL فتُرفع مع المستودع: رخصتها تجيز ذلك، وبدونها يسقط
+# اختيار أسلوب الخط على البديل في أي نسخة جديدة من المشروع.
 public/fonts/*.woff2
 public/fonts/*.ttf
 public/fonts/*.otf
+!public/fonts/cairo-*.woff2
+!public/fonts/tajawal-*.woff2
+!public/fonts/reem-kufi-*.woff2
+!public/fonts/amiri-*.woff2
 public/media/*
 !public/media/.gitkeep
 
