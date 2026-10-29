@@ -965,6 +965,409 @@ main:focus-visible {
   color: var(--text-2);
 }
 
+/* ---------- سجل الشراء ---------- */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+.btn-primary:hover {
+  background: var(--accent-strong);
+}
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary .ic {
+  stroke-width: 2.4;
+}
+
+.btn-ghost {
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-2);
+  font-weight: 700;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-link {
+  border: 0;
+  background: none;
+  padding: 6px 4px;
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.btn-link.danger {
+  color: var(--down);
+}
+
+.btn-record {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 12px;
+}
+
+/* زر الإضافة: في الرأس على الشاشات الكبيرة، وزر عائم دائري في الجوال. */
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 15px;
+}
+.add-btn .ic {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.6;
+}
+@media (max-width: 899px) {
+  .add-btn {
+    position: fixed;
+    z-index: 25;
+    inset-inline-end: 16px;
+    bottom: calc(var(--bottomnav-h) + env(safe-area-inset-bottom) + 14px);
+    width: 58px;
+    height: 58px;
+    padding: 0;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+  .add-btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .add-btn .ic {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.pc-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+  padding: 16px;
+}
+.pc-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+.pc-summary b {
+  font-size: 20px;
+}
+
+.pc-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.pc {
+  padding: 16px;
+}
+.pc-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+.pc-head .asset-ic {
+  width: 40px;
+  height: 36px;
+}
+.pc-title h2 {
+  font-size: 17px;
+  font-weight: 700;
+}
+.pc-date {
+  font-size: 13px;
+  color: var(--muted);
+}
+.pc-pl {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 16px;
+}
+.pc-ratio {
+  font-size: 13px;
+}
+
+.pc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.pc-grid dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+.pc-grid dd {
+  margin: 0;
+  font-weight: 700;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 6px;
+}
+
+.pc-note {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-size: 14px;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+
+.pc-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.pc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-2);
+}
+.pc-empty > .ic {
+  width: 40px;
+  height: 40px;
+  color: var(--accent);
+}
+
+.pc-backup {
+  margin-top: 14px;
+  padding: 16px;
+}
+.pc-backup h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.pc-backup p.muted {
+  font-size: 14px;
+}
+.pc-backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.pc-backup .field-help {
+  color: var(--text-2);
+}
+
+/* نافذة الإضافة: تظهر من الأسفل في الجوال، وفي الوسط على الشاشات الكبيرة. */
+dialog.sheet {
+  width: min(520px, calc(100% - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--text);
+  overflow: auto;
+}
+dialog.sheet::backdrop {
+  background: rgba(5, 6, 8, 0.72);
+}
+@media (max-width: 599px) {
+  dialog.sheet {
+    width: 100%;
+    max-width: 100%;
+    margin: auto 0 0;
+    border-radius: 18px 18px 0 0;
+    border-bottom: 0;
+    max-height: calc(100dvh - 32px);
+  }
+}
+
+.sheet-in {
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.sheet-head h2 {
+  font-size: 19px;
+  font-weight: 700;
+}
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+
+.pd-block {
+  margin-bottom: 14px;
+}
+.pd-block[hidden],
+.pd-block > [hidden],
+[data-pd-unit-wrap][hidden],
+[data-pd-unit-static][hidden] {
+  display: none;
+}
+
+.pd-assets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+}
+.pd-asset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 8px;
+}
+.pd-ic {
+  width: 22px;
+  height: 20px;
+  flex: none;
+}
+
+.pd-price {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  font-size: 14px;
+}
+.pd-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+.pd-row b {
+  font-size: 17px;
+}
+.pd-row.muted {
+  font-size: 12px;
+}
+.pd-total {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
+}
+.pd-total b {
+  color: var(--accent);
+  font-size: 19px;
+}
+.warn {
+  margin-top: 6px;
+  color: var(--warn);
+  font-size: 13px;
+}
+
+.field-help {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.field-text {
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.sheet-actions {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+}
+
+.toast {
+  position: fixed;
+  z-index: 40;
+  inset-inline: 16px;
+  bottom: calc(var(--bottomnav-h) + env(safe-area-inset-bottom) + 70px);
+  max-width: 480px;
+  margin-inline: auto;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(63, 208, 138, 0.5);
+  background: #13241c;
+  color: var(--text);
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.toast[hidden] {
+  display: none;
+}
+.toast a {
+  color: var(--up);
+  font-weight: 700;
+}
+@media (min-width: 900px) {
+  .toast {
+    bottom: 24px;
+  }
+}
+
+@media (min-width: 720px) {
+  .pc-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 /* ---------- عناصر مساعدة ---------- */
 
 .btn {
@@ -1018,7 +1421,7 @@ main:focus-visible {
   bottom: 0;
   z-index: 30;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   height: calc(var(--bottomnav-h) + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
   background: #15181e;

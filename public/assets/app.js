@@ -22,6 +22,7 @@ import {
   unitPriceUsd,
   usdPerGram,
 } from './calc.js';
+import { PURCHASES_KEY, createPurchases } from './purchases.js';
 
 const ASSETS = {
   gold: { name: 'الذهب', kind: 'metal', icon: 'i-gold' },
@@ -137,6 +138,26 @@ function displayUsd(id, rawUsd, karat = 24) {
   return ASSETS[id].kind === 'metal' ? usdPerGram(rawUsd) * (id === 'gold' ? karat / 24 : 1) : rawUsd;
 }
 
+const purchases = createPurchases({
+  ASSETS,
+  ORDER,
+  view: $view,
+  asset,
+  iconHTML,
+  moneyHTML,
+  changeHTML,
+  placeholder,
+  inCurrency,
+  curLabel,
+  rate,
+  currency: () => prefs.currency,
+  karat: () => prefs.karat,
+  lastAsset: () => prefs.lastAsset,
+  offline: () => state.offline,
+  onSaved: () => state.view?.update(),
+  onPurchasesPage: () => parseRoute().page === 'purchases',
+});
+
 // ---------- حالة الاتصال والتنبيه ----------
 
 function renderStatus() {
@@ -200,6 +221,7 @@ async function refreshPrices() {
     }
     renderStatus();
     state.view?.update();
+    purchases.refreshDialog();
   })();
   return state.inflight;
 }
@@ -246,6 +268,12 @@ function homeHTML() {
     }</b></div>`,
   ).join('');
   const nisab = gold ? moneyHTML(usdPerGram(gold.price) * NISAB_GOLD_GRAMS) : '—';
+  const log = purchases.summary();
+  const logText = log
+    ? `${purchases.countText(log.count)} · الربح أو الخسارة: <span class="chg ${
+        log.pl == null ? 'flat' : log.pl > 0 ? 'up' : log.pl < 0 ? 'down' : 'flat'
+      }">${purchases.signedMoneyHTML(log.pl)}</span>`
+    : 'سجّل مشترياتك ليُحفظ سعر الشراء تلقائياً، وارجع لتعرف قيمتها الآن.';
   return `<div class="page-head"><h1 class="page-title">الأسعار الآن</h1></div>
     <div class="cards">${ORDER.map(assetCardHTML).join('')}</div>
     <section class="card karats" aria-labelledby="karats-h">
@@ -256,6 +284,11 @@ function homeHTML() {
     <a class="card cta" href="#/zakat">
       <svg class="ic" aria-hidden="true"><use href="#i-calc"/></svg>
       <span class="cta-text"><b>حاسبة الزكاة</b><span class="muted">قيمة نصاب الذهب اليوم (<span class="num">85</span> جرام): ${nisab}</span></span>
+      <svg class="ic go" aria-hidden="true"><use href="#i-left"/></svg>
+    </a>
+    <a class="card cta" href="#/purchases">
+      <svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>
+      <span class="cta-text"><b>سجل الشراء</b><span class="muted">${logText}</span></span>
       <svg class="ic go" aria-hidden="true"><use href="#i-left"/></svg>
     </a>`;
 }
@@ -367,6 +400,7 @@ function AssetView(id) {
             <output class="total-value" data-total for="calc-qty calc-unit" aria-live="polite"></output>
           </div>
           <p class="unit-price"><span data-unit-label></span><b data-unit-price></b></p>
+          <button type="button" class="btn btn-record" data-record><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg>سجّلها كعملية شراء</button>
         </div>
       </div>
     </section>`;
@@ -519,6 +553,8 @@ function AssetView(id) {
       setQty(formatQuantity(Number(next.toFixed(maxDecimals)), maxDecimals));
     } else if (t.hasAttribute('data-retry')) {
       loadChart();
+    } else if (t.hasAttribute('data-record')) {
+      purchases.openDialog({ asset: id, karat: karat(), unit: calc.unit, qty: calc.qty });
     }
   }
 
@@ -690,6 +726,7 @@ function parseRoute() {
   const [page, arg] = location.hash.replace(/^#\/?/, '').split('/');
   if (page === 'asset' && Object.hasOwn(ASSETS, arg ?? '')) return { page: 'asset', id: arg };
   if (page === 'zakat') return { page: 'zakat' };
+  if (page === 'purchases') return { page: 'purchases' };
   return { page: 'home' };
 }
 
@@ -708,7 +745,8 @@ function render(firstLoad = false) {
     prefs.lastAsset = route.id;
     savePrefs();
   }
-  state.view = route.page === 'asset' ? AssetView(route.id) : route.page === 'zakat' ? ZakatView() : HomeView();
+  const views = { asset: () => AssetView(route.id), zakat: ZakatView, purchases: purchases.PurchasesView, home: HomeView };
+  state.view = views[route.page]();
   state.view.mount();
   document.title = state.view.title;
   updateNav(route);
@@ -731,6 +769,11 @@ for (const b of document.querySelectorAll('[data-currency]')) {
 }
 
 window.addEventListener('hashchange', () => render());
+
+// مزامنة سجل الشراء إذا عُدّل في تبويب آخر.
+window.addEventListener('storage', (e) => {
+  if (e.key === PURCHASES_KEY) state.view?.update();
+});
 
 // عرض آخر أسعار محفوظة فوراً (إن وُجدت) ثم جلب الجديد.
 const cached = storage.get(LS_PRICES);
