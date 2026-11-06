@@ -4,10 +4,7 @@
   <circle cx="540" cy="470" r="440" fill="url(#bgGlow)"/>
   
   <g>
-    <circle cx="580" cy="400" r="235" fill="none" stroke="url(#ga)" stroke-width="25.85"
-      stroke-dasharray="1210.769808693506 265.7787384936965" stroke-linecap="round" transform="rotate(-70 580 400)"/>
-    <path d="M 668.03 182.11 L 803.25 160.29999999999998 L 880.8 160.29999999999998" fill="none"
-      stroke="url(#ga)" stroke-width="25.85" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="580" cy="400" r="235" fill="none" stroke="url(#ga)" stroke-width="25.85"/>
     <path d="M 636.40 400.00 Q 698.31 430.60 679.62 559.43
       A 188 188 0 0 1 634.97 579.79 Q 675.10 482.96 634.48 414.60 Z" fill="url(#ga)"/><path d="M 623.20 436.25 Q 650.96 499.48 553.84 586.17
       A 188 188 0 0 1 506.54 573.05 Q 599.52 524.68 612.35 446.20 Z" fill="url(#ga)"/><path d="M 589.79 455.54 Q 570.41 521.82 440.29 525.80

@@ -3,10 +3,7 @@
   <rect width="1600" height="600" fill="#05070c"/>
   
   <g>
-    <circle cx="1260" cy="300" r="180" fill="none" stroke="url(#gb)" stroke-width="19.8"
-      stroke-dasharray="927.3981513397069 203.57520395261858" stroke-linecap="round" transform="rotate(-70 1260 300)"/>
-    <path d="M 1327.43 133.11 L 1431 116.4 L 1490.4 116.4" fill="none"
-      stroke="url(#gb)" stroke-width="19.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="1260" cy="300" r="180" fill="none" stroke="url(#gb)" stroke-width="19.8"/>
     <path d="M 1303.20 300.00 Q 1350.62 323.44 1336.31 422.12
       A 144 144 0 0 1 1302.10 437.71 Q 1333.55 364.16 1301.73 311.18 Z" fill="url(#gb)"/><path d="M 1293.09 327.77 Q 1314.35 376.20 1239.96 442.60
       A 144 144 0 0 1 1203.73 432.55 Q 1275.10 396.42 1284.78 335.39 Z" fill="url(#gb)"/><path d="M 1267.50 342.54 Q 1252.66 393.31 1152.99 396.35

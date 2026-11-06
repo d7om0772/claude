@@ -25,10 +25,7 @@ function turbine(cx, cy, R, id) {
   // speed arcs on the housing (gap at top-right = turbo outlet feel)
   return `
   <g>
-    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="url(#g${id})" stroke-width="${R * 0.11}"
-      stroke-dasharray="${2 * Math.PI * R * 0.82} ${2 * Math.PI * R * 0.18}" stroke-linecap="round" transform="rotate(-70 ${cx} ${cy})"/>
-    <path d="M ${P(cx, cy, R, -68)} L ${cx + R * 0.95} ${cy - R * 1.02} L ${cx + R * 1.28} ${cy - R * 1.02}" fill="none"
-      stroke="url(#g${id})" stroke-width="${R * 0.11}" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="url(#g${id})" stroke-width="${R * 0.11}"/>
     ${blades}
     <circle cx="${cx}" cy="${cy}" r="${r1 * 1.05}" fill="${BG}" stroke="url(#g${id})" stroke-width="${R * 0.06}"/>
     <circle cx="${cx}" cy="${cy}" r="${r1 * 0.38}" fill="${G}"/>
