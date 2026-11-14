@@ -1,0 +1,5 @@
+# regenerable audio intermediates
+audio/premix.wav
+audio/stem_vo.wav
+audio/stem_sfx.wav
+audio/final_mix.wav
