@@ -97,5 +97,62 @@
   "use": "قبل كشف رقم/نتيجة",
   "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "gs_swipe2": {
+  "file": "studio/sfx/gs_swipe2.wav",
+  "duration_s": 0.992,
+  "peak_dbfs": -3.0,
+  "description": "Swipe 2 (Gravity Sound)",
+  "use": "نزول القطعة، نبضة الكيبل، تبديل سطح المكتب، لفة الكيس",
+  "pack_name": "Swipe 2",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Swipe_2_%28Gravity_Sound%29.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710201",
+  "attribution": "\"Swipe 2 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 1,
+   "melody_warning": false
+  }
+ },
+ "gs_swipe_grass2": {
+  "file": "studio/sfx/gs_swipe_grass2.wav",
+  "duration_s": 0.999,
+  "peak_dbfs": -3.0,
+  "description": "Swipe grass 2 (Gravity Sound)",
+  "use": "لفة/انزلاق الكاميرا، تبديل الأقسام، حركة النافذة",
+  "pack_name": "Swipe grass 2",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Swipe_grass_2_%28Gravity_Sound%29.wav",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85709626",
+  "attribution": "\"Swipe grass 2 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 3,
+   "melody_warning": true
+  }
+ },
+ "gs_swipe_grass5": {
+  "file": "studio/sfx/gs_swipe_grass5.wav",
+  "duration_s": 1.0,
+  "peak_dbfs": -3.0,
+  "description": "Swipe grass 5 (Gravity Sound)",
+  "use": "تبديل الأقسام، المسح",
+  "pack_name": "Swipe grass 5",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Swipe_grass_5_%28Gravity_Sound%29.wav",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85709345",
+  "attribution": "\"Swipe grass 5 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 5,
+   "melody_warning": true
+  }
  }
 }

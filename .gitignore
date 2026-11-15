@@ -22,3 +22,8 @@ __pycache__/
 .DS_Store
 .env
 *.key
+
+# ملفات مؤقتة لتنزيل المؤثرات
+studio/sfx/*.src
+studio/sfx/*.tmp.wav
+studio/sfx/*.fix.wav

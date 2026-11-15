@@ -15,7 +15,7 @@ tools: Read, Write, Edit, Bash, Grep, Glob, ToolSearch, mcp__schedulin__list_soc
 1. اقرأ السكربت (`content/scripts/<ID>-*.md`: كابشن المنشور + الهاشتاقات) و`content/production/<ID>/upload.json` و`credits.md`.
 2. تأكد إن رابط Cloudinary يفتح (`curl -sI <url>` = 200).
 3. `create_media_from_url` بالرابط ← خذ `url` اللي يرجع (رابط مكتبة Schedulin). **لا تبني رابط بيدك.**
-4. **الكابشن:** كابشن المنشور + سطر فاضي + الهاشتاقات. لو `credits.md` فيه سطر إسناد CC BY أضفه قبل الهاشتاقات. ≤ 2200 حرف.
+4. **الكابشن:** كابشن المنشور + سطر فاضي + **سطر الإسناد** من `credits.md` (قسم "سطر الإسناد للوصف" — إلزامي لما يكون فيه مؤثرات CC BY) + الهاشتاقات. ≤ 2200 حرف.
 5. `create_post`:
    - `socialAccountId`، `action: "schedule"`، `scheduledAt`: ISO بتوقيت الرياض للموعد (مثل `2026-11-16T13:00:00+03:00`)، `caption`، `media: [{"url": <رابط Schedulin>}]`
    - `platformConfiguration`: `{"privacy_status": "PUBLIC_TO_EVERYONE", "allow_comment": true, "allow_duet": true, "allow_stitch": true, "is_ai_generated": true, "auto_add_music": false, "disclose_your_brand": false, "disclose_branded_content": false, "media": [{"url": <نفس الرابط>, "thumbnail_timestamp_ms": <cover_t × 1000>}]}`

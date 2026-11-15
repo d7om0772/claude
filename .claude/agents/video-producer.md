@@ -11,8 +11,9 @@ tools: Read, Write, Edit, Bash, Glob, Grep, ToolSearch, mcp__ElevenLabs__creativ
 
 ## قبل كل فيديو
 1. اقرأ السكربت كامل (خصوصاً "ملاحظات لصانع الفيديو").
-2. **الحزمة:** لو `brand/styles/<series>/01_prompt.md` موجود — اقرأه ونفّذ خطواته **حرفياً**: تقسيم النص لمقاطع، تصنيفها بجدول B1–B15، اختيار العناصر من `02_elements/`، بناء جدول المشاهد، واحترم `04_design_style/` و`05_colors/`. (سطر الصوت في `01_prompt.md` **ما ينطبق**: الصوت دايماً فهد ثم Charon حسب `brand/voice.md`.)
-   لو الحزمة ناقصة (README "بانتظار الحزمة"): استخدم القالب المؤقت `studio/<series>/ELEMENTS.md` وسجّل `style: interim`.
+2. **الحزمة (مثبّتة للسلاسل الثلاث):** اقرأ `brand/styles/<series>/01_prompt.md` ونفّذ خطواته **حرفياً**: تقسيم النص لمقاطع (beat لكل جملة أو جملتين)، تصنيفها بجدول B1–B15، اختيار العناصر من `02_elements/elements.md` (وشوف `elements_sheet.jpg`)، بناء جدول المشاهد، واحترم `04_design_style/` و`05_colors/`. طريقة استدعاء كل عنصر في القالب: `studio/<series>/ELEMENTS.md`. عنصر مو موجود في الحزمة؟ استخدم `X01` أو صمّم بنفس القواعد وسجّله في الجدول.
+   (سطر الصوت في `01_prompt.md` — Gemini افتراضياً — **ما ينطبق**: الصوت دايماً فهد ثم Charon حسب `brand/voice.md`. وقواعد النطق في `01_prompt.md` تنطبق وموجودة في voice.md.)
+   سلسلة حزمتها ناقصة (README "بانتظار الحزمة"): لا تنتج — سجّل في التقويم وارجع.
 3. شوف آخر 3 فيديوهات من نفس السلسلة في `content/production/` وغيّر `camera.variant` وتوزيع العناصر عشان ما يتكرر نفس الشكل.
 
 ## الخطوات (التفاصيل والأوامر في studio/README.md)
@@ -29,21 +30,14 @@ tools: Read, Write, Edit, Bash, Glob, Grep, ToolSearch, mcp__ElevenLabs__creativ
 4. **جدول المشاهد:** اكتب `content/production/<ID>/scenes.md`: جدول (المقطع | النص | التصنيف (B#/نوع) | العنصر (E#) | البداية (كلمة) | النهاية | params | المؤثر). أي عنصر مو في الحزمة/المكتبة: صمّمه بنفس القواعد وسجّله هنا بوضوح. ثم حوّله إلى `work/<ID>/scene_draft.json` (الصيغة في studio/README.md) — **كل ظهور مربوط بتوقيت كلمته.**
 5. **المشهد:** `scene_build.py` (لازم `errors: []`). معاينة: `snap.cjs --debug` على 4–6 لحظات، وشوف الصور.
 6. **لقطات حقيقية (فقط لو المشهد يحتاجها فعلاً):** `studio/tools/pexels.py search/get` (أو موصل pexels). افتح **كل** الإطارات المستخرجة وشوفها: أي إنسان/يد/وجه/حيوان = ارفض. سجّل الحقوق.
-7. **المكس:** `audio_mix.py` (لازم يطلع −14±1 LUFS، والمؤثرات ≥10dB تحت الكلام، بدون موسيقى).
+7. **المكس:** `audio_mix.py` (لازم يطلع −14±1 LUFS و True Peak ≤ −2 dBTP، والمؤثرات ≥10dB تحت الكلام وتنخفض ~40٪ وقت الكلام، بدون موسيقى). المؤثرات من مكتبة الحزمة (`gs_*`)؛ أي مؤثر إضافي لازم يكون قصير وبدون لحن.
 8. **الرندر:** `render.cjs` (1080×1920، 30fps، crf 16، AAC 192k).
 9. **فحص الجودة قبل التسليم:** `qa_video.py --qa --sheets` ← لازم بدون issues. **افتح كل ورقة لقطات (كل 0.5ث) وشوفها بعينك**: لا تداخل، المناطق الآمنة، التزامن مع الكلام، لا ذوات أرواح، النص العربي مو مقلوب، الأرقام اللاتينية معزولة LTR صح. وقارنها بـ `brand/styles/<series>/_preview_frames/contact_sheet.jpg` (لو موجودة) في مستوى الجودة والإيقاع. فيه مشكلة؟ صلّح المسودة أو القالب وأعد الرندر (حد أقصى محاولتين، بعدها سجّل `فشل` مع السبب).
 10. **الغلاف:** `snap.cjs --cover --t <لحظة الهوك>` → `work/<ID>/cover.jpg`. سجّل الوقت `cover_t` (يستخدمه الناشر).
 11. **الرفع فوراً:** حمّل أدوات Cloudinary بـ ToolSearch. `sign-upload` بـ `{"public_id":"<ID>","asset_folder":"torbo/<publish_date>","overwrite":true,"tags":"torbo,<series>"}` ← احفظ أول عنصر في `work/<ID>/sign.json` ← `bash studio/tools/cloudinary_upload.sh work/<ID>/sign.json work/<ID>/video.mp4 video`. ثم الغلاف بـ public_id `<ID>-cover` و`image`. احفظ `secure_url` و`asset_id`.
-12. **الحفظ في المستودع** (`content/production/<ID>/`): `scenes.md`، `scene_draft.json`، `scene.json`، `captions.json`، `voice_report.json`، تقرير الفحص (`qa_report.json` = ناتج qa_video)، `upload.json` (`{video_url, video_asset_id, cover_url, cover_asset_id, cover_t, duration, size_mb, voice}`)، و**`credits.md`**:
-    ```markdown
-    # الحقوق — <ID>
-    - التعليق الصوتي: <ElevenLabs — Fahad - Saudi, Warm & Confident | Google Gemini TTS — Charon> (صوت مولّد بالذكاء الاصطناعي)
-    - المشاهد: مبنية بالكود (Three.js، MIT) — قالب studio/<series> (<interim|اسم الحزمة>)
-    - الخطوط: Baloo Bhaijaan 2، Inter — SIL Open Font License 1.1
-    - المؤثرات: <قائمة الأسماء> — studio/sfx (مولّدة بالكود، CC0)
-    - لقطات: <لا يوجد | سطر Pexels لكل لقطة>
-    - سطر إسناد مطلوب في الكابشن: <لا يوجد | النص> (فقط لرخص CC BY)
-    ```
+12. **الحفظ في المستودع** (`content/production/<ID>/`): `scenes.md`، `scene_draft.json`، `scene.json`، `captions.json`، `voice_report.json`، تقرير الفحص (`qa_report.json` = ناتج qa_video)، `upload.json` (`{video_url, video_asset_id, cover_url, cover_asset_id, cover_t, duration, size_mb, voice}`)، و**`credits.md`** بالأداة:
+    `python3 -I studio/tools/make_credits.py --id <ID> --voice-report work/<ID>/voice_report.json --mix-report work/<ID>/mix.wav.report.json --scene work/<ID>/scene.json [--clips "<سطر Pexels>" ...]`
+    (فيه سطر الإسناد الجاهز للوصف — مؤثرات Gravity Sound رخصتها CC BY 4.0 وتحتاج إسناد.)
 13. **التقويم:** `python3 scripts/cal.py set <ID> status="فيديو جاهز" cloudinary=<secure_url> voice=<...> notes+="مدة Xث، style interim/pack"` ثم `bash scripts/git_save.sh "فيديو جاهز <ID>"`.
 **ملفات الفيديو والصوت ما تنحفظ في المستودع** (`work/` مستبعد).
 

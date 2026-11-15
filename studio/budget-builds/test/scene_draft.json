@@ -1,7 +1,9 @@
-{ "id": "selftest-budget-builds", "series": "budget-builds", "style": "interim", "camera": { "variant": 1 },
-  "title": "تجميعة قيمنق بـ **3,000** ريال", "hook": { "text": "**3,000** ريال بس؟", "start": 0, "end": "w4" }, "budget": 3000,
+{ "id": "selftest-budget-builds", "series": "budget-builds", "style": "15_iso_build_drop", "camera": { "variant": 1 },
+  "budget": 6500, "goal": "1440p",
+  "header": { "label": "تجميعة 6500 ريال", "counter": { "label": "باقي", "start": 6500 } },
+  "hook": { "title": { "main": "عندك **6500** ريال؟", "desc": "تجميعة تشغّل 1440p بأريحية", "desc_at": "w2.end" } },
   "events": [
-    { "el": "E01", "start": {"find": "بالمعالج"}, "end": {"find": "وبعده"}, "params": { "part": "cpu", "name": "Ryzen 5 5600", "price": 0 } },
-    { "el": "E01", "start": {"find": "كرت"}, "end": {"find": "الشاشة", "edge": "end", "shift": 0.8}, "params": { "part": "gpu", "name": "كرت الشاشة", "price": 0 } },
-    { "el": "E08", "start": {"find": "بالمعالج"}, "end": {"find": "الشاشة", "edge": "end", "shift": 1}, "params": { "text": "اختبار القالب — الأسعار صفر عمداً" } }
+    { "el": "E01", "start": 0, "end": "w2.end", "params": { "goal": "1440p" } },
+    { "el": "E03", "start": {"find": "نبدأ"}, "end": {"find": "بالمعالج"}, "params": {} },
+    { "el": "E04", "start": {"find": "بالمعالج"}, "end": "w7.end", "params": { "part": "cpu", "category": "المعالج", "name": "AMD Ryzen 5 9600X", "drop_at": {"find": "AMD"} } }
   ], "auto_sfx": true }

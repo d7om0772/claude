@@ -1,175 +1,28 @@
 {
- "id": "sample-shortcuts",
- "series": "shortcuts",
- "style": "interim",
- "duration": 9.0,
- "fps": 30,
- "camera": {
-  "variant": 0
- },
- "title": "لقطة شاشة لجزء محدد بضغطة",
- "hook": {
-  "text": "انسَ **Print Screen**",
-  "start": 0,
-  "end": 1.8
- },
- "right_screen": {
-  "demo": "text",
-  "text": "Win + Shift + S",
-  "size": 96
- },
- "captions": {
-  "lines": [
-   {
-    "start": 0.1,
-    "end": 1.8,
-    "words": [
-     {
-      "w": "انسَ",
-      "start": 0.1,
-      "end": 0.5
-     },
-     {
-      "w": "Print",
-      "start": 0.5,
-      "end": 0.8
-     },
-     {
-      "w": "Screen",
-      "start": 0.8,
-      "end": 1.1
-     },
-     {
-      "w": "وقص",
-      "start": 1.1,
-      "end": 1.4
-     },
-     {
-      "w": "الصور",
-      "start": 1.4,
-      "end": 1.8
-     }
-    ]
-   },
-   {
-    "start": 1.9,
-    "end": 3.8,
-    "words": [
-     {
-      "w": "اضغط",
-      "start": 1.9,
-      "end": 2.3
-     },
-     {
-      "w": "Win",
-      "start": 2.3,
-      "end": 2.7
-     },
-     {
-      "w": "+",
-      "start": 2.7,
-      "end": 2.8
-     },
-     {
-      "w": "Shift",
-      "start": 2.8,
-      "end": 3.2
-     },
-     {
-      "w": "+",
-      "start": 3.2,
-      "end": 3.3
-     },
-     {
-      "w": "S",
-      "start": 3.3,
-      "end": 3.8
-     }
-    ]
-   },
-   {
-    "start": 3.9,
-    "end": 6.2,
-    "words": [
-     {
-      "w": "وحدد",
-      "start": 3.9,
-      "end": 4.4
-     },
-     {
-      "w": "الجزء",
-      "start": 4.4,
-      "end": 4.9
-     },
-     {
-      "w": "اللي",
-      "start": 4.9,
-      "end": 5.2
-     },
-     {
-      "w": "تبيه",
-      "start": 5.2,
-      "end": 6.2
-     }
-    ]
-   }
-  ]
- },
- "events": [
-  {
-   "el": "E01",
-   "start": 2.0,
-   "end": 4.6,
-   "params": {
-    "keys": [
-     "Win",
-     "Shift",
-     "S"
-    ],
-    "times": [
-     2.3,
-     2.8,
-     3.3
-    ]
-   }
-  },
-  {
-   "el": "E03",
-   "start": 2.0,
-   "end": 3.9,
-   "params": {
-    "focus": "keyboard"
-   }
-  },
-  {
-   "el": "E02",
-   "start": 3.6,
-   "end": 6.6,
-   "params": {
-    "screen": "left",
-    "demo": "snip"
-   }
-  },
-  {
-   "el": "E03",
-   "start": 4.0,
-   "end": 6.6,
-   "params": {
-    "focus": "left"
-   }
-  },
-  {
-   "el": "E06",
-   "start": 6.4,
-   "end": 7.9,
-   "params": {
-    "old": "Print Screen + قص",
-    "new": "**Win + Shift + S**"
-   }
-  }
- ],
- "sfx": [],
- "closing": {
-  "start": 8.0
- }
+  "id": "sample-shortcuts", "series": "shortcuts", "style": "13_mini_desk_diorama", "duration": 26, "fps": 30, "camera": { "variant": 0 },
+  "header": { "label": "اختصارات ويندوز", "dots": 5 },
+  "hook": { "title": { "main": "**5** اختصارات", "desc": "بتوفر وقتك كل يوم", "desc_at": 1.0 } },
+  "captions": { "lines": [
+    { "start": 0.1, "end": 1.6, "words": [ {"w":"5","start":0.1,"end":0.4}, {"w":"اختصارات","start":0.4,"end":1.0}, {"w":"في","start":1.0,"end":1.2}, {"w":"ويندوز","start":1.2,"end":1.6} ] },
+    { "start": 4.0, "end": 6.0, "words": [ {"w":"الأول:","start":4.0,"end":4.5}, {"w":"Windows","start":4.5,"end":5.0}, {"w":"مع","start":5.0,"end":5.2}, {"w":"Shift","start":5.2,"end":5.6}, {"w":"مع","start":5.6,"end":5.8}, {"w":"S","start":5.8,"end":6.0} ] }
+  ] },
+  "events": [
+    { "el": "E01", "start": 0, "end": 2.2, "params": { "big": "5", "text": "اختصارات" } },
+    { "el": "E02", "start": 2.2, "end": 3.9, "params": { "text": "وقت" } },
+    { "el": "E03", "start": 4.0, "end": 7.8, "params": { "index": 1, "keys": ["Win", "Shift", "S"], "key_times": [4.6, 5.25, 5.85], "desc": "لقطة شاشة لجزء محدد", "desc_at": 6.2 } },
+    { "el": "X01", "start": 6.1, "end": 7.8, "params": { "mode": "snip" } },
+    { "el": "E03", "start": 8.0, "end": 11.5, "params": { "index": 2, "keys": ["Win", "Ctrl", "D"], "key_times": [8.5, 9.0, 9.5], "desc": "سطح مكتب جديد" } },
+    { "el": "E04", "start": 8.0, "end": 9.9, "params": {} },
+    { "el": "E08", "start": 9.9, "end": 11.5, "params": {} },
+    { "el": "E03", "start": 11.7, "end": 15, "params": { "index": 3, "keys": ["Win", "Shift", "→"], "key_times": [12.1, 12.5, 12.9], "desc": "ينقل النافذة لشاشتك الثانية" } },
+    { "el": "E06", "start": 13.1, "end": 15, "params": { "title": "Documents" } },
+    { "el": "E03", "start": 15.2, "end": 19, "params": { "index": 4, "keys": ["Ctrl", "Shift", "T"], "key_times": [15.6, 16.0, 16.4], "desc": "يرجّع التبويب اللي قفلته" } },
+    { "el": "E09", "start": 15.2, "end": 16.6, "params": {} },
+    { "el": "E10", "start": 16.7, "end": 19, "params": {} },
+    { "el": "E03", "start": 19.2, "end": 22.5, "params": { "index": 5, "keys": ["Ctrl", "Backspace"], "key_times": [19.6, 20.0], "desc": "يمسح الكلمة كاملة" } },
+    { "el": "E13", "start": 20.1, "end": 22.5, "params": { "text": "الاختصارات توفر وقتك كل يوم" } },
+    { "el": "E15", "start": 22.6, "end": 23.5, "params": { "title": "احفظ المقطع" } },
+    { "el": "E16", "start": 23.0, "end": 23.9, "params": { "title": "احفظ المقطع", "desc": "وعلّم صاحبك اللي يحتاجها" } }
+  ],
+  "sfx": [], "closing": { "start": 24 }
 }

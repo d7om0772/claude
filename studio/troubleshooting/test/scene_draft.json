@@ -1,7 +1,8 @@
-{ "id": "selftest-troubleshooting", "series": "troubleshooting", "style": "interim", "camera": { "variant": 1 },
-  "title": "الجهاز شغال بس الشاشة **سوداء**؟", "hook": { "text": "الشاشة **سوداء**؟", "start": 0, "end": "w2.end" },
+{ "id": "selftest-troubleshooting", "series": "troubleshooting", "style": "14_desk_pc_red_green", "camera": { "variant": 1 },
+  "header": { "label": "المشاكل وحلولها", "dots": 5 }, "initial_state": "problem",
+  "hook": { "title": { "main": "الجهاز شغال والشاشة !!سوداء؟!!" } },
   "events": [
-    { "el": "E06", "start": 0, "end": {"find": "غالباً"}, "params": { "demo": "no_signal" } },
-    { "el": "E01", "start": {"find": "غالباً"}, "end": {"find": "الغلط", "edge": "end", "shift": 0.5}, "params": { "label": "الكيبل في المكان الغلط", "anchor": "pc" } },
-    { "el": "E03", "start": {"find": "الكيبل"}, "end": {"find": "الغلط", "edge": "end", "shift": 0.5}, "params": { "focus": "pc" } }
+    { "el": "X01", "start": 0, "end": {"find": "غالباً"}, "params": { "mode": "no_signal", "state": "problem", "cam": "monitor" } },
+    { "el": "E03", "start": {"find": "غالباً"}, "end": {"find": "الغلط", "edge": "end", "shift": 1.2}, "params": { "index": 1, "title": "الكيبل في المكان الغلط", "fix_at": {"find": "الغلط", "edge": "end", "shift": 0.9} } },
+    { "el": "E08", "start": {"find": "الكيبل"}, "end": {"find": "الغلط", "edge": "end", "shift": 1.2}, "params": { "from": "mobo_hdmi", "to": "gpu_out", "plug_at": {"find": "الغلط"} } }
   ], "auto_sfx": true }

@@ -1,31 +1,29 @@
 {
-  "id": "sample-budget-builds",
-  "series": "budget-builds",
-  "style": "interim",
-  "duration": 9.5,
-  "fps": 30,
-  "seed": 3,
-  "camera": { "variant": 0 },
-  "title": "تجميعة قيمنق بـ **3,000** ريال",
-  "hook": { "text": "**3,000** ريال بس؟", "start": 0, "end": 1.6 },
-  "budget": 3000,
-  "preinstalled": ["mobo"],
+  "id": "sample-budget-builds", "series": "budget-builds", "style": "15_iso_build_drop", "duration": 30, "fps": 30, "seed": 3,
+  "camera": { "variant": 0 }, "budget": 6500, "goal": "1440p",
+  "header": { "label": "تجميعة 6500 ريال", "counter": { "label": "باقي", "start": 6500 } },
+  "hook": { "title": { "main": "عندك **6500** ريال؟", "desc": "تجميعة تشغّل 1440p بأريحية", "desc_at": 1.2 } },
+  "preinstalled": [],
   "captions": { "lines": [
-    { "start": 0.1, "end": 1.6, "words": [ {"w":"تبي","start":0.1,"end":0.4}, {"w":"تجميعة","start":0.4,"end":0.9}, {"w":"تشغّل","start":0.9,"end":1.2}, {"w":"كل","start":1.2,"end":1.35}, {"w":"شي؟","start":1.35,"end":1.6} ] },
-    { "start": 1.7, "end": 3.4, "words": [ {"w":"نبدأ","start":1.7,"end":2.0}, {"w":"بالمعالج","start":2.0,"end":2.5}, {"w":"Ryzen 5 5600","start":2.5,"end":3.4} ] },
-    { "start": 3.5, "end": 5.0, "words": [ {"w":"وكرت","start":3.5,"end":3.8}, {"w":"الشاشة","start":3.8,"end":4.2}, {"w":"RTX 3050","start":4.2,"end":5.0} ] }
+    { "start": 0.1, "end": 1.6, "words": [ {"w":"عندك","start":0.1,"end":0.5}, {"w":"6500","start":0.5,"end":1.1}, {"w":"ريال؟","start":1.1,"end":1.6} ] },
+    { "start": 4.1, "end": 6.0, "words": [ {"w":"المعالج:","start":4.1,"end":4.7}, {"w":"AMD","start":4.7,"end":5.0}, {"w":"Ryzen","start":5.0,"end":5.4}, {"w":"5","start":5.4,"end":5.6}, {"w":"9600X","start":5.6,"end":6.0} ] },
+    { "start": 6.2, "end": 7.4, "words": [ {"w":"بـ","start":6.2,"end":6.4}, {"w":"720","start":6.4,"end":6.9}, {"w":"ريال","start":6.9,"end":7.4} ] }
   ] },
   "events": [
-    { "el": "E01", "start": 1.9, "end": 3.3, "params": { "part": "cpu", "name": "Ryzen 5 5600", "price": 449 } },
-    { "el": "E01", "start": 2.6, "end": 3.6, "params": { "part": "cooler", "name": "مبرد هوائي", "price": 99 } },
-    { "el": "E01", "start": 3.0, "end": 3.9, "params": { "part": "ram", "name": "16GB DDR4", "price": 159 } },
-    { "el": "E01", "start": 3.6, "end": 5.0, "params": { "part": "gpu", "name": "RTX 3050 6GB", "price": 849 } },
-    { "el": "E01", "start": 4.4, "end": 5.4, "params": { "part": "ssd", "name": "1TB NVMe", "price": 199 } },
-    { "el": "E01", "start": 5.0, "end": 6.0, "params": { "part": "psu", "name": "550W", "price": 199 } },
-    { "el": "E03", "start": 6.0, "end": 7.6, "params": { "game": "Fortnite", "fps": 90, "res": "1080p", "approx": true } },
-    { "el": "E05", "start": 3.6, "end": 5.2, "params": { "part": "gpu", "zoom": 1.35 } },
-    { "el": "E08", "start": 2.0, "end": 8.0, "params": { "text": "أسعار تقريبية للتجربة فقط — ليست بيانات حقيقية" } }
+    { "el": "E01", "start": 0, "end": 3, "params": { "goal": "1440p" } },
+    { "el": "E03", "start": 3.0, "end": 4.2, "params": {} },
+    { "el": "E04", "start": 4.1, "end": 6.2, "params": { "part": "cpu", "category": "المعالج", "name": "AMD Ryzen 5 9600X" } },
+    { "el": "E05", "start": 6.4, "end": 7.6, "params": { "price": 720, "desc": "جيل جديد وقوي في الألعاب" } },
+    { "el": "E04", "start": 8.0, "end": 10, "params": { "part": "mobo", "category": "المذربورد", "name": "B650", "price": 550 } },
+    { "el": "E07", "start": 10.5, "end": 13, "params": { "part": "gpu", "category": "كرت الشاشة", "name": "NVIDIA RTX 5070", "price": 2200, "desc": "قلب التجميعة" } },
+    { "el": "E08", "start": 13.2, "end": 15.5, "params": { "title": "DLSS", "bars": [{ "label": "بدون", "value": 62 }, { "label": "مع DLSS", "value": 104 }] } },
+    { "el": "E09", "start": 15.6, "end": 16.4, "params": {} },
+    { "el": "E04", "start": 16.4, "end": 18, "params": { "part": "ram", "category": "الرام", "name": "32GB DDR5 6000", "price": 450 } },
+    { "el": "E10", "start": 18.2, "end": 20, "params": { "part": "psu", "category": "الباور", "name": "750W Gold", "price": 400 } },
+    { "el": "E11", "start": 20.2, "end": 22, "params": { "category": "الكيس", "name": "كيس بتهوية زينة", "price": 300 } },
+    { "el": "E12", "start": 22.2, "end": 24.2, "params": {} },
+    { "el": "E13", "start": 24.4, "end": 26.2, "params": { "res": "1440p", "fps": 100, "chips": ["DLSS ✓", "إعدادات عالية · تقريبي"], "title": "الأداء على **1440p**", "desc": "الأسعار بتاريخ اليوم وممكن تتغير" } },
+    { "el": "E14", "start": 26.3, "end": 27.4, "params": {} }
   ],
-  "sfx": [],
-  "closing": { "start": 8.0 }
+  "sfx": [], "closing": { "start": 27.5 }
 }

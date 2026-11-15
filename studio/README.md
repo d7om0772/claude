@@ -20,7 +20,7 @@ studio/
 | 0 | تجهيز | `mkdir -p work/<ID> content/production/<ID>` ← انسخ من السكربت: نص الكابشن → `work/<ID>/caption.txt`، نص التعليق → `work/<ID>/voice.txt` | |
 | 1 | الصوت | فهد (ElevenLabs) أو Charon (Gemini) — التفاصيل في `brand/voice.md §٢` ← `python3 -I studio/tools/voice_pipeline.py ...` | `voice.wav`, `words.json`, `voice_report.json` |
 | 2 | الترجمة | `python3 -I studio/tools/caption_align.py --caption work/<ID>/caption.txt --words work/<ID>/words.json --out work/<ID>/captions.json` | `captions.json` (اطبع الكلمات بأرقامها عشان تستخدمها في المسودة) |
-| 3 | جدول المشاهد | اقرأ `01_prompt.md` للحزمة (أو `ELEMENTS.md` للقالب المؤقت) ← اكتب `content/production/<ID>/scenes.md` (المقاطع، تصنيفها، العنصر، التوقيت) ← حوّله إلى `work/<ID>/scene_draft.json` | |
+| 3 | جدول المشاهد | اقرأ `brand/styles/<series>/01_prompt.md` و`02_elements/elements.md` (المرجع البصري) و`studio/<series>/ELEMENTS.md` (طريقة الاستدعاء) ← اكتب `content/production/<ID>/scenes.md` (رقم، وقت، النص المنطوق، نوع المقطع B1–B15، العنصر E##، الكلمة المتزامنة، المؤثر) ← حوّله إلى `work/<ID>/scene_draft.json` | |
 | 4 | المشهد | `python3 -I studio/tools/scene_build.py --draft work/<ID>/scene_draft.json --captions work/<ID>/captions.json --voice-report work/<ID>/voice_report.json --out work/<ID>/scene.json` | `scene.json` (المدة والختام والمؤثرات تلقائياً) |
 | 5 | معاينة سريعة | `node studio/tools/snap.cjs --series <s> --data work/<ID>/scene.json --t 1,5,12,20 --out work/<ID>/snap --debug` ← شوف الصور | |
 | 6 | المكس | `python3 -I studio/tools/audio_mix.py --voice work/<ID>/voice.wav --scene work/<ID>/scene.json --out work/<ID>/mix.wav` | `mix.wav` (−14 LUFS، مؤثرات −12dB تحت الكلام، بدون موسيقى) |
@@ -28,20 +28,27 @@ studio/
 | 8 | الفحص | `python3 -I studio/tools/qa_video.py work/<ID>/video.mp4 --qa work/<ID>/qa.json --sheets work/<ID>/sheets` ← **افتح كل ورقة لقطات وشوفها** | تقرير + أوراق لقطات كل 0.5ث |
 | 9 | الغلاف | `node studio/tools/snap.cjs --series <s> --data work/<ID>/scene.json --t <لحظة الهوك> --out work/<ID>/cover --cover` | `cover.jpg` |
 | 10 | الرفع | موصل Cloudinary `sign-upload` ← `bash studio/tools/cloudinary_upload.sh work/<ID>/sign.json work/<ID>/video.mp4 video` (وبعدها الغلاف بـ `image`) | رابط `secure_url` |
-| 11 | الحفظ | انسخ `scene_draft.json` و`scene.json` و`voice_report.json` و`captions.json` و`qa_video` (التقرير) إلى `content/production/<ID>/` + `credits.md` ← حدّث التقويم ← `bash scripts/git_save.sh "..."` | |
+| 11 | الحقوق | `python3 -I studio/tools/make_credits.py --id <ID> --voice-report work/<ID>/voice_report.json --mix-report work/<ID>/mix.wav.report.json --scene work/<ID>/scene.json` | `content/production/<ID>/credits.md` + سطر الإسناد (CC BY) |
+| 12 | الحفظ | انسخ `scene_draft.json` و`scene.json` و`voice_report.json` و`captions.json` وتقرير الفحص إلى `content/production/<ID>/` ← حدّث التقويم ← `bash scripts/git_save.sh "..."` | |
 
-### صيغة scene_draft.json
+### صيغة scene_draft.json (مثال budget-builds)
 ```json
-{ "id": "2026-11-16-02", "series": "shortcuts", "style": "interim", "camera": { "variant": 2 },
-  "title": "لقطة شاشة لجزء **محدد**", "hook": { "text": "انسَ **Print Screen**", "start": 0, "end": "w3.end" },
+{ "id": "2026-11-16-01", "series": "budget-builds", "style": "15_iso_build_drop", "camera": { "variant": 2 },
+  "budget": 3000, "goal": "1080p",
+  "header": { "label": "تجميعة 3000 ريال", "counter": { "label": "باقي", "start": 3000 } },
+  "hook": { "title": { "main": "عندك **3000** ريال؟", "desc": "تجميعة تشغّل ألعاب اليوم", "desc_at": "w3" } },
   "events": [
-    { "el": "E01", "start": "w5", "end": {"find": "وحدد", "shift": 1.0}, "params": { "keys": ["Win","Shift","S"], "times": ["w6","w8","w10"] } },
-    { "el": "E02", "start": {"find": "وحدد"}, "end": "w20.end", "params": { "screen": "left", "demo": "snip" } }
+    { "el": "E01", "start": 0, "end": "w3.end", "params": { "goal": "1080p" } },
+    { "el": "E03", "start": {"find": "نبدأ"}, "end": {"find": "بالمعالج"} },
+    { "el": "E04", "start": {"find": "بالمعالج"}, "end": "w12.end", "params": { "part": "cpu", "category": "المعالج", "name": "Ryzen 5 5600", "drop_at": {"find": "Ryzen"} } },
+    { "el": "E05", "start": {"find": "449"}, "end": "w15.end", "params": { "price": 449, "desc": "ستة أنوية بسعر ممتاز", "desc_at": "w14" } }
   ],
-  "sfx": [ { "t": {"find": "بثانية"}, "name": "ding" } ],
+  "sfx": [ { "t": {"find": "بثانية"}, "name": "gs_notification2" } ],
   "auto_sfx": true }
 ```
-التوقيتات: رقم بالثواني، أو `"w12"`/`"w12.end"` (رقم كلمة الكابشن)، أو `{"find": "نص", "nth": 1, "edge": "start|end", "shift": 0}`. **كل ظهور مربوط بكلمته.**
+- التوقيتات: رقم بالثواني، أو `"w12"`/`"w12.end"` (رقم كلمة الكابشن)، أو `{"find": "نص", "nth": 1, "edge": "start|end", "shift": 0}`. تنطبق على `start`/`end` وكل حقول الوقت في params (`drop_at`, `price_at`, `desc_at`, `fix_at`, `plug_at`, `key_times`...). **كل ظهور مربوط بكلمته.**
+- العناصر وحقولها لكل سلسلة: `studio/<series>/ELEMENTS.md`. أي event يقدر يحمل `params.title` (حالة عنوان)، و`"el": "T"` = عنوان فقط.
+- المؤثرات التلقائية (`auto_sfx`) حسب جدول مؤثرات الحزمة (Gravity Sound من Openverse: `gs_*` في `studio/sfx/manifest.json`)؛ لو ملف ناقص يُستخدم بديل مولّد بالكود تلقائياً.
 
 ## قواعد الجودة (قبل الرفع — كلها لازم تنجح)
 - `voice_report.json → match.score ≥ 0.85`، و`caption_align → match_ratio ≥ 0.7`.

@@ -1,9 +1,6 @@
-{ "id": "selftest-shortcuts", "series": "shortcuts", "style": "interim", "camera": { "variant": 1 },
-  "title": "لقطة شاشة لجزء محدد", "hook": { "text": "**Win + Shift + S**", "start": 0, "end": "w1" },
-  "right_screen": { "demo": "text", "text": "Win + Shift + S", "size": 96 },
+{ "id": "selftest-shortcuts", "series": "shortcuts", "style": "13_mini_desk_diorama", "camera": { "variant": 1 },
+  "header": { "label": "اختصارات ويندوز", "dots": 5 },
   "events": [
-    { "el": "E01", "start": "w0", "end": {"find": "وحدد", "shift": 1.2}, "params": { "keys": ["Win", "Shift", "S"], "times": ["w1", "w3", "w5"] } },
-    { "el": "E03", "start": "w0", "end": {"find": "وحدد"}, "params": { "focus": "keyboard" } },
-    { "el": "E02", "start": {"find": "وحدد"}, "end": {"find": "الشاشة", "edge": "end", "shift": 0.6}, "params": { "screen": "left", "demo": "snip" } },
-    { "el": "E03", "start": {"find": "وحدد"}, "end": {"find": "الشاشة", "edge": "end", "shift": 0.6}, "params": { "focus": "left" } }
+    { "el": "E03", "start": "w0", "end": {"find": "الشاشة", "edge": "end", "shift": 0.5}, "params": { "index": 1, "keys": ["Win", "Shift", "S"], "key_times": ["w1", "w3", "w5"], "desc": "لقطة شاشة لجزء محدد", "desc_at": {"find": "وحدد"} } },
+    { "el": "X01", "start": {"find": "وحدد"}, "end": {"find": "الشاشة", "edge": "end", "shift": 0.5}, "params": { "mode": "snip", "cam": "left" } }
   ], "auto_sfx": true }

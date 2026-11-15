@@ -15,17 +15,42 @@ scene_build.py — يحوّل مسودة المشهد (scene_draft.json اللي
 """
 import argparse, json, os, re, sys
 
-KNOWN = {
-    "budget-builds": {"E01", "E02", "E03", "E04", "E05", "E06", "E07", "E08"},
-    "shortcuts": {"E01", "E02", "E03", "E04", "E05", "E06"},
-    "troubleshooting": {"E01", "E02", "E03", "E04", "E05", "E06", "E07", "E08"},
+KNOWN = {  # عناصر كل حزمة (02_elements) + X01/X02 إضافات بنفس الأسلوب + T (حالة عنوان فقط)
+    "budget-builds": {f"E{i:02d}" for i in range(1, 16)} | {"T"},
+    "shortcuts": {f"E{i:02d}" for i in range(1, 18)} | {"X01", "T"},
+    "troubleshooting": {f"E{i:02d}" for i in range(1, 18)} | {"X01", "T"},
 }
-# مؤثرات افتراضية: (عنصر → [(إزاحة من البداية، اسم)])
+# المؤثرات الافتراضية حسب جدول "المؤثرات" في 04_design_style/design_style.md لكل حزمة.
+# كل عنصر → [(المرجع، الإزاحة، الاسم، مدة القص اختيارية)]. المرجع: "start" أو اسم حقل وقت في params (drop_at, fix_at...).
 AUTO = {
-    "budget-builds": {"E01": [(0.55, "thud")], "E03": [(0.0, "pop")], "E04": [(0.0, "pop")], "E05": [(0.0, "whoosh")], "E07": [(0.0, "swoosh_up")]},
-    "shortcuts": {"E04": [(0.0, "swoosh_up")], "E05": [(0.0, "pop")], "E06": [(0.0, "pop")], "E03": [(0.0, "whoosh")]},
-    "troubleshooting": {"E01": [(0.0, "error")], "E02": [(0.0, "success")], "E04": [(0.0, "pop")], "E05": [(0.0, "pop")], "E07": [(0.0, "swoosh_up")], "E08": [(0.0, "pop")], "E03": [(0.0, "whoosh")]},
+    "budget-builds": {
+        "E01": [("start", 0.1, "gs_item_pickup4")], "E02": [("start", 0.0, "gs_selection12_fwd")], "E03": [("start", 0.0, "gs_swipe_grass2")],
+        "E04": [("drop_at", 0.0, "gs_swipe2"), ("drop_at", 0.5, "gs_drop_item2"), ("drop_at", 0.55, "gs_lock")],
+        "E05": [("start", 0.0, "gs_coins3")], "E06": [("start", 0.0, "gs_lock")],
+        "E07": [("drop_at", 0.0, "gs_swipe2"), ("drop_at", 0.5, "gs_lock"), ("price_at", 0.0, "gs_coins3")],
+        "E08": [("start", 0.0, "gs_swipe_grass2"), ("start", 0.4, "gs_selection12_fwd")], "E09": [("start", 0.0, "gs_swipe_grass2")],
+        "E10": [("drop_at", 0.0, "gs_swipe2"), ("drop_at", 0.8, "gs_lock")], "E11": [("start", 0.0, "gs_swipe2"), ("start", 0.3, "gs_charging2")],
+        "E12": [("start", 0.4, "gs_notification2")], "E13": [("start", 0.3, "gs_charging2"), ("start", 1.4, "gs_item_pickup4")],
+    },
+    "shortcuts": {
+        "E01": [("start", 0.1, "gs_item_pickup4")], "E02": [("start", 0.0, "gs_watch_tick")], "E05": [("start", 0.0, "gs_swipe2")],
+        "E06": [("start", 0.0, "gs_swipe_grass2")], "E07": [("start", 0.0, "gs_charging2")], "E08": [("start", 0.0, "gs_swipe2")],
+        "E09": [("start", 0.45, "gs_select_option11"), ("start", 0.6, "gs_drop_item2")], "E10": [("start", 0.0, "gs_item_pickup4")],
+        "E11": [("start", 0.0, "gs_selection9_fwd")], "E12": [("start", 0.2, "gs_select_option11"), ("start", 0.65, "gs_item_pickup4")],
+        "E13": [("start", 0.55, "gs_swipe_grass5")], "E15": [("start", 0.0, "gs_notification2")], "E16": [("start", 0.0, "gs_item_pickup4")],
+        "X01": [("start", 0.0, "gs_selection12_fwd")],
+    },
+    "troubleshooting": {
+        "E01": [("start", 0.1, "gs_item_pickup4")], "E02": [("start", 0.0, "gs_error5")],
+        "E03": [("start", 0.0, "gs_swipe_grass2"), ("fix_at", 0.0, "gs_selection12_fwd"), ("fix_at", 0.05, "gs_item_pickup4")],
+        "E04": [("start", 0.0, "gs_swipe_grass2"), ("swap_at", 0.0, "gs_drop_item2"), ("swap_at", 0.6, "gs_lock")],
+        "E05": [("start", 0.0, "gs_selection12_fwd")], "E06": [("at", 0.0, "gs_select_option11")],
+        "E07": [("start", 0.0, "gs_item_pickup4"), ("start", 0.2, "gs_error5")], "E08": [("start", 0.0, "gs_swipe2"), ("plug_at", 0.6, "gs_lock")],
+        "E09": [("start", 0.3, "gs_error5")], "E13": [("key_at", 0.15, "gs_selection12_fwd")], "E14": [("start", 0.3, "gs_swipe2"), ("start", 1.0, "gs_item_pickup4")],
+        "E15": [("start", 0.0, "gs_item_pickup4")], "E16": [("start", 0.0, "gs_notification2")], "X01": [("start", 0.0, "gs_selection12_fwd")],
+    },
 }
+KEY_TIME_FIELDS = ("key_times",)   # كل وقت ضغطة زر = نقرة كيبورد قصيرة
 
 def main():
     ap = argparse.ArgumentParser()
@@ -64,7 +89,11 @@ def main():
     scene.update({"duration": duration, "fps": 30, "closing": {"start": closing}, "captions": {"lines": caps["lines"]}})
     scene.setdefault("style", "interim")
     if "hook" in d:
-        h = dict(d["hook"]); h["start"] = resolve(h.get("start", 0), "hook.start"); h["end"] = resolve(h.get("end", 2.6), "hook.end"); scene["hook"] = h
+        h = dict(d["hook"])
+        if "title" in h:
+            for k in ("desc_at", "price_at"):
+                if k in h["title"] and not isinstance(h["title"][k], (int, float)): h["title"][k] = round(resolve(h["title"][k], f"hook.title.{k}"), 3)
+        scene["hook"] = h
     evs = []
     for i, e in enumerate(d.get("events", [])):
         e = dict(e); ctx = f"event#{i}({e.get('el')})"
@@ -72,21 +101,36 @@ def main():
         e["start"] = round(resolve(e["start"], ctx + ".start") + float(e.pop("shift", 0)), 3)
         e["end"] = round(resolve(e["end"], ctx + ".end"), 3)
         p = e.get("params", {})
-        for k in ("times",):
+        for k in ("times", "key_times"):
             if k in p: p[k] = [round(resolve(x, f"{ctx}.params.{k}"), 3) for x in p[k]]
+        for k in ("drop_at", "price_at", "desc_at", "fix_at", "swap_at", "plug_at", "key_at", "at", "keys_ok_at", "until", "show_at"):
+            if k in p and not isinstance(p[k], (int, float)): p[k] = round(resolve(p[k], f"{ctx}.params.{k}"), 3)
+        if "title" in p and isinstance(p["title"], dict):
+            for k in ("price_at", "desc_at", "chip_fix_at", "keys_ok_at"):
+                if k in p["title"] and not isinstance(p["title"][k], (int, float)): p["title"][k] = round(resolve(p["title"][k], f"{ctx}.title.{k}"), 3)
+            if "key_times" in p["title"]: p["title"]["key_times"] = [round(resolve(x, f"{ctx}.title.key_times"), 3) for x in p["title"]["key_times"]]
         e["end"] = min(e["end"], closing - 0.05)
         if not (0 <= e["start"] < e["end"]): errors.append(f"{ctx}: start {e['start']} !< end {e['end']}")
         evs.append(e)
     scene["events"] = evs
     sfx = []
+    evs.sort(key=lambda e: e["start"])
     if d.get("auto_sfx", True):
         auto = AUTO.get(series, {})
-        sfx.append({"t": scene.get("hook", {}).get("start", 0.0), "name": "swoosh_up"})
         for e in evs:
-            for off, name in auto.get(e["el"], []): sfx.append({"t": round(e["start"] + off, 3), "name": name})
-            if series == "shortcuts" and e["el"] == "E01":
-                for t in e["params"].get("times", []): sfx.append({"t": t, "name": "click"})
-        sfx.append({"t": closing + 0.1, "name": "ding"})
+            p = e.get("params", {})
+            for ref, off, name in auto.get(e["el"], []):
+                base = e["start"] if ref == "start" else p.get(ref, (e["start"] + 0.35) if ref == "drop_at" else None)
+                if base is None: continue
+                sfx.append({"t": round(base + off, 3), "name": name})
+            for k in KEY_TIME_FIELDS:
+                for kt in p.get(k, []) + (p.get("title", {}).get(k, []) if isinstance(p.get("title"), dict) else []):
+                    sfx.append({"t": kt, "name": "gs_soft_keyboard", "dur": 0.22})
+            if series == "shortcuts" and e["el"] == "E03" and p.get("keys") and p.get("pulse", True):
+                last = (p.get("key_times") or [e["start"] + 0.2 + 0.25 * (len(p["keys"]) - 1)])[-1]
+                sfx.append({"t": round(last + 0.12, 3), "name": "gs_swipe2"})
+        sfx.append({"t": round(closing - 0.3, 3), "name": "gs_swipe2"})
+        sfx.append({"t": round(closing + 0.25, 3), "name": "gs_notification2"})
     for s in d.get("sfx", []):
         s = dict(s); s["t"] = round(resolve(s["t"], f"sfx {s.get('name')}"), 3); sfx.append(s)
     # منع تكدّس: نفس المؤثر خلال 0.12ث يتحذف

@@ -1,5 +1,28 @@
 # رخص المؤثرات الصوتية — studio/sfx
 
+## ١. مؤثرات الحزم (المعتمدة) — `gs_*.wav`
+من **Openverse ← Wikimedia Commons، حزمة Gravity Sound**، رخصة **CC BY 4.0** (تحتاج إسناد في وصف المنشور — `make_credits.py` يولّد السطر).
+القائمة والاستخدام حسب جدول المؤثرات في `brand/styles/<series>/04_design_style/design_style.md`، والتفاصيل الكاملة لكل ملف (المصدر، صفحة الهبوط، الرخصة، فحص النغمات) في `manifest.json`.
+التنزيل: `python3 -u -I studio/sfx/fetch_openverse.py` (آمن للتكرار؛ Wikimedia يحد الطلبات HTTP 429 فممكن ياخذ وقت).
+
+| الملف | الاسم في الحزمة | الاستخدام |
+|---|---|---|
+| gs_swipe2 | Swipe 2 | نزول القطعة، نبضة الكيبل، تبديل سطح المكتب، لفة الكيس، الختام |
+| gs_swipe_grass2 / gs_swipe_grass5 | Swipe grass 2 / 5 | لفّة/انزلاق الكاميرا، تبديل الأقسام، المسح |
+| gs_lock | Lock | تثبيت القطعة، البطارية، وصلة USB |
+| gs_drop_item2 | Drop Item 2 | ارتطام التثبيت، قفل التبويب، البطارية القديمة |
+| gs_coins3 | Coins 3 | خصم السعر من الميزانية |
+| gs_charging2 | Charging 2 | تشغيل المراوح، صعود الفريمات، توهج الشاشتين |
+| gs_item_pickup4 | Item pick up 4 | تركيب الغرفة، النتائج، رجوع التبويب، لحظة الحل |
+| gs_selection12_fwd / gs_selection9_fwd | Selection 12 / 9 forward | ظهور النتائج والقوائم، لحظة الحل |
+| gs_notification2 | Notification 2 | المجموع، احفظ، التعليقات، الختام |
+| gs_soft_keyboard | Soft laptop keyboard | ضغطات الأزرار (مقصوصة 0.22ث) |
+| gs_select_option11 | Select Option 11 | نقرات الماوس، زر التشغيل |
+| gs_watch_tick | Watch tick | الساعة |
+| gs_error5 | Error 5 | المشكلة (أحمر) |
+
+## ٢. البدائل المولّدة بالكود (احتياط تلقائي لأي ملف ناقص)
+
 كل المؤثرات هنا **مولّدة بالكود** داخل المستودع (`generate_sfx.py`، numpy، بذرة ثابتة) — ما فيها أي تسجيل أو عينة من طرف ثالث.
 الرخصة: **CC0 / إنتاج داخلي**. ما تحتاج إسناد، لكن نذكرها في `credits.md` لكل فيديو للشفافية.
 
