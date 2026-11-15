@@ -1,0 +1,95 @@
+{
+  "style": "3D Gaming Desk · Red Problem / Green Fix",
+  "colors": [
+    {
+      "hex": "#F1F6FE",
+      "role_ar": "الخلفية (تدرج أبيض مائل للأزرق)",
+      "key": "bg",
+      "usage_pct": 28
+    },
+    {
+      "hex": "#F8FAFD",
+      "role_ar": "الجدار والطاولة والكيبورد والكيس",
+      "key": "white",
+      "usage_pct": 22
+    },
+    {
+      "hex": "#E2EBFA",
+      "role_ar": "الأرضية والسجادة",
+      "key": "floor",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#14284B",
+      "role_ar": "النص الأساسي",
+      "key": "text",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#1D2C48",
+      "role_ar": "إطار الشاشة والماوس والماوس باد",
+      "key": "navy",
+      "usage_pct": 9
+    },
+    {
+      "hex": "#FF3347",
+      "role_ar": "أحمر المشكلة: إضاءة RGB والمؤشر المختفي وX والشارة",
+      "key": "problem",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#22D36A",
+      "role_ar": "أخضر الحل: إضاءة RGB و✓ وON وحلقة المؤشر",
+      "key": "fix",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#2F6BCF",
+      "role_ar": "أزرق الشعار: الهيدر والكابشن والأزرار المضغوطة",
+      "key": "brand",
+      "usage_pct": 5
+    },
+    {
+      "hex": "#6B9FE9",
+      "role_ar": "خلفية الشاشات (تدرج من #2F6BCF إلى #9CC2F3)",
+      "key": "screen",
+      "usage_pct": 8
+    },
+    {
+      "hex": "#223152",
+      "role_ar": "داخل الكيس (البوردة والكرت)",
+      "key": "inside",
+      "usage_pct": 4
+    }
+  ],
+  "gradients": [
+    {
+      "name_ar": "الخلفية",
+      "css": "radial-gradient(ellipse 85% 50% at 50% 52%, #ffffff, #f1f6fe 55%, #e0eafa)"
+    },
+    {
+      "name_ar": "إضاءة RGB",
+      "css": "MeshBasic color #FF3347 (problem) ↔ #22D36A (fix) + additive glow sprites + PointLight inside the case (same color)"
+    },
+    {
+      "name_ar": "شارة الخطوة",
+      "css": "problem: background #e5384a · fix: background #1fae5b + ✓ (pop 0.3s)"
+    },
+    {
+      "name_ar": "ستارة العنوان (اللقطات القريبة)",
+      "css": "linear-gradient(180deg, rgba(241,246,254,.97) 0, rgba(241,246,254,.92) 560px, rgba(241,246,254,0) 800px)"
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Baloo Bhaijaan 2",
+      "use_ar": "العناوين والكلمات الكبيرة والترجمة (يشبه خط شعار تيربو): وزن 700 إلى 800",
+      "url": "https://fonts.google.com/specimen/Baloo+Bhaijaan+2"
+    },
+    {
+      "family": "Inter",
+      "use_ar": "نصوص واجهات ويندوز داخل النوافذ (بديل Segoe UI)",
+      "url": "https://fonts.google.com/specimen/Inter"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "style": "Mini Desk Diorama · Shortcut → Result",
+  "colors": [
+    {
+      "hex": "#F1F6FE",
+      "role_ar": "الخلفية (تدرج أبيض مائل للأزرق مع شبكة خفيفة)",
+      "key": "bg",
+      "usage_pct": 30
+    },
+    {
+      "hex": "#F8FAFD",
+      "role_ar": "الجدار والطاولة والكيبورد (أبيض)",
+      "key": "white",
+      "usage_pct": 25
+    },
+    {
+      "hex": "#E2EBFA",
+      "role_ar": "أرضية الغرفة والسجادة",
+      "key": "floor",
+      "usage_pct": 8
+    },
+    {
+      "hex": "#14284B",
+      "role_ar": "النص الأساسي",
+      "key": "text",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#1D2C48",
+      "role_ar": "إطارات الشاشات والستاند والكيبل",
+      "key": "bezel",
+      "usage_pct": 7
+    },
+    {
+      "hex": "#2F6BCF",
+      "role_ar": "أزرق الشعار: الأزرار المضغوطة والشارات والكلمة النشطة",
+      "key": "logo_blue",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#3A7BD5",
+      "role_ar": "توهج الأزرار ونبضة الكيبل",
+      "key": "accent",
+      "usage_pct": 3
+    },
+    {
+      "hex": "#9CBDF0",
+      "role_ar": "أرجل الطاولة وتفاصيل فاتحة",
+      "key": "light_blue",
+      "usage_pct": 5
+    },
+    {
+      "hex": "#6B9FE9",
+      "role_ar": "خلفية الشاشات الصغيرة (تدرج من #2F6BCF إلى #9CC2F3)",
+      "key": "screen",
+      "usage_pct": 8
+    },
+    {
+      "hex": "#5B6B82",
+      "role_ar": "النص الثانوي",
+      "key": "muted",
+      "usage_pct": 2
+    }
+  ],
+  "gradients": [
+    {
+      "name_ar": "الخلفية",
+      "css": "radial-gradient(ellipse 85% 50% at 50% 52%, #ffffff, #f1f6fe 55%, #e0eafa) + grid: repeating-linear-gradient(30deg/150deg, rgba(47,107,207,.07) 0 2px, transparent 2px 64px)"
+    },
+    {
+      "name_ar": "خلفية الشاشات",
+      "css": "linear-gradient(135deg, #2f6bcf, #9cc2f3) + radial bloom rgba(255,255,255,.55) + 6 white petals @.11"
+    },
+    {
+      "name_ar": "الزر المضغوط (keycap)",
+      "css": "linear-gradient(180deg, #4a8fe7, #2f6bcf) · inset 0 -3px 0 #2558ad · translateY(6px)"
+    },
+    {
+      "name_ar": "نبضة الكيبل",
+      "css": "core #8fc0ff + additive glow radial(rgba(120,175,255,1) → rgba(74,143,231,.55) → 0)"
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Baloo Bhaijaan 2",
+      "use_ar": "العناوين والكلمات الكبيرة والترجمة (يشبه خط شعار تيربو): وزن 700 إلى 800",
+      "url": "https://fonts.google.com/specimen/Baloo+Bhaijaan+2"
+    },
+    {
+      "family": "Inter",
+      "use_ar": "نصوص واجهات ويندوز داخل النوافذ (بديل Segoe UI)",
+      "url": "https://fonts.google.com/specimen/Inter"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "pack": "15_iso_build_drop",
+  "series": "budget-builds",
+  "source_zip": "design-refs/budget-builds_15_iso_build_drop.zip",
+  "sha256": "d52cc6a3d5d4ac15d0ea55e759c9546d582caf0bf8376db8da10c91c77084373",
+  "installed_at": "2026-11-15T07:53:31.112891+00:00"
+}

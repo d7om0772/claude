@@ -1,0 +1,95 @@
+{
+  "style": "Isometric Build · Parts Drop In → Performance",
+  "colors": [
+    {
+      "hex": "#F1F6FE",
+      "role_ar": "الخلفية (تدرج أبيض مائل للأزرق مع شبكة أيزومترية خفيفة)",
+      "key": "bg",
+      "usage_pct": 28
+    },
+    {
+      "hex": "#F8FAFD",
+      "role_ar": "الطاولة والجدران والكيس",
+      "key": "white",
+      "usage_pct": 24
+    },
+    {
+      "hex": "#E2EBFA",
+      "role_ar": "الأرضية والسجادة",
+      "key": "floor",
+      "usage_pct": 7
+    },
+    {
+      "hex": "#14284B",
+      "role_ar": "النص الأساسي",
+      "key": "text",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#1D2C48",
+      "role_ar": "إطار الشاشة والستاند",
+      "key": "navy",
+      "usage_pct": 5
+    },
+    {
+      "hex": "#3A7BD5",
+      "role_ar": "خطوط أماكن القطع (أشباح شفافة)",
+      "key": "ghost",
+      "usage_pct": 4
+    },
+    {
+      "hex": "#2F6BCF",
+      "role_ar": "أزرق الشعار: العداد والسعر والشارة والكلمة النشطة",
+      "key": "brand",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#223152",
+      "role_ar": "القطع الداكنة (البوردة والكرت والباور)",
+      "key": "parts",
+      "usage_pct": 8
+    },
+    {
+      "hex": "#8FBAF0",
+      "role_ar": "إضاءات القطع والمراوح",
+      "key": "light",
+      "usage_pct": 4
+    },
+    {
+      "hex": "#6B9FE9",
+      "role_ar": "خلفية الشاشة (تدرج من #2F6BCF إلى #9CC2F3)",
+      "key": "screen",
+      "usage_pct": 8
+    }
+  ],
+  "gradients": [
+    {
+      "name_ar": "الخلفية",
+      "css": "radial-gradient(ellipse 85% 50% at 50% 52%, #ffffff, #f1f6fe 55%, #e0eafa) + iso grid repeating-linear-gradient(30deg/150deg, rgba(47,107,207,.07) 0 2px, transparent 2px 64px)"
+    },
+    {
+      "name_ar": "أشباح القطع",
+      "css": "MeshBasic #3a7bd5 opacity .10 + EdgesGeometry lines #3a7bd5 @.55 (pulse while waiting) → fade out on landing"
+    },
+    {
+      "name_ar": "ومضة التثبيت",
+      "css": "additive glow sprite #bcd6ff, scale 0.6 → 1.4, fade 0.5s"
+    },
+    {
+      "name_ar": "شاشة الأداء",
+      "css": "bg #0f1d38 + radial rgba(58,123,213,.45) · gauge arc linear-gradient(#4a8fe7 → #8fc0ff)"
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Baloo Bhaijaan 2",
+      "use_ar": "العناوين والكلمات الكبيرة والترجمة (يشبه خط شعار تيربو): وزن 700 إلى 800",
+      "url": "https://fonts.google.com/specimen/Baloo+Bhaijaan+2"
+    },
+    {
+      "family": "Inter",
+      "use_ar": "أسماء القطع والأسعار والأرقام والعداد",
+      "url": "https://fonts.google.com/specimen/Inter"
+    }
+  ]
+}
