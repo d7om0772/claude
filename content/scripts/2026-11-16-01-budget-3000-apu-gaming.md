@@ -4,8 +4,8 @@ publish_date: 2026-11-16
 slot: "13:00"
 series: budget-builds
 topic: تجميعة قيمنق بـ 3000 ريال للمبتدئ
-status: مرفوض
-version: 1
+status: سكربت
+version: 2
 target_length_s: 70
 researched_at: 2026-11-15
 ---
@@ -18,16 +18,16 @@ researched_at: 2026-11-15
 
 ## نص الكابشن
 عندك 3000 ريال وتبي تلعب؟
-الكروت غالية هالفترة، حتى RTX 3050 بـ 1,250 ريال.
+الكروت غالية هالفترة، حتى RTX 3050 6GB بـ 1,250 ريال.
 عشان كذا بنبدأ بمعالج فيه كرت مدمج.
 المعالج Ryzen 7 5700G، بـ 984 ريال، ومعه مبرد.
-الماذربورد ASRock B550M-HDV، بـ 398 ريال.
+الماذربورد ASUS PRIME B550M-A WIFI II، بـ 433 ريال، وتدعم المعالج من أول نسخة BIOS.
 الرام 16GB، شريحتين 8GB، بـ 555 ريال.
 التخزين Kingston NV3 500GB، بـ 391 ريال.
-الباور Corsair RM650، بـ 310 ريال.
+الباور Corsair RM650e، بـ 310 ريال.
 يعني 650W، تكفي لو ركّبت RTX 5060 بعدين.
-والكيس Cooler Master TD300 Mesh، بـ 299 ريال.
-المجموع 2,937 ريال، والباقي 63.
+والكيس Cooler Master TD300 Mesh الأبيض، بـ 299 ريال.
+المجموع 2,972 ريال، والباقي 28.
 على 1080p، Valorant تقريباً 140 FPS.
 وFortnite على إعدادات منخفضة، تقريباً 75 FPS.
 وش الميزانية الجاية؟ اكتبها بالتعليقات.
@@ -35,45 +35,47 @@ researched_at: 2026-11-15
 
 ## نص التعليق الصوتي
 عندك ثلاث آلاف ريال وتبي تلعب؟
-الكروت غالية هالفترة، حتى RTX ثلاثين خمسين بألف ومتين وخمسين ريال.
+الكروت غالية هالفترة، حتى RTX ثلاثين خمسين ست giga بألف ومتين وخمسين ريال.
 عشان كذا بنبدأ بمعالج فيه كرت مدمج.
 المعالج Ryzen seven fifty-seven hundred G، بتسع مية وأربعة وثمانين ريال، ومعه مبرد.
-الماذربورد ASRock B five fifty M HDV، بثلاث مية وثمانية وتسعين ريال.
+الماذربورد ASUS PRIME B five fifty M A Wi-Fi two، بأربع مية وثلاثة وثلاثين ريال، وتدعم المعالج من أول نسخة BIOS.
 الرام ستطعش giga، شريحتين ثمان giga، بخمس مية وخمسة وخمسين ريال.
 التخزين Kingston NV three خمس مية giga، بثلاث مية وواحد وتسعين ريال.
-الباور Corsair RM six fifty، بثلاث مية وعشرة ريال.
+الباور Corsair RM six fifty e، بثلاث مية وعشرة ريال.
 يعني ست مية وخمسين واط، تكفي لو ركّبت RTX خمسين ستين بعدين.
-والكيس Cooler Master TD three hundred Mesh، بميتين وتسعة وتسعين ريال.
-المجموع ألفين وتسع مية وسبعة وثلاثين ريال، والباقي ثلاثة وستين.
+والكيس Cooler Master TD three hundred Mesh الأبيض، بميتين وتسعة وتسعين ريال.
+المجموع ألفين وتسع مية وثنين وسبعين ريال، والباقي ثمانية وعشرين.
 على ألف وثمانين بي، Valorant تقريباً مية وأربعين فريم.
 وFortnite على إعدادات منخفضة، تقريباً خمسة وسبعين فريم.
 وش الميزانية الجاية؟ اكتبها بالتعليقات.
 تابع تيربو عشان ما يفوتك الجاي.
 
 ## الادعاءات والمراجع
-> **ملاحظة تسعير:** صفحات Amazon.sa وNoon رجّعت HTTP 503 للأداة وقت البحث (حماية ضد الزحف)، وExtra وJarir ما عرضت المنتجات. الأسعار مأخوذة من **SaudiPCPrice** (موقع مقارنة يتتبع عروض Amazon.sa، الأسعار شاملة الضريبة 15٪)، **لقطة 15/11/2026 الساعة 19:35 بتوقيت الرياض**، وكل سعر معه رابط المنتج في Amazon.sa (بدون رابط الإحالة). رابط Amazon.sa مذكور عشان المدقق/المشاهد يتأكد مباشرة.
+> **ملاحظة تسعير (نسخة 2):** المصدر الأساسي لكل سعر هو **صفحة المنتج في Amazon.sa نفسها** (رابط dp)، **تحقق مباشر 2026-11-15 الساعة 20:29 بتوقيت الرياض** (الأسعار شاملة الضريبة). SaudiPCPrice صار مصدر مساعد فقط (هو اللي دلّنا على العروض، وثبت إنه يغلط في أسماء المنتجات). الأسعار مقرّبة للريال.
 
 | # | الادعاء (كما في الكابشن) | المصدر | الرابط | تاريخ الوصول / التسعير |
 |---|---|---|---|---|
-| 1 | RTX 3050 بـ 1,250 ريال (أرخص عرض متتبَّع؛ RTX 3050 6GB) | SaudiPCPrice ← Amazon.sa (صفحة كروت الشاشة، أرخص كرت في القائمة) | https://www.saudipcprice.com/ar/gpu | 2026-11-15 (19:35) |
-| 2 | (نص على الشاشة فقط، وصف بطاقة RTX 3050) أكثر من ثلث الميزانية: 1,250 ÷ 3,000 = 41.7٪ | حساب | — | 2026-11-15 |
-| 3 | Ryzen 7 5700G بـ 984 ريال (984.02، متوفر) | SaudiPCPrice ← Amazon.sa | https://www.saudipcprice.com/ar/cpu/ryzen-7-5700g-سعر-السعودية · https://www.amazon.sa/dp/B091J3NYVF | 2026-11-15 (19:35) |
-| 4 | Ryzen 7 5700G فيه كرت مدمج (Radeon Graphics، 8 CUs) ومعه مبرد (Wraith Stealth) | Wikipedia: List of AMD Ryzen processors (صف 5700G: 8/16، 3.8/4.6GHz، Radeon 8 CU، مبرد Wraith Stealth) + PCWorld review (8 cores/16 threads، Radeon 8 CUs @ 2GHz، 65W) — صفحة AMD الرسمية رجّعت 503 | https://en.wikipedia.org/wiki/List_of_AMD_Ryzen_processors · https://www.pcworld.com/article/394942/ryzen-7-5700g-review.html | 2026-11-15 |
-| 5 | ASRock B550M-HDV بـ 398 ريال (متوفر؛ AM4، DDR4 × 2، M.2 PCIe 4.0 × 1، PCIe x16 × 1، mATX) | SaudiPCPrice ← Amazon.sa | https://www.saudipcprice.com/ar/motherboards/motherboard-asrock-b550m-hdv-سعر-السعودية · https://www.amazon.sa/dp/B089W26FCB | 2026-11-15 (19:35) |
-| 6 | الرام 16GB، شريحتين 8GB، بـ 555 ريال (TEAMGROUP T-Create Classic 10L DDR4 2×8GB 3200MHz CL22) | SaudiPCPrice ← Amazon.sa | https://www.saudipcprice.com/ar/ram/teamgroup-t-create-classic-10l-ddr4-16gb-kit-2-x-8gb-3200mhz-pc4-25600-cl22-desk-سعر-السعودية · https://www.amazon.sa/dp/B08HLYYP4G | 2026-11-15 (19:35) |
-| 8 | Kingston NV3 500GB بـ 391 ريال (NVMe Gen4، متوفر) | SaudiPCPrice ← Amazon.sa | https://www.saudipcprice.com/ar/ssd/ssd-kingston-nv3-500gb-سعر-السعودية · https://www.amazon.sa/dp/B0DBR9RZLV | 2026-11-15 (19:35) |
-| 9 | Corsair RM650 بـ 310 ريال (650W، 80+ Gold؛ أرخص باور في القائمة) | SaudiPCPrice ← Amazon.sa (صفحة الباورات) | https://www.saudipcprice.com/ar/psu · https://www.amazon.sa/dp/B0DMTPFW3J | 2026-11-15 (19:35) |
+| 1 | RTX 3050 6GB بـ 1,250 ريال (ZOTAC GAMING GeForce RTX 3050 6GB Low-Profile، SAR 1,250.00، In Stock) | Amazon.sa (تحقق مباشر) · مساعد: SaudiPCPrice (أرخص كرت في القائمة؛ نسخة 8GB أرخصها 1,646) | https://www.amazon.sa/dp/B0D4TRRSDV · https://www.saudipcprice.com/ar/gpu | 2026-11-15 (20:29) |
+| 2 | (نص على الشاشة فقط، وصف بطاقة RTX 3050 6GB) أكثر من ثلث الميزانية: 1,250 ÷ 3,000 = 41.7٪ | حساب | — | 2026-11-15 |
+| 3 | Ryzen 7 5700G بـ 984 ريال (SAR 984.02، "Only 2 left in stock") | Amazon.sa (تحقق مباشر) | https://www.amazon.sa/dp/B091J3NYVF | 2026-11-15 (20:29) |
+| 4 | Ryzen 7 5700G فيه كرت مدمج ومعه مبرد (AMD: # of CPU Cores 8، # of Threads 16، Graphics Model Radeon Graphics، Graphics Core Count 8، Graphics Frequency 2000 MHz، Thermal Solution (PIB) AMD Wraith Stealth، Default TDP 65W، Launch Date 4/13/2021) | AMD (صفحة المنتج الرسمية) | https://www.amd.com/en/support/downloads/drivers.html/processors/ryzen/ryzen-5000-series/amd-ryzen-7-5700g.html | 2026-11-15 |
+| 5 | ASUS PRIME B550M-A WIFI II بـ 433 ريال (العنوان في Amazon.sa: "ASUS PRIME B550MA WIFI II AMD B550 Socket AM4 micro ATX"، SAR 433.14، In Stock، البائع Amazon UAE) | Amazon.sa (تحقق مباشر) | https://www.amazon.sa/dp/B09LVQXHBG | 2026-11-15 (20:29) |
+| 5أ | البوردة تدعم المعالج من أول نسخة BIOS: قائمة دعم المعالجات الرسمية في ASUS للبوردة فيها "Ryzen 7 5700G (3.8GHz,45-65W,L3:16M,8C)" بأقل نسخة BIOS **0303**، وصفحة تنزيل الـ BIOS الرسمية أقدم نسخة فيها **0303 بتاريخ 2021/10/21** (بعدها 2604 … 3645 بتاريخ 2026/09/14). يعني أي نسخة BIOS للبوردة تدعم 5700G | ASUS (CPU Support List + BIOS & Firmware) | https://www.asus.com/motherboards-components/motherboards/prime/prime-b550m-a-wifi-ii/helpdesk_cpu/ · https://www.asus.com/motherboards-components/motherboards/prime/prime-b550m-a-wifi-ii/helpdesk_bios/ | 2026-11-15 |
+| 5ب | (مواصفات البطاقة/ملاحظات الصانع) B550، AM4 لـ Ryzen 5000 G-Series، 4 × DIMM DDR4، 2 × M.2، mATX؛ مع 5000 G-Series منفذ الكرت PCIe 3.0 x16 | ASUS Tech Specs | https://www.asus.com/motherboards-components/motherboards/prime/prime-b550m-a-wifi-ii/techspec/ | 2026-11-15 |
+| 6 | الرام 16GB، شريحتين 8GB، بـ 555 ريال (TEAMGROUP T-Create Classic 10L DDR4 16GB Kit (2 x 8GB) 3200MHz CL22، SAR 555.00، "Usually ships within 6 to 7 days") | Amazon.sa (تحقق مباشر) | https://www.amazon.sa/dp/B08HLYYP4G | 2026-11-15 (20:29) |
+| 8 | Kingston NV3 500GB بـ 391 ريال (NVMe PCIe 4.0 M.2 2280 SNV3S/500G، SAR 390.93، In Stock) | Amazon.sa (تحقق مباشر) | https://www.amazon.sa/dp/B0DBR9RZLV | 2026-11-15 (20:29) |
+| 9 | Corsair RM650e بـ 310 ريال (CORSAIR RM650e (2025)، 650W، Fully Modular، ATX 3.1، Cybenetics Gold؛ SAR 309.52، "Only 2 left in stock") | Amazon.sa (تحقق مباشر) | https://www.amazon.sa/dp/B0DMTPFW3J | 2026-11-15 (20:29) |
 | 10 | 650W تكفي لو ركّبت RTX 5060 (NVIDIA: Required System Power 550W، TGP 145W) | NVIDIA (صفحة RTX 5060 Family) | https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5060-family/ | 2026-11-15 |
-| 11 | Cooler Master TD300 Mesh بـ 299 ريال | SaudiPCPrice ← Amazon.sa (صفحة الكيسات) | https://www.saudipcprice.com/ar/cases · https://www.amazon.sa/dp/B09JQF3HLH | 2026-11-15 (19:35) |
-| 12 | المجموع 2,937 ريال، والباقي 63 (984 + 398 + 555 + 391 + 310 + 299 = 2,937؛ ضمن الميزانية −2.1٪) | حساب من الأسعار أعلاه | — | 2026-11-15 |
+| 11 | Cooler Master TD300 Mesh الأبيض بـ 299 ريال (العنوان: "Cooler Master TD300 Mesh White Micro-ATX Tower"، SAR 299.00، "Only 3 left in stock") | Amazon.sa (تحقق مباشر) | https://www.amazon.sa/dp/B09JQF3HLH | 2026-11-15 (20:29) |
+| 12 | المجموع 2,972 ريال، والباقي 28 (984 + 433 + 555 + 391 + 310 + 299 = 2,972؛ الفعلي 2,971.61؛ ضمن الميزانية −0.9٪) | حساب من الأسعار أعلاه | — | 2026-11-15 |
 | 13 | على 1080p، Valorant تقريباً 140 FPS (الاختبار: 142.3 FPS متوسط، 1920×1080، أعلى إعدادات + FXAA، 2×8GB DDR4) — **approx: true** | ComputerBase: اختبار iGPU للـ 5600G/5700G | https://www.computerbase.de/2021-08/ryzen-5600g-5700g-igpu-game-benchmark-test/2/ (النتائج) · https://www.computerbase.de/2021-08/ryzen-5600g-5700g-igpu-game-benchmark-test/ (الإعدادات ونظام الاختبار) | 2026-11-15 |
 | 14 | Fortnite على إعدادات منخفضة، تقريباً 75 FPS (الاختبار: 77.1 FPS متوسط، 1920×1080، Low preset DX11) — **approx: true** | ComputerBase (نفس الاختبار) | https://www.computerbase.de/2021-08/ryzen-5600g-5700g-igpu-game-benchmark-test/2/ | 2026-11-15 |
-| 15 | (نص على الشاشة + كابشن المنشور) الأسعار من Amazon.sa بتاريخ 15 نوفمبر وممكن تتغير | لقطة SaudiPCPrice 15/11/2026 19:35 (UTC+3) لعروض Amazon.sa | https://www.saudipcprice.com/ar/cpu | 2026-11-15 |
+| 15 | (نص على الشاشة + كابشن المنشور) الأسعار من Amazon.sa بتاريخ 15 نوفمبر وممكن تتغير | صفحات Amazon.sa أعلاه (تحقق مباشر 20:29) | الروابط في الأسطر 1، 3، 5، 6، 8، 9، 11 | 2026-11-15 |
 
 **ليش FPS "تقريبي":** اختبار ComputerBase (2021) استخدم 2×8GB DDR4 بتوقيتات 14-14-14-32 (أسرع من رامنا CL22)، وماذربورد مختلفة، ونسخ ألعاب أقدم. فالأرقام مقرّبة للأسفل (140 بدل 142، 75 بدل 77) ومكتوب عليها "تقريباً".
 
 ## كابشن المنشور
-تجميعة قيمنق بـ 3,000 ريال للمبتدئ: معالج فيه كرت مدمج يشغّل ألعاب مثل Valorant وFortnite على 1080p، وباور يكفي لو أضفت كرت شاشة بعدين.
+تجميعة قيمنق بـ 3,000 ريال للمبتدئ: معالج فيه كرت مدمج يشغّل ألعاب مثل Valorant وFortnite على 1080p، وماذربورد تدعمه بدون تحديث BIOS، وباور يكفي لو أضفت كرت شاشة بعدين.
 الأسعار من Amazon.sa بتاريخ 15 نوفمبر 2026 وممكن تتغير. أرقام الأداء تقريبية من اختبار ComputerBase.
 
 ## الهاشتاقات
@@ -84,21 +86,21 @@ researched_at: 2026-11-15
 - **ما فيه كرت شاشة في هالتجميعة:** خانة `gpu` تبقى **شبح فاضي** (لا تنزّل كرت). هذا جزء من الفكرة: مكان الكرت جاهز للترقية.
 - **جملة بجملة (15 جملة):**
   1. "عندك 3000…" ← E01 + E02 (1080p على الشاشة) والعداد "باقي 3,000".
-  2. "الكروت غالية… RTX 3050 بـ 1,250" ← T: `chip:"كرت الشاشة"`, `main:"RTX 3050"`, `price:"1,250 ريال"`, `desc:"!!أكثر من ثلث الميزانية!!"` (نوع B9). **العداد ما ينزل هنا** (القطعة ما انضافت).
+  2. "الكروت غالية… RTX 3050 6GB بـ 1,250" ← T: `chip:"كرت الشاشة"`, `main:"RTX 3050 6GB"`, `price:"1,250 ريال"`, `desc:"!!أكثر من ثلث الميزانية!!"` (نوع B9). **العداد ما ينزل هنا** (القطعة ما انضافت).
   3. "عشان كذا بنبدأ بمعالج…" ← E03 لفّة الكاميرا قدام الكيس (تبدأ أشباح القطع).
   4. المعالج ← E04 `part:"cpu"`, `category:"المعالج"`, `name:"Ryzen 7 5700G"`, `price:984`, `desc:"فيه كرت مدمج + مبرد"` ← E05 العداد 3,000 → 2,016. (المبرد يجي مع المعالج: لا تنزّل `cooler` بسعر منفصل؛ ممكن ينزل بدون سعر مع كلمة "مبرد").
-  5. الماذربورد ← E04 `part:"mobo"`, `name:"ASRock B550M-HDV"`, `price:398` ← العداد 1,618.
-  6. الرام ← E04 `part:"ram"`, `name:"16GB (2×8GB) DDR4"`, `price:555` ← العداد 1,063.
-  7. التخزين ← E04 `part:"ssd"`, `name:"Kingston NV3 500GB"`, `price:391` ← العداد 672.
-  8. الباور ← E10 `part:"psu"`, `name:"Corsair RM650"`, `price:310` ← العداد 362.
+  5. الماذربورد ← E04 `part:"mobo"`, `name:"ASUS PRIME B550M-A WIFI II"`, `price:433`, `desc:"تدعم 5700G من أول BIOS"` ← العداد 1,583. (لو الاسم طويل على البطاقة: سطرين "ASUS PRIME" / "B550M-A WIFI II"، بدون شعار ASUS.)
+  6. الرام ← E04 `part:"ram"`, `name:"16GB (2×8GB) DDR4"`, `price:555` ← العداد 1,028.
+  7. التخزين ← E04 `part:"ssd"`, `name:"Kingston NV3 500GB"`, `price:391` ← العداد 637.
+  8. الباور ← E10 `part:"psu"`, `name:"Corsair RM650e"`, `price:310` ← العداد 327.
   9. "650W تكفي لو ركّبت RTX 5060" ← E08 على الشاشة أو وميض شبح `gpu` الفاضي + T `chip:"ترقية بعدين"`, `main:"RTX 5060"`, `desc:"يحتاج 550W"` (من NVIDIA).
-  10. الكيس ← E11 `category:"الكيس"`, `name:"Cooler Master TD300 Mesh"`, `price:299` ← العداد 63.
-  11. المجموع ← E12 `total:2937`، `title:"المجموع 2,937 ريال"`، والباقي 63. **أضف تحت المجموع نص صغير غير منطوق:** "الأسعار من Amazon.sa بتاريخ 15 نوفمبر وممكن تتغير".
+  10. الكيس ← E11 `category:"الكيس"`, `name:"Cooler Master TD300 Mesh (أبيض)"`, `price:299` ← العداد 28. **لون موديل الكيس في المشهد أبيض** (النسخة White).
+  11. المجموع ← E12 `total:2972`، `title:"المجموع 2,972 ريال"`، والباقي 28. **أضف تحت المجموع نص صغير غير منطوق:** "الأسعار من Amazon.sa بتاريخ 15 نوفمبر وممكن تتغير".
   12–13. الأداء ← E13 `res:"1080p"`؛ Valorant `fps:140` بشارة "تقريبي"، ثم Fortnite `fps:75` بشارات `["إعدادات منخفضة","تقريبي"]`. **"تقريبي" إلزامي على الشاشة (approx: true للرقمين).**
   14. CTA ← E14 `title:"وش الميزانية الجاية؟"`, `desc:"اكتبها بالتعليقات"`.
   15. الختام ← E15 تلقائي.
-- **أرقام البطاقات:** 984 · 398 · 555 · 391 · 310 · 299 · المجموع 2,937 · الباقي 63 · RTX 3050 = 1,250 (للمقارنة فقط، ما ينخصم) · Valorant ~140 FPS (approx) · Fortnite ~75 FPS Low (approx).
-- **ملاحظة توافق (ما دخلت النص):** صفحة ASRock لقائمة دعم المعالجات (CPU support list ونسخة BIOS المطلوبة للـ 5700G) ما انفتحت للأداة، فما ذكرنا أي شي عن التوافق أو BIOS في الفيديو.
+- **أرقام البطاقات:** 984 · 433 · 555 · 391 · 310 · 299 · المجموع 2,972 · الباقي 28 · RTX 3050 6GB = 1,250 (للمقارنة فقط، ما ينخصم) · Valorant ~140 FPS (approx) · Fortnite ~75 FPS Low (approx).
+- **العداد خطوة بخطوة:** 3,000 → 2,016 → 1,583 → 1,028 → 637 → 327 → 28.
 
 ## التدقيق — جولة 1 — 2026-11-15 20:25
 **النتيجة: مرفوض**
@@ -117,3 +119,13 @@ researched_at: 2026-11-15
 | 11 | التعليق الصوتي ↔ الكابشن | ✅ | 15 جملة مقابل 15، والمعنى نفسه. الأرقام انتحوّلت صح: 3000، 1,250، 984، 398، 555، 391، 310، 299، 2,937، 63، 140، 75. 1080p = ألف وثمانين بي، 16GB/8GB/500GB بـ giga، RTX 5060 = خمسين ستين، 5700G وB550M وNV3 وTD300 بالإنجليزي. (بعد البند 1: "RM six fifty e"). |
 | 12 | الهوك والقواعد العامة | ✅ | الهوك يتحقق في الفيديو (تجميعة 2,937 ضمن 3,000). المرئيات بدون أي كائن حي، وأسماء المنتجات نص بس بدون شعارات، وما فيه نصيحة خطيرة. |
 | 13 | التكرار | ✅ | `content/published.md` فاضي. |
+
+## سجل التعديلات
+### نسخة 2 — 2026-11-15 (بعد التدقيق — جولة 1)
+- **(1) الباور:** "Corsair RM650" ← **"Corsair RM650e"** في الكابشن، والتعليق ← "Corsair RM six fifty e"، وبطاقة E10 `name:"Corsair RM650e"`. سطر المرجع 9 صار "CORSAIR RM650e (2025)، 650W، Cybenetics Gold" (انحذف "80+ Gold"). المصدر: https://www.amazon.sa/dp/B0DMTPFW3J (SAR 309.52).
+- **(2) توافق البوردة مع 5700G:** صفحات ASRock (www.asrock.com و asrock.com.tw) كلها رجّعت صفحة حماية Incapsula، ودليل B550M-HDV الرسمي (download.asrock.com/Manual/B550M-HDV.pdf) قديم وما يذكر Ryzen 5000 G-Series ولا أقل نسخة BIOS. فما قدرت أثبت توافق B550M-HDV، و**بدّلت البوردة**. صفحات MSI رجّعت 403 (فما قدرت أوثّق زر Flash BIOS في B550M PRO-VDH WIFI). اخترت **ASUS PRIME B550M-A WIFI II** (Amazon.sa B09LVQXHBG، SAR 433.14): مو فيها BIOS FlashBack (مو مذكور في Tech Specs الرسمية)، لكن هذا **أأمن من الفلاش باك**: قائمة دعم المعالجات الرسمية في ASUS تقول 5700G مدعوم من BIOS **0303**، وصفحة BIOS الرسمية تبيّن إن 0303 (2021/10/21) **هي أول نسخة BIOS منشورة للبوردة**، يعني المعالج يشتغل عليها بدون تحديث ولا معالج ثاني. أضفت جملة صادقة في الكابشن/التعليق: "وتدعم المعالج من أول نسخة BIOS"، وسطرين مرجع 5أ و5ب، وعبارة في كابشن المنشور. المجموع تغيّر: 2,937 ← **2,972**، والباقي 63 ← **28**، والعداد في ملاحظات الصانع اتحدّث.
+- **(3) مواصفات 5700G:** استبدلت Wikipedia وPCWorld بصفحة AMD الرسمية (فتحتها بـ curl: 8 أنوية/16 خيط، Radeon Graphics، 8 Graphics Cores، 2000 MHz، Wraith Stealth، 65W). النص ما تغيّر.
+- **(4) مصدر الأسعار:** Amazon.sa صار المصدر الأساسي لكل قطعة (رابط dp + السعر الفعلي، تحقق مباشر 2026-11-15 20:29 الرياض)، وSaudiPCPrice مساعد بس. سطر RTX 3050 صار برابط https://www.amazon.sa/dp/B0D4TRRSDV. كل الأسعار طابقت لقطة المدقق.
+- **(5) RTX 3050:** البطاقة T ← `main:"RTX 3050 6GB"`، والكابشن ← "حتى RTX 3050 6GB بـ 1,250 ريال"، والتعليق ← "حتى RTX ثلاثين خمسين ست giga بألف ومتين وخمسين ريال".
+- **(6) الكيس:** الكابشن/التعليق ← "Cooler Master TD300 Mesh الأبيض"، وبطاقة E11 `name:"Cooler Master TD300 Mesh (أبيض)"` والموديل أبيض في المشهد، وسطر المرجع 11 يذكر "TD300 Mesh White". المصدر: https://www.amazon.sa/dp/B09JQF3HLH.
+- `status` رجع "سكربت"، و`version` صار 2.
