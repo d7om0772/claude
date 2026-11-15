@@ -1,0 +1,265 @@
+{
+ "id": "2026-11-16-02",
+ "series": "shortcuts",
+ "style": "13_mini_desk_diorama",
+ "camera": {
+  "variant": 1
+ },
+ "header": {
+  "label": "اختصارات ويندوز",
+  "dots": 2
+ },
+ "hook": {
+  "title": {
+   "main": "لا تقص.. صوّر **الجزء** بس",
+   "desc": "Win + Shift + S",
+   "desc_at": "w2"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "big": "",
+    "text": "",
+    "clock": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0.05,
+   "end": "w1",
+   "params": {
+    "mode": "fullshot",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w1",
+   "end": "w4.end",
+   "params": {
+    "mode": "fullshot",
+    "screen": "left",
+    "cam": "screens"
+   }
+  },
+  {
+   "el": "E02",
+   "start": "w5",
+   "end": "w7.end",
+   "params": {
+    "text": "أسرع",
+    "spins": 3,
+    "title": {
+     "main": "فيه طريقة **أسرع**"
+    }
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w8",
+   "end": "w15.end",
+   "params": {
+    "index": 1,
+    "label": "الاختصار",
+    "keys": [
+     "Win",
+     "Shift",
+     "S"
+    ],
+    "key_times": [
+     "w9",
+     "w11",
+     "w13"
+    ],
+    "desc": "لقطة لجزء من الشاشة",
+    "desc_at": "w14",
+    "cam": "main"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w16",
+   "end": "w37.end",
+   "params": {
+    "mode": "snip",
+    "screen": "left",
+    "cam": "left",
+    "times": [
+     "w23",
+     "w25",
+     "w28",
+     "w30"
+    ],
+    "at": "w32",
+    "title": {
+     "chip": "شريط القص",
+     "main": "يطلع **فوق الشاشة**"
+    }
+   }
+  },
+  {
+   "el": "T",
+   "start": "w22",
+   "end": "w31.end",
+   "params": {
+    "chip": "4 أشكال",
+    "main": "اختار **الشكل**"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w32",
+   "end": "w37.end",
+   "params": {
+    "chip": "اسحب",
+    "main": "على **الجزء** اللي تبيه"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w38",
+   "end": "w43.end",
+   "params": {
+    "mode": "clipboard",
+    "screen": "right",
+    "cam": "right",
+    "thumb": true,
+    "items": [
+     "Screenshot",
+     "Notes",
+     "Link"
+    ],
+    "title": {
+     "chip": "تلقائياً",
+     "main": "تنحفظ في **الحافظة**"
+    }
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w44",
+   "end": "w51.end",
+   "params": {
+    "mode": "chat",
+    "screen": "left",
+    "cam": "left",
+    "at": "w51",
+    "title": {
+     "chip": "الصقها",
+     "keys": [
+      "Ctrl",
+      "V"
+     ],
+     "key_times": [
+      "w49",
+      "w51"
+     ],
+     "desc": "بالمحادثة أو الملف",
+     "desc_at": "w45"
+    }
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w48",
+   "end": "w51.end",
+   "params": {
+    "keys": [
+     "Ctrl",
+     "V"
+    ],
+    "key_times": [
+     "w49",
+     "w51"
+    ]
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w52",
+   "end": "w61.end",
+   "params": {
+    "mode": "snipapp",
+    "screen": "left",
+    "cam": "left",
+    "title": {
+     "chip": "تعديل وحفظ",
+     "main": "Snipping Tool",
+     "desc": "عدّل عليها أو احفظها",
+     "desc_at": "w54"
+    }
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w62",
+   "end": "w72.end",
+   "params": {
+    "index": 2,
+    "label": "بونص",
+    "keys": [
+     "Win",
+     "Shift",
+     "R"
+    ],
+    "key_times": [
+     "w63",
+     "w65",
+     "w67"
+    ],
+    "desc": "يسجّل فيديو لجزء من الشاشة",
+    "desc_at": "w68"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w67",
+   "end": "w72.end",
+   "params": {
+    "mode": "snip",
+    "screen": "left",
+    "at": "w68",
+    "rec": true
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": "w23",
+   "name": "gs_select_option11"
+  },
+  {
+   "t": "w25",
+   "name": "gs_select_option11"
+  },
+  {
+   "t": "w28",
+   "name": "gs_select_option11"
+  },
+  {
+   "t": "w30",
+   "name": "gs_select_option11"
+  },
+  {
+   "t": "w32",
+   "name": "gs_swipe_grass5"
+  },
+  {
+   "t": "w37",
+   "name": "gs_notification2"
+  },
+  {
+   "t": "w51.end",
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": "w58",
+   "name": "gs_selection9_fwd"
+  }
+ ],
+ "auto_sfx": true
+}
