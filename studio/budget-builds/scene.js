@@ -178,6 +178,8 @@ async function build(ctx) {
     ctx.plan[e.params.part] = { ghostFrom: roll + 0.9, drop: at(e.params.drop_at, e.start + 0.35), side: e.el === "E10" };
   }
   for (const p of data.preinstalled || []) ctx.plan[p] = { ghostFrom: 0, drop: -10 };
+  // خانات تبقى شبح فاضي طول الفيديو (مثل gpu في تجميعة بكرت مدمج: مكان الترقية جاهز)
+  for (const p of data.ghost_parts || []) if (!ctx.plan[p]) ctx.plan[p] = { ghostFrom: roll + 0.9, drop: 1e9 };
   // الكاميرا
   const P = POSES(ctx.variant);
   const keys = [{ t: 0, pose: P.room }];

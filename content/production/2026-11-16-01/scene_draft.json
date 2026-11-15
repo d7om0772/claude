@@ -1,0 +1,297 @@
+{
+ "id": "2026-11-16-01",
+ "series": "budget-builds",
+ "style": "15_iso_build_drop",
+ "camera": {
+  "variant": 0
+ },
+ "budget": 3000,
+ "goal": "1080p",
+ "ghost_parts": [
+  "gpu"
+ ],
+ "header": {
+  "label": "تجميعة 3000 ريال",
+  "counter": {
+   "label": "باقي",
+   "start": 3000
+  }
+ },
+ "hook": {
+  "title": {
+   "main": "عندك **3000** ريال؟",
+   "desc": "قيمنق على 1080p",
+   "desc_at": "w3"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "goal": "1080p"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w5",
+   "params": {
+    "chip": "كرت الشاشة",
+    "chip_color": "problem",
+    "main": "الكروت !!غالية!! هالفترة",
+    "size": "mid"
+   },
+   "end": "w8.end"
+  },
+  {
+   "el": "T",
+   "start": "w9",
+   "params": {
+    "chip": "كرت الشاشة",
+    "main": "RTX 3050 6GB",
+    "en": true,
+    "price": 1250,
+    "price_at": "w13",
+    "desc": "!!أكثر من ثلث الميزانية!!",
+    "desc_at": "w14"
+   },
+   "end": "w14.end"
+  },
+  {
+   "el": "E08",
+   "start": "w12",
+   "end": "w14.end",
+   "params": {
+    "title": "الكرت من ميزانيتك",
+    "bars": [
+     {
+      "label": "الكرت",
+      "value": 1250
+     },
+     {
+      "label": "الميزانية",
+      "value": 3000
+     }
+    ]
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w15",
+   "end": "w21.end",
+   "params": {
+    "title": {
+     "start": 10.22,
+     "main": "نبدأ بمعالج فيه **كرت مدمج**",
+     "size": "mid"
+    }
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w22",
+   "end": "w30.end",
+   "params": {
+    "part": "cpu",
+    "category": "المعالج",
+    "name": "Ryzen 7 5700G",
+    "drop_at": "w23",
+    "price": 984,
+    "price_at": "w27",
+    "desc": "فيه كرت مدمج **+** مبرد",
+    "desc_at": "w29"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w31",
+   "end": "w39.end",
+   "params": {
+    "part": "mobo",
+    "category": "الماذربورد",
+    "name": "ASUS PRIME B550M-A WIFI II",
+    "drop_at": "w32",
+    "price": 433,
+    "price_at": "w38"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w40",
+   "end": "w45.end",
+   "params": {
+    "chip": "الماذربورد",
+    "main": "تدعم **5700G** من أول BIOS",
+    "size": "mid"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w46",
+   "end": "w52.end",
+   "params": {
+    "part": "ram",
+    "category": "الرام",
+    "name": "16GB (2×8GB) DDR4",
+    "en": true,
+    "list_name": "الرام",
+    "drop_at": "w47",
+    "price": 555,
+    "price_at": "w51"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w53",
+   "end": "w59.end",
+   "params": {
+    "part": "ssd",
+    "category": "التخزين",
+    "name": "Kingston NV3 500GB",
+    "drop_at": "w54",
+    "price": 391,
+    "price_at": "w58"
+   }
+  },
+  {
+   "el": "E10",
+   "start": "w60",
+   "end": "w65.end",
+   "params": {
+    "part": "psu",
+    "category": "الباور",
+    "name": "Corsair RM650e",
+    "drop_at": "w61",
+    "price": 310,
+    "price_at": "w64"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w66",
+   "params": {
+    "chip": "ترقية بعدين",
+    "chip_color": "fix",
+    "main": "RTX 5060",
+    "en": true,
+    "desc": "يحتاج **550W** وعندك ++650W++",
+    "desc_at": "w68"
+   },
+   "end": "w73.end"
+  },
+  {
+   "el": "E08",
+   "start": "w68",
+   "end": "w73.end",
+   "params": {
+    "title": "باور RTX 5060",
+    "bars": [
+     {
+      "label": "يحتاج",
+      "value": 550,
+      "unit": "W"
+     },
+     {
+      "label": "عندك",
+      "value": 650,
+      "unit": "W"
+     }
+    ]
+   }
+  },
+  {
+   "el": "E11",
+   "start": "w74",
+   "end": "w82.end",
+   "params": {}
+  },
+  {
+   "el": "T",
+   "start": "w74",
+   "end": "w82.end",
+   "params": {
+    "chip": "الكيس",
+    "main": "Cooler Master TD300 Mesh",
+    "en": true,
+    "size": "sm",
+    "desc": "النسخة **البيضاء**",
+    "desc_at": "w79"
+   }
+  },
+  {
+   "el": "E05",
+   "start": "w81",
+   "end": "w82.end",
+   "params": {
+    "price": 299,
+    "list_name": "الكيس"
+   }
+  },
+  {
+   "el": "E12",
+   "start": "w83",
+   "end": "w85.end",
+   "params": {
+    "total": 2972,
+    "title": "المجموع **2,972** ريال"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w86",
+   "params": {
+    "main": "والباقي ++28++ ريال",
+    "size": "mid",
+    "desc": "الأسعار من Amazon.sa بتاريخ 15 نوفمبر وممكن تتغير",
+    "desc_at": "w87"
+   },
+   "end": "w88.end"
+  },
+  {
+   "el": "E13",
+   "start": "w89",
+   "end": "w93.end",
+   "params": {
+    "res": "1080p",
+    "head": "Valorant ·",
+    "fps": 140,
+    "plus": false,
+    "chips": [
+     "إعدادات عالية",
+     "تقريبي"
+    ],
+    "title": "**Valorant** على 1080p",
+    "desc": "تقريباً 140 FPS"
+   }
+  },
+  {
+   "el": "E13",
+   "start": "w94",
+   "end": "w100.end",
+   "params": {
+    "res": "1080p",
+    "head": "Fortnite ·",
+    "fps": 75,
+    "plus": false,
+    "chips": [
+     "إعدادات منخفضة",
+     "تقريبي"
+    ],
+    "title": "**Fortnite** على 1080p",
+    "desc": "إعدادات منخفضة · تقريباً 75 FPS"
+   }
+  },
+  {
+   "el": "E14",
+   "start": "w101",
+   "end": "w105.end",
+   "params": {
+    "title": "وش الميزانية الجاية؟",
+    "desc": "اكتبها بالتعليقات"
+   }
+  }
+ ],
+ "sfx": [],
+ "auto_sfx": true
+}

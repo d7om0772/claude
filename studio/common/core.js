@@ -86,7 +86,8 @@ function setupCaptions(ctx) {
     const ws = L.words; let group = null;
     const isSym = (s) => /^[+\-–/×&]+$/.test(s.trim());
     ws.forEach((w, k) => {
-      const latin = hasLatin(w.w), sym = isSym(w.w);
+      const mixed = hasLatin(w.w) && /^[\u0600-\u06FF]/.test(w.w); // مثل "وFortnite": حرف عربي ملتصق بكلمة لاتينية
+      const latin = hasLatin(w.w) && !mixed, sym = isSym(w.w);
       const joinable = latin || (sym && group && ws[k + 1] && hasLatin(ws[k + 1].w));
       if (joinable) {
         if (!group) { if (k) cap.appendChild(document.createTextNode(" ")); group = el("bdi", "ltrgroup", null, cap); group.dir = "ltr"; }
@@ -94,7 +95,7 @@ function setupCaptions(ctx) {
         spans.push(el("span", "w ltr", esc(w.w), group));
       } else {
         group = null; if (k) cap.appendChild(document.createTextNode(" "));
-        spans.push(el("span", "w", esc(w.w), cap));
+        spans.push(el("span", "w", mixed ? isolateLTR(w.w) : esc(w.w), cap));
       }
     });
     // لو السطر أعرض من الكبسولة: صغّر الخط
@@ -245,7 +246,7 @@ export async function boot(cfg) {
   // العناصر
   const events = (data.events || []).map((ev, i) => ({ ...ev, _i: i, params: ev.params || {} })).sort((a, b) => a.start - b.start);
   for (const ev of events) {
-    if (ev.params.title) ctx.addTitle({ start: ev.start, ...ev.params.title });
+    if (ev.params.title && typeof ev.params.title === "object") ctx.addTitle({ start: ev.start, ...ev.params.title });
     if (ev.el === "T") { ctx.addTitle({ start: ev.start, end: ev.params.until ?? undefined, ...ev.params }); continue; }
     const h = cfg.handlers[ev.el];
     if (!h) { console.warn("unknown element", ev.el); continue; }

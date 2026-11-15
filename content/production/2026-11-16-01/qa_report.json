@@ -1,0 +1,15 @@
+{
+ "video": "work/2026-11-16-01/video.mp4",
+ "duration": 77.733333,
+ "size_mb": 14.9,
+ "lufs": -14.0,
+ "true_peak": -3.9,
+ "issues": [],
+ "sheets": [
+  "work/2026-11-16-01/sheets/sheet_01.jpg",
+  "work/2026-11-16-01/sheets/sheet_02.jpg",
+  "work/2026-11-16-01/sheets/sheet_03.jpg",
+  "work/2026-11-16-01/sheets/sheet_04.jpg",
+  "work/2026-11-16-01/sheets/sheet_05.jpg"
+ ]
+}

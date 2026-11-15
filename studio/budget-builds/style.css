@@ -1,2 +1,5 @@
 /* budget-builds — حزمة 15_iso_build_drop: كل التخطيط المشترك في common/base.css */
 .tag3d { font-size: 46px; }
+
+/* اسم طويل بسطر واحد (size:"sm") — 2026-11-16-01 */
+.tzone .main.sm { font-size: 58px; }
