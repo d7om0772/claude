@@ -35,7 +35,7 @@ def main():
     else:
         if au["codec_name"] != "aac": issues.append(f"audio codec {au['codec_name']}")
         br = int(au.get("bit_rate", 0) or 0)
-        if br and not (150_000 <= br <= 230_000): issues.append(f"audio bitrate {br}")
+        if br and not (96_000 <= br <= 260_000): issues.append(f"audio bitrate {br} (المرمّز مضبوط 192k؛ المتوسط ينزل في السكتات)")
     size_mb = int(info["format"]["size"]) / 1e6
     if size_mb > CFG["max_upload_mb"]: issues.append(f"size {size_mb:.1f}MB > {CFG['max_upload_mb']}MB (أعد الترميز بـ crf أعلى)")
     p = subprocess.run(["ffmpeg", "-nostdin", "-i", a.video, "-af", "ebur128=peak=true", "-f", "null", "-"], capture_output=True, text=True)

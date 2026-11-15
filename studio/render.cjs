@@ -3,7 +3,11 @@
  render.cjs — يصوّر كل فريم من قالب السلسلة بـ Playwright (renderFrame(t) حتمية) ويجمعها بـ ffmpeg.
 
  node studio/render.cjs --series budget-builds --data work/<ID>/scene.json --out work/<ID>/video.mp4 \
-      [--audio work/<ID>/mix.wav] [--from 0] [--to 5] [--fps 30] [--crf 16] [--workers 2] [--qa work/<ID>/qa.json]
+      [--audio work/<ID>/mix.wav] [--from 0] [--to 5] [--fps 30] [--crf 16] [--workers 3] [--qa work/<ID>/qa.json]
+
+ فيديو طويل (أمر Bash الواحد حدّه 10 دقايق): قسّم الرندر لأجزاء، كل جزء في أمر مستقل، ثم جمّعها:
+   node studio/render.cjs ... --parts 3 --part 1      (ثم --part 2 ثم --part 3)  → work/<ID>/.parts/
+   node studio/render.cjs ... --assemble               → يجمع الأجزاء + يركّب الصوت + qa.json
 
  - 1080×1920، 30fps، H.264 (crf 14–18، yuv420p، BT.709)، صوت AAC 192k، faststart.
  - كل نص ثانية يشغّل window.__qa(t): المناطق الآمنة + تداخل العناصر → يكتبها في qa.json.
@@ -28,7 +32,7 @@ const fps = +(A.fps || data.fps || 30);
 const from = +(A.from || 0);
 const to = Math.min(+(A.to || data.duration), data.duration);
 const crf = String(A.crf || 16);
-const workers = Math.max(1, +(A.workers || 2));
+const workers = Math.max(1, +(A.workers || 3));
 const out = path.resolve(A.out || path.join(path.dirname(dataPath), "video.mp4"));
 const qaPath = path.resolve(A.qa || path.join(path.dirname(out), "qa.json"));
 const html = "file://" + path.join(STUDIO, series, "index.html");
@@ -36,10 +40,14 @@ const tmp = fs.mkdtempSync(path.join(path.dirname(out), ".render-"));
 const FFMPEG = "ffmpeg";
 
 const totalFrames = Math.round((to - from) * fps);
-const chunk = Math.ceil(totalFrames / workers);
+const nParts = Math.max(1, +(A.parts || 1)), part = +(A.part || 0);
+const partsDir = path.join(path.dirname(out), ".parts");
+const pSize = Math.ceil(totalFrames / nParts);
+const P0 = part ? (part - 1) * pSize : 0, P1 = part ? Math.min(totalFrames, part * pSize) : totalFrames;
+const chunk = Math.ceil((P1 - P0) / workers);
 
 async function runWorker(k) {
-  const f0 = k * chunk, f1 = Math.min(totalFrames, f0 + chunk);
+  const f0 = P0 + k * chunk, f1 = Math.min(P1, f0 + chunk);
   if (f0 >= f1) return { frames: 0, qa: [], ms: 0 };
   const seg = path.join(tmp, `seg_${String(k).padStart(2, "0")}.mp4`);
   const ff = spawn(FFMPEG, ["-nostdin", "-v", "error", "-y", "-f", "image2pipe", "-framerate", String(fps), "-c:v", "png", "-i", "-",
@@ -73,28 +81,51 @@ async function runWorker(k) {
   return { frames: f1 - f0, qa, ms: (Date.now() - t0) / Math.max(1, f1 - f0), seg, meta, errors };
 }
 
-(async () => {
-  const t0 = Date.now();
-  console.log(`render ${series}: ${totalFrames} frames (${from}s→${to}s) @${fps}fps, ${workers} workers`);
-  const res = await Promise.all([...Array(workers).keys()].map(runWorker));
-  const segs = res.filter((r) => r.seg).map((r) => r.seg);
-  const list = path.join(tmp, "list.txt");
-  fs.writeFileSync(list, segs.map((s) => `file '${s}'`).join("\n"));
-  const silent = path.join(tmp, "video_silent.mp4");
-  execFileSync(FFMPEG, ["-nostdin", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-c", "copy", silent]);
+function finish(silent, qa, errors, meta, msPerFrame, t0) {
   if (A.audio) {
     execFileSync(FFMPEG, ["-nostdin", "-v", "error", "-y", "-i", silent, "-ss", String(from), "-t", String(to - from), "-i", path.resolve(A.audio),
       "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest", "-movflags", "+faststart", out]);
   } else {
     execFileSync(FFMPEG, ["-nostdin", "-v", "error", "-y", "-i", silent, "-c", "copy", "-movflags", "+faststart", out]);
   }
+  const report = { series, data: dataPath, out, frames: totalFrames, fps, from, to, workers, ms_per_frame: msPerFrame,
+    seconds: Math.round((Date.now() - t0) / 1000), meta, violations: qa, console_errors: errors };
+  fs.writeFileSync(qaPath, JSON.stringify(report, null, 1));
+  const byType = qa.reduce((m, v) => ((m[v.type] = (m[v.type] || 0) + 1), m), {});
+  console.log(`✓ ${out}  (${report.seconds}s, ${msPerFrame}ms/frame)  qa: ${JSON.stringify(byType)}  console_errors: ${errors.length}`);
+}
+
+(async () => {
+  const t0 = Date.now();
+  if (A.assemble) { // تجميع الأجزاء
+    const parts = fs.readdirSync(partsDir).filter((f) => /^p\d+\.mp4$/.test(f)).sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+    const metas = parts.map((f) => JSON.parse(fs.readFileSync(path.join(partsDir, f.replace(".mp4", ".json")), "utf8")));
+    const want = metas[0]?.nParts; if (!want || parts.length !== want) throw new Error(`parts missing: have ${parts.length}, need ${want}`);
+    const list = path.join(tmp, "list.txt"); fs.writeFileSync(list, parts.map((f) => `file '${path.join(partsDir, f)}'`).join("\n"));
+    const silent = path.join(tmp, "video_silent.mp4");
+    execFileSync(FFMPEG, ["-nostdin", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-c", "copy", silent]);
+    finish(silent, metas.flatMap((m) => m.qa), [...new Set(metas.flatMap((m) => m.errors))], metas[0].meta,
+      Math.round(metas.reduce((s, m) => s + m.ms * m.frames, 0) / Math.max(1, totalFrames)), t0);
+    fs.rmSync(tmp, { recursive: true, force: true }); fs.rmSync(partsDir, { recursive: true, force: true });
+    return;
+  }
+  console.log(`render ${series}: frames ${P0}→${P1} of ${totalFrames} (${from}s→${to}s) @${fps}fps, ${workers} workers${part ? `, part ${part}/${nParts}` : ""}`);
+  const res = await Promise.all([...Array(workers).keys()].map(runWorker));
+  const segs = res.filter((r) => r.seg).map((r) => r.seg);
+  const list = path.join(tmp, "list.txt");
+  fs.writeFileSync(list, segs.map((s) => `file '${s}'`).join("\n"));
+  const silent = path.join(tmp, "video_silent.mp4");
+  execFileSync(FFMPEG, ["-nostdin", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-c", "copy", silent]);
   const qa = res.flatMap((r) => r.qa);
   const errors = [...new Set(res.flatMap((r) => r.errors || []))];
-  const report = { series, data: dataPath, out, frames: totalFrames, fps, from, to, workers,
-    ms_per_frame: Math.round(res.reduce((s, r) => s + r.ms * r.frames, 0) / Math.max(1, totalFrames)),
-    seconds: Math.round((Date.now() - t0) / 1000), meta: res[0].meta, violations: qa, console_errors: errors };
-  fs.writeFileSync(qaPath, JSON.stringify(report, null, 1));
+  const frames = P1 - P0, ms = Math.round(res.reduce((s, r) => s + r.ms * r.frames, 0) / Math.max(1, frames));
+  if (part) {
+    fs.mkdirSync(partsDir, { recursive: true });
+    fs.copyFileSync(silent, path.join(partsDir, `p${part}.mp4`));
+    fs.writeFileSync(path.join(partsDir, `p${part}.json`), JSON.stringify({ nParts, part, frames, ms, qa, errors, meta: res[0].meta }));
+    console.log(`✓ part ${part}/${nParts} (${frames} frames, ${Math.round((Date.now() - t0) / 1000)}s). ${part === nParts ? "" : "شغّل الجزء التالي، "}وبعد كل الأجزاء: --assemble`);
+  } else {
+    finish(silent, qa, errors, res[0].meta, ms, t0);
+  }
   fs.rmSync(tmp, { recursive: true, force: true });
-  const byType = qa.reduce((m, v) => ((m[v.type] = (m[v.type] || 0) + 1), m), {});
-  console.log(`✓ ${out}  (${report.seconds}s, ${report.ms_per_frame}ms/frame)  qa: ${JSON.stringify(byType)}  console_errors: ${errors.length}`);
 })().catch((e) => { console.error("✗ render failed:", e.message); try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {} process.exit(1); });

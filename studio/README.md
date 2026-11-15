@@ -24,7 +24,7 @@ studio/
 | 4 | المشهد | `python3 -I studio/tools/scene_build.py --draft work/<ID>/scene_draft.json --captions work/<ID>/captions.json --voice-report work/<ID>/voice_report.json --out work/<ID>/scene.json` | `scene.json` (المدة والختام والمؤثرات تلقائياً) |
 | 5 | معاينة سريعة | `node studio/tools/snap.cjs --series <s> --data work/<ID>/scene.json --t 1,5,12,20 --out work/<ID>/snap --debug` ← شوف الصور | |
 | 6 | المكس | `python3 -I studio/tools/audio_mix.py --voice work/<ID>/voice.wav --scene work/<ID>/scene.json --out work/<ID>/mix.wav` | `mix.wav` (−14 LUFS، مؤثرات −12dB تحت الكلام، بدون موسيقى) |
-| 7 | الرندر | `node studio/render.cjs --series <s> --data work/<ID>/scene.json --audio work/<ID>/mix.wav --out work/<ID>/video.mp4 --workers 3 --crf 16` | `video.mp4`, `qa.json` (~8 دقايق لفيديو 60ث) |
+| 7 | الرندر | `node studio/render.cjs --series <s> --data work/<ID>/scene.json --audio work/<ID>/mix.wav --out work/<ID>/video.mp4 --workers 3 --crf 16` (Bash بـ `timeout: 600000`). **فيديو > 40ث:** أضف `--parts 3 --part 1` ثم `--part 2` ثم `--part 3` (كل واحد أمر مستقل) ثم نفس الأمر بـ `--assemble` | `video.mp4`, `qa.json` (~0.27ث/فريم ≈ 8 دقايق لفيديو 60ث) |
 | 8 | الفحص | `python3 -I studio/tools/qa_video.py work/<ID>/video.mp4 --qa work/<ID>/qa.json --sheets work/<ID>/sheets` ← **افتح كل ورقة لقطات وشوفها** | تقرير + أوراق لقطات كل 0.5ث |
 | 9 | الغلاف | `node studio/tools/snap.cjs --series <s> --data work/<ID>/scene.json --t <لحظة الهوك> --out work/<ID>/cover --cover` | `cover.jpg` |
 | 10 | الرفع | موصل Cloudinary `sign-upload` ← `bash studio/tools/cloudinary_upload.sh work/<ID>/sign.json work/<ID>/video.mp4 video` (وبعدها الغلاف بـ `image`) | رابط `secure_url` |
