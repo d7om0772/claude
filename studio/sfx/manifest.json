@@ -154,5 +154,24 @@
    "distinct_notes": 5,
    "melody_warning": true
   }
+ },
+ "gs_lock": {
+  "file": "studio/sfx/gs_lock.wav",
+  "duration_s": 0.375,
+  "peak_dbfs": -3.0,
+  "description": "Lock (Gravity Sound)",
+  "use": "تثبيت القطعة، تركيب البطارية/الوصلة",
+  "pack_name": "Lock",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/bf/Lock_%28Gravity_Sound%29.wav/Lock_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85709254",
+  "attribution": "\"Lock (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 0,
+   "melody_warning": false
+  }
  }
 }
