@@ -173,5 +173,24 @@
    "distinct_notes": 0,
    "melody_warning": false
   }
+ },
+ "gs_coins3": {
+  "file": "studio/sfx/gs_coins3.wav",
+  "duration_s": 0.178,
+  "peak_dbfs": -3.0,
+  "description": "Coins 3 (Gravity Sound)",
+  "use": "خصم السعر من الميزانية",
+  "pack_name": "Coins 3",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Coins_3_%28Gravity_Sound%29.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85709934",
+  "attribution": "\"Coins 3 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 0,
+   "melody_warning": false
+  }
  }
 }
