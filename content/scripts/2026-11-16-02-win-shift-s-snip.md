@@ -4,7 +4,7 @@ publish_date: 2026-11-16
 slot: "18:00"
 series: shortcuts
 topic: "Win + Shift + S: لقطة شاشة لجزء محدد"
-status: سكربت
+status: معتمد
 version: 1
 target_length_s: 42
 researched_at: 2026-11-15
@@ -73,3 +73,20 @@ researched_at: 2026-11-15
 - جملة 11: E17 الختام (تلقائي).
 - ما فيه أسعار ولا FPS. لا تكتب "Print Screen" على الشاشة (سلوكه يختلف حسب الإعدادات).
 - عدد كلمات التعليق ≈ 79 كلمة ← ~40 ثانية (مع مشهد الختام ~42).
+
+## التدقيق — جولة 1 — 2026-11-15 20:13
+**النتيجة: معتمد**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | كل ادعاءات الكابشن لها مراجع | ✅ | 7 ادعاءات (الاختصار، الشريط، الأشكال الأربعة، الحافظة، Ctrl + V، Snipping Tool، Win + Shift + R) كلها في الجدول. |
+| 2 | Win + Shift + S → الحافظة (#1، #4) | ✅ | Microsoft Support (تبويب Windows 11): "Select a region of the screen to capture a screenshot to the clipboard." |
+| 3 | شريط القص فوق الشاشة (#2) | ✅ | صفحة Use Snipping Tool: "Press Windows logo key + Shift + S to open the snipping tool overlay". "فوق الشاشة" بمعنى overlay صحيحة. |
+| 4 | الأشكال: مستطيل، رسم حر، نافذة، الشاشة كاملة (#3) | ✅ | صفحة Snipping Tool تذكر Rectangle وFreeform وWindow وFull screen. |
+| 5 | Ctrl + V يلصق (#5) | ✅ | جدول Text editing في Windows 11: "Paste the last item from the clipboard." |
+| 6 | التعديل والحفظ في Snipping Tool (#6) | ✅ | "automatically copied to the Snipping Tool window where you make changes, save, and share". |
+| 7 | Win + Shift + R تسجيل فيديو لجزء (#7) | ✅ | Keyboard shortcuts: "Select a region of the screen to record a video. It then opens the screen recording in the Snipping Tool." وصفحة Snipping Tool تشرح Video snip. |
+| 8 | الاختصارات شغالة على Windows 11 الحالي | ✅ | الاثنين موجودين في تبويب Windows 11 بصفحة Microsoft Support الحالية (وصلت لها 2026-11-15). |
+| 9 | أسعار / مواصفات / أداء | ✅ | ما فيه (ما ينطبق). |
+| 10 | التعليق ↔ الكابشن | ✅ | 11 جملة مقابل 11 بنفس المعنى. Win = Windows، Ctrl = Control، S = إس، V = في، R = آر، و`+` = "و" حسب voice.md §٣.٤. |
+| 11 | الهوك / ذوات الأرواح / الشعارات / الأمان | ✅ | الهوك (لا تقص، صوّر الجزء) يتحقق في الفيديو. نافذة المحادثة بدون صور شخصية أو أفاتار، وSnipping Tool نص فقط بدون شعار. ما فيه نصيحة خطيرة. |
+| 12 | التكرار | ✅ | published.md فاضي، وما فيه سكربت ثاني عن Win + Shift + S. |
