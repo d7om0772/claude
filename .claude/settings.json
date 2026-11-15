@@ -19,7 +19,12 @@
       "mcp__schedulin",
       "mcp__Cloudinary",
       "mcp__tiktok_scraper",
-      "mcp__pexels"
+      "mcp__pexels",
+      "mcp__3965ffd3-c19a-49df-8392-c3bf0520e097",
+      "mcp__f9150534-222a-48ff-8848-4d91797aacb1",
+      "mcp__5d962f5f-7d7c-420e-b9b9-898cc2de3c2f",
+      "mcp__653f4e23-7eed-470f-897e-9c96f3d9301b",
+      "mcp__b34e1787-6150-4b76-8268-0ff5acf4ed3c"
     ],
     "deny": [
       "Bash(git push --force:*)",
