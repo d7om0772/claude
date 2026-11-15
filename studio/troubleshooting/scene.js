@@ -76,7 +76,7 @@ function bellyDraw(g, w, h, s) {
   g.fillStyle = "#DDE4EF"; g.beginPath(); g.ellipse(w / 2, h / 2, w * 0.46, h * 0.47, 0, 0, 7); g.fill();
   g.lineWidth = 10; g.strokeStyle = PAL.navy; g.stroke();
   g.fillStyle = "#C3CEDF"; K.rr(g, w * 0.3, h * 0.14, w * 0.4, h * 0.3, 18); g.fill(); g.strokeStyle = "#8D9AB2"; g.lineWidth = 4; g.stroke();
-  K.text(g, "+  −", w / 2, h * 0.29, { size: h * 0.07, color: PAL.navy, font: K.FONT_EN, weight: 700 });
+  K.text(g, "+  −", w / 2, h * 0.29, { size: h * 0.07, color: PAL.navy, font: K.FONT_EN, weight: 700, dir: "ltr" });
   g.fillStyle = PAL.navy; g.beginPath(); g.arc(w / 2, h * 0.56, h * 0.025, 0, 7); g.fill();
   const on = s.on ?? 0; g.fillStyle = "#1D2C48"; K.rr(g, w * 0.34, h * 0.68, w * 0.32, h * 0.09, h * 0.045); g.fill();
   g.fillStyle = on > 0.5 ? PAL.fix : PAL.problem; g.beginPath(); g.arc(w * (0.39 + 0.22 * on), h * 0.725, h * 0.036, 0, 7); g.fill();
@@ -160,7 +160,7 @@ const POSE = {
   wide: { target: [0.25, 0.75, -0.3], yaw: 0, pitch: 12, zoom: 1.12, shiftY: 0.55 },
   monitor: { target: [MON.x, 0.75 + MON.h / 2, MON.z], yaw: 0, pitch: 5, zoom: 2.35, shiftY: 0.05 },
   desk: { target: [-0.6, 0.85, -0.2], yaw: 0, pitch: 18, zoom: 1.75, shiftY: -0.05 },
-  mouse: { target: [MOUSE.x, 0.25, MOUSE.z], yaw: 0, pitch: 18, zoom: 4.2, shiftY: 0.12 },
+  mouse: { target: [MOUSE.x, 0.4, MOUSE.z + 0.2], yaw: 0, pitch: 12, zoom: 7.0, shiftY: 0.0 },
   case: { target: [PC.x, 1.15, PC.z], yaw: 0, pitch: 7, zoom: 2.5, shiftY: -0.05 },
   caseTop: { target: [PC.x + 0.25, 1.75, PC.z], yaw: 0, pitch: 18, zoom: 2.55, shiftY: -0.2 },
   laptop: { target: [KB.x, 0.55, KB.z - 0.2], yaw: 0, pitch: 24, zoom: 2.5, shiftY: -0.05 },
