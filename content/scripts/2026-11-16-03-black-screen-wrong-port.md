@@ -4,7 +4,7 @@ publish_date: 2026-11-16
 slot: "22:00"
 series: troubleshooting
 topic: الجهاز يشتغل بس الشاشة سوداء: كيبل الشاشة في المكان الغلط
-status: سكربت
+status: معتمد
 version: 1
 target_length_s: 56
 researched_at: 2026-11-15
@@ -93,3 +93,23 @@ researched_at: 2026-11-15
 
 - **أرقام/نصوص على الشاشة:** ما فيه أسعار ولا FPS ولا أرقام قياس. النصوص الوحيدة: "F"، "DisplayPort"، "HDMI"، "الخطوة 1/2/3". لا تكتب نص "No Signal" بشعار أي شركة؛ رسالة عامة فقط.
 - لا تكتب أسماء موديلات معالجات محددة على الشاشة (المصدر يثبت قاعدة اللاحقة F فقط).
+
+## التدقيق — جولة 1 — 2026-11-15 20:14
+**النتيجة: معتمد**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | كل ادعاء في الكابشن له مرجع | ✅ | الجمل الـ 13 (ما عدا CTA) كلها مغطاة بالأسطر 1–9. |
+| 2 | NZXT — أشهر سبب: الكيبل في منفذ الماذربورد بدل الكرت | ✅ | فتحت الصفحة (منشورة 2026-08-17): "a display cable plugged into the motherboard's video output instead of the card" موجودة. |
+| 3 | NZXT — الكيبل لازم يكون في الكرت مو منافذ البوردة | ✅ | "the display must be connected to the card, not to the motherboard's rear video ports" موجودة. |
+| 4 | NZXT — منافذ البوردة يشغلها الكرت المدمج، ومطفية أو ما لها شغل في أجهزة كثير | ✅ | "driven by the CPU's integrated graphics and on many builds it is disabled or unused" موجودة حرفياً. |
+| 5 | Intel — لاحقة F = بدون كرت مدمج | ✅ | صفحة Intel: صف الديسكتوب "F — Requires discrete graphics". |
+| 6 | ASUS FAQ 1042632 (تأكيد) | ✅ | الصفحة تفتح: "First, confirm whether the CPU supports graphics" و"confirming that the graphics cable is properly connected to the graphics output port". ملاحظة غير مانعة: وصف السطر 4ب يقول "تنصح تتأكد من AMD أو Intel" وهذا مو مذكور حرفياً في الصفحة — المضمون (تأكد إن المعالج يدعم الرسوميات) صحيح. |
+| 7 | NZXT — منافذ الكرت تحت في منطقة فتحات التوسعة | ✅ | "sit lower on the back of the case, in the expansion slot area" موجودة. |
+| 8 | NZXT — انقل الكيبل للكرت وغالباً تنحل | ✅ | "move it to the card and you are probably done" موجودة؛ "غالباً" تطابق "probably". |
+| 9 | NZXT — دخّل الكيبل لآخره من الطرفين / DisplayPort نصف داخل | ✅ | "A partially inserted DisplayPort cable can look connected and carry nothing" موجودة. |
+| 10 | NZXT — اختر المدخل من قائمة الشاشة | ✅ | "using the on-screen display menu" موجودة. |
+| 11 | أسعار / مواصفات / اختصارات / أداء | ✅ | لا ينطبق: ما فيه أسعار ولا أرقام أداء ولا اختصارات. |
+| 12 | التعليق الصوتي ↔ الكابشن | ✅ | 14 جملة مقابل 14، الفروق فقط: 1/2/3 → واحد/ثنين/ثلاث (§٣.١)، F → إف (§٣.٤ حرف لوحده)، DisplayPort بالإنجليزي (§٣.٦). المعنى مطابق. |
+| 13 | الهوك صادق / ذوات أرواح / شعارات / نصيحة خطيرة | ✅ | الهوك (شاشة سوداء والجهاز شغال) يتحقق بالحل. المرئيات بدون كائنات حية، والملاحظات تمنع الشعارات (Intel نص فقط). ما فيه فك قطع أو باور أو فولت — بالعكس ينصح بعدم الفك. |
+| 14 | كابشن المنشور | ✅ | "3 خطوات" تطابق الخطوات الثلاث في السكربت، ومحتواه مغطى بالمراجع 1–2 و5. |
+| 15 | التكرار | ✅ | `content/published.md` فاضي، ولا يوجد سكربت آخر بنفس الموضوع. |
