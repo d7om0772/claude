@@ -34,6 +34,7 @@
 | `content/production/<ID>/` | جدول المشاهد، scene.json، تقارير الصوت والفحص، credits.md |
 | `content/published.md` | سجل المنشورات |
 | `reports/weekly-YYYY-WW.md` | تقارير المحلل الأسبوعية |
+| **لوحة تيربو** (https://claude.ai/artifact/8iyutVvJT3xEYyjPpkAyje) | شاشة صاحب الحساب: يوم النشر الجاي، مسار الإنتاج، التقويم، منشورات Schedulin (مباشرة)، المهام وسجل التشغيل. تتحدث في نهاية كل مهمة (`schedules/dashboard.md`)، وصفحتها في `studio/dashboard/index.html` |
 | `brand/identity.md` · `brand/voice.md` · `brand/series.md` | الهوية، الصوت وقواعد النطق، السلاسل |
 | `brand/styles/<series>/` | حزم الستايل (المرجع الملزم) · `pack-map.json` يربط الحزم بالسلاسل |
 | `brand/logo/` | الشعار (أصلي + شفاف) |

@@ -1,0 +1,368 @@
+<meta name="dash-one-writer">
+<style>
+.tb { --tb-brand: #2F6BCF; display: grid; gap: var(--cds-gap-xl); color: var(--color-fg); font-family: var(--font-anthropic-sans); }
+.tb-head { display: grid; gap: var(--cds-gap-xs); }
+.tb-eyebrow { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); letter-spacing: .02em; }
+.tb-title { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); text-wrap: balance; }
+.tb-lede { margin: 0; font-size: var(--cds-font-size-body); line-height: 1.7; max-width: 60ch; }
+.tb-lede b { font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+.tb-sec { display: grid; gap: var(--cds-gap-md); min-width: 0; }
+.tb-sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--cds-gap-sm); }
+.tb-h2 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.tb-sub { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.tb-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--cds-gap-md); }
+.tb-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-sm); align-content: start; min-width: 0; }
+.tb-card-top { display: flex; align-items: center; justify-content: space-between; gap: var(--cds-gap-sm); }
+.tb-time { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-heading); font-variant-numeric: tabular-nums; }
+.tb-series { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.tb-topic { margin: 0; font-size: var(--cds-font-size-body); line-height: 1.55; font-weight: var(--cds-font-weight-medium); }
+.tb-angle, .tb-small { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); line-height: 1.6; }
+.tb-note { margin: 0; font-size: var(--cds-font-size-caption); line-height: 1.6; color: var(--color-fg-muted); border-inline-start: 2px solid var(--color-border-line); padding-inline-start: var(--cds-pad-sm); }
+.tb-note.is-bad { border-color: var(--color-bad); }
+.tb-link { color: var(--tb-brand); text-decoration: none; font-size: var(--cds-font-size-caption); }
+.tb-link:hover, .tb-link:focus-visible { text-decoration: underline; }
+.tb-pill { --dot: var(--color-fg-muted); display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); white-space: nowrap; color: var(--color-fg); background: var(--color-bg); }
+.tb-pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot); flex: none; }
+.tb-s-idea { --dot: var(--color-fg-muted); }
+.tb-s-wip { --dot: var(--color-warn); }
+.tb-s-ready { --dot: var(--tb-brand); }
+.tb-s-done { --dot: var(--color-ok); }
+.tb-s-bad { --dot: var(--color-bad); }
+.tb-flow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--cds-gap-sm); }
+.tb-step { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); display: grid; gap: 2px; min-width: 0; }
+.tb-step-n { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.tb-step-l { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: inline-flex; align-items: center; gap: 6px; }
+.tb-step-l::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot); }
+.tb-step.tb-s-bad { border-color: var(--color-bad); }
+.tb-scroll { overflow-x: auto; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-panel); }
+.tb-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); }
+.tb-table th { text-align: start; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: var(--cds-pad-sm) var(--cds-pad-md); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.tb-table td { padding: var(--cds-pad-sm) var(--cds-pad-md); border-bottom: 1px solid var(--color-border-line); vertical-align: top; line-height: 1.55; }
+.tb-table tr:last-child td { border-bottom: 0; }
+.tb-table .tb-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tb-table .tb-wide { min-width: 16em; }
+.tb-empty { color: var(--color-fg-muted); text-align: center; padding: var(--cds-pad-lg) !important; }
+.tb-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--cds-gap-xl); }
+.tb-runs-next { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
+.tb-runs-next li { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cds-gap-sm); padding: var(--cds-pad-sm) var(--cds-pad-md); border-bottom: 1px solid var(--color-border-line); }
+.tb-runs-next li:last-child { border-bottom: 0; }
+.tb-runs-next .tb-when { font-variant-numeric: tabular-nums; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); text-align: end; }
+.tb [data-dash-source-state=refreshing] { opacity: .5; }
+@media (max-width: 720px) { .tb-flow { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .tb-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+
+<div class="tb" dir="rtl" lang="ar">
+  <header class="tb-head" id="top">
+    <p class="tb-eyebrow">تيربو · TURBO PC · ‎@.torbo</p>
+    <h1 class="tb-title">لوحة تيربو</h1>
+    <p class="tb-lede tb-lede-has" data-read lang="ar">أقرب يوم نشر <b data-draw="nd-date" data-source="next_day" data-field="date" data-row="0">—</b>، وجاهز منه <b data-draw="nd-ready" data-source="next_day" data-field="ready" data-row="0">—</b> من <b data-draw="nd-total" data-source="next_day" data-field="total" data-row="0">—</b> فيديوهات (فيديو جاهز أو مجدول أو منشور).</p>
+    <p class="tb-lede tb-lede-none" data-read lang="ar" hidden>ما فيه فيديوهات قادمة في التقويم. مهمة الكتابة تخطط الأيام الجاية الساعة 8:05 مساءً.</p>
+  </header>
+
+  <section class="tb-sec" id="next-day">
+    <div class="tb-sec-head">
+      <h2 class="tb-h2">يوم النشر الجاي: <span data-draw="nd-date" data-source="next_day" data-field="date" data-row="0">—</span></h2>
+      <p class="tb-sub">بتوقيت الرياض</p>
+    </div>
+    <div class="tb-cards" data-draw="day-cards" data-source="calendar next_day">—</div>
+  </section>
+
+  <section class="tb-sec" id="pipeline">
+    <div class="tb-sec-head">
+      <h2 class="tb-h2">مسار الإنتاج</h2>
+      <p class="tb-sub">كل فيديوهات اليوم وما بعده في التقويم، حسب الحالة</p>
+    </div>
+    <div class="tb-flow" data-draw="flow" data-source="status_counts">—</div>
+  </section>
+
+  <section class="tb-sec" id="calendar">
+    <div class="tb-sec-head">
+      <h2 class="tb-h2">التقويم: الأيام السبعة الجاية</h2>
+      <select class="dash-select" id="tb-series" aria-label="السلسلة">
+        <option value="">كل السلاسل</option>
+        <option value="budget-builds">تجميعات</option>
+        <option value="shortcuts">اختصارات</option>
+        <option value="troubleshooting">المشاكل وحلولها</option>
+      </select>
+    </div>
+    <div class="tb-scroll">
+      <table class="tb-table" data-source="calendar" data-row-key="id">
+        <thead><tr><th data-field="date">اليوم</th><th data-field="time">الموعد</th><th data-field="series_ar">السلسلة</th><th data-field="topic">الموضوع</th><th data-field="status">الحالة</th></tr></thead>
+        <tbody data-draw="cal-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="tb-two">
+    <section class="tb-sec" id="posts">
+      <div class="tb-sec-head">
+        <h2 class="tb-h2">المنشورات في Schedulin</h2>
+        <p class="tb-sub">مباشر من حساب ‎@.torbo</p>
+      </div>
+      <div class="tb-scroll">
+        <table class="tb-table" data-source="posts" data-row-key="id">
+          <thead><tr><th data-field="scheduledAt">الموعد</th><th data-field="status">الحالة</th><th data-field="caption">الكابشن</th></tr></thead>
+          <tbody data-draw="posts-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="tb-sec" id="tasks">
+      <div class="tb-sec-head">
+        <h2 class="tb-h2">المهام المجدولة</h2>
+        <p class="tb-sub">التشغيل الجاي لكل مهمة</p>
+      </div>
+      <ul class="tb-runs-next" data-draw="runs-next" data-source="next_runs"></ul>
+    </section>
+  </div>
+
+  <section class="tb-sec" id="runs">
+    <div class="tb-sec-head">
+      <h2 class="tb-h2">سجل التشغيل</h2>
+      <p class="tb-sub">وش سوّت كل مهمة، الأحدث فوق</p>
+    </div>
+    <div class="tb-scroll">
+      <table class="tb-table" data-source="runs" data-row-key="time,task">
+        <thead><tr><th data-field="time">الوقت</th><th data-field="task">المهمة</th><th data-field="summary">الملخص</th></tr></thead>
+        <tbody data-draw="runs-rows"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+window.tb = (function () {
+  const RIYADH = 'Asia/Riyadh';
+  const LOC = 'ar-SA-u-ca-gregory-nu-latn';
+  const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: RIYADH }).format(new Date());
+  const addDays = (s, n) => { const [y, m, d] = String(s).split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10); };
+  const dayFmt = new Intl.DateTimeFormat(LOC, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+  const fmtDate = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || '')); return m ? dayFmt.format(new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]))) : String(s || ''); };
+  const fmtTime = (hm) => {
+    const m = /^(\d{1,2}):(\d{2})/.exec(String(hm || '')); if (!m) return String(hm || '');
+    const h = +m[1]; const suf = h < 12 ? 'ص' : (h < 15 ? 'ظ' : 'م');
+    return (h % 12 || 12) + ':' + m[2] + suf;
+  };
+  const instFmt = new Intl.DateTimeFormat(LOC, { weekday: 'short', day: 'numeric', month: 'short', timeZone: RIYADH });
+  const hmFmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: RIYADH });
+  const fmtInstant = (iso) => { const d = new Date(iso); return isNaN(d) ? String(iso || '') : instFmt.format(d) + ' · ' + fmtTime(hmFmt.format(d)); };
+  const relDay = (iso) => {
+    const d = new Date(iso); if (isNaN(d)) return '';
+    const day = new Intl.DateTimeFormat('en-CA', { timeZone: RIYADH }).format(d);
+    const t = today();
+    const when = day === t ? 'اليوم' : day === addDays(t, 1) ? 'بكرة' : fmtDate(day);
+    return when + ' ' + fmtTime(hmFmt.format(d));
+  };
+  const until = (iso) => {
+    const ms = new Date(iso) - Date.now(); if (!(ms > 0)) return '';
+    const mins = Math.round(ms / 60000), h = Math.floor(mins / 60), m = mins % 60;
+    return 'بعد ' + (h ? h + ' س ' : '') + m + ' د';
+  };
+  const CLS = { 'فكرة': 'idea', 'سكربت': 'wip', 'معتمد': 'wip', 'فيديو جاهز': 'ready', 'مجدول': 'done', 'منشور': 'done', 'فشل': 'bad', 'مرفوض': 'bad', 'مستبدل': 'idea', 'ملغي': 'idea' };
+  const POST_AR = { SCHEDULED: ['مجدول', 'done'], PROCESSING: ['ينشر الحين', 'ready'], COMPLETED: ['منشور', 'done'], DRAFT: ['مسودة', 'idea'], FAILED: ['فشل', 'bad'] };
+  const TASK_AR = { write: 'الكتابة', produce: 'الإنتاج', publish: 'النشر', rescue: 'الإنقاذ', analyze: 'التحليل', setup: 'الإعداد' };
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const pill = (label, cls) => el('span', 'tb-pill tb-s-' + (cls || 'idea'), label || '—');
+  const statusPill = (s) => pill(s, CLS[s]);
+  const safeUrl = (u) => /^https:\/\//.test(String(u || '')) ? String(u) : '';
+  return { today, addDays, fmtDate, fmtTime, fmtInstant, relDay, until, CLS, POST_AR, TASK_AR, el, pill, statusPill, safeUrl };
+})();
+</script>
+
+<script>
+dash.loader('posts', {
+  description: 'يحوّل منشورات Schedulin لصفوف: المعرّف والحالة والموعد وأول الكابشن والرابط.',
+  fn: ({ answer }) => {
+    if (answer && answer.error) throw new Error(typeof answer.error === 'string' ? answer.error : (answer.error.message || 'Schedulin error'));
+    const list = (answer && Array.isArray(answer.posts)) ? answer.posts : [];
+    const linkOf = (p) => {
+      const kids = [].concat(p.platformPosts || [], p.socialPosts || [], p.targets || []);
+      const k = kids.map((x) => x && (x.url || x.platformUrl || x.permalink || x.postUrl)).find(Boolean);
+      return String(p.url || p.platformUrl || p.permalink || k || '');
+    };
+    const rows = list.map((p) => ({
+      id: String(p.id ?? ''),
+      status: String(p.status ?? ''),
+      scheduledAt: String(p.scheduledAt ?? p.scheduled_at ?? p.publishAt ?? ''),
+      publishedAt: String(p.publishedAt ?? p.published_at ?? ''),
+      caption: String(p.caption ?? p.content ?? p.text ?? '').slice(0, 160),
+      url: linkOf(p)
+    }));
+    const total = Number(answer && answer.total);
+    return { columns: ['id', 'status', 'scheduledAt', 'publishedAt', 'caption', 'url'], rows, truncated: Number.isFinite(total) && total > rows.length };
+  }
+});
+
+dash.calc('next_day', {
+  inputs: ['calendar'],
+  title: 'أقرب يوم نشر',
+  description: 'أول يوم من اليوم وطالع فيه فيديوهات في التقويم، وكم منها حالته فيديو جاهز أو مجدول أو منشور.',
+  fn: (calendar) => {
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Riyadh' }).format(new Date());
+    const dates = [...new Set(calendar.map((r) => String(r.date)).filter((d) => d >= today))].sort();
+    if (!dates.length) return [];
+    const rows = calendar.filter((r) => String(r.date) === dates[0]);
+    const ready = rows.filter((r) => ['فيديو جاهز', 'مجدول', 'منشور'].includes(r.status)).length;
+    return [{ date: dates[0], total: rows.length, ready }];
+  }
+});
+
+dash.calc('status_counts', {
+  inputs: ['calendar'],
+  title: 'الفيديوهات القادمة حسب الحالة',
+  description: 'عدد فيديوهات اليوم وما بعده في التقويم لكل حالة. "فشل" تشمل المرفوض.',
+  fn: (calendar) => {
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Riyadh' }).format(new Date());
+    const up = calendar.filter((r) => String(r.date) >= today);
+    const order = ['فكرة', 'سكربت', 'معتمد', 'فيديو جاهز', 'مجدول', 'منشور', 'فشل'];
+    return order.map((s) => ({ status: s, count: up.filter((r) => (s === 'فشل' ? ['فشل', 'مرفوض'].includes(r.status) : r.status === s)).length }));
+  }
+});
+
+dash.calc('next_runs', {
+  inputs: ['tasks'],
+  title: 'التشغيل الجاي لكل مهمة',
+  description: 'أقرب موعد لكل مهمة مجدولة، محسوب من موعدها الثابت بتوقيت الرياض (UTC+3).',
+  fn: (tasks) => {
+    const H = 3600e3, now = Date.now(), r = new Date(now + 3 * H);
+    return tasks.map((t) => {
+      for (let d = 0; d < 8; d++) {
+        const c = Date.UTC(r.getUTCFullYear(), r.getUTCMonth(), r.getUTCDate() + d, Number(t.hour), Number(t.minute)) - 3 * H;
+        const dow = new Date(c + 3 * H).getUTCDay();
+        if (c > now && (String(t.dow) === '*' || Number(t.dow) === dow)) return { task: t.task, name: t.name, next: new Date(c).toISOString() };
+      }
+      return { task: t.task, name: t.name, next: '' };
+    }).sort((a, b) => String(a.next).localeCompare(String(b.next)));
+  }
+});
+
+dash.onData(() => {
+  const n = dash.data('next_day');
+  const none = n.status === 'ok' && Array.isArray(n.data) && n.data.length === 0;
+  document.querySelectorAll('.tb-lede-has').forEach((e) => { e.hidden = none; });
+  document.querySelectorAll('.tb-lede-none').forEach((e) => { e.hidden = !none; });
+});
+
+document.querySelectorAll('#tb-series').forEach((s) => s.addEventListener('change', () => dash.draw('cal-rows')));
+</script>
+
+<script>
+(function () {
+  const nd = () => { const n = dash.data('next_day'); return n.status === 'ok' && Array.isArray(n.data) && n.data[0] ? n.data[0] : null; };
+  dash.draw('nd-date', (e) => { const r = nd(); e.textContent = r ? tb.fmtDate(r.date) : '—'; });
+  dash.draw('nd-ready', (e) => { const r = nd(); e.textContent = r ? String(r.ready) : '—'; });
+  dash.draw('nd-total', (e) => { const r = nd(); e.textContent = r ? String(r.total) : '—'; });
+
+  dash.draw('day-cards', (box) => {
+    const c = dash.data('calendar'); const r0 = nd();
+    box.replaceChildren();
+    if (c.status === 'error') { box.textContent = 'تعذّر تحميل التقويم'; return; }
+    if (c.status !== 'ok' || dash.data('next_day').status !== 'ok') { box.textContent = '—'; return; }
+    if (!r0) { box.textContent = 'ما فيه فيديوهات قادمة في التقويم.'; return; }
+    c.data.filter((r) => String(r.date) === r0.date).forEach((r) => {
+      const where = 'id=' + r.id;
+      const card = tb.el('article', 'tb-card'); card.id = 'v-' + r.id;
+      const top = tb.el('div', 'tb-card-top');
+      const time = tb.el('span', 'tb-time', tb.fmtTime(r.time));
+      time.setAttribute('data-source', 'calendar'); time.setAttribute('data-field', 'time'); time.setAttribute('data-where', where);
+      const p = tb.statusPill(r.status);
+      p.setAttribute('data-source', 'calendar'); p.setAttribute('data-field', 'status'); p.setAttribute('data-where', where);
+      top.append(time, p);
+      const series = tb.el('span', 'tb-series', r.series_ar || r.series);
+      const topic = tb.el('p', 'tb-topic', r.topic);
+      topic.setAttribute('data-source', 'calendar'); topic.setAttribute('data-field', 'topic'); topic.setAttribute('data-where', where);
+      card.append(top, series, topic);
+      if (r.angle) card.append(tb.el('p', 'tb-angle', r.angle));
+      const bits = [];
+      if (r.voice) bits.push('الصوت: ' + r.voice);
+      if (r.post) bits.push('منشور Schedulin: ' + r.post);
+      if (bits.length) card.append(tb.el('p', 'tb-small', bits.join(' · ')));
+      const url = tb.safeUrl(r.video);
+      if (url) { const a = tb.el('a', 'tb-link', 'شوف الفيديو ↗'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; card.append(a); }
+      if (r.note) { const n = tb.el('p', 'tb-note' + (/فشل|خطأ|تعذر|تعذّر/.test(r.note) ? ' is-bad' : ''), r.note); card.append(n); }
+      box.append(card);
+    });
+  });
+
+  dash.draw('flow', (box) => {
+    const s = dash.data('status_counts');
+    box.replaceChildren();
+    if (s.status !== 'ok' || !Array.isArray(s.data)) { box.textContent = '—'; return; }
+    const CLS = { 'فكرة': 'idea', 'سكربت': 'wip', 'معتمد': 'wip', 'فيديو جاهز': 'ready', 'مجدول': 'done', 'منشور': 'done', 'فشل': 'bad' };
+    s.data.forEach((r) => {
+      const step = tb.el('div', 'tb-step tb-s-' + (CLS[r.status] || 'idea'));
+      if (r.status === 'فشل' && !r.count) step.className = 'tb-step tb-s-idea';
+      const n = tb.el('span', 'tb-step-n', String(r.count));
+      n.setAttribute('data-source', 'status_counts'); n.setAttribute('data-field', 'count'); n.setAttribute('data-where', 'status=' + r.status);
+      step.append(n, tb.el('span', 'tb-step-l', r.status));
+      box.append(step);
+    });
+  });
+
+  const emptyRow = (tbody, cols, text) => { const tr = tb.el('tr'); const td = tb.el('td', 'tb-empty', text); td.colSpan = cols; tr.append(td); tbody.append(tr); };
+
+  dash.draw('cal-rows', (tbody) => {
+    const c = dash.data('calendar');
+    tbody.replaceChildren();
+    if (c.status === 'error') return emptyRow(tbody, 5, 'تعذّر تحميل التقويم');
+    if (c.status !== 'ok') return emptyRow(tbody, 5, '—');
+    const t = tb.today(), end = tb.addDays(t, 6);
+    const sel = document.getElementById('tb-series'); const f = sel ? sel.value : '';
+    const rows = c.data.filter((r) => String(r.date) >= t && String(r.date) <= end && (!f || r.series === f));
+    if (!rows.length) return emptyRow(tbody, 5, 'ما فيه فيديوهات في هذي الفترة.');
+    rows.forEach((r) => {
+      const tr = tb.el('tr'); tr.setAttribute('data-key', r.id);
+      const st = tb.el('td'); st.append(tb.statusPill(r.status));
+      tr.append(tb.el('td', 'tb-num', tb.fmtDate(r.date)), tb.el('td', 'tb-num', tb.fmtTime(r.time)), tb.el('td', '', r.series_ar || r.series), tb.el('td', 'tb-wide', r.topic), st);
+      tbody.append(tr);
+    });
+  });
+
+  dash.draw('posts-rows', (tbody) => {
+    const p = dash.data('posts');
+    tbody.replaceChildren();
+    if (p.status === 'loading') return emptyRow(tbody, 3, 'جاري التحميل…');
+    if (p.status === 'error') return emptyRow(tbody, 3, 'تعذّر تحميل منشورات Schedulin');
+    if (p.status !== 'ok') return emptyRow(tbody, 3, '—');
+    if (!p.data.length) return emptyRow(tbody, 3, 'ما فيه منشورات للحين. مهمة النشر تجدول فيديوهات اليوم كل صباح الساعة 7:05.');
+    [...p.data].sort((a, b) => String(b.scheduledAt).localeCompare(String(a.scheduledAt))).slice(0, 30).forEach((r) => {
+      const tr = tb.el('tr'); tr.setAttribute('data-key', r.id);
+      const [label, cls] = tb.POST_AR[r.status] || [r.status, 'idea'];
+      const st = tb.el('td'); st.append(tb.pill(label, cls));
+      const cap = tb.el('td', 'tb-wide', r.caption);
+      const url = tb.safeUrl(r.url);
+      if (url) { const a = tb.el('a', 'tb-link', ' ↗'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('aria-label', 'افتح المنشور'); cap.append(a); }
+      tr.append(tb.el('td', 'tb-num', r.scheduledAt ? tb.fmtInstant(r.scheduledAt) : '—'), st, cap);
+      tbody.append(tr);
+    });
+  });
+
+  dash.draw('runs-next', (ul) => {
+    const n = dash.data('next_runs');
+    ul.replaceChildren();
+    if (n.status !== 'ok' || !Array.isArray(n.data)) { const li = tb.el('li', '', '—'); ul.append(li); return; }
+    n.data.forEach((r) => {
+      const li = tb.el('li');
+      const name = tb.el('span', '', r.name);
+      const when = tb.el('span', 'tb-when', r.next ? tb.relDay(r.next) + ' · ' + tb.until(r.next) : '—');
+      when.setAttribute('data-source', 'next_runs'); when.setAttribute('data-field', 'next'); when.setAttribute('data-where', 'task=' + r.task);
+      li.append(name, when);
+      ul.append(li);
+    });
+  });
+
+  dash.draw('runs-rows', (tbody) => {
+    const r = dash.data('runs');
+    tbody.replaceChildren();
+    if (r.status === 'error') return emptyRow(tbody, 3, 'تعذّر تحميل السجل');
+    if (r.status !== 'ok') return emptyRow(tbody, 3, '—');
+    if (!r.data.length) return emptyRow(tbody, 3, 'ما فيه تشغيلات للحين.');
+    [...r.data].reverse().slice(0, 40).forEach((x) => {
+      const tr = tb.el('tr'); const enc = (v) => String(v).replace(/[%&=,]/g, (c) => '%' + c.charCodeAt(0).toString(16).toUpperCase()); tr.setAttribute('data-key', enc(x.time) + ',' + enc(x.task));
+      tr.append(tb.el('td', 'tb-num', x.time), tb.el('td', '', tb.TASK_AR[x.task] || x.task), tb.el('td', 'tb-wide', x.summary));
+      tbody.append(tr);
+    });
+  });
+})();
+</script>
