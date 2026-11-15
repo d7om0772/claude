@@ -192,5 +192,24 @@
    "distinct_notes": 0,
    "melody_warning": false
   }
+ },
+ "gs_drop_item2": {
+  "file": "studio/sfx/gs_drop_item2.wav",
+  "duration_s": 0.106,
+  "peak_dbfs": -3.0,
+  "description": "Drop Item 2 (Gravity Sound)",
+  "use": "تثبيت القطعة (ارتطام)، قفل التبويب، البطارية القديمة",
+  "pack_name": "Drop Item 2",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Drop_Item_2_%28Gravity_Sound%29.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85709938",
+  "attribution": "\"Drop Item 2 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 0,
+   "melody_warning": false
+  }
  }
 }

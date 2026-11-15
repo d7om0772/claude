@@ -1,0 +1,10 @@
+{
+ "video_url": "https://res.cloudinary.com/dcbqslxew/video/upload/v1794785818/2026-11-16-03.mp4",
+ "video_asset_id": "518350fdb47c282c591d15166012764f",
+ "cover_url": "https://res.cloudinary.com/dcbqslxew/image/upload/v1794785820/2026-11-16-03-cover.jpg",
+ "cover_asset_id": "ef794ebc3f7f37c80e2bf34d5c1b4764",
+ "cover_t": 1.6,
+ "duration": 60.533,
+ "size_mb": 12.7,
+ "voice": "gemini (ElevenLabs quota: 36 credits left, 630 required)"
+}

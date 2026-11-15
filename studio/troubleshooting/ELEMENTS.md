@@ -27,7 +27,7 @@
 | **E15** علامات الاستفهام | — | "؟" حمراء فوق الكيس وفوق الماوس |
 | **E16** فقاعة التعليق | `text` · `title` ("واجهتك مشكلة ثانية؟") · `desc` | |
 | **E17** الختام | — | تلقائي |
-| **X01** عرض شاشة إضافي (بنفس الأسلوب) | `mode`: `no_signal` / `display_settings` (`from`,`to`) / `bios_xmp` (`profile`,`speed_off`,`speed_on`) / `temps` (`items:[[الاسم، قبل، بعد]]`) / `startup` (`apps`) / `fan_curve` / `ping` (`bad`,`good`) / `stutter` / `text` / `off` / `desktop` · `state`: `problem`/`fix` · `cam` | لمشاكل ما لها عنصر في الحزمة (الشاشة السوداء، 60Hz، XMP، الحرارة، برامج بدء التشغيل، المراوح، البنق). سجّله في جدول المشاهد كعنصر مصمَّم بنفس قواعد الحزمة |
+| **X01** عرض شاشة إضافي (بنفس الأسلوب) | `mode`: `no_signal` / `display_settings` (`from`,`to`) / `bios_xmp` (`profile`,`speed_off`,`speed_on`) / `temps` (`items:[[الاسم، قبل، بعد]]`) / `startup` (`apps`) / `fan_curve` / `ping` (`bad`,`good`) / `stutter` / `text` / `off` / `desktop` / `input_menu` (`items`,`from`,`to`,`pick_at`: قائمة مدخلات الشاشة، التحديد يقلب أخضر) / `cursor_back` · `state`: `problem`/`fix` · `cam` | لمشاكل ما لها عنصر في الحزمة (الشاشة السوداء، 60Hz، XMP، الحرارة، برامج بدء التشغيل، المراوح، البنق). سجّله في جدول المشاهد كعنصر مصمَّم بنفس قواعد الحزمة |
 | **T** عنوان فقط | `chip`, `chip_color`, `main`, `desc`, `keys`... | |
 
 **قواعد:** أي رقم على الشاشة (حرارة، بنق، Hz) لازم من المصدر أو يُقال "مثلاً" في الكلام. لا خطوات خطيرة.

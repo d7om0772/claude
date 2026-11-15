@@ -2,6 +2,10 @@
 
 > كل تعديل على النظام (وكلاء، مهام، قوالب، إعدادات، تقويم) يتسجل هنا: التاريخ، وش تغيّر، وليش. الأحدث فوق.
 
+## 2026-11-15 — قالب troubleshooting + scene_build: تعديلات من فيديو 2026-11-16-03
+- `studio/troubleshooting/scene.js`: وضع X01 جديد `input_menu` (قائمة Input Source على شاشة سوداء، التحديد ينتقل من المدخل الغلط الأحمر للصح الأخضر ✓ عند `pick_at`). موثّق في `studio/troubleshooting/ELEMENTS.md`. السبب: خطوة "اختر المدخل الصح من قائمة الشاشة" ما لها عنصر في الحزمة — مصمَّم بنفس قواعدها.
+- `studio/tools/scene_build.py`: `pick_at` حقل وقت يُحلّ من الكلمات، وX01 بحالة مشكلة (`no_signal`/`off`/state problem) يأخذ تلقائياً مؤثر Error 5 بدل نغمة الحل.
+
 ## 2026-11-15 — قالب budget-builds + core: تعديلات من فيديو 2026-11-16-01
 - `studio/budget-builds/scene.js`: حقل `ghost_parts` (خانة تبقى شبح أزرق فاضي طول الفيديو — مكان كرت الشاشة في تجميعة بكرت مدمج). موثّق في `studio/budget-builds/ELEMENTS.md`.
 - `studio/budget-builds/style.css`: `.tzone .main.sm` (58px) لاسم طويل بسطر واحد (`size:"sm"`).

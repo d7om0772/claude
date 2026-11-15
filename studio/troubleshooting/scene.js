@@ -37,6 +37,18 @@ function monitorDraw(ctx) {
       g.fillStyle = "#fff"; K.rr(g, w / 2 - w * 0.18, h / 2 - h * 0.1, w * 0.36, h * 0.2, 16); g.fill(); g.globalAlpha = 1;
       K.text(g, s.text || "No Signal", w / 2, h / 2, { size: h * 0.08, weight: 700, color: "#05090F", font: K.FONT_EN }); return; }
     if (m === "off") { g.fillStyle = "#0B1426"; g.fillRect(0, 0, w, h); return; }
+    // input_menu — قائمة مدخلات الشاشة (OSD) على شاشة سوداء: {items, from, to, pick_at}: التحديد ينتقل من المدخل الغلط (أحمر) للصح (أخضر)
+    if (m === "input_menu") { g.fillStyle = "#05090F"; g.fillRect(0, 0, w, h);
+      const items = s.items || ["HDMI 1", "HDMI 2", "DisplayPort"], tNow = (s.start ?? 0) + p * (s.dur ?? 1);
+      const picked = s.pick_at != null ? tNow >= s.pick_at : p > 0.55; const sel = picked ? (s.to ?? items.length - 1) : (s.from ?? 0);
+      const q = E.outBack(clamp(p / 0.12)); g.save(); g.translate(w / 2, h / 2); g.scale(q, q); g.translate(-w / 2, -h / 2);
+      g.fillStyle = "#1D2C48"; K.rr(g, w * 0.26, h * 0.1, w * 0.48, h * 0.8, 18); g.fill();
+      K.text(g, s.title || "Input Source", w / 2, h * 0.2, { size: h * 0.065, weight: 700, color: "#9DB8F5", font: K.FONT_EN });
+      items.forEach((it, i) => { const y = h * (0.36 + i * 0.17), on = i === sel; const col = on ? (picked ? PAL.fix : PAL.problem) : null;
+        g.fillStyle = on ? col : "#2A3B5C"; K.rr(g, w * 0.3, y - h * 0.065, w * 0.4, h * 0.13, 12); g.fill();
+        K.text(g, it, w / 2, y, { size: h * 0.06, weight: 700, color: "#fff", font: K.FONT_EN });
+        if (on && picked) K.text(g, "✓", w * 0.66, y, { size: h * 0.06, weight: 800, color: "#fff", font: K.FONT_EN }); });
+      g.restore(); return; }
     if (m === "text") { desk(); K.text(g, s.text || "", w / 2, h * 0.45, { size: h * (s.size || 0.15), color: "#fff" }); return; }
     if (m === "display_settings") { desk(); K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, "Settings › Display › Advanced display", { lines: 0 });
       K.text(g, "Choose a refresh rate", w * 0.13, h * 0.3, { size: h * 0.055, weight: 600, align: "left", font: K.FONT_EN, color: PAL.muted });
