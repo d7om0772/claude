@@ -1,0 +1,233 @@
+<title>متابعة تيربو</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* تخطيط: عمود واحد للجوال، بطاقات قصيرة، والحالة دايماً بنقطة ملوّنة + كلمة */
+:root {
+  --bg: #F3F6FC; --panel: #FFFFFF; --line: #DCE5F3; --fg: #14284B; --muted: #5B6B86;
+  --brand: #2F6BCF; --ok: #17A55A; --warn: #C98A00; --bad: #E0283C; --chip: #E8EFFB;
+  --font: "IBM Plex Sans Arabic", "Geeza Pro", "Segoe UI", Tahoma, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0E1626; --panel: #16223A; --line: #263552; --fg: #E6ECF8; --muted: #9AA8C2;
+  --brand: #6A9BEA; --ok: #3CCB7F; --warn: #E3B23C; --bad: #FF5C6C; --chip: #1E2C49; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0E1626; --panel: #16223A; --line: #263552; --fg: #E6ECF8; --muted: #9AA8C2;
+  --brand: #6A9BEA; --ok: #3CCB7F; --warn: #E3B23C; --bad: #FF5C6C; --chip: #1E2C49; color-scheme: dark; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.6; }
+.wrap { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px; display: grid; gap: 26px; }
+.eyebrow { margin: 0; color: var(--muted); font-size: 12.5px; }
+h1 { margin: 2px 0 6px; font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
+.lede { margin: 0; font-size: 15.5px; }
+.lede b { font-variant-numeric: tabular-nums; }
+section { display: grid; gap: 10px; min-width: 0; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
+h2 { margin: 0; font-size: 17px; font-weight: 600; }
+.sub { margin: 0; color: var(--muted); font-size: 12.5px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.time { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.series { color: var(--muted); font-size: 12.5px; }
+.topic { margin: 0; font-weight: 600; }
+.small { margin: 0; color: var(--muted); font-size: 12.5px; }
+.note { margin: 0; font-size: 12.5px; color: var(--muted); border-right: 2px solid var(--line); padding-right: 8px; }
+.note.bad { border-color: var(--bad); }
+a { color: var(--brand); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 1px 10px; border-radius: 999px; background: var(--chip); font-size: 12.5px; white-space: nowrap; }
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dot, var(--muted)); }
+.s-idea { --dot: var(--muted); } .s-wip { --dot: var(--warn); } .s-ready { --dot: var(--brand); } .s-done { --dot: var(--ok); } .s-bad { --dot: var(--bad); }
+.flow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.step { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 2px; }
+.step .n { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.step .l { font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 5px; }
+.step .l::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--muted)); }
+.step.s-bad.has { border-color: var(--bad); }
+@media (max-width: 640px) { .flow { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 360px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filters button { font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; }
+.filters button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.list { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.row { display: grid; grid-template-columns: 7.5em 1fr auto; gap: 4px 12px; align-items: start; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.row:last-child { border-bottom: 0; }
+.row .when { color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.row .what { min-width: 0; }
+.row .what .s { color: var(--muted); font-size: 12px; }
+.day-sep { padding: 6px 14px; background: var(--chip); font-size: 12.5px; font-weight: 600; }
+.empty { padding: 16px; color: var(--muted); text-align: center; }
+.runs-next .row { grid-template-columns: 1fr auto; }
+.foot { color: var(--muted); font-size: 12.5px; display: grid; gap: 4px; }
+@media (max-width: 420px) { .row { grid-template-columns: 1fr auto; } .row .when { grid-column: 1 / -1; } }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <p class="eyebrow">تيربو · TURBO PC · <span dir="ltr">@.torbo</span></p>
+    <h1>متابعة تيربو</h1>
+    <p class="lede" id="lede">—</p>
+  </header>
+
+  <section id="next-day">
+    <div class="sec-head"><h2 id="nd-title">يوم النشر الجاي</h2><p class="sub">بتوقيت الرياض</p></div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section id="pipeline">
+    <div class="sec-head"><h2>مسار الإنتاج</h2><p class="sub">فيديوهات اليوم وما بعده حسب الحالة</p></div>
+    <div class="flow" id="flow"></div>
+  </section>
+
+  <section id="calendar">
+    <div class="sec-head"><h2>التقويم: الأيام السبعة الجاية</h2></div>
+    <div class="filters" id="filters" role="group" aria-label="السلسلة">
+      <button type="button" data-s="" aria-pressed="true">الكل</button>
+      <button type="button" data-s="budget-builds" aria-pressed="false">تجميعات</button>
+      <button type="button" data-s="shortcuts" aria-pressed="false">اختصارات</button>
+      <button type="button" data-s="troubleshooting" aria-pressed="false">المشاكل وحلولها</button>
+    </div>
+    <div class="list" id="cal"></div>
+  </section>
+
+  <section id="tasks">
+    <div class="sec-head"><h2>المهام المجدولة</h2><p class="sub">التشغيل الجاي لكل مهمة</p></div>
+    <div class="list runs-next" id="next-runs"></div>
+  </section>
+
+  <section id="runs">
+    <div class="sec-head"><h2>سجل التشغيل</h2><p class="sub">الأحدث فوق</p></div>
+    <div class="list" id="runlog"></div>
+  </section>
+
+  <footer class="foot">
+    <span id="stamp">—</span>
+    <span>اللوحة الكاملة (فيها منشورات Schedulin مباشرة، وتفتح من الكمبيوتر): <a id="board" target="_blank" rel="noopener">لوحة تيربو</a></span>
+  </footer>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var H = 3600000;
+  var CLS = { 'فكرة': 'idea', 'سكربت': 'wip', 'معتمد': 'wip', 'فيديو جاهز': 'ready', 'مجدول': 'done', 'منشور': 'done', 'فشل': 'bad', 'مرفوض': 'bad', 'مستبدل': 'idea', 'ملغي': 'idea' };
+  var TASK_AR = { write: 'الكتابة', produce: 'الإنتاج', publish: 'النشر', rescue: 'الإنقاذ', analyze: 'التحليل', setup: 'الإعداد' };
+  var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  var MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function clear(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function riyadh(ms) { return new Date(ms + 3 * H); }
+  function ymd(d) { return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()); }
+  function today() { return ymd(riyadh(Date.now())); }
+  function addDays(s, n) { var p = s.split('-'); return ymd(new Date(Date.UTC(+p[0], +p[1] - 1, +p[2] + n))); }
+  function fmtTime(hm) { var m = /^(\d{1,2}):(\d{2})/.exec(String(hm || '')); if (!m) return String(hm || ''); var h = +m[1]; return (h % 12 || 12) + ':' + m[2] + (h < 12 ? 'ص' : (h < 15 ? 'ظ' : 'م')); }
+  function dayLabel(s) { var p = s.split('-'); var d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])); return DAYS[d.getUTCDay()] + ' ' + (+p[2]) + ' ' + MONTHS[+p[1] - 1]; }
+  function pill(s) { return el('span', 'pill s-' + (CLS[s] || 'idea'), s || '—'); }
+  function safe(u) { return /^https:\/\//.test(String(u || '')) ? String(u) : ''; }
+
+  var cal = D.calendar || [], t = today();
+  var upcoming = cal.filter(function (r) { return r.date >= t; });
+
+  // يوم النشر الجاي
+  var dates = []; upcoming.forEach(function (r) { if (dates.indexOf(r.date) < 0) dates.push(r.date); }); dates.sort();
+  var nd = dates[0];
+  var lede = document.getElementById('lede'), cards = document.getElementById('cards');
+  if (!nd) {
+    lede.textContent = 'ما فيه فيديوهات قادمة في التقويم. مهمة الكتابة تخطط الأيام الجاية الساعة 8:05 مساءً.';
+    cards.appendChild(el('p', 'small', 'ما فيه فيديوهات قادمة.'));
+  } else {
+    var dayRows = cal.filter(function (r) { return r.date === nd; });
+    var ready = dayRows.filter(function (r) { return ['فيديو جاهز', 'مجدول', 'منشور'].indexOf(r.status) >= 0; }).length;
+    var when = nd === t ? 'اليوم' : (nd === addDays(t, 1) ? 'بكرة' : '');
+    clear(lede);
+    lede.appendChild(document.createTextNode('أقرب يوم نشر ' + (when ? when + '، ' : '') + dayLabel(nd) + ': جاهز منه '));
+    lede.appendChild(el('b', '', String(ready))); lede.appendChild(document.createTextNode(' من '));
+    lede.appendChild(el('b', '', String(dayRows.length))); lede.appendChild(document.createTextNode(' فيديوهات (فيديو جاهز أو مجدول أو منشور).'));
+    document.getElementById('nd-title').textContent = 'يوم النشر الجاي: ' + dayLabel(nd);
+    dayRows.forEach(function (r) {
+      var c = el('article', 'card'), top = el('div', 'card-top');
+      top.appendChild(el('span', 'time', fmtTime(r.time))); top.appendChild(pill(r.status));
+      c.appendChild(top); c.appendChild(el('span', 'series', r.series_ar || r.series)); c.appendChild(el('p', 'topic', r.topic));
+      if (r.angle) c.appendChild(el('p', 'small', r.angle));
+      var bits = []; if (r.voice) bits.push('الصوت: ' + r.voice); if (r.post) bits.push('Schedulin: ' + r.post);
+      if (bits.length) c.appendChild(el('p', 'small', bits.join(' · ')));
+      var u = safe(r.video); if (u) { var a = el('a', '', 'شوف الفيديو ↗'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; c.appendChild(a); }
+      if (r.note) c.appendChild(el('p', 'note' + (/فشل|خطأ|تعذ/.test(r.note) ? ' bad' : ''), r.note));
+      cards.appendChild(c);
+    });
+  }
+
+  // مسار الإنتاج
+  var flow = document.getElementById('flow');
+  ['فكرة', 'سكربت', 'معتمد', 'فيديو جاهز', 'مجدول', 'منشور', 'فشل'].forEach(function (s) {
+    var n = upcoming.filter(function (r) { return s === 'فشل' ? (r.status === 'فشل' || r.status === 'مرفوض') : r.status === s; }).length;
+    var st = el('div', 'step s-' + (CLS[s] || 'idea') + (n ? ' has' : ''));
+    st.appendChild(el('span', 'n', String(n))); st.appendChild(el('span', 'l', s));
+    flow.appendChild(st);
+  });
+
+  // التقويم
+  var calBox = document.getElementById('cal'), filter = '';
+  function drawCal() {
+    clear(calBox);
+    var end = addDays(t, 6), last = '';
+    var rows = upcoming.filter(function (r) { return r.date <= end && (!filter || r.series === filter); });
+    if (!rows.length) { calBox.appendChild(el('div', 'empty', 'ما فيه فيديوهات في هذي الفترة.')); return; }
+    rows.forEach(function (r) {
+      if (r.date !== last) { calBox.appendChild(el('div', 'day-sep', (r.date === t ? 'اليوم · ' : (r.date === addDays(t, 1) ? 'بكرة · ' : '')) + dayLabel(r.date))); last = r.date; }
+      var row = el('div', 'row'); row.appendChild(el('span', 'when', fmtTime(r.time)));
+      var w = el('div', 'what'); w.appendChild(el('div', '', r.topic)); w.appendChild(el('div', 's', r.series_ar || r.series));
+      row.appendChild(w); row.appendChild(pill(r.status)); calBox.appendChild(row);
+    });
+  }
+  var btns = document.querySelectorAll('#filters button');
+  Array.prototype.forEach.call(btns, function (b) {
+    b.addEventListener('click', function () {
+      filter = b.getAttribute('data-s') || '';
+      Array.prototype.forEach.call(btns, function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      drawCal();
+    });
+  });
+  drawCal();
+
+  // المهام المجدولة: التشغيل الجاي
+  var nr = document.getElementById('next-runs');
+  function drawNext() {
+    clear(nr);
+    var now = Date.now(), r = riyadh(now);
+    var list = (D.tasks || []).map(function (x) {
+      for (var d = 0; d < 8; d++) {
+        var c = Date.UTC(r.getUTCFullYear(), r.getUTCMonth(), r.getUTCDate() + d, +x.hour, +x.minute) - 3 * H;
+        if (c > now && (String(x.dow) === '*' || +x.dow === riyadh(c).getUTCDay())) return { name: x.name, at: c };
+      }
+      return { name: x.name, at: 0 };
+    }).sort(function (a, b) { return a.at - b.at; });
+    list.forEach(function (x) {
+      var row = el('div', 'row'); row.appendChild(el('span', '', x.name));
+      var txt = '—';
+      if (x.at) {
+        var rd = riyadh(x.at), day = ymd(rd), mins = Math.round((x.at - Date.now()) / 60000);
+        var dl = day === t ? 'اليوم' : (day === addDays(t, 1) ? 'بكرة' : dayLabel(day));
+        txt = dl + ' ' + fmtTime(pad(rd.getUTCHours()) + ':' + pad(rd.getUTCMinutes())) + ' · بعد ' + (Math.floor(mins / 60) ? Math.floor(mins / 60) + ' س ' : '') + (mins % 60) + ' د';
+      }
+      row.appendChild(el('span', 'when', txt)); nr.appendChild(row);
+    });
+  }
+  drawNext(); setInterval(drawNext, 60000);
+
+  // سجل التشغيل
+  var rl = document.getElementById('runlog'), runs = (D.runs || []).slice().reverse().slice(0, 40);
+  if (!runs.length) rl.appendChild(el('div', 'empty', 'ما فيه تشغيلات للحين.'));
+  runs.forEach(function (x) {
+    var row = el('div', 'row'); row.appendChild(el('span', 'when', x.time));
+    var w = el('div', 'what'); w.appendChild(el('div', '', x.summary)); row.appendChild(w);
+    row.appendChild(el('span', 'pill s-idea', TASK_AR[x.task] || x.task)); rl.appendChild(row);
+  });
+
+  document.getElementById('stamp').textContent = 'آخر تحديث للبيانات: ' + (D.exported || '—').replace('T', ' ').replace('+03:00', '') + ' (الرياض)';
+  var b = document.getElementById('board'); b.href = D.board;
+})();
+</script>
