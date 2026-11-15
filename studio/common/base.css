@@ -1,0 +1,92 @@
+/* =========================================================================
+   base.css — طبقة HTML المشتركة لكل قوالب تيربو (1080×1920)
+   التوكنز من brand/identity.md. القيم المعلّمة (مؤقت) تتحدث من palette.json أول ما تتثبت الحزم.
+   ========================================================================= */
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../fonts/baloo-bhaijaan-2-arabic-wght-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../fonts/baloo-bhaijaan-2-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-weight: 100 900; font-display: block;
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2"); }
+
+:root {
+  --bg: #F1F6FE;        /* الخلفية */
+  --ink: #14284B;       /* النص */
+  --blue: #2F6BFF;      /* أزرق العلامة (مؤقت) */
+  --blue-2: #DCE8FF;    /* أزرق فاتح (مؤقت) */
+  --white: #FFFFFF;
+  --red: #FF3347;       /* المشكلة */
+  --green: #16C47F;     /* الحل (مؤقت) */
+  --gold: #FFB020;      /* السعر (مؤقت) */
+  --muted: #5B6B8C;
+  --shadow: 0 10px 30px rgba(20, 40, 75, .14), 0 2px 6px rgba(20, 40, 75, .08);
+  --ar: "Baloo Bhaijaan 2", sans-serif;
+  --en: "Inter", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+body { font-family: var(--ar); color: var(--ink); direction: rtl; -webkit-font-smoothing: antialiased; }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+#gl { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+#overlay { position: absolute; inset: 0; pointer-events: none; }
+.ltr, bdi.ltr { direction: ltr; unicode-bidi: isolate; font-family: var(--en); font-weight: 700; letter-spacing: -0.01em; }
+
+/* ---------- الشريط العلوي: y 190–290 ---------- */
+.topbar { position: absolute; top: 196px; left: 60px; right: 60px; height: 92px; display: flex; flex-direction: column; gap: 14px; }
+.topbar .row { display: flex; align-items: center; gap: 18px; height: 64px; }
+.topbar .logo { width: 64px; height: 64px; object-fit: contain; flex: none; }
+.topbar .logo-ph { width: 64px; height: 64px; border-radius: 50%; background: var(--blue); color: #fff; font: 800 15px var(--en);
+  display: flex; align-items: center; justify-content: center; letter-spacing: .02em; flex: none; }
+.topbar .series { font-weight: 800; font-size: 40px; line-height: 1; }
+.topbar .brandname { margin-inline-start: auto; font: 800 26px var(--en); color: var(--blue); letter-spacing: .04em; direction: ltr; }
+.progress { height: 10px; border-radius: 99px; background: var(--blue-2); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--blue); border-radius: 99px; margin-inline-start: 0; }
+
+/* ---------- العنوان: y 310–470 ---------- */
+.title { position: absolute; top: 312px; left: 70px; right: 70px; text-align: center; font-weight: 800; font-size: 62px; line-height: 1.18;
+  max-height: 156px; overflow: hidden; }
+.title .hl { color: var(--blue); }
+
+/* ---------- نص الهوك الكبير ---------- */
+.hook { position: absolute; left: 80px; right: 140px; top: 560px; text-align: center; font-weight: 800; font-size: 84px; line-height: 1.12;
+  color: var(--ink); text-shadow: 0 4px 0 #fff, 0 0 30px rgba(255,255,255,.9); opacity: 0; }
+.hook .hl { color: var(--blue); }
+
+/* ---------- الترجمة: كبسولة بيضاء y 1250–1440، الكلمة الحالية بالأزرق ---------- */
+.caption { position: absolute; left: 60px; width: 880px; top: 1262px; height: 176px; display: flex; align-items: center; justify-content: center; }
+.capsule { background: var(--white); border-radius: 44px; padding: 18px 40px 22px; box-shadow: var(--shadow); max-width: 880px;
+  font-weight: 800; font-size: 54px; line-height: 1.25; text-align: center; transform-origin: 50% 100%; }
+.capsule .w { color: var(--ink); opacity: .55; transition: none; }
+.capsule .w.said { opacity: 1; }
+.capsule .w.now { color: var(--blue); opacity: 1; }
+.capsule .w.ltr, .capsule .ltrgroup { font-family: var(--en); font-weight: 800; }
+.capsule .w.ltr { font-size: .9em; }
+.capsule .ltrgroup { direction: ltr; unicode-bidi: isolate; }
+
+/* ---------- بطاقات العناصر ---------- */
+.card { position: absolute; background: var(--white); border-radius: 30px; box-shadow: var(--shadow); padding: 22px 28px; opacity: 0; }
+.card h3 { font-size: 38px; font-weight: 800; line-height: 1.2; margin-bottom: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; border-radius: 99px; padding: 6px 18px 8px; font-weight: 800; font-size: 34px; }
+.chip.blue { background: var(--blue); color: #fff; }
+.chip.gold { background: var(--gold); color: var(--ink); }
+.chip.red { background: var(--red); color: #fff; }
+.chip.green { background: var(--green); color: #fff; }
+.chip.soft { background: var(--blue-2); color: var(--ink); }
+.label3d { position: absolute; left: 0; top: 0; transform-origin: 50% 100%; white-space: nowrap; opacity: 0; }
+.label3d .tag { background: var(--white); border-radius: 22px; box-shadow: var(--shadow); padding: 10px 20px 12px; display: flex; align-items: center; gap: 12px;
+  font-size: 34px; font-weight: 800; }
+.note { font-size: 24px; color: var(--muted); font-weight: 700; }
+
+/* ---------- الختام ---------- */
+.closing { position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; opacity: 0; }
+.closing .full { width: 520px; max-height: 520px; object-fit: contain; }
+.closing .full-ph { width: 300px; height: 300px; border-radius: 50%; background: var(--blue); color: #fff; font: 800 64px var(--en);
+  display: flex; align-items: center; justify-content: center; }
+.closing .sig { font-size: 60px; font-weight: 800; }
+.closing .sig .dot { color: var(--blue); padding: 0 12px; }
+.closing .ph-note { font: 600 22px var(--en); color: var(--muted); direction: ltr; }
+
+/* ---------- وضع التصحيح (?debug=1): يرسم المناطق الآمنة ---------- */
+.safe-guide { position: absolute; pointer-events: none; border: 3px dashed rgba(255, 51, 71, .7); }

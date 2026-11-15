@@ -1,0 +1,12 @@
+{
+  "name": "torbo-studio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Three.js scene templates + deterministic frame renderer for TURBO PC TikTok videos",
+  "type": "module",
+  "dependencies": {
+    "@fontsource-variable/baloo-bhaijaan-2": "5.3.0",
+    "@fontsource-variable/inter": "5.3.0",
+    "three": "0.186.0"
+  }
+}

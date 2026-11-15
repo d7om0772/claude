@@ -1,0 +1,101 @@
+{
+ "whoosh": {
+  "file": "studio/sfx/whoosh.wav",
+  "duration_s": 0.5,
+  "peak_dbfs": -3.0,
+  "description": "مرور هوائي ناعم (ضجيج بتردد صاعد ثم نازل)",
+  "use": "انتقال كاميرا، دخول بطاقة كبيرة",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "swoosh_up": {
+  "file": "studio/sfx/swoosh_up.wav",
+  "duration_s": 0.35,
+  "peak_dbfs": -3.0,
+  "description": "مرور صاعد قصير",
+  "use": "ظهور الهوك/العنوان",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "pop": {
+  "file": "studio/sfx/pop.wav",
+  "duration_s": 0.12,
+  "peak_dbfs": -3.0,
+  "description": "فرقعة خفيفة (نغمة وحدة بتردد نازل)",
+  "use": "ظهور ملصق/شريحة/بطاقة صغيرة",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "click": {
+  "file": "studio/sfx/click.wav",
+  "duration_s": 0.06,
+  "peak_dbfs": -3.0,
+  "description": "نقرة زر كيبورد",
+  "use": "ضغط زر في سلسلة الاختصارات",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "thud": {
+  "file": "studio/sfx/thud.wav",
+  "duration_s": 0.35,
+  "peak_dbfs": -3.0,
+  "description": "ارتطام خفيف منخفض",
+  "use": "نزول قطعة في الكيس",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "snap": {
+  "file": "studio/sfx/snap.wav",
+  "duration_s": 0.14,
+  "peak_dbfs": -3.0,
+  "description": "تركيب/تثبيت (نقرتين سريعتين)",
+  "use": "قطعة تثبتت في مكانها، كيبل انشبك",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "tick": {
+  "file": "studio/sfx/tick.wav",
+  "duration_s": 0.025,
+  "peak_dbfs": -3.0,
+  "description": "تكة عداد قصيرة جداً",
+  "use": "عداد السعر/الأرقام",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "ding": {
+  "file": "studio/sfx/ding.wav",
+  "duration_s": 0.7,
+  "peak_dbfs": -3.0,
+  "description": "نغمة وحدة صافية (بدون لحن)",
+  "use": "معلومة مهمة، رقم نهائي",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "error": {
+  "file": "studio/sfx/error.wav",
+  "duration_s": 0.32,
+  "peak_dbfs": -3.0,
+  "description": "طنين منخفض قصير",
+  "use": "حالة المشكلة (أحمر)",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "success": {
+  "file": "studio/sfx/success.wav",
+  "duration_s": 0.5,
+  "peak_dbfs": -3.0,
+  "description": "نغمة إيجابية وحدة ناعمة (بدون لحن)",
+  "use": "حالة الحل (أخضر)، علامة صح",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ },
+ "rise": {
+  "file": "studio/sfx/rise.wav",
+  "duration_s": 0.8,
+  "peak_dbfs": -3.0,
+  "description": "ضجيج صاعد قصير قبل الكشف",
+  "use": "قبل كشف رقم/نتيجة",
+  "source": "مولّد بالكود: studio/sfx/generate_sfx.py",
+  "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)"
+ }
+}

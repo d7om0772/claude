@@ -1,0 +1,7 @@
+{ "id": "selftest-troubleshooting", "series": "troubleshooting", "style": "interim", "camera": { "variant": 1 },
+  "title": "الجهاز شغال بس الشاشة **سوداء**؟", "hook": { "text": "الشاشة **سوداء**؟", "start": 0, "end": "w2.end" },
+  "events": [
+    { "el": "E06", "start": 0, "end": {"find": "غالباً"}, "params": { "demo": "no_signal" } },
+    { "el": "E01", "start": {"find": "غالباً"}, "end": {"find": "الغلط", "edge": "end", "shift": 0.5}, "params": { "label": "الكيبل في المكان الغلط", "anchor": "pc" } },
+    { "el": "E03", "start": {"find": "الكيبل"}, "end": {"find": "الغلط", "edge": "end", "shift": 0.5}, "params": { "focus": "pc" } }
+  ], "auto_sfx": true }

@@ -1,0 +1,175 @@
+{
+ "id": "sample-shortcuts",
+ "series": "shortcuts",
+ "style": "interim",
+ "duration": 9.0,
+ "fps": 30,
+ "camera": {
+  "variant": 0
+ },
+ "title": "لقطة شاشة لجزء محدد بضغطة",
+ "hook": {
+  "text": "انسَ **Print Screen**",
+  "start": 0,
+  "end": 1.8
+ },
+ "right_screen": {
+  "demo": "text",
+  "text": "Win + Shift + S",
+  "size": 96
+ },
+ "captions": {
+  "lines": [
+   {
+    "start": 0.1,
+    "end": 1.8,
+    "words": [
+     {
+      "w": "انسَ",
+      "start": 0.1,
+      "end": 0.5
+     },
+     {
+      "w": "Print",
+      "start": 0.5,
+      "end": 0.8
+     },
+     {
+      "w": "Screen",
+      "start": 0.8,
+      "end": 1.1
+     },
+     {
+      "w": "وقص",
+      "start": 1.1,
+      "end": 1.4
+     },
+     {
+      "w": "الصور",
+      "start": 1.4,
+      "end": 1.8
+     }
+    ]
+   },
+   {
+    "start": 1.9,
+    "end": 3.8,
+    "words": [
+     {
+      "w": "اضغط",
+      "start": 1.9,
+      "end": 2.3
+     },
+     {
+      "w": "Win",
+      "start": 2.3,
+      "end": 2.7
+     },
+     {
+      "w": "+",
+      "start": 2.7,
+      "end": 2.8
+     },
+     {
+      "w": "Shift",
+      "start": 2.8,
+      "end": 3.2
+     },
+     {
+      "w": "+",
+      "start": 3.2,
+      "end": 3.3
+     },
+     {
+      "w": "S",
+      "start": 3.3,
+      "end": 3.8
+     }
+    ]
+   },
+   {
+    "start": 3.9,
+    "end": 6.2,
+    "words": [
+     {
+      "w": "وحدد",
+      "start": 3.9,
+      "end": 4.4
+     },
+     {
+      "w": "الجزء",
+      "start": 4.4,
+      "end": 4.9
+     },
+     {
+      "w": "اللي",
+      "start": 4.9,
+      "end": 5.2
+     },
+     {
+      "w": "تبيه",
+      "start": 5.2,
+      "end": 6.2
+     }
+    ]
+   }
+  ]
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 2.0,
+   "end": 4.6,
+   "params": {
+    "keys": [
+     "Win",
+     "Shift",
+     "S"
+    ],
+    "times": [
+     2.3,
+     2.8,
+     3.3
+    ]
+   }
+  },
+  {
+   "el": "E03",
+   "start": 2.0,
+   "end": 3.9,
+   "params": {
+    "focus": "keyboard"
+   }
+  },
+  {
+   "el": "E02",
+   "start": 3.6,
+   "end": 6.6,
+   "params": {
+    "screen": "left",
+    "demo": "snip"
+   }
+  },
+  {
+   "el": "E03",
+   "start": 4.0,
+   "end": 6.6,
+   "params": {
+    "focus": "left"
+   }
+  },
+  {
+   "el": "E06",
+   "start": 6.4,
+   "end": 7.9,
+   "params": {
+    "old": "Print Screen + قص",
+    "new": "**Win + Shift + S**"
+   }
+  }
+ ],
+ "sfx": [],
+ "closing": {
+  "start": 8.0
+ }
+}

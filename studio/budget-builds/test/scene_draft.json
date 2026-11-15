@@ -1,0 +1,7 @@
+{ "id": "selftest-budget-builds", "series": "budget-builds", "style": "interim", "camera": { "variant": 1 },
+  "title": "تجميعة قيمنق بـ **3,000** ريال", "hook": { "text": "**3,000** ريال بس؟", "start": 0, "end": "w4" }, "budget": 3000,
+  "events": [
+    { "el": "E01", "start": {"find": "بالمعالج"}, "end": {"find": "وبعده"}, "params": { "part": "cpu", "name": "Ryzen 5 5600", "price": 0 } },
+    { "el": "E01", "start": {"find": "كرت"}, "end": {"find": "الشاشة", "edge": "end", "shift": 0.8}, "params": { "part": "gpu", "name": "كرت الشاشة", "price": 0 } },
+    { "el": "E08", "start": {"find": "بالمعالج"}, "end": {"find": "الشاشة", "edge": "end", "shift": 1}, "params": { "text": "اختبار القالب — الأسعار صفر عمداً" } }
+  ], "auto_sfx": true }

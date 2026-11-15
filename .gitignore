@@ -1,0 +1,24 @@
+# ملفات الإنتاج المؤقتة — ما تنحفظ في المستودع
+/work/
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+frames/
+_frames_tmp/
+# استثناء: معاينات حزم الستايل لازم تنحفظ لأنها مرجع الجودة
+!design-refs/**/*.mp4
+!brand/styles/**/03_preview.mp4
+# المؤثرات الصوتية (قصيرة ومولّدة بالكود) تنحفظ
+!studio/sfx/*.wav
+
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+*.key

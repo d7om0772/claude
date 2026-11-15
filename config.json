@@ -1,0 +1,43 @@
+{
+  "account": {
+    "handle": "@.torbo",
+    "brand_ar": "تيربو",
+    "brand_en": "TURBO PC",
+    "platform": "tiktok",
+    "schedulin_social_account_id": "1db3a149-a820-426e-bd78-c7756510bfc7",
+    "schedulin_username": "تيربو | TORBO",
+    "tiktok_username": ".torbo"
+  },
+  "timezone": "Asia/Riyadh",
+  "launch_date": "2026-11-16",
+  "phases": [
+    { "name": "phase1", "from_day": 1, "to_day": 60, "videos_per_day": 3, "publish_times": ["13:00", "18:00", "22:00"] },
+    { "name": "phase2", "from_day": 61, "to_day": null, "videos_per_day": 1, "publish_times": ["18:00"] }
+  ],
+  "phase2_note": "وقت المرحلة الثانية يتحدث من توصيات تقرير التحليل (مهمة write يوم السبت تعدّل publish_times للمرحلة الثانية هنا).",
+  "series": {
+    "active": ["budget-builds", "shortcuts", "troubleshooting"],
+    "paused": ["tech-news", "comparisons"]
+  },
+  "voice": {
+    "primary": "elevenlabs",
+    "fallback": "gemini",
+    "providers_file": "brand/voice-providers.json"
+  },
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "crf": 16,
+    "audio_bitrate": "192k",
+    "loudness_lufs": -14,
+    "sfx_below_voice_db": 10,
+    "max_upload_mb": 95
+  },
+  "cloudinary": {
+    "folder_pattern": "torbo/{date}/",
+    "delete_after_days_published": 7
+  },
+  "fact_check": { "max_rewrites": 2 },
+  "git": { "branch": "main" }
+}

@@ -1,0 +1,9 @@
+{
+  "_comment": "ربط مجلد الحزمة الداخلي (أو رقمه) بمجلد السلسلة في brand/styles/. المدير يضيف سطر لكل حزمة جديدة (مثل أخبار تقنية ومقارنات).",
+  "15_iso_build_drop": "budget-builds",
+  "13_mini_desk_diorama": "shortcuts",
+  "14_desk_pc_red_green": "troubleshooting",
+  "15": "budget-builds",
+  "13": "shortcuts",
+  "14": "troubleshooting"
+}
