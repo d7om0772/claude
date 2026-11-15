@@ -13,6 +13,27 @@ const LM = { x: -1.42, z: -0.75 }, RM = { x: 1.42, z: -0.75 };
 // ---------------- محتوى الشاشات ----------------
 const SYMBOLS = ["♥", "★", "⚡", "☀", "☁", "♪", "✓", "☂", "✿", "⚙", "✉", "☕"];   // أشياء ورموز فقط — بدون وجوه أو كائنات حية
 const MATH = ["Ω", "π", "∞", "±", "≈", "√", "∑", "°", "©", "€", "→", "✓"];
+
+// ---- مساعدات X01 (لقطة الشاشة): منطقة القص الثابتة + مصغّرها + أيقونات الشريط (أشكال مجردة) ----
+const SNIPR = (w, h) => ({ x: w * 0.25, y: h * 0.22, w: w * 0.45, h: h * 0.45 });
+function snipWins(g, w, h) { K.windowBox(g, w * 0.08, h * 0.1, w * 0.5, h * 0.5, "Docs"); K.windowBox(g, w * 0.42, h * 0.2, w * 0.5, h * 0.52, "Browser"); }
+function snipThumb(g, w, h, x, y, tw) { const r = SNIPR(w, h), k = tw / r.w, th = r.h * k;
+  g.save(); g.beginPath(); g.rect(x, y, tw, th); g.clip(); g.translate(x - r.x * k, y - r.y * k); g.scale(k, k); K.screenBg(g, w, h); snipWins(g, w, h); g.restore();
+  g.strokeStyle = "#fff"; g.lineWidth = 3; g.strokeRect(x, y, tw, th); return th; }
+function snipIcon(g, i, cx, cy, r, col) { g.save(); g.strokeStyle = col; g.fillStyle = col; g.lineWidth = Math.max(3, r * 0.14); g.lineJoin = "round"; g.lineCap = "round";
+  if (i === 0) { g.setLineDash([r * 0.22, r * 0.16]); g.strokeRect(cx - r * 0.8, cy - r * 0.55, r * 1.6, r * 1.1); }
+  if (i === 1) { g.beginPath(); g.moveTo(cx - r * 0.7, cy + r * 0.2); g.bezierCurveTo(cx - r * 0.9, cy - r * 0.8, cx + r * 0.2, cy - r * 0.6, cx + r * 0.5, cy - r * 0.3); g.bezierCurveTo(cx + r * 1.0, cy + r * 0.2, cx + r * 0.1, cy + r * 0.8, cx - r * 0.7, cy + r * 0.2); g.stroke(); }
+  if (i === 2) { g.strokeRect(cx - r * 0.8, cy - r * 0.6, r * 1.6, r * 1.2); g.fillRect(cx - r * 0.8, cy - r * 0.6, r * 1.6, r * 0.35); }
+  if (i === 3) { const L = r * 0.4, a = r * 0.8, b = r * 0.6; [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([dx, dy]) => { g.beginPath(); g.moveTo(cx + dx * a, cy + dy * (b - L)); g.lineTo(cx + dx * a, cy + dy * b); g.lineTo(cx + dx * (a - L), cy + dy * b); g.stroke(); }); }
+  if (i === 4) { K.rr(g, cx - r * 0.8, cy - r * 0.45, r * 1.05, r * 0.9, r * 0.15); g.fill(); g.beginPath(); g.moveTo(cx + r * 0.35, cy); g.lineTo(cx + r * 0.85, cy - r * 0.4); g.lineTo(cx + r * 0.85, cy + r * 0.4); g.closePath(); g.fill(); }
+  g.restore(); }
+function appIcon(g, i, cx, cy, r, col) { g.save(); g.strokeStyle = col; g.fillStyle = col; g.lineWidth = Math.max(3, r * 0.16); g.lineCap = "round"; g.lineJoin = "round";
+  if (i === 0) { g.beginPath(); g.moveTo(cx - r * 0.6, cy + r * 0.6); g.lineTo(cx + r * 0.5, cy - r * 0.5); g.stroke(); g.beginPath(); g.moveTo(cx - r * 0.75, cy + r * 0.75); g.lineTo(cx - r * 0.45, cy + r * 0.75); g.lineTo(cx - r * 0.75, cy + r * 0.45); g.closePath(); g.fill(); }
+  if (i === 1) { g.fillRect(cx - r * 0.25, cy - r * 0.7, r * 0.5, r * 0.9); g.fillRect(cx - r * 0.6, cy + r * 0.45, r * 1.2, r * 0.2); }
+  if (i === 2) { g.beginPath(); g.moveTo(cx - r * 0.4, cy - r * 0.8); g.lineTo(cx - r * 0.4, cy + r * 0.4); g.lineTo(cx + r * 0.8, cy + r * 0.4); g.moveTo(cx - r * 0.8, cy - r * 0.4); g.lineTo(cx + r * 0.4, cy - r * 0.4); g.lineTo(cx + r * 0.4, cy + r * 0.8); g.stroke(); }
+  if (i === 3) { g.strokeRect(cx - r * 0.45, cy - r * 0.6, r * 0.9, r * 1.1); g.strokeRect(cx - r * 0.7, cy - r * 0.35, r * 0.9, r * 1.1); }
+  if (i === 4) { g.beginPath(); g.moveTo(cx - r * 0.7, cy - r * 0.7); g.lineTo(cx + r * 0.45, cy - r * 0.7); g.lineTo(cx + r * 0.7, cy - r * 0.45); g.lineTo(cx + r * 0.7, cy + r * 0.7); g.lineTo(cx - r * 0.7, cy + r * 0.7); g.closePath(); g.stroke(); g.fillRect(cx - r * 0.35, cy - r * 0.7, r * 0.6, r * 0.45); }
+  g.restore(); }
 function demo(ctx) {
   return (g, w, h, s) => {
     const p = s.p ?? 1, m = s.mode || "desktop";
@@ -79,19 +100,75 @@ function demo(ctx) {
         g.beginPath(); g.moveTo(-h * 0.08, 0); g.lineTo(-h * 0.08, h * 0.1); g.lineTo(h * 0.08, h * 0.1); g.lineTo(h * 0.08, 0); g.stroke(); }
       g.restore(); K.text(g, s.text || (m === "save" ? "احفظ" : "علّمه"), w / 2, h * 0.76, { size: h * 0.15, color: "#fff" }); return; }
     // ---- X01: عروض إضافية بنفس الأسلوب ----
-    if (m === "snip") { desk(); K.windowBox(g, w * 0.08, h * 0.1, w * 0.5, h * 0.5, "Docs"); K.windowBox(g, w * 0.42, h * 0.2, w * 0.5, h * 0.52, "Browser");
-      g.fillStyle = "rgba(10,20,40,.42)"; g.fillRect(0, 0, w, h); g.fillStyle = "#fff"; K.rr(g, w / 2 - w * 0.16, h * 0.03, w * 0.32, h * 0.09, 12); g.fill();
-      for (let i = 0; i < 4; i++) { g.fillStyle = i === 0 ? PAL.brand : "#B8C7E6"; K.rr(g, w / 2 - w * 0.14 + i * w * 0.072, h * 0.045, w * 0.05, h * 0.06, 8); g.fill(); }
-      const q = E.inOutCubic(clamp((p - 0.15) / 0.55)); const x0 = w * 0.25, y0 = h * 0.22, ww = w * 0.45 * q, hh = h * 0.45 * q;
-      if (q > 0) { g.save(); g.beginPath(); g.rect(x0, y0, ww, hh); g.clip(); K.screenBg(g, w, h); K.windowBox(g, w * 0.08, h * 0.1, w * 0.5, h * 0.5, "Docs"); K.windowBox(g, w * 0.42, h * 0.2, w * 0.5, h * 0.52, "Browser"); g.restore();
-        g.strokeStyle = "#fff"; g.lineWidth = 4; g.setLineDash([12, 8]); g.strokeRect(x0, y0, ww, hh); g.setLineDash([]); }
+    if (m === "snip") { const T = (s.start ?? 0) + p * (s.dur ?? 1), R0 = SNIPR(w, h), timed = !!(s.times || s.at != null || s.rec);
+      desk(); snipWins(g, w, h);
+      const fade = timed ? clamp((T - (s.start ?? 0)) / 0.3) : 1;
+      g.fillStyle = `rgba(10,20,40,${0.42 * fade})`; g.fillRect(0, 0, w, h);
+      let sel = 0; if (s.times) { sel = -1; s.times.forEach((tt, i) => { if (T >= tt) sel = i; }); }
+      let q = 0; if (s.at != null) q = E.inOutCubic(clamp((T - s.at) / 0.9)); else if (!timed) q = E.inOutCubic(clamp((p - 0.15) / 0.55));
+      if (q > 0) sel = 0;
+      // معاينة الشكل المختار قبل السحب
+      if (q === 0 && sel >= 0 && s.times) { g.save(); g.strokeStyle = "#fff"; g.lineWidth = 5; g.setLineDash([16, 10]); g.lineDashOffset = -T * 60;
+        if (sel === 0) g.strokeRect(R0.x, R0.y, R0.w, R0.h);
+        if (sel === 1) { g.beginPath(); g.moveTo(w * 0.3, h * 0.3); g.bezierCurveTo(w * 0.45, h * 0.12, w * 0.7, h * 0.25, w * 0.66, h * 0.45); g.bezierCurveTo(w * 0.62, h * 0.66, w * 0.4, h * 0.7, w * 0.33, h * 0.55); g.bezierCurveTo(w * 0.27, h * 0.45, w * 0.22, h * 0.38, w * 0.3, h * 0.3); g.stroke(); }
+        if (sel === 2) { g.setLineDash([]); g.strokeStyle = "#8fc0ff"; g.lineWidth = 9; K.rr(g, w * 0.42 - 6, h * 0.2 - 6, w * 0.5 + 12, h * 0.52 + 12, 16); g.stroke(); }
+        if (sel === 3) { g.setLineDash([]); g.strokeStyle = "#8fc0ff"; g.lineWidth = 12; g.strokeRect(8, 8, w - 16, h - 16); }
+        g.restore(); }
+      if (q > 0) { const ww = R0.w * q, hh = R0.h * q;
+        g.save(); g.beginPath(); g.rect(R0.x, R0.y, ww, hh); g.clip(); K.screenBg(g, w, h); snipWins(g, w, h);
+        if (s.at != null && !s.rec) { const fl = 1 - clamp((T - s.at - 0.9) / 0.35); if (q >= 1 && fl > 0) { g.fillStyle = `rgba(255,255,255,${0.55 * fl})`; g.fillRect(R0.x, R0.y, ww, hh); } }
+        g.restore(); g.strokeStyle = s.rec && q >= 1 ? PAL.problem : "#fff"; g.lineWidth = 5; g.setLineDash([16, 10]); g.strokeRect(R0.x, R0.y, ww, hh); g.setLineDash([]);
+        if (q < 1) K.cursor(g, R0.x + ww, R0.y + hh, h / 520);
+        if (s.rec && q >= 1) { const a = 0.55 + 0.45 * Math.sin((T - s.at) * 7); const cx = R0.x + 44, cy = R0.y + 44;
+          g.fillStyle = `rgba(255,51,71,${a})`; g.beginPath(); g.arc(cx, cy, 20, 0, 7); g.fill();
+          g.fillStyle = "rgba(255,255,255,.92)"; K.rr(g, cx + 30, cy - 22, 190, 44, 22); g.fill();
+          const sec = Math.max(0, Math.floor(T - s.at - 0.9)); K.text(g, `REC 00:0${Math.min(9, sec)}`, cx + 125, cy + 1, { size: 26, weight: 700, color: PAL.problem }); } }
+      // شريط القص فوق الشاشة
+      const by = lerp(-h * 0.14, h * 0.035, E.outBack(fade)), bw = w * 0.46, bx = w / 2 - bw / 2, bh = h * 0.11;
+      g.save(); g.shadowColor = "rgba(10,20,40,.35)"; g.shadowBlur = 20; g.fillStyle = "#fff"; K.rr(g, bx, by, bw, bh, 16); g.fill(); g.restore();
+      for (let i = 0; i < 5; i++) { const cw = bw * 0.155, cx0 = bx + bw * 0.035 + i * (cw + bw * 0.03) + (i === 4 ? bw * 0.01 : 0), cy0 = by + bh * 0.13, ch = bh * 0.74;
+        const on = i === 4 ? !!s.rec : i === sel; g.fillStyle = on ? (i === 4 ? PAL.problem : PAL.brand) : "#E3EAF7"; K.rr(g, cx0, cy0, cw, ch, 12); g.fill();
+        snipIcon(g, i, cx0 + cw / 2, cy0 + ch / 2, ch * 0.5, on ? "#fff" : PAL.navy); }
+      if (s.times && sel >= 0 && q === 0) { const nm = ["مستطيل", "رسم حر", "نافذة", "الشاشة كاملة"][sel]; const b = E.outBack(clamp((T - s.times[sel]) / 0.25));
+        g.save(); g.translate(w / 2, by + bh + h * 0.1); g.scale(b, b); g.fillStyle = PAL.brand; K.rr(g, -w * 0.15, -h * 0.055, w * 0.3, h * 0.11, h * 0.055); g.fill();
+        K.text(g, nm, 0, 4, { size: h * 0.07, color: "#fff" }); g.restore(); }
+      return; }
+    if (m === "fullshot") { const T = (s.start ?? 0) + p * (s.dur ?? 1); desk(); snipWins(g, w, h);
+      const ins = lerp(h * 0.03, h * 0.11, E.inOutCubic(clamp(p))); g.fillStyle = "rgba(10,20,40,.35)";
+      g.fillRect(0, 0, w, ins); g.fillRect(0, h - ins, w, ins); g.fillRect(0, ins, ins, h - 2 * ins); g.fillRect(w - ins, ins, ins, h - 2 * ins);
+      g.save(); g.strokeStyle = "#fff"; g.lineWidth = 6; g.setLineDash([22, 14]); g.lineDashOffset = -T * 40; g.strokeRect(ins, ins, w - 2 * ins, h - 2 * ins); g.restore();
+      g.strokeStyle = "#fff"; g.lineWidth = 12; g.lineCap = "round"; const L = h * 0.08;
+      [[ins, ins, 1, 1], [w - ins, ins, -1, 1], [ins, h - ins, 1, -1], [w - ins, h - ins, -1, -1]].forEach(([x, y, dx, dy]) => { g.beginPath(); g.moveTo(x + dx * L, y); g.lineTo(x, y); g.lineTo(x, y + dy * L); g.stroke(); });
+      return; }
+    if (m === "chat") { const T = (s.start ?? 0) + p * (s.dur ?? 1); desk(); const X = w * 0.1, Y = h * 0.05, W = w * 0.8, H = h * 0.82;
+      K.windowBox(g, X, Y, W, H, s.wtitle || "Chat", { lines: 0 });
+      const bub = (right, y, bw2, col) => { g.fillStyle = col; K.rr(g, right ? X + W - 28 - bw2 : X + 28, y, bw2, h * 0.085, 20); g.fill(); };
+      bub(false, Y + h * 0.12, W * 0.46, "#E8EEF8"); bub(true, Y + h * 0.24, W * 0.34, "#DCE8FF"); bub(false, Y + h * 0.36, W * 0.3, "#E8EEF8");
+      g.fillStyle = "#F1F5FC"; K.rr(g, X + 24, Y + H - h * 0.11, W - 48, h * 0.08, 20); g.fill();
+      if (s.at != null && T >= s.at) { const b = E.outBack(clamp((T - s.at) / 0.35)); const tw = W * 0.38, th = tw * h / w, tx = X + W - 28 - tw, ty = Y + h * 0.48;
+        g.save(); g.translate(tx + tw, ty + th); g.scale(b, b); g.translate(-(tx + tw), -(ty + th));
+        g.fillStyle = "#DCE8FF"; K.rr(g, tx - 12, ty - 12, tw + 24, th + 24, 20); g.fill(); snipThumb(g, w, h, tx, ty, tw); g.restore();
+        const gl = 1 - clamp((T - s.at - 0.35) / 0.6); if (gl > 0) { g.strokeStyle = `rgba(47,107,207,${gl})`; g.lineWidth = 8; K.rr(g, tx - 18, ty - 18, tw + 36, th + 36, 24); g.stroke(); } }
+      else { g.fillStyle = PAL.brand; g.fillRect(X + 48, Y + H - h * 0.095, 4, h * 0.05); }
+      return; }
+    if (m === "snipapp") { const T = (s.start ?? 0) + p * (s.dur ?? 1); desk(); const X = w * 0.06, Y = h * 0.05, W = w * 0.88, H = h * 0.82;
+      K.windowBox(g, X, Y, W, H, "Snipping Tool", { lines: 0 });
+      const tools = 5, tb = h * 0.085; for (let i = 0; i < tools; i++) { const tx = X + 24 + i * (tb + 14), ty = Y + 56; const on = (i === 0 && p > 0.25 && p < 0.62) || (i === 4 && p >= 0.62);
+        g.fillStyle = on ? PAL.brand : "#EEF3FB"; K.rr(g, tx, ty, tb, tb, 12); g.fill(); appIcon(g, i, tx + tb / 2, ty + tb / 2, tb * 0.5, on ? "#fff" : PAL.navy); }
+      const tw = W * 0.6, th = tw * h / w, tx = X + (W - tw) / 2, ty = Y + 56 + tb + 24; snipThumb(g, w, h, tx, ty, tw);
+      const d = clamp((p - 0.3) / 0.3); if (d > 0) { g.save(); g.strokeStyle = PAL.problem; g.lineWidth = 9; g.lineCap = "round"; g.beginPath();
+        g.ellipse(tx + tw * 0.62, ty + th * 0.42, tw * 0.22, th * 0.2, -0.15, -1.6, -1.6 + d * Math.PI * 2.1); g.stroke(); g.restore(); }
+      if (p >= 0.62) { const b = E.outBack(clamp((p - 0.62) / 0.12)); g.save(); g.translate(X + W - w * 0.14, Y + H - h * 0.09); g.scale(b, b);
+        g.fillStyle = PAL.brand; K.rr(g, -w * 0.11, -h * 0.045, w * 0.22, h * 0.09, h * 0.045); g.fill(); K.text(g, "Saved", 0, 3, { size: h * 0.045, color: "#fff", weight: 700 }); g.restore(); }
       return; }
     if (m === "clipboard") { desk(); const a = E.outCubic(clamp(p / 0.25)); const pw = w * 0.36, x = w * 0.6, y = h * 0.92 - h * 0.78 * a;
       g.save(); g.shadowColor = "rgba(20,40,75,.3)"; g.shadowBlur = 24; g.fillStyle = "#fff"; K.rr(g, x, y, pw, h * 0.72, 16); g.fill(); g.restore();
       K.text(g, "Clipboard", x + 24, y + h * 0.06, { size: h * 0.05, align: "left", font: K.FONT_EN, weight: 700 });
-      (s.items || ["Meeting 4 PM", "photo.png", "RTX specs", "Order #4821"]).forEach((it, i) => { const sel = p > 0.45 && i === Math.min(3, Math.floor((p - 0.45) * 8));
-        g.fillStyle = sel ? "#DCE8FF" : "#F3F6FC"; K.rr(g, x + 16, y + h * 0.11 + i * h * 0.145, pw - 32, h * 0.12, 12); g.fill();
-        K.text(g, it, x + 34, y + h * 0.17 + i * h * 0.145, { size: h * 0.045, align: "left", font: K.FONT_EN, weight: 600 }); }); return; }
+      (s.items || ["Meeting 4 PM", "photo.png", "RTX specs", "Order #4821"]).forEach((it, i) => { const sel = s.thumb ? (i === 0 && p > 0.3) : (p > 0.45 && i === Math.min(3, Math.floor((p - 0.45) * 8)));
+        const iy = y + h * 0.11 + i * h * 0.145; g.fillStyle = sel ? "#DCE8FF" : "#F3F6FC"; K.rr(g, x + 16, iy, pw - 32, h * 0.12, 12); g.fill();
+        if (s.thumb && i === 0) { const nb = E.outBack(clamp((p - 0.18) / 0.2)); g.save(); g.translate(x + 30, iy + h * 0.06); g.scale(nb, nb); snipThumb(g, w, h, 0, -h * 0.045, w * 0.09); g.restore();
+          K.text(g, it, x + 34 + w * 0.105, iy + h * 0.06, { size: h * 0.04, align: "left", font: K.FONT_EN, weight: 700 }); }
+        else K.text(g, it, x + 34, iy + h * 0.06, { size: h * 0.045, align: "left", font: K.FONT_EN, weight: 600 }); }); return; }
     if (m === "taskmgr") { desk(); g.globalAlpha = clamp(p / 0.12); K.windowBox(g, w * 0.08, h * 0.06, w * 0.84, h * 0.8, "Task Manager", { lines: 0 });
       (s.rows || [["Browser", 34], ["Game", 51], ["Updater", 8], ["Chat", 3]]).forEach(([n, c], i) => { const y = h * 0.24 + i * h * 0.14;
         K.text(g, n, w * 0.13, y, { size: h * 0.05, align: "left", font: K.FONT_EN, weight: 600 }); g.fillStyle = c > 30 ? "#FFD2D7" : "#DCE8FF"; K.rr(g, w * 0.45, y - h * 0.025, w * 0.32 * (c / 60) * clamp(p * 2), h * 0.05, 8); g.fill();
@@ -180,7 +257,7 @@ async function build(ctx) {
       let gl = 0; for (const gq of ctx.glows) if (t >= gq.start && t <= gq.end + 0.3) gl = Math.max(gl, (0.5 + 0.5 * Math.sin((t - gq.start) * 9)) * (1 - clamp((t - gq.end) / 0.3)));
       for (const m of [R.mons.left, R.mons.right]) { m.userData.frameMat.emissive.set(PAL.accent); m.userData.frameMat.emissiveIntensity = gl * 1.3; }
       // الشاشتين
-      for (const side of ["left", "right"]) { const s = lastStarted(ctx.screens[side], t); R.mons[side].userData.tex.redraw({ ...s, p: s.dur ? Math.round(prog(t, s.start, s.dur) * 45) / 45 : 1 }); }
+      for (const side of ["left", "right"]) { const s = lastStarted(ctx.screens[side], t); R.mons[side].userData.tex.redraw({ ...s, p: s.dur ? Math.round(prog(t, s.start, s.dur) * Math.max(45, Math.round(s.dur * 15))) / Math.max(45, Math.round(s.dur * 15)) : 1 }); }
     },
   };
 }
