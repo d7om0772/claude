@@ -58,6 +58,19 @@ a { color: var(--brand); }
 .day-sep { padding: 6px 14px; background: var(--chip); font-size: 12.5px; font-weight: 600; }
 .empty { padding: 16px; color: var(--muted); text-align: center; }
 .runs-next .row { grid-template-columns: 1fr auto; }
+.row.run { grid-template-columns: 7.5em 1fr auto; align-items: center; }
+.ring { position: relative; width: 52px; height: 52px; flex: none; }
+.ring svg { width: 52px; height: 52px; transform: rotate(-90deg); display: block; }
+.ring .track { fill: none; stroke: var(--line); stroke-width: 5; }
+.ring .bar { fill: none; stroke: var(--rc, var(--muted)); stroke-width: 5; stroke-linecap: round; }
+.ring b { position: absolute; inset: 0; display: grid; place-items: center; font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; direction: ltr; }
+.ring.na b { color: var(--muted); font-weight: 500; }
+.ring.lo { --rc: var(--ok); } .ring.mid { --rc: var(--warn); } .ring.hi { --rc: var(--bad); }
+.week { color: var(--muted); font-size: 12px; }
+.week.warn { color: var(--bad); font-weight: 600; }
+.usage-now { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--muted); }
+.usage-now b { color: var(--fg); font-variant-numeric: tabular-nums; }
+@media (max-width: 420px) { .row.run { grid-template-columns: 1fr auto; } }
 .foot { color: var(--muted); font-size: 12.5px; display: grid; gap: 4px; }
 @media (max-width: 420px) { .row { grid-template-columns: 1fr auto; } .row .when { grid-column: 1 / -1; } }
 </style>
@@ -96,7 +109,8 @@ a { color: var(--brand); }
   </section>
 
   <section id="runs">
-    <div class="sec-head"><h2>سجل التشغيل</h2><p class="sub">الأحدث فوق</p></div>
+    <div class="sec-head"><h2>سجل التشغيل</h2><p class="sub">الدائرة: كم وصل استهلاك حد الـ5 ساعات لحظة انتهاء المهمة</p></div>
+    <p class="usage-now" id="usage-now" hidden></p>
     <div class="list" id="runlog"></div>
   </section>
 
@@ -218,14 +232,42 @@ a { color: var(--brand); }
   }
   drawNext(); setInterval(drawNext, 60000);
 
-  // سجل التشغيل
+  // سجل التشغيل + دائرة حد الـ5 ساعات
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function ring(v) {
+    var box = el('div', 'ring'), has = typeof v === 'number' && isFinite(v);
+    var n = has ? Math.max(0, Math.min(100, v)) : 0;
+    box.className = 'ring ' + (!has ? 'na' : (n >= 80 ? 'hi' : (n >= 50 ? 'mid' : 'lo')));
+    var svg = document.createElementNS(SVGNS, 'svg'); svg.setAttribute('viewBox', '0 0 52 52');
+    svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', has ? ('حد الخمس ساعات ' + n + ' بالمية') : 'ما فيه قراءة');
+    var r = 21, C = 2 * Math.PI * r;
+    var t = document.createElementNS(SVGNS, 'circle'); t.setAttribute('class', 'track'); t.setAttribute('cx', 26); t.setAttribute('cy', 26); t.setAttribute('r', r);
+    svg.appendChild(t);
+    if (has && n > 0) {
+      var b = document.createElementNS(SVGNS, 'circle'); b.setAttribute('class', 'bar'); b.setAttribute('cx', 26); b.setAttribute('cy', 26); b.setAttribute('r', r);
+      b.setAttribute('stroke-dasharray', (C * n / 100).toFixed(2) + ' ' + C.toFixed(2)); svg.appendChild(b);
+    }
+    box.appendChild(svg); box.appendChild(el('b', '', has ? n + '%' : '—'));
+    return box;
+  }
   var rl = document.getElementById('runlog'), runs = (D.runs || []).slice().reverse().slice(0, 40);
   if (!runs.length) rl.appendChild(el('div', 'empty', 'ما فيه تشغيلات للحين.'));
   runs.forEach(function (x) {
-    var row = el('div', 'row'); row.appendChild(el('span', 'when', x.time));
-    var w = el('div', 'what'); w.appendChild(el('div', '', x.summary)); row.appendChild(w);
-    row.appendChild(el('span', 'pill s-idea', TASK_AR[x.task] || x.task)); rl.appendChild(row);
+    var row = el('div', 'row run');
+    var head = el('span', 'when', x.time);
+    var w = el('div', 'what');
+    var title = el('div', ''); title.appendChild(el('span', 'pill s-idea', TASK_AR[x.task] || x.task)); w.appendChild(title);
+    w.appendChild(el('div', 's', x.summary));
+    if (typeof x.usage_7d === 'number') { var wk = el('div', 'week' + (x.usage_7d >= 90 ? ' warn' : ''), 'الحد الأسبوعي: '); var wb = el('bdi', '', x.usage_7d + '%'); wb.setAttribute('dir', 'ltr'); wk.appendChild(wb); w.appendChild(wk); }
+    row.appendChild(head); row.appendChild(w); row.appendChild(ring(x.usage_5h)); rl.appendChild(row);
   });
+  var lastU = runs.filter(function (x) { return typeof x.usage_5h === 'number'; })[0];
+  if (lastU) {
+    var un = document.getElementById('usage-now'); un.hidden = false;
+    un.appendChild(document.createTextNode('آخر قراءة (' + (TASK_AR[lastU.task] || lastU.task) + '): حد 5 ساعات '));
+    un.appendChild(el('b', '', lastU.usage_5h + '%'));
+    if (typeof lastU.usage_7d === 'number') { un.appendChild(document.createTextNode(' · الأسبوعي ')); un.appendChild(el('b', '', lastU.usage_7d + '%')); }
+  }
 
   document.getElementById('stamp').textContent = 'آخر تحديث للبيانات: ' + (D.exported || '—').replace('T', ' ').replace('+03:00', '') + ' (الرياض)';
   var b = document.getElementById('board'); b.href = D.board;

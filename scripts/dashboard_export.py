@@ -81,8 +81,13 @@ def main():
     cal_rows.sort(key=lambda x: (x["date"], x["time"]))
 
     runs = []
+    def pct(v):
+        m = re.search(r"(\d+(?:\.\d+)?)", v or "")
+        return round(float(m.group(1))) if m else None
     for c in table_rows(os.path.join(ROOT, "schedules", "runs.md"), 3):
-        runs.append({"time": c[0], "task": c[1], "summary": c[2][:300]})
+        runs.append({"time": c[0], "task": c[1], "summary": c[2][:300],
+                     "usage_5h": pct(c[3]) if len(c) > 3 else None,
+                     "usage_7d": pct(c[4]) if len(c) > 4 else None})
 
     trig = {}
     readme = open(os.path.join(ROOT, "schedules", "README.md"), encoding="utf-8").read()
