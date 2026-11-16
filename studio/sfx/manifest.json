@@ -211,5 +211,43 @@
    "distinct_notes": 0,
    "melody_warning": false
   }
+ },
+ "gs_charging2": {
+  "file": "studio/sfx/gs_charging2.wav",
+  "duration_s": 1.998,
+  "peak_dbfs": -3.0,
+  "description": "Charging 2 (Gravity Sound)",
+  "use": "تشغيل المراوح، صعود الفريمات، توهج الشاشتين",
+  "pack_name": "Charging 2",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/08/Charging_2_%28Gravity_Sound%29.wav",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710034",
+  "attribution": "\"Charging 2 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 5,
+   "melody_warning": true
+  }
+ },
+ "gs_item_pickup4": {
+  "file": "studio/sfx/gs_item_pickup4.wav",
+  "duration_s": 0.181,
+  "peak_dbfs": -3.0,
+  "description": "Item pick up 4 (Gravity Sound)",
+  "use": "تركيب الغرفة، ظهور النتائج، رجوع التبويب، لحظة الحل",
+  "pack_name": "Item pick up 4",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/ec/Item_pick_up_4_%28Gravity_Sound%29.wav/Item_pick_up_4_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710853",
+  "attribution": "\"Item pick up 4 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 0,
+   "melody_warning": false
+  }
  }
 }
