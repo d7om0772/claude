@@ -58,6 +58,8 @@ def main():
     ap.add_argument("--voice-report", required=True); ap.add_argument("--out", required=True)
     ap.add_argument("--tail", type=float, default=0.35, help="سكتة بعد آخر كلمة قبل الختام")
     ap.add_argument("--closing", type=float, default=2.6, help="مدة الختام")
+    ap.add_argument("--loop", type=float, default=1.0,
+                    help="الحلقة: آخر كم ثانية من الختام تذوب في الفريم الأول (آخر لقطة = أول لقطة). 0 = بدون")
     a = ap.parse_args()
     d = json.load(open(a.draft, encoding="utf-8"))
     caps = json.load(open(a.captions, encoding="utf-8"))
@@ -87,6 +89,12 @@ def main():
     duration = round(closing + a.closing, 3)
     scene = {k: v for k, v in d.items() if k not in ("events", "sfx", "auto_sfx")}
     scene.update({"duration": duration, "fps": 30, "closing": {"start": closing}, "captions": {"lines": caps["lines"]}})
+    loop = float(d.get("loop", {}).get("dur", a.loop)) if isinstance(d.get("loop"), dict) else a.loop
+    loop = max(0.0, min(loop, a.closing - 0.6))
+    if loop > 0:
+        scene["loop"] = {"start": round(duration - loop, 3), "dur": round(loop, 3)}
+    else:
+        scene.pop("loop", None)
     scene.setdefault("style", "interim")
     if "hook" in d:
         h = dict(d["hook"])

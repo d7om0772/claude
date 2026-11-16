@@ -313,4 +313,4 @@ const handlers = {
   X01: { setup(ev, ctx) { const p = ev.params; ctx.screens[p.screen || "left"].push({ start: ev.start, dur: Math.max(0.6, ev.end - ev.start), ...p }); ctx.sortS(); } },
 };
 
-boot({ series: "shortcuts", label: "اختصارات ويندوز", closingLabel: "تيربو · اختصارات ويندوز", grid: true, header: "dots", build, handlers });
+boot({ series: "shortcuts", loopHold: 1.35, label: "اختصارات ويندوز", closingLabel: "تيربو · اختصارات ويندوز", grid: true, header: "dots", build, handlers });

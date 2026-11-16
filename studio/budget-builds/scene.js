@@ -312,4 +312,4 @@ const handlers = {
   E15: {},
 };
 
-boot({ series: "budget-builds", label: "تجميعات", closingLabel: "تيربو · تجميعات", grid: true, header: "counter", build, handlers });
+boot({ series: "budget-builds", loopHold: 0.9, label: "تجميعات", closingLabel: "تيربو · تجميعات", grid: true, header: "counter", build, handlers });

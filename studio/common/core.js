@@ -108,11 +108,12 @@ function setupCaptions(ctx) {
     else for (let i = 0; i < lines.length; i++) {
       const a = lines[i], next = lines[i + 1];
       const holdEnd = next ? Math.min(next.start, a.end + 0.6) : a.end + 0.6;
-      if (t >= a.start - 0.05 && t < holdEnd) { L = a; break; }
+      if ((i === 0 && ctx.loopHold ? t >= 0 : t >= a.start - 0.05) && t < holdEnd) { L = a; break; }
     }
     if (L !== cur && !(L && cur && L.key === "closing" && cur.key === "closing")) { cur = L; if (L) build(L); }
     if (!L) { box.style.opacity = 0; return; }
-    const pin = prog(t, L.start - 0.05, 0.22);
+    // مع الحلقة: أول سطر ظاهر كامل من الفريم الأول (الكلمات تتلون مع النطق كالعادة)
+    const pin = ctx.loopHold && L === lines[0] ? 1 : prog(t, L.start - 0.05, 0.22);
     box.style.opacity = clamp(pin * 2);
     cap.style.transform = `scale(${0.92 + 0.08 * E.outBack(pin)})`;
     L.words.forEach((w, k) => {
@@ -263,7 +264,30 @@ export async function boot(cfg) {
       Object.assign(el("div", "safe-guide", null, ov).style, { left: l + "px", top: t + "px", width: w + "px", height: h + "px" });
   }
 
+  // الحلقة (بطلب صاحب الحساب 2026-11-16): آخر لقطة = أول لقطة، عشان الفيديو يعيد نفسه بدون ما يحس المشاهد.
+  // data.loop = {start, dur}: من start يذوب الفريم تدريجياً في صورة الفريم الأول، وآخر فريم = الفريم الأول بالضبط.
+  // صورة الفريم الأول يحطها الرندر (render.cjs / snap.cjs) بـ window.__setLoopFrame(dataUrl) بعد ما يصوّر t=0.
+  const fpsL = data.fps || 30;
+  const loop = data.loop && +data.loop.dur > 0
+    ? { start: +(data.loop.start ?? (data.duration - data.loop.dur)), end: data.duration - 1 / fpsL } : null;
+  const loopImg = el("img", "loop-frame", null, stage);
+  Object.assign(loopImg.style, { position: "absolute", inset: "0", width: "1080px", height: "1920px", zIndex: "999",
+    pointerEvents: "none", opacity: "0", display: "none" });
+  // الفريم الأول لازم يكون لقطة مكتملة (هو آخر لقطة بعد): تركيب المشهد (البنطّات) والعنوان يتثبتون على حالتهم
+  // عند loop.hold ثانية خلال [0, hold]، والصوت والترجمة والعناصر تمشي على الوقت الحقيقي. hold من القالب (cfg.loopHold).
+  if (loop) loop.hold = +(data.loop.hold ?? cfg.loopHold ?? 1.0);
+  ctx.loopHold = loop ? loop.hold : 0;
+  window.__loop = loop;
+  window.__setLoopFrame = (src) => new Promise((res) => { loopImg.onload = () => res(true); loopImg.onerror = () => res(false); loopImg.src = src; });
+  const loopAlpha = (t) => {
+    if (!loop || !loopImg.src || t < loop.start) return 0;
+    const u = Math.min(1, Math.max(0, (t - loop.start) / Math.max(1 / fpsL, loop.end - loop.start)));
+    return u * u * (3 - 2 * u);
+  };
+
   window.renderFrame = (t) => {
+    const la = loopAlpha(t);
+    loopImg.style.display = la > 0 ? "block" : "none"; loopImg.style.opacity = la >= 0.999 ? "1" : String(la);
     if (counterNum) {
       let v = ctx.counter.start;
       for (const c of ctx.counter.events) v += c.delta * E.inOutCubic(prog(t, c.t, 0.6));
@@ -273,9 +297,10 @@ export async function boot(cfg) {
       const s = lastStarted(ctx.dots.events.filter((e) => e.i === i), t, "t");
       d.className = "d" + (s ? " " + s.state : "");
     });
-    sceneApi.update?.(t);
+    const vt = loop && t < loop.hold ? loop.hold : t; // وقت التركيب البصري (ثابت لين hold)
+    sceneApi.update?.(vt);
     for (const ev of events) ev._h?.update?.(ev, t, ctx);
-    updTitle(t);
+    updTitle(vt);
     updCaption(t);
     renderer.render(scene, camera);
     return true;

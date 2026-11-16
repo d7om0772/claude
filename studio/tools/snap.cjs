@@ -15,6 +15,11 @@ const STUDIO = path.dirname(__dirname);
   await p.goto("file://" + path.join(STUDIO, A.series, "index.html") + (A.debug ? "?debug=1" : ""));
   await p.waitForFunction("window.__ready === true", null, { timeout: 90000 });
   const out = path.resolve(A.out || "snap");
+  if (!A.debug && await p.evaluate(() => !!window.__loop)) { // الحلقة: صورة الفريم الأول للثانية الأخيرة (مثل render.cjs)
+    await p.evaluate(() => window.renderFrame(0));
+    const b64 = (await p.screenshot({ type: "png" })).toString("base64");
+    await p.evaluate((s) => window.__setLoopFrame("data:image/png;base64," + s), b64);
+  }
   for (const ts of String(A.t || "1").split(",")) {
     const t = parseFloat(ts); await p.evaluate((tt) => window.renderFrame(tt), t);
     if (A.cover) { await p.screenshot({ path: out + ".jpg", type: "jpeg", quality: 92 }); console.log(out + ".jpg"); break; }

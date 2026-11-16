@@ -46,6 +46,14 @@ const pSize = Math.ceil(totalFrames / nParts);
 const P0 = part ? (part - 1) * pSize : 0, P1 = part ? Math.min(totalFrames, part * pSize) : totalFrames;
 const chunk = Math.ceil((P1 - P0) / workers);
 
+// الحلقة: نصوّر الفريم الأول (t=0) ونعطيه للصفحة، وآخر ثانية تذوب فيه (core.js → data.loop).
+async function setLoopFrame(page) {
+  if (!(await page.evaluate(() => !!window.__loop))) return false;
+  await page.evaluate(() => window.renderFrame(0));
+  const b64 = (await page.screenshot({ type: "png" })).toString("base64");
+  return page.evaluate((s) => window.__setLoopFrame("data:image/png;base64," + s), b64);
+}
+
 async function runWorker(k) {
   const f0 = P0 + k * chunk, f1 = Math.min(P1, f0 + chunk);
   if (f0 >= f1) return { frames: 0, qa: [], ms: 0 };
@@ -65,6 +73,7 @@ async function runWorker(k) {
     throw new Error("scene not ready: " + e.message + "\n" + errors.join("\n"));
   });
   const meta = await page.evaluate(() => window.__meta);
+  await setLoopFrame(page);
   const qa = []; const t0 = Date.now();
   const qaEvery = Math.round(fps / 2);
   for (let f = f0; f < f1; f++) {

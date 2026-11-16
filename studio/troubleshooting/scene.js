@@ -334,4 +334,4 @@ const handlers = {
   X01: { setup(ev, ctx) { const p = ev.params; ctx.screens.push({ start: ev.start, dur: Math.max(0.6, ev.end - ev.start), ...p }); if (p.state) ctx.states.push({ t: ev.start, mode: p.state }); ctx.sortAll(); } },
 };
 
-boot({ series: "troubleshooting", label: "المشاكل وحلولها", closingLabel: "المشاكل وحلولها · تيربو", grid: false, header: "dots", build, handlers });
+boot({ series: "troubleshooting", loopHold: 1.1, label: "المشاكل وحلولها", closingLabel: "المشاكل وحلولها · تيربو", grid: false, header: "dots", build, handlers });
