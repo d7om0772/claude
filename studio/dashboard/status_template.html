@@ -259,7 +259,7 @@ a { color: var(--brand); }
     var title = el('div', ''); title.appendChild(el('span', 'pill s-idea', TASK_AR[x.task] || x.task)); w.appendChild(title);
     w.appendChild(el('div', 's', x.summary));
     if (typeof x.usage_7d === 'number') { var wk = el('div', 'week' + (x.usage_7d >= 90 ? ' warn' : ''), 'الحد الأسبوعي: '); var wb = el('bdi', '', x.usage_7d + '%'); wb.setAttribute('dir', 'ltr'); wk.appendChild(wb); w.appendChild(wk); }
-    row.appendChild(head); row.appendChild(w); row.appendChild(ring(x.usage_5h)); rl.appendChild(row);
+    row.appendChild(head); row.appendChild(w); if (x.task !== 'setup') row.appendChild(ring(x.usage_5h)); rl.appendChild(row);
   });
   var lastU = runs.filter(function (x) { return typeof x.usage_5h === 'number'; })[0];
   if (lastU) {
