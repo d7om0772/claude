@@ -306,5 +306,62 @@
    "distinct_notes": 2,
    "melody_warning": false
   }
+ },
+ "gs_soft_keyboard": {
+  "file": "studio/sfx/gs_soft_keyboard.wav",
+  "duration_s": 4.0,
+  "peak_dbfs": -3.0,
+  "description": "Soft laptop keyboard-wxA-2",
+  "use": "ضغطات الأزرار",
+  "pack_name": "Soft laptop keyboard",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Mrakash1",
+  "license": "CC CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/deed.en/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/63/Soft_laptop_keyboard-wxA-2.wav",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=174817775",
+  "attribution": "\"Soft laptop keyboard-wxA-2\" by Mrakash1, CC CC0 1.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 10,
+   "melody_warning": true
+  }
+ },
+ "gs_select_option11": {
+  "file": "studio/sfx/gs_select_option11.wav",
+  "duration_s": 0.263,
+  "peak_dbfs": -3.0,
+  "description": "Select Option 11 (Gravity Sound)",
+  "use": "نقرات الماوس، زر التشغيل",
+  "pack_name": "Select Option 11",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0d/Select_Option_11_%28Gravity_Sound%29.wav/Select_Option_11_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710036",
+  "attribution": "\"Select Option 11 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 2,
+   "melody_warning": false
+  }
+ },
+ "gs_watch_tick": {
+  "file": "studio/sfx/gs_watch_tick.wav",
+  "duration_s": 0.113,
+  "peak_dbfs": -3.0,
+  "description": "Watch tick",
+  "use": "الساعة",
+  "pack_name": "Watch tick",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Marble Toast",
+  "license": "CC CC0 1.0",
+  "license_url": "https://creativecommons.org/publicdomain/zero/1.0/deed.en/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Watch_tick.ogg",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=150098021",
+  "attribution": "\"Watch tick\" by Marble Toast, CC CC0 1.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 1,
+   "melody_warning": false
+  }
  }
 }
