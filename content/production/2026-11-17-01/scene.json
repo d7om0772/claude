@@ -1,0 +1,910 @@
+{
+ "id": "2026-11-17-01",
+ "series": "shortcuts",
+ "style": "13_mini_desk_diorama",
+ "camera": {
+  "variant": 2
+ },
+ "header": {
+  "label": "اختصارات ويندوز",
+  "dots": 1
+ },
+ "hook": {
+  "title": {
+   "main": "تبي اللي نسخته **قبل**؟",
+   "desc": "Win + V"
+  }
+ },
+ "duration": 39.586,
+ "fps": 30,
+ "closing": {
+  "start": 36.986
+ },
+ "captions": {
+  "lines": [
+   {
+    "start": 0.0,
+    "end": 1.3,
+    "words": [
+     {
+      "w": "نسخت",
+      "start": 0.0,
+      "end": 0.38
+     },
+     {
+      "w": "شي",
+      "start": 0.38,
+      "end": 0.62
+     },
+     {
+      "w": "جديد",
+      "start": 0.62,
+      "end": 1.3
+     }
+    ]
+   },
+   {
+    "start": 1.3,
+    "end": 2.66,
+    "words": [
+     {
+      "w": "وضاع",
+      "start": 1.3,
+      "end": 1.9
+     },
+     {
+      "w": "اللي",
+      "start": 1.9,
+      "end": 2.1
+     },
+     {
+      "w": "قبله؟",
+      "start": 2.1,
+      "end": 2.66
+     }
+    ]
+   },
+   {
+    "start": 2.66,
+    "end": 5.38,
+    "words": [
+     {
+      "w": "Ctrl",
+      "start": 2.66,
+      "end": 3.42
+     },
+     {
+      "w": "+",
+      "start": 3.42,
+      "end": 3.8
+     },
+     {
+      "w": "V",
+      "start": 3.8,
+      "end": 3.98
+     },
+     {
+      "w": "يلصق",
+      "start": 3.98,
+      "end": 4.74
+     },
+     {
+      "w": "آخر",
+      "start": 4.74,
+      "end": 5.2
+     },
+     {
+      "w": "شي",
+      "start": 5.2,
+      "end": 5.38
+     }
+    ]
+   },
+   {
+    "start": 5.38,
+    "end": 6.26,
+    "words": [
+     {
+      "w": "نسخته",
+      "start": 5.38,
+      "end": 5.94
+     },
+     {
+      "w": "بس",
+      "start": 5.94,
+      "end": 6.26
+     }
+    ]
+   },
+   {
+    "start": 6.26,
+    "end": 7.5,
+    "words": [
+     {
+      "w": "الحل",
+      "start": 6.26,
+      "end": 7.5
+     }
+    ]
+   },
+   {
+    "start": 7.5,
+    "end": 9.22,
+    "words": [
+     {
+      "w": "اضغط",
+      "start": 7.5,
+      "end": 8.3
+     },
+     {
+      "w": "Win",
+      "start": 8.3,
+      "end": 8.6
+     },
+     {
+      "w": "+",
+      "start": 8.6,
+      "end": 9.06
+     },
+     {
+      "w": "V",
+      "start": 9.06,
+      "end": 9.22
+     }
+    ]
+   },
+   {
+    "start": 9.22,
+    "end": 11.1,
+    "words": [
+     {
+      "w": "يطلع",
+      "start": 9.22,
+      "end": 10.06
+     },
+     {
+      "w": "لك",
+      "start": 10.06,
+      "end": 10.2
+     },
+     {
+      "w": "سجل",
+      "start": 10.2,
+      "end": 10.5
+     },
+     {
+      "w": "الحافظة",
+      "start": 10.5,
+      "end": 11.1
+     }
+    ]
+   },
+   {
+    "start": 11.1,
+    "end": 12.22,
+    "words": [
+     {
+      "w": "أول",
+      "start": 11.1,
+      "end": 11.94
+     },
+     {
+      "w": "مرة؟",
+      "start": 11.94,
+      "end": 12.22
+     }
+    ]
+   },
+   {
+    "start": 12.22,
+    "end": 14.76,
+    "words": [
+     {
+      "w": "اضغط",
+      "start": 12.22,
+      "end": 13.14
+     },
+     {
+      "w": "Turn",
+      "start": 13.14,
+      "end": 13.44
+     },
+     {
+      "w": "on",
+      "start": 13.44,
+      "end": 13.72
+     },
+     {
+      "w": "عشان",
+      "start": 13.72,
+      "end": 14.26
+     },
+     {
+      "w": "يتفعّل",
+      "start": 14.26,
+      "end": 14.76
+     }
+    ]
+   },
+   {
+    "start": 14.76,
+    "end": 16.22,
+    "words": [
+     {
+      "w": "من",
+      "start": 14.76,
+      "end": 15.74
+     },
+     {
+      "w": "بعدها",
+      "start": 15.74,
+      "end": 16.22
+     }
+    ]
+   },
+   {
+    "start": 16.22,
+    "end": 18.44,
+    "words": [
+     {
+      "w": "كل",
+      "start": 16.22,
+      "end": 16.74
+     },
+     {
+      "w": "شي",
+      "start": 16.74,
+      "end": 16.98
+     },
+     {
+      "w": "تنسخه",
+      "start": 16.98,
+      "end": 17.58
+     },
+     {
+      "w": "ينحفظ",
+      "start": 17.58,
+      "end": 18.08
+     },
+     {
+      "w": "فيه",
+      "start": 18.08,
+      "end": 18.44
+     }
+    ]
+   },
+   {
+    "start": 18.44,
+    "end": 20.06,
+    "words": [
+     {
+      "w": "نصوص",
+      "start": 18.44,
+      "end": 19.52
+     },
+     {
+      "w": "وصور",
+      "start": 19.52,
+      "end": 20.06
+     }
+    ]
+   },
+   {
+    "start": 20.06,
+    "end": 22.5,
+    "words": [
+     {
+      "w": "لين",
+      "start": 20.06,
+      "end": 20.7
+     },
+     {
+      "w": "آخر",
+      "start": 20.7,
+      "end": 21.06
+     },
+     {
+      "w": "25",
+      "start": 21.06,
+      "end": 21.56
+     },
+     {
+      "w": "نسخة",
+      "start": 21.56,
+      "end": 22.5
+     }
+    ]
+   },
+   {
+    "start": 22.5,
+    "end": 24.4,
+    "words": [
+     {
+      "w": "اختار",
+      "start": 22.5,
+      "end": 23.54
+     },
+     {
+      "w": "أي",
+      "start": 23.54,
+      "end": 23.74
+     },
+     {
+      "w": "واحد",
+      "start": 23.74,
+      "end": 24.08
+     },
+     {
+      "w": "منها",
+      "start": 24.08,
+      "end": 24.4
+     }
+    ]
+   },
+   {
+    "start": 24.4,
+    "end": 26.78,
+    "words": [
+     {
+      "w": "وينلصق",
+      "start": 24.4,
+      "end": 25.4
+     },
+     {
+      "w": "في",
+      "start": 25.4,
+      "end": 25.52
+     },
+     {
+      "w": "المكان",
+      "start": 25.52,
+      "end": 25.88
+     },
+     {
+      "w": "اللي",
+      "start": 25.88,
+      "end": 26.06
+     },
+     {
+      "w": "تكتب",
+      "start": 26.06,
+      "end": 26.42
+     },
+     {
+      "w": "فيه",
+      "start": 26.42,
+      "end": 26.78
+     }
+    ]
+   },
+   {
+    "start": 26.78,
+    "end": 28.54,
+    "words": [
+     {
+      "w": "شي",
+      "start": 26.78,
+      "end": 27.38
+     },
+     {
+      "w": "تستخدمه",
+      "start": 27.38,
+      "end": 28.06
+     },
+     {
+      "w": "دايم؟",
+      "start": 28.06,
+      "end": 28.54
+     }
+    ]
+   },
+   {
+    "start": 28.54,
+    "end": 29.34,
+    "words": [
+     {
+      "w": "ثبّته",
+      "start": 28.54,
+      "end": 29.34
+     }
+    ]
+   },
+   {
+    "start": 29.34,
+    "end": 31.92,
+    "words": [
+     {
+      "w": "لأن",
+      "start": 29.34,
+      "end": 30.12
+     },
+     {
+      "w": "السجل",
+      "start": 30.12,
+      "end": 30.6
+     },
+     {
+      "w": "ينمسح",
+      "start": 30.6,
+      "end": 31.24
+     },
+     {
+      "w": "كل",
+      "start": 31.24,
+      "end": 31.44
+     },
+     {
+      "w": "ما",
+      "start": 31.44,
+      "end": 31.64
+     },
+     {
+      "w": "تعيد",
+      "start": 31.64,
+      "end": 31.92
+     }
+    ]
+   },
+   {
+    "start": 31.92,
+    "end": 32.78,
+    "words": [
+     {
+      "w": "تشغيل",
+      "start": 31.92,
+      "end": 32.3
+     },
+     {
+      "w": "الجهاز",
+      "start": 32.3,
+      "end": 32.78
+     }
+    ]
+   },
+   {
+    "start": 32.78,
+    "end": 33.86,
+    "words": [
+     {
+      "w": "إلا",
+      "start": 32.78,
+      "end": 33.28
+     },
+     {
+      "w": "اللي",
+      "start": 33.28,
+      "end": 33.42
+     },
+     {
+      "w": "مثبّت",
+      "start": 33.42,
+      "end": 33.86
+     }
+    ]
+   },
+   {
+    "start": 33.86,
+    "end": 36.58,
+    "words": [
+     {
+      "w": "تابع",
+      "start": 33.86,
+      "end": 35.0
+     },
+     {
+      "w": "تيربو",
+      "start": 35.0,
+      "end": 35.38
+     },
+     {
+      "w": "عشان",
+      "start": 35.38,
+      "end": 35.86
+     },
+     {
+      "w": "ما",
+      "start": 35.86,
+      "end": 35.94
+     },
+     {
+      "w": "يفوتك",
+      "start": 35.94,
+      "end": 36.36
+     },
+     {
+      "w": "الجاي",
+      "start": 36.36,
+      "end": 36.58
+     }
+    ]
+   }
+  ]
+ },
+ "loop": {
+  "start": 38.586,
+  "dur": 1.0
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0.0,
+   "end": 2.66,
+   "params": {
+    "big": "",
+    "text": "",
+    "clock": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0.0,
+   "end": 2.66,
+   "params": {
+    "mode": "doc",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0.0,
+   "end": 2.66,
+   "params": {
+    "mode": "cliphist",
+    "phase": "lost",
+    "screen": "right",
+    "at": 0.62,
+    "items": [
+     "Meeting 4 PM",
+     "Link",
+     "pc-case.png"
+    ],
+    "fresh": "Order #4821"
+   }
+  },
+  {
+   "el": "E04",
+   "start": 2.66,
+   "end": 6.26,
+   "params": {
+    "keys": [
+     "Ctrl",
+     "V"
+    ],
+    "key_times": [
+     2.66,
+     3.8
+    ]
+   }
+  },
+  {
+   "el": "X01",
+   "start": 2.66,
+   "end": 6.26,
+   "params": {
+    "mode": "doc",
+    "screen": "left",
+    "at": 3.98,
+    "paste": "Order #4821",
+    "cam": "main"
+   }
+  },
+  {
+   "el": "T",
+   "start": 2.66,
+   "end": 6.26,
+   "params": {
+    "chip": "Ctrl + V",
+    "main": "يلصق **آخر** نسخة بس"
+   }
+  },
+  {
+   "el": "E03",
+   "start": 6.26,
+   "end": 11.1,
+   "params": {
+    "index": 1,
+    "label": "الحل",
+    "keys": [
+     "Win",
+     "V"
+    ],
+    "key_times": [
+     8.3,
+     9.06
+    ],
+    "desc": "يفتح سجل الحافظة",
+    "desc_at": 9.22
+   }
+  },
+  {
+   "el": "X01",
+   "start": 9.22,
+   "end": 11.1,
+   "params": {
+    "mode": "cliphist",
+    "phase": "open",
+    "screen": "left",
+    "cam": "left",
+    "items": [
+     "Order #4821",
+     "Meeting 4 PM",
+     "Link",
+     "pc-case.png"
+    ]
+   }
+  },
+  {
+   "el": "X01",
+   "start": 11.1,
+   "end": 14.76,
+   "params": {
+    "mode": "cliphist",
+    "phase": "turnon",
+    "screen": "left",
+    "cam": "left",
+    "at": 13.14,
+    "title": {
+     "chip": "أول مرة؟",
+     "main": "اضغط **Turn on**"
+    }
+   }
+  },
+  {
+   "el": "X01",
+   "start": 14.76,
+   "end": 22.5,
+   "params": {
+    "mode": "cliphist",
+    "phase": "fill",
+    "screen": "right",
+    "cam": "right",
+    "items": [
+     "Meeting 4 PM",
+     "Order #4821",
+     "RTX specs",
+     "pc-case.png"
+    ],
+    "times": [
+     16.22,
+     16.98,
+     18.44,
+     19.52
+    ],
+    "show_at": 21.06,
+    "title": {
+     "chip": "من بعدها",
+     "main": "كل نسخة **تنحفظ**"
+    }
+   }
+  },
+  {
+   "el": "T",
+   "start": 20.06,
+   "end": 22.5,
+   "params": {
+    "chip": "نصوص وصور",
+    "main": "لين آخر **25** نسخة"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 22.5,
+   "end": 26.78,
+   "params": {
+    "mode": "cliphist",
+    "phase": "pick",
+    "screen": "right",
+    "cam": "screens",
+    "pick_at": 23.74,
+    "pin_index": 1,
+    "items": [
+     "pc-case.png",
+     "RTX specs",
+     "Order #4821",
+     "Meeting 4 PM"
+    ],
+    "title": {
+     "chip": "اختار",
+     "main": "وينلصق **مكان الكتابة**"
+    }
+   }
+  },
+  {
+   "el": "X01",
+   "start": 22.5,
+   "end": 26.78,
+   "params": {
+    "mode": "doc",
+    "screen": "left",
+    "at": 24.4,
+    "paste": "RTX specs"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 26.78,
+   "end": 29.34,
+   "params": {
+    "mode": "cliphist",
+    "phase": "pin",
+    "screen": "right",
+    "cam": "right",
+    "at": 28.54,
+    "pin_index": 1,
+    "items": [
+     "pc-case.png",
+     "RTX specs",
+     "Order #4821",
+     "Meeting 4 PM"
+    ],
+    "title": {
+     "chip": "تستخدمه دايم؟",
+     "main": "**ثبّته**"
+    }
+   }
+  },
+  {
+   "el": "E02",
+   "start": 29.34,
+   "end": 31.64,
+   "params": {
+    "text": "Restart",
+    "spins": 2,
+    "title": {
+     "chip": "إعادة التشغيل",
+     "main": "السجل **ينمسح**"
+    }
+   }
+  },
+  {
+   "el": "X01",
+   "start": 31.64,
+   "end": 33.86,
+   "params": {
+    "mode": "cliphist",
+    "phase": "wipe",
+    "screen": "right",
+    "cam": "right",
+    "at": 32.3,
+    "pin_index": 1,
+    "items": [
+     "pc-case.png",
+     "RTX specs",
+     "Order #4821",
+     "Meeting 4 PM"
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": 32.78,
+   "end": 33.86,
+   "params": {
+    "chip": "يبقى",
+    "main": "إلا **المثبّت**"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.0,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 0.1,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 0.62,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 2.66,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 2.66,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 3.8,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 3.98,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 8.3,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 9.06,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 9.18,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 9.22,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 11.1,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 13.14,
+   "name": "gs_select_option11"
+  },
+  {
+   "t": 14.76,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 16.22,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 16.98,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 18.44,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 19.52,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 22.5,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 23.74,
+   "name": "gs_select_option11"
+  },
+  {
+   "t": 24.4,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 26.78,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 28.54,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 29.34,
+   "name": "gs_watch_tick"
+  },
+  {
+   "t": 31.64,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 32.3,
+   "name": "gs_swipe_grass5"
+  },
+  {
+   "t": 33.28,
+   "name": "gs_charging2"
+  },
+  {
+   "t": 36.686,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 37.236,
+   "name": "gs_notification2"
+  }
+ ]
+}

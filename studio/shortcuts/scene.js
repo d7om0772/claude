@@ -34,6 +34,91 @@ function appIcon(g, i, cx, cy, r, col) { g.save(); g.strokeStyle = col; g.fillSt
   if (i === 3) { g.strokeRect(cx - r * 0.45, cy - r * 0.6, r * 0.9, r * 1.1); g.strokeRect(cx - r * 0.7, cy - r * 0.35, r * 0.9, r * 1.1); }
   if (i === 4) { g.beginPath(); g.moveTo(cx - r * 0.7, cy - r * 0.7); g.lineTo(cx + r * 0.45, cy - r * 0.7); g.lineTo(cx + r * 0.7, cy - r * 0.45); g.lineTo(cx + r * 0.7, cy + r * 0.7); g.lineTo(cx - r * 0.7, cy + r * 0.7); g.closePath(); g.stroke(); g.fillRect(cx - r * 0.35, cy - r * 0.7, r * 0.6, r * 0.45); }
   g.restore(); }
+// ---- مساعدات X01 (سجل الحافظة Win + V، 2026-11-17): بطاقات نسخ + لوحة Clipboard + مستند — جمادات ورموز فقط ----
+const CLIP_DEF = ["Meeting 4 PM", "pc-case.png", "RTX specs", "Order #4821"];
+function pcThumb(g, x, y, tw, th) { g.fillStyle = "#DCE8FF"; K.rr(g, x, y, tw, th, 8); g.fill();
+  const cw = th * 0.42, ch = th * 0.72, cx = x + tw / 2 - cw / 2, cy = y + th * 0.14; g.fillStyle = PAL.navy; K.rr(g, cx, cy, cw, ch, 6); g.fill();
+  g.fillStyle = "#78afff"; g.beginPath(); g.arc(cx + cw / 2, cy + ch * 0.35, cw * 0.26, 0, 7); g.fill(); g.beginPath(); g.arc(cx + cw / 2, cy + ch * 0.72, cw * 0.18, 0, 7); g.fill(); }
+function pinIcon(g, cx, cy, r, on) { g.save(); g.translate(cx, cy); g.rotate(0.6); g.fillStyle = on ? PAL.brand : "#B8C6E0";
+  K.rr(g, -r * 0.35, -r, r * 0.7, r * 0.9, r * 0.12); g.fill(); g.fillRect(-r * 0.6, -r * 0.15, r * 1.2, r * 0.22);
+  g.strokeStyle = on ? PAL.brand : "#B8C6E0"; g.lineWidth = Math.max(2, r * 0.16); g.lineCap = "round"; g.beginPath(); g.moveTo(0, r * 0.05); g.lineTo(0, r * 0.95); g.stroke(); g.restore(); }
+function clipCard(g, x, y, cw, ch, it, o = {}) {
+  const img = /\.(png|jpg)$/i.test(it);
+  g.save(); g.globalAlpha = o.alpha ?? 1;
+  g.save(); g.shadowColor = "rgba(20,40,75,.18)"; g.shadowBlur = o.shadow ?? 10; g.fillStyle = o.grey ? "#E4E8EF" : (o.sel ? "#DCE8FF" : "#F6F8FD"); K.rr(g, x, y, cw, ch, 14); g.fill(); g.restore();
+  if (o.flash) { g.fillStyle = `rgba(255,51,71,${0.35 * o.flash})`; K.rr(g, x, y, cw, ch, 14); g.fill(); }
+  if (o.glow) { g.strokeStyle = `rgba(47,107,207,${o.glow})`; g.lineWidth = 7; K.rr(g, x - 4, y - 4, cw + 8, ch + 8, 18); g.stroke(); }
+  const col = o.grey ? "#9AA6BB" : PAL.ink; let tx = x + 22;
+  if (img) { const th = ch * 0.74, tw = th * 1.3; if (o.grey) g.globalAlpha *= 0.55; pcThumb(g, x + 16, y + (ch - th) / 2, tw, th); g.globalAlpha = o.alpha ?? 1; tx = x + 32 + tw; }
+  else { g.fillStyle = o.grey ? "#C9D1DE" : "#C4D6F5"; for (let i = 0; i < 2; i++) { K.rr(g, x + 22, y + ch * (0.62 + i * 0.16) - 4, cw * (0.5 - i * 0.18), 9, 4); g.fill(); } }
+  K.text(g, img ? "Image" : it, tx, img ? y + ch * 0.5 : y + ch * 0.32, { size: ch * 0.34, align: "left", font: K.FONT_EN, weight: 700, color: col });
+  if (o.q) { const b = E.outBack(clamp(o.q)); g.save(); g.translate(x + cw - ch * 0.42, y + ch / 2); g.scale(b, b); g.fillStyle = "#9AA6BB"; g.beginPath(); g.arc(0, 0, ch * 0.28, 0, 7); g.fill();
+    K.text(g, "?", 0, 2, { size: ch * 0.38, color: "#fff", font: K.FONT_EN, weight: 800 }); g.restore(); }
+  if (o.pin != null) pinIcon(g, x + cw - ch * 0.42, y + ch / 2, ch * 0.24 * (1 + 0.25 * (o.pinPop || 0)), o.pin);
+  g.restore(); }
+function clipPanel(g, w, h, a = 1) { const pw = w * 0.72, ph = h * 0.84, px = (w - pw) / 2, py = h * 0.04;
+  g.save(); g.translate(w / 2, py + ph); g.scale(0.6 + 0.4 * a, 0.6 + 0.4 * a); g.translate(-w / 2, -(py + ph)); g.globalAlpha = clamp(a * 1.5);
+  g.save(); g.shadowColor = "rgba(20,40,75,.32)"; g.shadowBlur = 26; g.fillStyle = "#fff"; K.rr(g, px, py, pw, ph, 18); g.fill(); g.restore();
+  K.text(g, "Clipboard", px + 26, py + h * 0.065, { size: h * 0.055, align: "left", font: K.FONT_EN, weight: 700 });
+  return { px, py, pw, ph, done: () => g.restore() }; }
+function cliphist(g, w, h, s) {
+  const T = (s.start ?? 0) + (s.p ?? 1) * (s.dur ?? 1), t0 = s.start ?? 0, ph = s.phase || "open";
+  K.screenBg(g, w, h); K.taskbar(g, w, h);
+  const items = s.items || CLIP_DEF;
+  if (ph === "lost") {   // نسخة جديدة تنزل فوق، والقديمة تبهت رمادي وعليها علامة استفهام (Ctrl + C يكتب فوق الحافظة)
+    const cw = w * 0.62, ch = h * 0.16, x = (w - cw) / 2, gap = h * 0.035, at = s.at ?? t0 + 0.4;
+    const d = E.outBack(clamp((T - at) / 0.45)), fade = clamp((T - at - 0.35) / 0.4);
+    items.forEach((it, i) => { const y = h * 0.1 + (i + d) * (ch + gap); clipCard(g, x, y, cw, ch, it, { grey: fade > 0.5, alpha: 1 - 0.35 * fade, q: fade > 0 ? (T - at - 0.35) / 0.3 : 0 }); });
+    if (T >= at) { const y = lerp(-ch * 1.4, h * 0.1, d); clipCard(g, x, y, cw, ch, s.fresh || "Order #4821", { glow: 1 - clamp((T - at - 0.45) / 0.6), shadow: 18 }); }
+    return; }
+  const open = ph === "open" ? E.outCubic(clamp((T - t0) / 0.45)) : 1;
+  const P = clipPanel(g, w, h, open), cx = P.px + 22, cw = P.pw - 44, ch = h * 0.15, gap = h * 0.018, y0 = P.py + h * 0.115;
+  const rowY = (i) => y0 + i * (ch + gap);
+  if (ph === "turnon") {   // أول مرة: زر Turn on أزرق ينضغط (بدون نص الرسالة الرسمية)
+    const at = s.at ?? t0 + 0.8; const bw = P.pw * 0.5, bh = h * 0.12, bx = w / 2 - bw / 2, by = P.py + P.ph * 0.5;
+    g.fillStyle = "#EEF3FB"; K.rr(g, w / 2 - h * 0.09, P.py + P.ph * 0.2, h * 0.18, h * 0.2, 14); g.fill(); g.fillStyle = PAL.navy; K.rr(g, w / 2 - h * 0.04, P.py + P.ph * 0.2 - h * 0.015, h * 0.08, h * 0.04, 8); g.fill();
+    g.fillStyle = "#C4D6F5"; for (let i = 0; i < 3; i++) { K.rr(g, w / 2 - h * 0.055, P.py + P.ph * 0.27 + i * h * 0.04, h * 0.11 - i * h * 0.02, h * 0.016, 4); g.fill(); }
+    const pr = T >= at && T < at + 0.18 ? 0.94 : 1, on = T >= at; g.save(); g.translate(w / 2, by + bh / 2); g.scale(pr, pr);
+    g.fillStyle = on ? "#1F55B0" : PAL.brand; K.rr(g, -bw / 2, -bh / 2, bw, bh, bh / 2); g.fill(); K.text(g, on ? "On  ✓" : "Turn on", 0, 2, { size: bh * 0.42, color: "#fff", font: K.FONT_EN, weight: 700 }); g.restore();
+    if (on) { const r = clamp((T - at) / 0.5); g.strokeStyle = `rgba(47,107,207,${1 - r})`; g.lineWidth = 8; K.rr(g, bx - 20 * r, by - 20 * r, bw + 40 * r, bh + 40 * r, bh / 2 + 20 * r); g.stroke(); }
+    const q = E.inOutCubic(clamp((T - t0 - 0.2) / Math.max(0.3, at - t0 - 0.25))); K.cursor(g, lerp(w * 0.85, bx + bw * 0.62, q), lerp(h * 0.95, by + bh * 0.55, q), h / 480);
+    P.done(); return; }
+  if (ph === "fill") {   // كل نسخة تنضاف فوق، وعداد 25
+    const tm = s.times || items.map((_, i) => t0 + 0.3 + i * 0.6); let n = 0; tm.forEach((tt) => { if (T >= tt) n++; });
+    const lastT = n ? tm[n - 1] : 0, d = n ? E.outBack(clamp((T - lastT) / 0.4)) : 1;
+    for (let k = 0; k < n; k++) { const it = items[n - 1 - k]; const yy = k === 0 ? lerp(y0 - ch, y0, d) : rowY(k - 1 + d); if (k > 4) break;
+      clipCard(g, cx, yy, cw, ch, it, { alpha: k === 0 ? clamp(d * 1.4) : 1, glow: k === 0 ? 1 - clamp((T - lastT - 0.4) / 0.5) : 0 }); }
+    if (s.show_at != null && T >= s.show_at) { const b = E.outBack(clamp((T - s.show_at) / 0.35)); g.save(); g.translate(P.px + P.pw - h * 0.11, P.py + h * 0.065); g.scale(b, b);
+      g.fillStyle = PAL.brand; K.rr(g, -h * 0.085, -h * 0.045, h * 0.17, h * 0.09, h * 0.045); g.fill(); K.text(g, "25", 0, 2, { size: h * 0.06, color: "#fff", font: K.FONT_EN, weight: 800 }); g.restore(); }
+    P.done(); return; }
+  const pinI = s.pin_index ?? 1;
+  if (ph === "pick") {   // المؤشر يختار البطاقة الثانية
+    const at = s.pick_at ?? t0 + 0.8, q = E.inOutCubic(clamp((T - t0 - 0.15) / Math.max(0.3, at - t0 - 0.15))), sel = T >= at;
+    items.forEach((it, i) => clipCard(g, cx, rowY(i), cw, ch, it, { sel: sel && i === pinI, glow: sel && i === pinI ? 1 - clamp((T - at) / 0.8) : 0 }));
+    K.cursor(g, lerp(w * 0.86, cx + cw * 0.55, q), lerp(h * 0.9, rowY(pinI) + ch * 0.55, q), h / 480);
+    if (sel && T < at + 0.3) { g.fillStyle = `rgba(47,107,207,${0.35 * (1 - (T - at) / 0.3)})`; g.beginPath(); g.arc(cx + cw * 0.55, rowY(pinI) + ch * 0.55, h * 0.05, 0, 7); g.fill(); }
+    P.done(); return; }
+  if (ph === "pin") {    // دبوس يتفعّل بالأزرق على بطاقة وحدة
+    const at = s.at ?? t0 + 0.5, on = T >= at;
+    items.forEach((it, i) => clipCard(g, cx, rowY(i), cw, ch, it, { pin: i === pinI ? on : null, pinPop: i === pinI && on ? 1 - clamp((T - at) / 0.35) : 0, glow: i === pinI && on ? 1 - clamp((T - at) / 0.8) : 0, sel: i === pinI }));
+    P.done(); return; }
+  if (ph === "wipe") {   // إعادة التشغيل: غير المثبّت يومض أحمر وينمسح، والمثبّت يطلع فوق ويتوهج
+    const at = s.at ?? t0 + 0.4, fl = clamp((T - at) / 0.35), gone = clamp((T - at - 0.35) / 0.35), up = E.inOutCubic(clamp((T - at - 0.7) / 0.4));
+    items.forEach((it, i) => { if (i === pinI) return; if (gone >= 1) return; clipCard(g, cx + gone * cw * 0.15, rowY(i), cw, ch, it, { flash: T >= at ? Math.sin(fl * Math.PI * 2) * 0.5 + 0.5 : 0, alpha: 1 - gone }); });
+    clipCard(g, cx, lerp(rowY(pinI), rowY(0), up), cw, ch, items[pinI], { pin: true, sel: true, glow: up > 0 ? 0.5 + 0.5 * Math.sin((T - at) * 6) : 0 });
+    P.done(); return; }
+  // open: قائمة السجل تنفتح بتكبير
+  items.forEach((it, i) => clipCard(g, cx, rowY(i), cw, ch, it, { alpha: clamp((T - t0 - 0.15 - i * 0.08) / 0.25) }));
+  P.done(); }
+function docScreen(g, w, h, s) {   // مستند Notes: اللصق عند at (البطاقة الملصوقة تتوهج)
+  const T = (s.start ?? 0) + (s.p ?? 1) * (s.dur ?? 1); K.screenBg(g, w, h); K.taskbar(g, w, h);
+  const X = w * 0.08, Y = h * 0.05, W = w * 0.84, H = h * 0.82; K.windowBox(g, X, Y, W, H, s.wtitle || "Notes", { lines: 3 });
+  const ly = Y + 66 + 3 * 32 + 16;
+  if (s.at != null && T >= s.at) { const b = E.outBack(clamp((T - s.at) / 0.35)); const cw = W * 0.62, ch = h * 0.15;
+    g.save(); g.translate(X + 22, ly); g.scale(1, b); clipCard(g, X + 22 - (X + 22), 0, cw, ch, s.paste || "Order #4821", { sel: true, glow: 1 - clamp((T - s.at - 0.3) / 0.7), shadow: 0 }); g.restore();
+    g.fillStyle = PAL.brand; g.fillRect(X + 22 + cw + 14, ly + 10, 4, ch - 20); }
+  else if (Math.floor(T * 2.5) % 2 === 0) { g.fillStyle = PAL.brand; g.fillRect(X + 22, ly + 6, 4, h * 0.07); }
+}
 function demo(ctx) {
   return (g, w, h, s) => {
     const p = s.p ?? 1, m = s.mode || "desktop";
@@ -169,6 +254,8 @@ function demo(ctx) {
         if (s.thumb && i === 0) { const nb = E.outBack(clamp((p - 0.18) / 0.2)); g.save(); g.translate(x + 30, iy + h * 0.06); g.scale(nb, nb); snipThumb(g, w, h, 0, -h * 0.045, w * 0.09); g.restore();
           K.text(g, it, x + 34 + w * 0.105, iy + h * 0.06, { size: h * 0.04, align: "left", font: K.FONT_EN, weight: 700 }); }
         else K.text(g, it, x + 34, iy + h * 0.06, { size: h * 0.045, align: "left", font: K.FONT_EN, weight: 600 }); }); return; }
+    if (m === "cliphist") return cliphist(g, w, h, s);
+    if (m === "doc") return docScreen(g, w, h, s);
     if (m === "taskmgr") { desk(); g.globalAlpha = clamp(p / 0.12); K.windowBox(g, w * 0.08, h * 0.06, w * 0.84, h * 0.8, "Task Manager", { lines: 0 });
       (s.rows || [["Browser", 34], ["Game", 51], ["Updater", 8], ["Chat", 3]]).forEach(([n, c], i) => { const y = h * 0.24 + i * h * 0.14;
         K.text(g, n, w * 0.13, y, { size: h * 0.05, align: "left", font: K.FONT_EN, weight: 600 }); g.fillStyle = c > 30 ? "#FFD2D7" : "#DCE8FF"; K.rr(g, w * 0.45, y - h * 0.025, w * 0.32 * (c / 60) * clamp(p * 2), h * 0.05, 8); g.fill();

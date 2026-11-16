@@ -1,0 +1,10 @@
+{
+ "video_url": "https://res.cloudinary.com/dcbqslxew/video/upload/v1794850331/2026-11-17-01.mp4",
+ "video_asset_id": "1cbefc51a01532d3dfe26e312e04e7e2",
+ "cover_url": "https://res.cloudinary.com/dcbqslxew/image/upload/v1794850333/2026-11-17-01-cover.jpg",
+ "cover_asset_id": "c96077c1bc844c06c0b5dac6ea9efa9a",
+ "cover_t": 1.0,
+ "duration": 39.586,
+ "size_mb": 9.9,
+ "voice": "gemini (Charon, gemini-3.8-flash-tts) — رصيد ElevenLabs ناقص 36/380"
+}

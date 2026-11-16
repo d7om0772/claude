@@ -1,0 +1,41 @@
+{
+ "id": "2026-11-17-01", "series": "shortcuts", "style": "13_mini_desk_diorama",
+ "camera": { "variant": 2 },
+ "header": { "label": "اختصارات ويندوز", "dots": 1 },
+ "hook": { "title": { "main": "تبي اللي نسخته **قبل**؟", "desc": "Win + V" } },
+ "events": [
+  { "el": "E01", "start": 0, "end": "w5.end", "params": { "big": "", "text": "", "clock": false } },
+  { "el": "X01", "start": 0, "end": "w5.end", "params": { "mode": "doc", "screen": "left" } },
+  { "el": "X01", "start": 0, "end": "w5.end", "params": { "mode": "cliphist", "phase": "lost", "screen": "right", "at": "w2", "items": ["Meeting 4 PM", "Link", "pc-case.png"], "fresh": "Order #4821" } },
+  { "el": "E04", "start": "w6", "end": "w13.end", "params": { "keys": ["Ctrl", "V"], "key_times": ["w6", "w8"] } },
+  { "el": "X01", "start": "w6", "end": "w13.end", "params": { "mode": "doc", "screen": "left", "at": "w9", "paste": "Order #4821", "cam": "main" } },
+  { "el": "T", "start": "w6", "end": "w13.end", "params": { "chip": "Ctrl + V", "main": "يلصق **آخر** نسخة بس" } },
+  { "el": "E03", "start": "w14", "end": "w22.end", "params": { "index": 1, "label": "الحل", "keys": ["Win", "V"], "key_times": ["w16", "w18"], "desc": "يفتح سجل الحافظة", "desc_at": "w19" } },
+  { "el": "X01", "start": "w19", "end": "w22.end", "params": { "mode": "cliphist", "phase": "open", "screen": "left", "cam": "left", "items": ["Order #4821", "Meeting 4 PM", "Link", "pc-case.png"] } },
+  { "el": "X01", "start": "w23", "end": "w29.end", "params": { "mode": "cliphist", "phase": "turnon", "screen": "left", "cam": "left", "at": "w26",
+    "title": { "chip": "أول مرة؟", "main": "اضغط **Turn on**" } } },
+  { "el": "X01", "start": "w30", "end": "w42.end", "params": { "mode": "cliphist", "phase": "fill", "screen": "right", "cam": "right",
+    "items": ["Meeting 4 PM", "Order #4821", "RTX specs", "pc-case.png"], "times": ["w32", "w34", "w37", "w38"], "show_at": "w41",
+    "title": { "chip": "من بعدها", "main": "كل نسخة **تنحفظ**" } } },
+  { "el": "T", "start": "w39", "end": "w42.end", "params": { "chip": "نصوص وصور", "main": "لين آخر **25** نسخة" } },
+  { "el": "X01", "start": "w43", "end": "w52.end", "params": { "mode": "cliphist", "phase": "pick", "screen": "right", "cam": "screens", "pick_at": "w45", "pin_index": 1,
+    "items": ["pc-case.png", "RTX specs", "Order #4821", "Meeting 4 PM"], "title": { "chip": "اختار", "main": "وينلصق **مكان الكتابة**" } } },
+  { "el": "X01", "start": "w43", "end": "w52.end", "params": { "mode": "doc", "screen": "left", "at": "w47", "paste": "RTX specs" } },
+  { "el": "X01", "start": "w53", "end": "w56.end", "params": { "mode": "cliphist", "phase": "pin", "screen": "right", "cam": "right", "at": "w56", "pin_index": 1,
+    "items": ["pc-case.png", "RTX specs", "Order #4821", "Meeting 4 PM"], "title": { "chip": "تستخدمه دايم؟", "main": "**ثبّته**" } } },
+  { "el": "E02", "start": "w57", "end": "w61.end", "params": { "text": "Restart", "spins": 2, "title": { "chip": "إعادة التشغيل", "main": "السجل **ينمسح**" } } },
+  { "el": "X01", "start": "w62", "end": "w67.end", "params": { "mode": "cliphist", "phase": "wipe", "screen": "right", "cam": "right", "at": "w64", "pin_index": 1,
+    "items": ["pc-case.png", "RTX specs", "Order #4821", "Meeting 4 PM"] } },
+  { "el": "T", "start": "w65", "end": "w67.end", "params": { "chip": "يبقى", "main": "إلا **المثبّت**" } }
+ ],
+ "sfx": [
+  { "t": "w2", "name": "gs_item_pickup4" },
+  { "t": "w9", "name": "gs_item_pickup4" },
+  { "t": "w26", "name": "gs_select_option11" },
+  { "t": "w32", "name": "gs_item_pickup4" }, { "t": "w34", "name": "gs_item_pickup4" }, { "t": "w37", "name": "gs_item_pickup4" }, { "t": "w38", "name": "gs_item_pickup4" },
+  { "t": "w45", "name": "gs_select_option11" }, { "t": "w47", "name": "gs_item_pickup4" },
+  { "t": "w56", "name": "gs_item_pickup4" },
+  { "t": "w64", "name": "gs_swipe_grass5" }, { "t": "w66", "name": "gs_charging2" }
+ ],
+ "auto_sfx": true
+}

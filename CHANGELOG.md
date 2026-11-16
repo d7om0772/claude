@@ -2,6 +2,9 @@
 
 > كل تعديل على النظام (وكلاء، مهام، قوالب، إعدادات، تقويم) يتسجل هنا: التاريخ، وش تغيّر، وليش. الأحدث فوق.
 
+## 2026-11-16 — قالب shortcuts: أوضاع X01 لسجل الحافظة (فيديو 2026-11-17-01)
+- `studio/shortcuts/scene.js`: وضع `cliphist` بمراحل (`lost`، `open`، `turnon`، `fill`، `pick`، `pin`، `wipe`) ووضع `doc` (مستند يلصق بطاقة). السبب: Win + V احتاج عروض غير موجودة في الحزمة — مصمَّمة بنفس قواعدها (جمادات ورموز فقط، Inter لنصوص الواجهة، بدون شعارات). موثّقة في `studio/shortcuts/ELEMENTS.md`.
+
 ## 2026-11-15 — قالب troubleshooting + scene_build: تعديلات من فيديو 2026-11-16-03
 - `studio/troubleshooting/scene.js`: وضع X01 جديد `input_menu` (قائمة Input Source على شاشة سوداء، التحديد ينتقل من المدخل الغلط الأحمر للصح الأخضر ✓ عند `pick_at`). موثّق في `studio/troubleshooting/ELEMENTS.md`. السبب: خطوة "اختر المدخل الصح من قائمة الشاشة" ما لها عنصر في الحزمة — مصمَّم بنفس قواعدها.
 - `studio/tools/scene_build.py`: `pick_at` حقل وقت يُحلّ من الكلمات، وX01 بحالة مشكلة (`no_signal`/`off`/state problem) يأخذ تلقائياً مؤثر Error 5 بدل نغمة الحل.

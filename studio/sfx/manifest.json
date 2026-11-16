@@ -287,5 +287,24 @@
    "distinct_notes": 1,
    "melody_warning": false
   }
+ },
+ "gs_notification2": {
+  "file": "studio/sfx/gs_notification2.wav",
+  "duration_s": 0.75,
+  "peak_dbfs": -3.0,
+  "description": "Notification 2 (Gravity Sound)",
+  "use": "المجموع، احفظ، التعليقات، الختام",
+  "pack_name": "Notification 2",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e1/Notification_2_%28Gravity_Sound%29.wav/Notification_2_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710780",
+  "attribution": "\"Notification 2 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 2,
+   "melody_warning": false
+  }
  }
 }
