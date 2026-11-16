@@ -1,55 +1,69 @@
 {
-  "_doc": "إعدادات مزودي الصوت. الشرح الكامل وقواعد النطق في brand/voice.md. لا تغيّر voice_id إلا من نتيجة creative_list_voices.",
-  "elevenlabs": {
-    "role": "primary",
-    "voice_name": "Fahad - Saudi, Warm & Confident",
-    "voice_id": "rpGHcNQJvO8dFNNFNj1v",
-    "voice_found_via": "mcp ElevenLabs creative_list_voices search='Fahad Saudi' (2026-11-15)",
-    "model_id": "eleven_v4",
-    "language_code": "ar",
-    "generations_count": 1,
-    "voice_settings": "اتركها افتراضية (تعليمات الموصل: لا تُضبط إلا بطلب)",
-    "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/fcc0b35d7e6b4ac2aeb6960adad0de2b/voices/rpGHcNQJvO8dFNNFNj1v/LuvdUE7t2qg2rhUK0m1S.mp3",
-    "reference_profile": {
-      "f0_median_hz": 133.3,
-      "f0_p10_p90_hz": [
-        105.3,
-        186.0
-      ],
-      "words_per_s": 2.06,
-      "source": "preview_url (عينة فهد الرسمية)"
-    },
-    "approx_cost": "تقريباً 1 كريدت لكل حرف (جملة 200 حرف = 186 كريدت). سكربت 60 ثانية ≈ 800–1000 كريدت.",
-    "status_2026_11_15": "الرصيد خلص وقت الإعداد (36 كريدت باقية من 10000) — ما انولد ولا مقطع بصوت فهد. أول فيديو بعد تجديد الرصيد: تحقق من النطق بـ Whisper وحدّث قسم فهد في voice.md.",
-    "replacements": []
+ "_doc": "إعدادات مزودي الصوت. الشرح الكامل وقواعد النطق في brand/voice.md. لا تغيّر voice_id إلا من نتيجة creative_list_voices.",
+ "elevenlabs": {
+  "role": "primary",
+  "voice_name": "Fahad - Saudi, Warm & Confident",
+  "voice_id": "rpGHcNQJvO8dFNNFNj1v",
+  "voice_found_via": "mcp ElevenLabs creative_list_voices search='Fahad Saudi' (2026-11-15)",
+  "model_id": "eleven_v4",
+  "language_code": "ar",
+  "generations_count": 1,
+  "voice_settings": "اتركها افتراضية (تعليمات الموصل: لا تُضبط إلا بطلب)",
+  "preview_url": "https://storage.googleapis.com/eleven-public-prod/database/workspace/fcc0b35d7e6b4ac2aeb6960adad0de2b/voices/rpGHcNQJvO8dFNNFNj1v/LuvdUE7t2qg2rhUK0m1S.mp3",
+  "reference_profile": {
+   "f0_median_hz": 133.3,
+   "f0_p10_p90_hz": [
+    105.3,
+    186.0
+   ],
+   "words_per_s": 2.06,
+   "source": "preview_url (عينة فهد الرسمية)"
   },
-  "gemini": {
-    "role": "fallback",
-    "api": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
-    "api_key_env": "GEMINI_API_KEY",
-    "model": "gemini-3.1-flash-tts-preview",
-    "voice": "Charon",
-    "sample_rate": 24000,
-    "style": "Voice direction: a warm, confident, middle-aged Saudi man speaking clear white Saudi dialect (لهجة سعودية بيضاء، نجدية خفيفة). Low, relaxed chest register — deep and calm, never high or shouty. Steady, friendly intonation with a slight smile; not dramatic, not a radio announcer. Conversational pace (about two words per second) with short natural pauses only at commas and full stops. Say English tech terms in clear English. Read exactly the text below — do not add, drop or change any word.",
-    "style_version": "v2 (2026-11-15) — أقرب نسخة لطبقة صوت فهد من 5 تجارب",
-    "target_words_per_s": 2.05,
-    "tempo_clamp": [
-      0.92,
-      1.12
-    ],
-    "measured_profile": {
-      "f0_median_hz": [
-        133.3,
-        144.1
-      ],
-      "words_per_s_raw": 1.78,
-      "note": "Charon بدون الضبط كان 167Hz وأبطأ؛ بعد style v2 صار 133–144Hz، والسرعة تتعدل بـ atempo إلى 2.05 كلمة/ث"
-    },
-    "pitch_max_hz": 150,
-    "pitch_target_hz": 140,
-    "pitch_min_ratio": 0.89,
-    "pitch_note": "لو وسيط طبقة Charon طلع فوق 150Hz ننزّله بحد أقصى سيميتونين (ratio 0.89) عشان يقرب من فهد (133Hz). المدة ما تتغير.",
-    "replacements": []
+  "approx_cost": "تقريباً 1 كريدت لكل حرف (جملة 200 حرف = 186 كريدت). سكربت 60 ثانية ≈ 800–1000 كريدت.",
+  "status_2026_11_15": "الرصيد خلص وقت الإعداد (36 كريدت باقية من 10000) — ما انولد ولا مقطع بصوت فهد. أول فيديو بعد تجديد الرصيد: تحقق من النطق بـ Whisper وحدّث قسم فهد في voice.md.",
+  "replacements": []
+ },
+ "gemini": {
+  "role": "fallback",
+  "api": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+  "api_key_env": "GEMINI_API_KEY",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Charon",
+  "sample_rate": 24000,
+  "style": "Voice direction: a warm, confident, middle-aged Saudi man speaking clear white Saudi dialect (لهجة سعودية بيضاء، نجدية خفيفة). Low, relaxed chest register — deep and calm, never high or shouty. Steady, friendly intonation with a slight smile; not dramatic, not a radio announcer. Conversational pace (about two words per second) with short natural pauses only at commas and full stops. Say English tech terms in clear English. Read exactly the text below — do not add, drop or change any word.",
+  "style_version": "v2 (2026-11-15) — أقرب نسخة لطبقة صوت فهد من 5 تجارب",
+  "target_words_per_s": 2.05,
+  "tempo_clamp": [
+   0.85,
+   1.12
+  ],
+  "measured_profile": {
+   "f0_median_hz": [
+    133.3,
+    144.1
+   ],
+   "words_per_s_raw": 1.78,
+   "note": "Charon بدون الضبط كان 167Hz وأبطأ؛ بعد style v2 صار 133–144Hz، والسرعة تتعدل بـ atempo إلى 2.05 كلمة/ث"
   },
-  "_replacements_doc": "قائمة استبدالات نطق لكل مزوّد: [{\"from\":\"نص\",\"to\":\"نص\",\"regex\":false,\"why\":\"السبب والتاريخ\"}]. تنطبق تلقائياً في voice_pipeline.py قبل التوليد. أضف قاعدة كل ما طلع خطأ نطق متكرر في التفريغ."
+  "pitch_max_hz": 150,
+  "pitch_target_hz": 140,
+  "pitch_min_ratio": 0.89,
+  "pitch_note": "لو وسيط طبقة Charon طلع فوق 150Hz ننزّله بحد أقصى سيميتونين (ratio 0.89) عشان يقرب من فهد (133Hz). المدة ما تتغير.",
+  "replacements": [],
+  "model_start_version": 3.8,
+  "model_chain": [
+   "gemini-3.8-flash-tts",
+   "gemini-3.7-flash-tts",
+   "gemini-3.1-flash-tts-preview",
+   "gemini-2.5-pro-preview-tts",
+   "gemini-2.5-flash-preview-tts"
+  ],
+  "model_rule": "بطلب صاحب الحساب 2026-11-16: 3.8 أول، وإذا مو متوفر 3.7، ثم اللي بعده. voice_pipeline يقرا الموديلات المتوفرة (اللي فيها tts) ≤ model_start_version ويرتبها تنازلياً، ويستخدم موديل واحد للفيديو كله؛ model_chain احتياط لو قائمة الموديلات ما انقرت. ملاحظة: gemini-3.7-flash موديل نصي بدون صوت (جُرّب 2026-11-16)، فما يدخل السلسلة.",
+  "measured_profile_3_8": {
+   "f0_median_hz": 115.9,
+   "words_per_s_raw": 2.42,
+   "note": "gemini-3.8-flash-tts + Charon + style v2 (2026-11-16، نص 60ث): أسرع وأعمق من 3.1 ← حد التبطيء صار 0.85 عشان يوصل 2.05 كلمة/ث؛ الطبقة ما تتعدل (التصحيح بس لو فوق 150Hz). تطابق Whisper 0.894."
+  }
+ },
+ "_replacements_doc": "قائمة استبدالات نطق لكل مزوّد: [{\"from\":\"نص\",\"to\":\"نص\",\"regex\":false,\"why\":\"السبب والتاريخ\"}]. تنطبق تلقائياً في voice_pipeline.py قبل التوليد. أضف قاعدة كل ما طلع خطأ نطق متكرر في التفريغ."
 }

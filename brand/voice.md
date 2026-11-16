@@ -18,7 +18,7 @@
 |---|---|---|
 | المزوّد | ElevenLabs (موصل MCP) | Google AI Studio (Gemini TTS، API بالمفتاح `GEMINI_API_KEY`) |
 | الصوت | **Fahad - Saudi, Warm & Confident** | **Charon** |
-| المعرّف | `voice_id = rpGHcNQJvO8dFNNFNj1v` (من `creative_list_voices`) | موديل `gemini-3.1-flash-tts-preview` |
+| المعرّف | `voice_id = rpGHcNQJvO8dFNNFNj1v` (من `creative_list_voices`) | موديل حسب الأولوية: `gemini-3.8-flash-tts` ← 3.7 (لو توفر) ← اللي بعده (`voice-providers.json → gemini.model_rule`) |
 | الموديل | `eleven_v4`، `generations_count = 1` | — |
 | الإعدادات | افتراضية | تعليمات أسلوب v2 + ضبط السرعة والطبقة تلقائياً |
 

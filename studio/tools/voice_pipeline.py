@@ -28,32 +28,92 @@ MATCH_OK = 0.85
 def run(cmd, **kw):
     return subprocess.run(cmd, check=True, capture_output=True, text=True, **kw)
 
-def gemini_tts(text, out_wav):
+class ModelUnavailable(Exception):
+    """الموديل مو متوفر/ما يطلع صوت ← ننزل للي بعده في السلسلة."""
+
+def _model_rank(name):
+    """ترتيب موديلات Gemini TTS: الإصدار الأعلى أول، وبنفس الإصدار pro ثم flash ثم flash-lite، والنهائي قبل preview."""
+    m = re.match(r"gemini-(\d+(?:\.\d+)?)-(pro|flash-lite|flash)", name)
+    if not m: return None
+    tier = {"pro": 0, "flash": 1, "flash-lite": 2}[m.group(2)]
+    return (-float(m.group(1)), tier, 1 if "preview" in name else 0)
+
+def gemini_model_chain():
+    """سلسلة الموديلات بالترتيب (قاعدة صاحب الحساب 2026-11-16: 3.8 أول، وإذا مو متوفر 3.7، ثم اللي بعده...).
+    نقرا الموديلات المتوفرة فعلاً من Gemini (اللي فيها "tts")، ونشيل الأعلى من model_start_version،
+    ونرتبها تنازلياً. لو القراءة فشلت: model_chain الثابتة من voice-providers.json."""
+    g = PROV["gemini"]
+    start = float(g.get("model_start_version", 99))
+    static = list(g.get("model_chain") or [g["model"]])
+    key = os.environ.get(g["api_key_env"])
+    try:
+        req = urllib.request.Request("https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000",
+                                     headers={"x-goog-api-key": key or ""})
+        names = [m["name"].split("/", 1)[-1] for m in json.load(urllib.request.urlopen(req, timeout=30)).get("models", [])
+                 if "generateContent" in m.get("supportedGenerationMethods", [])]
+    except Exception as e:  # noqa: BLE001
+        print(f"[gemini] قائمة الموديلات ما انقرت ({e}) ← السلسلة الثابتة", file=sys.stderr)
+        return static
+    found = [n for n in names if "tts" in n and _model_rank(n) and -_model_rank(n)[0] <= start + 1e-9]
+    chain = sorted(set(found), key=_model_rank)
+    return chain or static
+
+def _pcm_from_part(part, default_rate):
+    """يرجّع (pcm 16-bit mono, rate). بعض الموديلات (3.8) ترجع WAV كامل بهيدر، وبعضها (3.1) PCM خام."""
+    raw = base64.b64decode(part["data"])
+    if raw[:4] == b"RIFF":
+        import io
+        w = wave.open(io.BytesIO(raw), "rb")
+        if w.getsampwidth() != 2 or w.getnchannels() != 1: raise ModelUnavailable("unexpected wav format")
+        return w.readframes(w.getnframes()), w.getframerate()
+    m = re.search(r"rate=(\d+)", part.get("mimeType", ""))
+    return raw, int(m.group(1)) if m else default_rate
+
+def gemini_tts(text, out_wav, model):
     g = PROV["gemini"]
     key = os.environ.get(g["api_key_env"])
     if not key: raise SystemExit("GEMINI_API_KEY missing")
     body = {"contents": [{"parts": [{"text": g["style"] + "\n\n" + text}]}],
             "generationConfig": {"responseModalities": ["AUDIO"],
                                  "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": g["voice"]}}}}}
-    url = g["api"].format(model=g["model"])
+    url = g["api"].format(model=model)
     last = None
     for attempt in range(4):
         try:
             req = urllib.request.Request(url, data=json.dumps(body).encode(),
                                          headers={"Content-Type": "application/json", "x-goog-api-key": key})
             r = json.load(urllib.request.urlopen(req, timeout=300))
-            data = r["candidates"][0]["content"]["parts"][0]["inlineData"]["data"]
-            pcm = base64.b64decode(data)
-            w = wave.open(out_wav, "wb"); w.setnchannels(1); w.setsampwidth(2); w.setframerate(g["sample_rate"])
+            parts = r["candidates"][0]["content"]["parts"]
+            part = next((p["inlineData"] for p in parts if "inlineData" in p), None)
+            if not part: raise ModelUnavailable(f"{model}: ما رجّع صوت")
+            pcm, rate = _pcm_from_part(part, g["sample_rate"])
+            w = wave.open(out_wav, "wb"); w.setnchannels(1); w.setsampwidth(2); w.setframerate(rate)
             w.writeframes(pcm); w.close()
             return
+        except ModelUnavailable:
+            raise
         except urllib.error.HTTPError as e:
             last = f"HTTP {e.code}: {e.read().decode()[:300]}"
+            if e.code in (400, 403, 404): raise ModelUnavailable(f"{model}: {last}")
             if e.code not in (429, 500, 502, 503, 504): break
         except Exception as e:  # noqa: BLE001
             last = str(e)
         time.sleep(5 * (attempt + 1))
-    raise SystemExit(f"gemini TTS failed: {last}")
+    raise ModelUnavailable(f"{model}: {last}")
+
+def gemini_render(chunks, out_dir):
+    """صوت واحد للفيديو كله: نجرب الموديلات بالترتيب، وأول موديل يطلع كل المقاطع هو المعتمد."""
+    tried = []
+    for model in gemini_model_chain():
+        try:
+            parts = []
+            for i, c in enumerate(chunks):
+                p = os.path.join(out_dir, f"gemini_part{i}.wav"); gemini_tts(c, p, model); parts.append(p)
+            print(f"[gemini] الموديل: {model}" + (f" (بعد: {'; '.join(tried)})" if tried else ""), file=sys.stderr)
+            return parts, model, tried
+        except ModelUnavailable as e:
+            tried.append(str(e)[:160]); print(f"[gemini] {e} ← اللي بعده", file=sys.stderr)
+    raise SystemExit("gemini TTS failed: " + " | ".join(tried))
 
 def provider_text(text, provider):
     """يطبّق استبدالات النطق الخاصة بالمزوّد (brand/voice-providers.json → <provider>.replacements)."""
@@ -138,11 +198,10 @@ def main():
     if a.prepare_only:
         print(tts_text); return
     raw = a.audio
+    tts_model, tts_skipped = (PROV["elevenlabs"].get("model_id") if a.provider == "elevenlabs" else None), []
     if a.provider == "gemini":
         chunks = split_chunks(tts_text)
-        parts = []
-        for i, c in enumerate(chunks):
-            p = os.path.join(a.out, f"gemini_part{i}.wav"); gemini_tts(c, p); parts.append(p)
+        parts, tts_model, tts_skipped = gemini_render(chunks, a.out)
         raw = os.path.join(a.out, "voice_raw.wav")
         if len(parts) == 1: os.replace(parts[0], raw)
         else:
@@ -180,7 +239,7 @@ def main():
                 words, full, m = transcribe(out_wav, voice_text, caption_text, model)
     fixed = refine_starts(words, silence_onsets(out_wav))
     dur = float(run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", out_wav]).stdout)
-    res = {"provider": a.provider, "duration": round(dur, 3), "tempo": round(tempo, 4), "pitch_ratio": round(pitch, 4), "text": full,
+    res = {"provider": a.provider, "model": tts_model, "models_skipped": tts_skipped, "duration": round(dur, 3), "tempo": round(tempo, 4), "pitch_ratio": round(pitch, 4), "text": full,
            "match": m, "starts_refined": fixed, "words_per_s": round(words_per_s(words), 2), "words": words}
     json.dump(res, open(os.path.join(a.out, "words.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     rep = {k: v for k, v in res.items() if k != "words"}

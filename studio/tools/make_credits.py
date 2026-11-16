@@ -21,7 +21,7 @@ def main():
     vr = json.load(open(a.voice_report, encoding="utf-8")); mr = json.load(open(a.mix_report, encoding="utf-8"))
     sc = json.load(open(a.scene, encoding="utf-8"))
     man = json.load(open(os.path.join(ROOT, "studio", "sfx", "manifest.json"), encoding="utf-8"))
-    voice = ("ElevenLabs — Fahad - Saudi, Warm & Confident" if vr.get("provider") == "elevenlabs" else "Google Gemini TTS (gemini-3.1-flash-tts-preview) — Charon")
+    voice = ("ElevenLabs — Fahad - Saudi, Warm & Confident" if vr.get("provider") == "elevenlabs" else f"Google Gemini TTS ({vr.get('model') or 'gemini-3.1-flash-tts-preview'}) — Charon")
     used = sorted({s["name"] for s in mr.get("sfx", [])})
     lines = [f"# الحقوق — {a.id}", "",
              f"- **التعليق الصوتي:** {voice} — صوت مولّد بالذكاء الاصطناعي.",
