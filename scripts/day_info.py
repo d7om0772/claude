@@ -49,13 +49,17 @@ def main():
         "launch_date": CFG["launch_date"],
         "today": phase_for(today),
         "tomorrow": phase_for(tomorrow),
-        "phase2_starts": (datetime.date.fromisoformat(CFG["launch_date"]) + datetime.timedelta(days=60)).isoformat(),
+        "phases": [{"name": ph["name"], "from": (datetime.date.fromisoformat(CFG["launch_date"]) + datetime.timedelta(days=ph["from_day"] - 1)).isoformat(),
+                    "to": ((datetime.date.fromisoformat(CFG["launch_date"]) + datetime.timedelta(days=ph["to_day"] - 1)).isoformat() if ph.get("to_day") else None),
+                    "videos_per_day": ph["videos_per_day"], "times": ph["publish_times"][:ph["videos_per_day"]]} for ph in CFG["phases"]],
     }
     if as_json:
         print(json.dumps(info, ensure_ascii=False, indent=1)); return
     t, tm = info["today"], info["tomorrow"]
     print(f"الآن (الرياض): {info['now_riyadh']}  [{info['weekday']}]  أسبوع {info['iso_week']}")
-    print(f"launch_date: {info['launch_date']}  — المرحلة الثانية تبدأ: {info['phase2_starts']}")
+    print(f"launch_date: {info['launch_date']}")
+    for ph in info["phases"]:
+        print(f"  {ph['name']}: {ph['from']} → {ph['to'] or '…'} | {ph['videos_per_day']}/يوم {', '.join(ph['times'])}")
     for label, d in (("اليوم", t), ("بكرة", tm)):
         slots = ", ".join(f"{s['id']}@{s['time']}" for s in d["slots"]) or "—"
         print(f"{label} {d['date']}: يوم #{d['day_number']} | {d['phase']} | {d['videos_per_day']} فيديو | {slots}")

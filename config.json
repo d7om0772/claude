@@ -11,13 +11,73 @@
   "timezone": "Asia/Riyadh",
   "launch_date": "2026-11-16",
   "phases": [
-    { "name": "phase1", "from_day": 1, "to_day": 60, "videos_per_day": 3, "publish_times": ["13:00", "18:00", "22:00"] },
-    { "name": "phase2", "from_day": 61, "to_day": null, "videos_per_day": 1, "publish_times": ["18:00"] }
+    {
+      "name": "launch",
+      "from_day": 1,
+      "to_day": 1,
+      "videos_per_day": 3,
+      "publish_times": [
+        "13:00",
+        "18:00",
+        "22:00"
+      ],
+      "note": "يوم الإطلاق 2026-11-16 (انجدول قبل تغيير السياسة)"
+    },
+    {
+      "name": "ramp1",
+      "from_day": 2,
+      "to_day": 4,
+      "videos_per_day": 1,
+      "publish_times": [
+        "18:00"
+      ],
+      "note": "3 أيام: فيديو واحد يومياً"
+    },
+    {
+      "name": "ramp2",
+      "from_day": 5,
+      "to_day": 11,
+      "videos_per_day": 2,
+      "publish_times": [
+        "18:00",
+        "22:00"
+      ],
+      "note": "أسبوع: فيديوهين يومياً"
+    },
+    {
+      "name": "ramp3",
+      "from_day": 12,
+      "to_day": 25,
+      "videos_per_day": 3,
+      "publish_times": [
+        "13:00",
+        "18:00",
+        "22:00"
+      ],
+      "note": "أسبوعين: 3 فيديوهات يومياً"
+    },
+    {
+      "name": "steady",
+      "from_day": 26,
+      "to_day": null,
+      "videos_per_day": 1,
+      "publish_times": [
+        "18:00"
+      ],
+      "note": "بعدها فيديو واحد يومياً"
+    }
   ],
-  "phase2_note": "وقت المرحلة الثانية يتحدث من توصيات تقرير التحليل (مهمة write يوم السبت تعدّل publish_times للمرحلة الثانية هنا).",
+  "phase2_note": "أوقات مرحلة steady (فيديو واحد يومياً من اليوم 26) تتحدث من توصيات تقرير التحليل (مهمة write يوم السبت تعدّل publish_times هنا).",
   "series": {
-    "active": ["budget-builds", "shortcuts", "troubleshooting"],
-    "paused": ["tech-news", "comparisons"]
+    "active": [
+      "budget-builds",
+      "shortcuts",
+      "troubleshooting"
+    ],
+    "paused": [
+      "tech-news",
+      "comparisons"
+    ]
   },
   "voice": {
     "primary": "elevenlabs",
@@ -38,6 +98,11 @@
     "folder_pattern": "torbo/{date}/",
     "delete_after_days_published": 7
   },
-  "fact_check": { "max_rewrites": 2 },
-  "git": { "branch": "main" }
+  "fact_check": {
+    "max_rewrites": 2
+  },
+  "git": {
+    "branch": "main"
+  },
+  "phases_policy": "بطلب صاحب الحساب 2026-11-16: من بكرة 1/يوم ×3 أيام ← 2/يوم ×أسبوع ← 3/يوم ×أسبوعين ← 1/يوم دائماً."
 }
