@@ -268,5 +268,24 @@
    "distinct_notes": 4,
    "melody_warning": true
   }
+ },
+ "gs_selection9_fwd": {
+  "file": "studio/sfx/gs_selection9_fwd.wav",
+  "duration_s": 0.25,
+  "peak_dbfs": -3.0,
+  "description": "Selection 9 forward (Gravity Sound)",
+  "use": "ظهور القائمة",
+  "pack_name": "Selection 9 forward",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/fd/Selection_9_forward_%28Gravity_Sound%29.wav/Selection_9_forward_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710893",
+  "attribution": "\"Selection 9 forward (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 1,
+   "melody_warning": false
+  }
  }
 }
