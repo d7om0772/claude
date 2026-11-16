@@ -1,0 +1,115 @@
+/* التجربة الثانية لأسلوب "الشرح بالتشبيه" — التصميم 2: "ورق فاتح".
+   مختلف عن التصميم 1 (كحلي + خطوط سميكة + كتابة بيضاء بظل):
+   · عالم الهوية فاتح بخلفية تيربو (أبيض مزرق + شبكة أيزومترية) وكتابة كحلية.
+   · عالم القصة: طاولة مطبخ من فوق، رسم "ورق مقصوص" بدون خطوط، ظلال ناعمة طويلة.
+   · عالم الشرح: سطح مكتب كحلي بتوهّج ناعم + نوافذ بيضاء + أزرار كيبورد مجسّمة.
+   · الكابشن داخل كبسولة بيضاء، والكلمات تطلع من تحت لفوق.
+   أكسنت واحد: أزرق الشعار #2F6BCF (بخط تحديد فاتح بدل التوهّج على الخلفيات الفاتحة). أحمر ✗ / أخضر ✓ فقط. */
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../../fonts/baloo-bhaijaan-2-arabic-wght-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../../fonts/baloo-bhaijaan-2-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-weight: 100 900; font-display: block;
+  src: url("../../fonts/inter-latin-wght-normal.woff2") format("woff2"); }
+
+:root {
+  --ink: #14284B; --muted: #5B6B82; --brand: #2F6BCF; --brand-l: #CFE0FB; --brand-glow: rgba(47,107,207,.45);
+  --no: #E5384A; --yes: #1FAE5B;
+  --wood: #D9B288; --wood-d: #C99E72; --dough: #F1CC91; --dough-d: #DDAE6A; --baked: #E0A257; --steel: #C9D1DC; --steel-d: #8E9AAB;
+  --desk: #0E1A33;
+  --ar: "Baloo Bhaijaan 2", sans-serif; --en: "Inter", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+body { font-family: var(--ar); direction: rtl; -webkit-font-smoothing: antialiased; color: var(--ink); }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #fff; }
+.world { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+.fill { position: absolute; inset: 0; }
+.ltr { direction: ltr; unicode-bidi: isolate; }
+
+/* ---------- عالم الهوية (فاتح) ---------- */
+#brand { background: radial-gradient(ellipse 85% 50% at 50% 50%, #ffffff, #f1f6fe 55%, #dfe9f9); }
+#brand::before { content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(30deg, rgba(47,107,207,.07) 0 2px, transparent 2px 64px),
+              repeating-linear-gradient(150deg, rgba(47,107,207,.07) 0 2px, transparent 2px 64px); }
+/* ---------- كرت الجسر (أزرق كامل = قلب التباين) ---------- */
+#bridge { background: radial-gradient(ellipse 80% 55% at 50% 48%, #3D7BE0, #2F6BCF 55%, #2357AE); }
+/* ---------- عالم القصة: طاولة خشب من فوق ---------- */
+/* الخشب كخلفية للعالم نفسه (تتحرك بـ background-position)، والديكور قطع صغيرة تتحرك كل وحدة لحالها:
+   طبقة وحدة كبيرة متحركة كان المتصفح ما يرسمها كاملة (مربعات فاضية في الرندر). */
+#story { background: var(--wood); }
+#wood { position: absolute; inset: 0; background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.18) 0 60px, transparent 61px) 0 0 / 520px 610px,
+    repeating-linear-gradient(90deg, var(--wood) 0 228px, var(--wood-d) 228px 236px),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.06)), var(--wood); }
+#counter { position: absolute; left: -500px; top: -200px; width: 0; height: 0; }
+.tray { position: absolute; left: 180px; top: 470px; width: 720px; height: 1000px; border-radius: 48px; transform-origin: 50% 50%;
+  background: linear-gradient(160deg, #4A5262, #333946); padding: 22px;
+  box-shadow: 0 46px 70px rgba(80, 45, 15, .42), 0 10px 18px rgba(80, 45, 15, .25), inset 0 2px 0 rgba(255,255,255,.18); }
+.tray .in { position: relative; width: 676px; height: 956px; border-radius: 30px; overflow: hidden; background: #2B303B; }
+.tray svg { position: absolute; left: 0; top: 0; }
+.sticker { position: absolute; left: 50%; top: 600px; transform-origin: 50% 50%; opacity: 0; padding: 26px 70px 34px; border-radius: 26px;
+  background: #fff; color: var(--ink); font-weight: 800; font-size: 210px; line-height: 1; white-space: nowrap;
+  box-shadow: 0 30px 50px rgba(0,0,0,.35), 0 6px 0 #D5DCE6; }
+.sticker::before { content: ""; position: absolute; left: 50%; top: -26px; width: 220px; height: 58px; margin-left: -110px;
+  background: rgba(47,107,207,.82); transform: rotate(-4deg); border-radius: 6px; }
+/* ---------- عالم الشرح: سطح مكتب كحلي ---------- */
+#explain { background: var(--desk); }
+#explain .bloom { position: absolute; inset: 0;
+  background: radial-gradient(circle at 78% 22%, rgba(47,107,207,.55), transparent 42%),
+              radial-gradient(circle at 18% 78%, rgba(107,159,233,.35), transparent 46%),
+              radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 60%); }
+#diagram { position: absolute; inset: 0; transform-origin: 540px 900px; }
+.tile { position: absolute; width: 190px; height: 250px; border-radius: 30px; background: #fff; transform-origin: 50% 50%;
+  box-shadow: 0 18px 36px rgba(0,0,0,.45); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; opacity: 0; }
+.tile .lbl { font-weight: 800; font-size: 36px; line-height: 1.05; text-align: center; color: var(--ink); }
+.win { position: absolute; left: 140px; top: 540px; width: 800px; height: 800px; border-radius: 34px; background: #F7F9FC; overflow: hidden; opacity: 0;
+  transform-origin: 50% 50%; box-shadow: 0 50px 90px rgba(0,0,0,.6), 0 0 0 2px rgba(255,255,255,.4); }
+.win .bar { position: absolute; left: 0; right: 0; top: 0; height: 74px; background: #E7EDF6; display: flex; align-items: center; padding: 0 118px 0 28px; gap: 14px; }
+.win .ctl { margin-right: auto; display: flex; gap: 22px; direction: ltr; }
+.win .ctl i { display: block; width: 22px; height: 22px; border-radius: 4px; border: 3px solid #8C9AB0; }
+.win .ctl i:first-child { border-width: 0 0 3px 0; border-radius: 0; height: 14px; }
+.win .ttl { font-weight: 800; font-size: 32px; color: var(--muted); }
+.win .tab { font-weight: 800; font-size: 30px; color: var(--muted); padding: 6px 22px 8px; border-radius: 16px; }
+.win .tab.on { background: #fff; color: var(--ink); box-shadow: 0 2px 8px rgba(20,40,75,.12); }
+.win .body { position: absolute; left: 0; right: 0; top: 74px; bottom: 0; }
+.win .body svg { position: absolute; left: 0; top: 0; }
+.step { position: absolute; top: 12px; right: 22px; height: 50px; min-width: 50px; padding: 0 16px; border-radius: 25px; background: var(--brand); color: #fff;
+  font: 800 30px/50px var(--en); text-align: center; direction: ltr; }
+.step.ar { font-family: var(--ar); font-size: 30px; line-height: 52px; padding: 0 22px; }
+.wlbl { position: absolute; font-weight: 800; font-size: 32px; line-height: 1; color: var(--ink); white-space: nowrap; }
+
+/* ---------- أزرار الكيبورد ---------- */
+.keys { position: absolute; display: flex; align-items: center; justify-content: center; gap: 26px; direction: ltr; }
+.key { position: relative; min-width: 150px; height: 150px; padding: 0 30px; border-radius: 30px; background: #fff; color: var(--ink);
+  display: flex; align-items: center; justify-content: center; font: 800 60px/1 var(--en);
+  box-shadow: 0 14px 0 #B9C6DA, 0 26px 40px rgba(0,0,0,.35); }
+.key.down { background: var(--brand); color: #fff; box-shadow: 0 3px 0 #1E4C9A, 0 0 44px rgba(79,146,255,.85), 0 10px 22px rgba(0,0,0,.35); }
+.plus { font: 800 64px/1 var(--en); color: #fff; opacity: .9; }
+.keys.sm .key { min-width: 112px; height: 112px; padding: 0 22px; border-radius: 24px; font-size: 44px; box-shadow: 0 10px 0 #B9C6DA, 0 18px 30px rgba(0,0,0,.3); }
+.keys.sm .key.down { box-shadow: 0 2px 0 #1E4C9A, 0 0 34px rgba(79,146,255,.85); }
+.keys.sm .plus { font-size: 48px; color: #fff; }
+.win .plus { color: var(--muted); }
+
+/* ---------- الكابشن: كبسولة بيضاء في الشريط العلوي ---------- */
+#cap { position: absolute; left: 120px; width: 840px; top: 312px; height: 0; display: flex; align-items: center; justify-content: flex-start; }  /* RTL: مثبّتة يمين وتكبر لليسار */
+#cap .pill { display: flex; gap: .26em; align-items: center; white-space: nowrap; padding: .2em .62em .28em; border-radius: 999px; background: rgba(255,255,255,.97);
+  font-weight: 800; line-height: 1.2; color: var(--ink); box-shadow: 0 14px 34px rgba(10,25,55,.28), 0 3px 0 rgba(20,40,75,.08); }
+#cap .pill:empty { display: none; }
+.w { display: inline-block; transform-origin: 50% 80%; }
+.combo { display: inline-flex; gap: .16em; align-items: center; direction: ltr; unicode-bidi: isolate; }
+.kc { font-family: var(--en); font-size: .62em; font-weight: 800; padding: .14em .42em .16em; border-radius: .34em; background: #EEF3FB; color: var(--ink);
+  box-shadow: 0 .14em 0 #B9C6DA; position: relative; top: -.06em; }
+.pl { font-family: var(--en); font-size: .6em; color: var(--muted); }
+.card-text { position: absolute; left: 120px; width: 840px; text-align: center; font-weight: 800; line-height: 1.2; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 50%; }
+.card-text .row { display: flex; gap: .26em; align-items: baseline; justify-content: center; white-space: nowrap; }
+.acc { color: var(--brand); position: relative; }
+.mark { background: linear-gradient(transparent 62%, var(--brand-l) 62%, var(--brand-l) 92%, transparent 92%); padding: 0 .08em; }
+.rule { height: 10px; border-radius: 5px; background: var(--brand); transform-origin: 50% 50%; }
+#hero { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 960px; }
+#logo-tile { position: absolute; width: 170px; height: 170px; border-radius: 40px; background: #fff; box-shadow: 0 18px 40px rgba(20,40,75,.22); display: flex; align-items: center; justify-content: center; opacity: 0; }
+#logo-tile img { width: 124px; height: 124px; object-fit: contain; }
+#grain { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; }
+#loopimg { position: absolute; inset: 0; width: 1080px; height: 1920px; opacity: 0; pointer-events: none; }
