@@ -2,6 +2,10 @@
 
 > كل تعديل على النظام (وكلاء، مهام، قوالب، إعدادات، تقويم) يتسجل هنا: التاريخ، وش تغيّر، وليش. الأحدث فوق.
 
+## 2026-11-17 — قالب troubleshooting: إضافات من فيديو 2026-11-18-01 (144Hz على 60)
+- `studio/troubleshooting/scene.js`: X01 `settings_nav` (مسار Settings بالكلمات) و`spec_table` (مواصفات لكل منفذ بدون أرقام)، و`display_settings` صار يقبل `fix_at`/`star_at`/`state:"problem"` (كان القلب على نسبة من المدة)، و`text` يقبل `color`/`sub`/`ring`/`pulse`. E08 نسخة `gpu_hdmi → gpu_dp` بملصقات HDMI/DP على منافذ كرت الشاشة. السبب: الفيديو احتاج عروض غير موجودة في الحزمة، ومنع E08 `mobo_hdmi → gpu_out` للتنويع — مصمَّمة بنفس قواعد الحزمة وموثقة في `ELEMENTS.md`.
+- `studio/tools/scene_build.py`: `params.sfx` لكل عنصر (`false` يلغي المؤثر التلقائي، أو اسم بديل) — شاشات X01 المحايدة كانت تطلع بنغمة الحل؛ و`star_at` ضمن حقول الوقت.
+
 ## 2026-11-16 — قالب shortcuts: أوضاع X01 لسجل الحافظة (فيديو 2026-11-17-01)
 - `studio/shortcuts/scene.js`: وضع `cliphist` بمراحل (`lost`، `open`، `turnon`، `fill`، `pick`، `pin`، `wipe`) ووضع `doc` (مستند يلصق بطاقة). السبب: Win + V احتاج عروض غير موجودة في الحزمة — مصمَّمة بنفس قواعدها (جمادات ورموز فقط، Inter لنصوص الواجهة، بدون شعارات). موثّقة في `studio/shortcuts/ELEMENTS.md`.
 

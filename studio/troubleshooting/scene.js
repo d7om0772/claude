@@ -49,12 +49,37 @@ function monitorDraw(ctx) {
         K.text(g, it, w / 2, y, { size: h * 0.06, weight: 700, color: "#fff", font: K.FONT_EN });
         if (on && picked) K.text(g, "✓", w * 0.66, y, { size: h * 0.06, weight: 800, color: "#fff", font: K.FONT_EN }); });
       g.restore(); return; }
-    if (m === "text") { desk(); K.text(g, s.text || "", w / 2, h * 0.45, { size: h * (s.size || 0.15), color: "#fff" }); return; }
+    if (m === "text") { desk(); const col = s.color === "problem" ? PAL.problem : s.color === "fix" ? PAL.fix : (s.color || "#fff");
+      const pulse = s.pulse ? 1 + 0.05 * Math.sin(p * (s.dur || 1) * 9) : 1; const ty = s.sub ? h * 0.4 : h * 0.45;
+      if (s.color && s.color !== "#fff") { g.fillStyle = "rgba(255,255,255,.92)"; K.rr(g, w * 0.22, ty - h * 0.15, w * 0.56, h * 0.3, h * 0.06); g.fill(); }
+      g.save(); g.translate(w / 2, ty); g.scale(pulse, pulse); K.text(g, s.text || "", 0, 0, { size: h * (s.size || 0.15), color: col, font: /[A-Za-z0-9]/.test(s.text || "") ? K.FONT_EN : undefined, weight: 800 }); g.restore();
+      if (s.sub) K.text(g, s.sub, w / 2, h * 0.68, { size: h * 0.06, color: "#fff", font: /^[\x00-\x7F]+$/.test(s.sub) ? K.FONT_EN : undefined, weight: 700 });
+      if (s.ring) { const q = clamp(p * (s.dur || 1) / 0.5); g.strokeStyle = `rgba(34,211,106,${1 - q * 0.5})`; g.lineWidth = h * 0.014; g.beginPath(); g.arc(w / 2, ty, h * (0.12 + 0.12 * E.outCubic(q)), 0, 7); g.stroke();
+        if (q > 0.5) { g.fillStyle = PAL.fix; g.beginPath(); g.arc(w * 0.76, ty - h * 0.13, h * 0.06, 0, 7); g.fill(); K.text(g, "✓", w * 0.76, ty - h * 0.13, { size: h * 0.07, color: "#fff", font: K.FONT_EN }); } }
+      return; }
+    // settings_nav — مسار الإعدادات: {items, times}: كل عنصر يتحدد بالأزرق مع كلمته
+    if (m === "settings_nav") { desk(); const tNow = (s.start ?? 0) + p * (s.dur ?? 1); const items = s.items || ["Settings", "System", "Display"];
+      K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, s.title || "Settings", { lines: 0 });
+      let cur = -1; items.forEach((_, i) => { if (tNow >= (s.times?.[i] ?? (s.start ?? 0) + i * 0.6)) cur = i; });
+      items.forEach((it, i) => { const y = h * (0.3 + i * 0.13); const on = i === cur, done = i < cur;
+        if (i > cur) g.globalAlpha = 0.35; g.fillStyle = on ? PAL.brand : done ? "#E6EEFB" : "#F3F6FC"; K.rr(g, w * 0.13 + i * w * 0.04, y - h * 0.05, w * 0.6, h * 0.1, 10); g.fill();
+        K.text(g, (i ? "› " : "") + it, w * 0.16 + i * w * 0.04, y, { size: h * 0.055, align: "left", font: K.FONT_EN, weight: on ? 800 : 600, color: on ? "#fff" : PAL.navy }); g.globalAlpha = 1; });
+      return; }
+    // spec_table — مواصفات الشاشة لكل منفذ بدون أرقام مخترعة: {rows:[[المنفذ، القيمة]]}
+    if (m === "spec_table") { desk(); K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, s.title || "Monitor specs", { lines: 0 });
+      (s.rows || [["HDMI", "? Hz"], ["DisplayPort", "? Hz"]]).forEach(([k, v], i) => { const y = h * (0.36 + i * 0.2); g.globalAlpha = clamp(p * (s.dur || 1) / 0.3 - i * 0.6);
+        g.fillStyle = "#F3F6FC"; K.rr(g, w * 0.13, y - h * 0.07, w * 0.74, h * 0.14, 12); g.fill();
+        K.text(g, k, w * 0.16, y, { size: h * 0.065, align: "left", font: K.FONT_EN, weight: 700 }); K.text(g, v, w * 0.84, y, { size: h * 0.07, align: "right", font: K.FONT_EN, weight: 800, color: PAL.brand }); g.globalAlpha = 1; });
+      return; }
     if (m === "display_settings") { desk(); K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, "Settings › Display › Advanced display", { lines: 0 });
       K.text(g, "Choose a refresh rate", w * 0.13, h * 0.3, { size: h * 0.055, weight: 600, align: "left", font: K.FONT_EN, color: PAL.muted });
-      const q = clamp((p - 0.35) / 0.3); const ok = q > 0.5;
+      const tNow = (s.start ?? 0) + p * (s.dur ?? 1);
+      const ok = s.fix_at != null ? tNow >= s.fix_at : s.state === "problem" ? false : clamp((p - 0.35) / 0.3) > 0.5;
       g.fillStyle = "#F3F6FC"; K.rr(g, w * 0.13, h * 0.37, w * 0.36, h * 0.13, 12); g.fill(); g.strokeStyle = ok ? PAL.fix : PAL.problem; g.lineWidth = 5; K.rr(g, w * 0.13, h * 0.37, w * 0.36, h * 0.13, 12); g.stroke();
-      K.text(g, ok ? (s.to || "144 Hz") : (s.from || "60 Hz"), w * 0.16, h * 0.435, { size: h * 0.07, align: "left", font: K.FONT_EN, weight: 700 }); return; }
+      K.text(g, ok ? (s.to || "144 Hz") : (s.from || "60 Hz"), w * 0.16, h * 0.435, { size: h * 0.07, align: "left", font: K.FONT_EN, weight: 700 });
+      if (s.star_at != null && tNow >= s.star_at) { const q = E.outBack(clamp((tNow - s.star_at) / 0.3)); g.save(); g.translate(w * 0.56, h * 0.435); g.scale(q, q);
+        g.fillStyle = PAL.brand; g.beginPath(); g.arc(0, 0, h * 0.06, 0, 7); g.fill(); K.text(g, "*", 0, h * 0.015, { size: h * 0.11, color: "#fff", font: K.FONT_EN, weight: 800 }); g.restore(); }
+      return; }
     if (m === "bios_xmp") { g.fillStyle = "#0F1B33"; g.fillRect(0, 0, w, h); K.text(g, "BIOS › Memory", w * 0.06, h * 0.12, { size: h * 0.06, align: "left", font: K.FONT_EN, weight: 700, color: "#9DB8F5" });
       const on = p > 0.45; [["Memory Profile", on ? (s.profile || "XMP / EXPO Profile 1") : "Disabled"], ["Memory Speed", on ? (s.speed_on || "6000 MT/s") : (s.speed_off || "4800 MT/s")]].forEach(([k, v], i) => {
         const y = h * (0.32 + i * 0.22); g.fillStyle = "#1B2B4F"; K.rr(g, w * 0.06, y - h * 0.08, w * 0.88, h * 0.16, 12); g.fill();
@@ -103,12 +128,14 @@ function rearDraw(g, w, h, s) {
   port(w * 0.25, h * 0.1, w * 0.1, h * 0.045, s.hl === "mobo_hdmi" ? s.hlColor : null); K.text(g, "HDMI", w * 0.3, h * 0.17, { size: h * 0.028, color: "#5B6B82", font: K.FONT_EN, weight: 700 });
   for (let i = 0; i < 3; i++) { g.fillStyle = "#C9D3E6"; K.rr(g, w * 0.08, h * (0.5 + i * 0.07), w * 0.84, h * 0.05, 6); g.fill(); }   // فتحات PCIe
   g.fillStyle = "#2E4170"; K.rr(g, w * 0.08, h * 0.5, w * 0.84, h * 0.05, 6); g.fill();                                        // براكيت كرت الشاشة
-  for (let i = 0; i < 3; i++) port(w * (0.14 + i * 0.12), h * 0.505, w * 0.09, h * 0.04, (s.hl === "gpu_out" && i === 0) ? s.hlColor : null);
+  for (let i = 0; i < 3; i++) port(w * (0.14 + i * 0.12), h * 0.505, w * 0.09, h * 0.04, ((s.hl === "gpu_out" || s.hl === "gpu_hdmi") && i === 0) || (s.hl === "gpu_dp" && i === 1) ? s.hlColor : null);
+  if (s.gpuLabels) ["HDMI", "DP", "DP"].forEach((n, i) => { g.fillStyle = "#fff"; K.rr(g, w * (0.125 + i * 0.12), h * 0.565, w * 0.12, h * 0.045, 6); g.fill();
+    K.text(g, n, w * (0.185 + i * 0.12), h * 0.588, { size: h * (i ? 0.032 : 0.026), color: i === 0 && s.hl === "gpu_hdmi" ? PAL.problem : i === 1 && s.hl === "gpu_dp" ? PAL.fix : PAL.navy, font: K.FONT_EN, weight: 800 }); });
   K.text(g, "GPU", w * 0.6, h * 0.525, { size: h * 0.03, color: "#cfe0ff", font: K.FONT_EN, weight: 800 });
   g.strokeStyle = "#B8C6DD"; g.lineWidth = 6; g.beginPath(); g.arc(w * 0.68, h * 0.22, h * 0.13, 0, 7); g.stroke();       // مروحة خلفية
   g.fillStyle = "#1D2C48"; K.rr(g, w * 0.08, h * 0.8, w * 0.36, h * 0.14, 10); g.fill();                                       // الباور
 }
-const PORT_UV = { mobo_hdmi: [0.3, 0.122], usb_rear: [0.165, 0.24], gpu_out: [0.185, 0.525], usb_front: null };
+const PORT_UV = { mobo_hdmi: [0.3, 0.122], usb_rear: [0.165, 0.24], gpu_out: [0.185, 0.525], gpu_hdmi: [0.185, 0.525], gpu_dp: [0.305, 0.525], usb_front: null };
 
 function buildPC(root) {
   const g = new THREE.Group(); g.position.set(PC.x, 0.02, PC.z); root.add(g);
@@ -252,7 +279,7 @@ async function build(ctx) {
         const uv = (k) => { const u = PORT_UV[k]; return u ? new THREE.Vector3(-PC.w / 2 - 0.04, PC.h * (1 - u[1]), -PC.d / 2 + u[0] * PC.d) : new THREE.Vector3(PC.w / 2 - 0.3, PC.h + 0.3, 0.15); };
         const a = uv(r.from), b = uv(r.to); pc.plug.visible = rot > 0.3; pc.plug.position.copy(a).lerp(b, q); pc.plug.position.x -= 0.12 * Math.sin(Math.PI * q) + 0.12;
         pc.plug.rotation.set(0, 0, -Math.PI / 2); const done = q >= 1; plugCol = done ? GREEN : RED; pc.plugGlow.material.opacity = done ? 0.9 : 0.3;
-        hl = { hl: done ? r.to : r.from, hlColor: done ? PAL.fix : PAL.problem }; }
+        hl = { hl: done ? r.to : r.from, hlColor: done ? PAL.fix : PAL.problem, gpuLabels: /^gpu_(hdmi|dp)$/.test(r.from) || /^gpu_(hdmi|dp)$/.test(r.to) }; }
       pc.plugGlow.material.color.copy(plugCol);
       pc.rearTex.redraw(hl || {});
       // اللابتوب بدل الكيبورد (E09–E11) + الماوس على جهاز ثاني (E14)

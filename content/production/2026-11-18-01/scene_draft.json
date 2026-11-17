@@ -1,0 +1,378 @@
+{
+ "id": "2026-11-18-01",
+ "series": "troubleshooting",
+ "style": "14_desk_pc_red_green",
+ "camera": {
+  "variant": 2
+ },
+ "header": {
+  "label": "المشاكل وحلولها",
+  "dots": 3
+ },
+ "initial_state": "problem",
+ "hook": {
+  "title": {
+   "main": "شاشتك 144Hz شغالة على !!60؟!!"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w8.end",
+   "params": {}
+  },
+  {
+   "el": "X01",
+   "start": 0,
+   "end": "w18.end",
+   "params": {
+    "mode": "text",
+    "text": "60 Hz",
+    "color": "problem",
+    "pulse": true,
+    "state": "problem"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w9",
+   "end": "w18.end",
+   "params": {
+    "main": "الإعداد في **Windows**",
+    "desc": "ممكن باقي على رقم !!أقل!!",
+    "desc_at": "w15",
+    "cam": "monitor"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w19",
+   "end": "w26.end",
+   "params": {
+    "index": 1,
+    "title": "افتح ++Settings++",
+    "desc": "ثم System ثم Display",
+    "desc_at": "w23",
+    "fix_at": "w48"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w19",
+   "end": "w26.end",
+   "params": {
+    "mode": "settings_nav",
+    "items": [
+     "Settings",
+     "System",
+     "Display",
+     "Advanced display"
+    ],
+    "times": [
+     "w22",
+     "w24",
+     "w26",
+     "w28"
+    ],
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w27",
+   "end": "w29.end",
+   "params": {
+    "mode": "settings_nav",
+    "items": [
+     "Settings",
+     "System",
+     "Display",
+     "Advanced display"
+    ],
+    "times": [
+     "w22",
+     "w24",
+     "w26",
+     "w28"
+    ],
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w27",
+   "end": "w29.end",
+   "params": {
+    "main": "ادخل **Advanced display**"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w30",
+   "end": "w51.end",
+   "params": {
+    "mode": "display_settings",
+    "from": "60 Hz",
+    "to": "144 Hz",
+    "fix_at": "w48",
+    "sfx": "gs_swipe2"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w30",
+   "end": "w36.end",
+   "params": {
+    "main": "اختر **شاشتك**",
+    "desc": "لو عندك أكثر من وحدة",
+    "desc_at": "w32"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w37",
+   "end": "w41.end",
+   "params": {
+    "chip": "Choose a refresh rate",
+    "chip_color": "brand",
+    "main": "جنب **الرقم** هذا"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w42",
+   "end": "w47.end",
+   "params": {
+    "main": "اختر الرقم ++المكتوب على شاشتك++"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w48",
+   "end": "w48.end",
+   "params": {
+    "main": "مثل ++144Hz++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w49",
+   "end": "w56.end",
+   "params": {
+    "mode": "display_settings",
+    "from": "144 Hz",
+    "to": "144 Hz",
+    "fix_at": "w49",
+    "star_at": "w52",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w49",
+   "end": "w56.end",
+   "params": {
+    "chip": "ملاحظة",
+    "chip_color": "brand",
+    "main": "جنب الرقم **نجمة**؟",
+    "desc": "معناها الدقة بتتغير معه",
+    "desc_at": "w53"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w57",
+   "end": "w59.end",
+   "params": {
+    "mode": "display_settings",
+    "from": "60 Hz",
+    "state": "problem"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w57",
+   "end": "w59.end",
+   "params": {
+    "main": "الرقم !!مو موجود؟!!"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w60",
+   "end": "w65.end",
+   "params": {
+    "index": 2,
+    "title": "شيك على **المنفذ** والكيبل",
+    "fix_at": "w74"
+   }
+  },
+  {
+   "el": "E08",
+   "start": "w60",
+   "end": "w75",
+   "params": {
+    "from": "gpu_hdmi",
+    "to": "gpu_dp",
+    "plug_at": "w74"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w66",
+   "end": "w72.end",
+   "params": {
+    "chip": "بعض الشاشات",
+    "chip_color": "problem",
+    "main": "تعطيك !!Hz أقل!! على HDMI",
+    "size": "mid"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w73",
+   "end": "w74.end",
+   "params": {
+    "main": "فجرّب ++DisplayPort++"
+   }
+  },
+  {
+   "el": "E07",
+   "start": "w75",
+   "end": "w81.end",
+   "params": {}
+  },
+  {
+   "el": "T",
+   "start": "w75",
+   "end": "w81.end",
+   "params": {
+    "chip": "انتبه",
+    "chip_color": "problem",
+    "main": "كيبلات HDMI !!القديمة!!",
+    "desc": "ممكن ما تتحمل هالسرعة",
+    "desc_at": "w78",
+    "size": "mid"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w82",
+   "end": "w91.end",
+   "params": {
+    "mode": "spec_table",
+    "rows": [
+     [
+      "HDMI",
+      "? Hz"
+     ],
+     [
+      "DisplayPort",
+      "? Hz"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": "gs_swipe2"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w82",
+   "end": "w91.end",
+   "params": {
+    "main": "شيك على **مواصفات** شاشتك",
+    "desc": "كم Hz تدعم على كل منفذ",
+    "desc_at": "w86"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w92",
+   "end": "w97.end",
+   "params": {
+    "index": 3,
+    "title": "حدّث ++تعريف++ كرت الشاشة",
+    "fix_at": "w97",
+    "cam": "case"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w98",
+   "end": "w106.end",
+   "params": {
+    "mode": "text",
+    "text": "144 Hz",
+    "color": "fix",
+    "ring": true,
+    "sub": "Graphics settings",
+    "state": "fix",
+    "cam": "monitor"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w98",
+   "end": "w100.end",
+   "params": {
+    "main": "وفي **اللعبة** نفسها"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w101",
+   "end": "w106.end",
+   "params": {
+    "main": "اختر ++نفس الرقم++",
+    "desc": "من إعدادات الرسوميات",
+    "desc_at": "w105"
+   }
+  },
+  {
+   "el": "E16",
+   "start": "w107",
+   "end": "w113.end",
+   "params": {
+    "title": "تابع **تيربو**",
+    "desc": "عشان ما يفوتك الحل الجاي",
+    "text": "تابع تيربو"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": "w48",
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": {
+    "find": "144Hz",
+    "nth": 2,
+    "shift": 0.05
+   },
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": "w22",
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": "w24",
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": "w26",
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": "w28",
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  }
+ ],
+ "auto_sfx": true
+}

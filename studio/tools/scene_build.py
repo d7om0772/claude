@@ -111,7 +111,7 @@ def main():
         p = e.get("params", {})
         for k in ("times", "key_times"):
             if k in p: p[k] = [round(resolve(x, f"{ctx}.params.{k}"), 3) for x in p[k]]
-        for k in ("drop_at", "price_at", "desc_at", "fix_at", "swap_at", "plug_at", "key_at", "at", "keys_ok_at", "until", "show_at", "pick_at"):
+        for k in ("drop_at", "price_at", "desc_at", "fix_at", "swap_at", "plug_at", "key_at", "at", "keys_ok_at", "until", "show_at", "pick_at", "star_at"):
             if k in p and not isinstance(p[k], (int, float)): p[k] = round(resolve(p[k], f"{ctx}.params.{k}"), 3)
         if "title" in p and isinstance(p["title"], dict):
             for k in ("price_at", "desc_at", "chip_fix_at", "keys_ok_at"):
@@ -127,9 +127,11 @@ def main():
         auto = AUTO.get(series, {})
         for e in evs:
             p = e.get("params", {})
+            if p.get("sfx") is False: continue          # إلغاء المؤثر التلقائي لهذا العنصر
             for ref, off, name in auto.get(e["el"], []):
                 # X01 بحالة مشكلة (شاشة سوداء/مطفية): مؤثر الخطأ بدل نغمة الحل
                 if e["el"] == "X01" and (p.get("state") == "problem" or p.get("mode") in ("no_signal", "off")): name = "gs_error5"
+                if isinstance(p.get("sfx"), str): name = p["sfx"]   # بديل للمؤثر التلقائي (مثل gs_swipe2 لتبديل شاشة محايد)
                 base = e["start"] if ref == "start" else p.get(ref, (e["start"] + 0.35) if ref == "drop_at" else None)
                 if base is None: continue
                 sfx.append({"t": round(base + off, 3), "name": name})
