@@ -1,7 +1,7 @@
 ---
 id: trial-analogy-02
 type: تجربة أسلوب (غير منشورة، وما دخلت التقويم)
-style: analogy-explainer ("الشرح بالتشبيه") — التصميم 2 "ورق فاتح". الدليل في ../analogy-01/style-system/
+style: analogy-explainer ("الشرح بالتشبيه") — التصميم 2 "ورق فاتح". الدليل: الإصدار 1 من ../style-system/ (في تاريخ git)
 source_script: content/scripts/2026-11-16-02-win-shift-s-snip.md (معتمد، جولة تدقيق 1)
 series_of_source: shortcuts
 length_s: 42.97

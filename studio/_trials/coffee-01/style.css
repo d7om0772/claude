@@ -1,0 +1,63 @@
+/* تجربة "محاصيل القهوة" — نفس نظام الأسلوب لكن بدون قصة التشبيه، وبألوان قهوة (مو هوية تيربو):
+   · عالم الهوية: ورق كريمي + كتابة بلون الإسبريسو، والأكسنت أحمر حبة البن.
+   · كرت الجسر: أحمر كامل (قلب التباين) = الوقفة الوحيدة في الفيديو.
+   · عالم الشرح: محمّص غامق بتوهّج ذهبي + بطاقات كريمية.
+   · عالم الأمثلة: ورق كرافت + خريطة "ورق مقصوص" تتنقل بين البلدان (viewBox، مو transform).
+   بدون ذوات أرواح: حبوب، أكياس، جبال، نباتات، خرائط فقط. */
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../../fonts/baloo-bhaijaan-2-arabic-wght-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../../fonts/baloo-bhaijaan-2-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root {
+  --cream: #F6EDE0; --cream2: #EADCC7; --ink: #2A1A12; --muted: #7A6555; --acc: #B83A2E; --acc-l: #F2D3CB;
+  --kraft: #D8BA92; --roast: #1C130E; --gold: #E2A15A; --ocean: #CFE3DF; --land: #F7EEDF;
+  --ar: "Baloo Bhaijaan 2", sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+body { font-family: var(--ar); direction: rtl; -webkit-font-smoothing: antialiased; color: var(--ink); }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--cream); }
+.world { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+.fill { position: absolute; inset: 0; }
+
+#brand { background: radial-gradient(circle, rgba(42,26,18,.06) 0 3px, transparent 3.5px) 0 0 / 46px 46px,
+                     radial-gradient(ellipse 85% 50% at 50% 50%, #FFF9F1, var(--cream) 55%, var(--cream2)); }
+#bridge { background: radial-gradient(ellipse 80% 55% at 50% 48%, #C9473A, var(--acc) 55%, #94291F); }
+#explain { background: var(--roast); }
+#explain .bloom { position: absolute; inset: 0; background: radial-gradient(circle at 50% 38%, rgba(226,161,90,.28), transparent 45%), radial-gradient(circle at 20% 85%, rgba(184,58,46,.22), transparent 40%); }
+#explain .dots { position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,255,255,.05) 2px, transparent 2.6px) 0 0 / 54px 54px; }
+#mapw { background: var(--kraft); }
+
+#diagram { position: absolute; inset: 0; transform-origin: 835px 1150px; }
+.tile { position: absolute; width: 200px; height: 250px; border-radius: 30px; background: var(--cream); transform-origin: 50% 50%;
+  box-shadow: 0 18px 36px rgba(0,0,0,.5); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; opacity: 0; }
+.tile .lbl { font-weight: 800; font-size: 38px; line-height: 1.05; color: var(--ink); }
+.slot { position: absolute; width: 200px; height: 250px; border-radius: 30px; border: 4px dashed rgba(226,161,90,.6); opacity: 0; transform-origin: 50% 50%; }
+.panel { position: absolute; left: 140px; top: 520px; width: 800px; height: 820px; border-radius: 40px; background: var(--cream); overflow: hidden; opacity: 0;
+  transform-origin: 50% 50%; box-shadow: 0 50px 90px rgba(0,0,0,.6); }
+
+#mapcard { position: absolute; left: 60px; top: 410px; width: 960px; height: 720px; border-radius: 44px; overflow: hidden; background: var(--ocean);
+  box-shadow: 0 30px 60px rgba(70,40,15,.35), inset 0 0 0 6px rgba(255,255,255,.55); }
+#excard { position: absolute; left: 120px; top: 1158px; width: 840px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+#exname { font-weight: 800; font-size: 96px; line-height: 1; color: var(--ink); transform-origin: 50% 70%; }
+#exchips { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 16px; max-width: 840px; }
+.chip { display: flex; align-items: center; gap: 12px; padding: 8px 30px 12px 24px; border-radius: 999px; background: #FFF9F1; font-weight: 800; font-size: 52px; line-height: 1.1; color: var(--ink);
+  box-shadow: 0 10px 22px rgba(70,40,15,.22); transform-origin: 50% 50%; white-space: nowrap; }
+.chip svg { flex: none; }
+
+#cap { position: absolute; left: 120px; width: 840px; top: 312px; height: 0; display: flex; align-items: center; justify-content: flex-start; }
+#cap .pill { display: flex; gap: .26em; align-items: center; white-space: nowrap; padding: .2em .62em .28em; border-radius: 999px; background: #FFF9F1;
+  font-weight: 800; line-height: 1.2; color: var(--ink); box-shadow: 0 14px 34px rgba(30,15,5,.28); }
+#cap .pill:empty { display: none; }
+.w { display: inline-block; transform-origin: 50% 80%; }
+.card-text { position: absolute; left: 120px; width: 840px; text-align: center; font-weight: 800; line-height: 1.2; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 50%; }
+.card-text .row { display: flex; gap: .26em; align-items: baseline; justify-content: center; white-space: nowrap; }
+.acc { color: var(--acc); }
+.mark { background: linear-gradient(transparent 62%, var(--acc-l) 62%, var(--acc-l) 92%, transparent 92%); padding: 0 .08em; }
+.rule { height: 10px; border-radius: 5px; background: var(--acc); transform-origin: 50% 50%; }
+#hero { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 1000px; }
+#grain { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; }
+#loopimg { position: absolute; inset: 0; width: 1080px; height: 1920px; opacity: 0; pointer-events: none; }

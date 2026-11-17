@@ -1,7 +1,7 @@
 ---
 id: trial-analogy-01
 type: تجربة أسلوب (غير منشور، وما دخل التقويم)
-style: analogy-explainer ("الشرح بالتشبيه") — الدليل في style-system/
+style: analogy-explainer ("الشرح بالتشبيه") — الدليل: الإصدار 1 من ../style-system/ (في تاريخ git؛ الحالي صار بدون تشبيه)
 source_script: content/scripts/2026-11-16-03-black-screen-wrong-port.md (معتمد، جولة تدقيق 1)
 series_of_source: troubleshooting
 length_s: 39.8
