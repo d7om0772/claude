@@ -1,0 +1,70 @@
+/* تجربة "طرق معالجة القهوة" — نظام الأسلوب الإصدار 2 بتصميم جديد: "طباعة ريزو" (Risograph).
+   · ورق كريمي + 4 أحبار فقط: أسود حبر، أحمر، تركوازي، أصفر.
+   · نقاط هافتون بدل التدرجات، وطبقة لون ثانية مزاحة شوي (misregistration) تحت الأشكال والنصوص.
+   · الكابشن شريط حبر أسود مائل بظل أحمر، والكلمات "تنختم" بدل ما تطلع بنعومة.
+   · العوالم: الهوية = ورق · الجسر = تركوازي كامل · الشرح = حبر أسود · الأمثلة = أرض صفراء (شمس) فيها مناشر التجفيف.
+   بدون ذوات أرواح: ثمار، حبوب، أوراق نبات، مناشر، شمس فقط. */
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../../fonts/baloo-bhaijaan-2-arabic-wght-normal.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: "Baloo Bhaijaan 2"; font-weight: 400 800; font-display: block;
+  src: url("../../fonts/baloo-bhaijaan-2-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root { --paper: #F2EBDD; --ink: #262220; --red: #F15060; --teal: #00838A; --yellow: #FFD23F; --ar: "Baloo Bhaijaan 2", sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+body { font-family: var(--ar); direction: rtl; -webkit-font-smoothing: antialiased; color: var(--ink); }
+#stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--paper); }
+.world { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+.fill { position: absolute; inset: 0; }
+
+/* هافتون: نقاط بحبر واحد */
+.ht-red { background: radial-gradient(circle, var(--red) 0 4.5px, transparent 5px) 0 0 / 16px 16px; }
+.ht-teal { background: radial-gradient(circle, var(--teal) 0 4px, transparent 4.5px) 0 0 / 15px 15px; }
+.ht-ink { background: radial-gradient(circle, rgba(38,34,32,.9) 0 3px, transparent 3.5px) 0 0 / 14px 14px; }
+.ht-paper { background: radial-gradient(circle, rgba(242,235,221,.16) 0 3px, transparent 3.5px) 0 0 / 15px 15px; }
+
+#brand { background: var(--paper); }
+#brand .sun { position: absolute; width: 760px; height: 760px; border-radius: 50%; right: -260px; top: -180px; opacity: .5;
+  -webkit-mask: radial-gradient(circle, #000 60%, transparent 61%); mask: radial-gradient(circle, #000 60%, transparent 61%); }
+#brand .reg { position: absolute; width: 56px; height: 56px; border: 4px solid var(--ink); border-radius: 50%; opacity: .55; }
+#brand .reg::before, #brand .reg::after { content: ""; position: absolute; background: var(--ink); }
+#brand .reg::before { left: 50%; top: -18px; bottom: -18px; width: 4px; margin-left: -2px; }
+#brand .reg::after { top: 50%; left: -18px; right: -18px; height: 4px; margin-top: -2px; }
+#bridge { background: var(--teal); }
+#explain { background: var(--ink); }
+#exw { background: var(--yellow); }
+#exw .sunx { position: absolute; left: 700px; top: 200px; width: 560px; height: 560px; border-radius: 50%; opacity: .55;
+  -webkit-mask: radial-gradient(circle, #000 59%, transparent 60%); mask: radial-gradient(circle, #000 59%, transparent 60%); }
+
+#diagram { position: absolute; inset: 0; transform-origin: 540px 820px; }
+.lab { position: absolute; display: flex; align-items: center; gap: 12px; padding: 8px 24px 12px 20px; background: var(--paper); border: 5px solid var(--paper);
+  font-weight: 800; font-size: 46px; line-height: 1.1; color: var(--ink); opacity: 0; transform-origin: 50% 50%; white-space: nowrap; }
+.lab i { display: block; width: 34px; height: 34px; border-radius: 50%; flex: none; }
+.panel { position: absolute; left: 140px; top: 520px; width: 800px; height: 760px; background: var(--paper); overflow: hidden; opacity: 0; transform-origin: 50% 50%;
+  box-shadow: 16px 16px 0 var(--red); }
+
+#excard { position: absolute; left: 120px; top: 1190px; width: 840px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+#exname { font-weight: 800; font-size: 92px; line-height: 1; color: var(--ink); text-shadow: 6px 6px 0 var(--red); transform-origin: 50% 70%; }
+#exchips { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 18px; max-width: 840px; }
+.chip { display: flex; align-items: center; gap: 10px; padding: 6px 24px 10px 18px; background: var(--paper); border: 5px solid var(--ink); font-weight: 800; font-size: 44px; line-height: 1.1;
+  color: var(--ink); box-shadow: 7px 7px 0 var(--ink); transform-origin: 50% 50%; white-space: nowrap; }
+.chip svg { flex: none; }
+
+/* الكابشن: شريط حبر أسود مائل بظل أحمر */
+#cap { position: absolute; left: 120px; width: 840px; top: 312px; height: 0; display: flex; align-items: center; justify-content: flex-start; }
+#cap .pill { display: flex; gap: .26em; align-items: center; white-space: nowrap; padding: .14em .5em .24em; background: var(--ink); color: var(--paper);
+  font-weight: 800; line-height: 1.2; box-shadow: 10px 10px 0 var(--red); transform-origin: 100% 50%; }
+#cap .pill:empty { display: none; }
+.w { display: inline-block; transform-origin: 50% 60%; }
+.card-text { position: absolute; left: 120px; width: 840px; text-align: center; font-weight: 800; line-height: 1.12; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 50%; }
+.card-text .row { display: flex; gap: .26em; align-items: baseline; justify-content: center; white-space: nowrap; }
+.sh-red { text-shadow: 7px 7px 0 var(--red); }
+.sh-teal { text-shadow: 7px 7px 0 var(--teal); }
+.c-red { color: var(--red); } .c-teal { color: var(--teal); }
+.c-red.sh-ink, .c-teal.sh-ink { text-shadow: 7px 7px 0 var(--ink); }
+.rule { height: 12px; background: var(--ink); transform-origin: 50% 50%; box-shadow: 6px 6px 0 var(--red); }
+#hero { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 1000px; }
+#grain { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; }
+#loopimg { position: absolute; inset: 0; width: 1080px; height: 1920px; opacity: 0; pointer-events: none; }
