@@ -75,9 +75,27 @@
       "troubleshooting"
     ],
     "paused": [
-      "tech-news",
       "comparisons"
-    ]
+    ],
+    "news": {
+      "series": "tech-news",
+      "max_per_day": 1,
+      "outside_daily_quota": true,
+      "task_time": "09:35",
+      "publish_window": [
+        "10:00",
+        "23:30"
+      ],
+      "min_gap_minutes": 90,
+      "duration_s": [
+        30,
+        45
+      ],
+      "min_score": 6,
+      "defer_max": 1,
+      "expire_hours": 72,
+      "note": "بطلب صاحب الحساب 2026-11-18: خبر PC واحد يومياً لو فيه خبر يستاهل (الأهم)، والثاني يتأجل لبكرة. ما يدخل ضمن عدد الفيديوهات اليومية ولا في تدوير التقويم. لازم يمر على المدقق."
+    }
   },
   "voice": {
     "primary": "elevenlabs",

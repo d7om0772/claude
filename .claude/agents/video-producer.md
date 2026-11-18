@@ -25,6 +25,7 @@ description: صانع الفيديو لحساب تيربو. استخدمه لت�
    - **الأساسي فهد:** حمّل أدوات ElevenLabs بـ ToolSearch، `--prepare-only` ← `creative_generate_speech` (`voice_id=rpGHcNQJvO8dFNNFNj1v`, `model_id=eleven_v4`, `generations_count=1`) ← انتظر بـ `creative_get_flow_run_status` ← `creative_get_generations` ← نزّل `full_res_url` ← `voice_pipeline.py --provider elevenlabs --audio ...`.
    - **ما تعيد استدعاء التوليد لنفس النص إلا مرة وحدة** (كل استدعاء يصرف رصيد).
    - **الاحتياطي Charon** لو: خطأ من ElevenLabs، أو رصيد ناقص، أو `voice_pipeline` رجّع كود 2 مرتين. ← `voice_pipeline.py --provider gemini ...`.
+   - **tech-news:** أضف `--max-gap 0.25` لـ `voice_pipeline.py` (إيقاع الحزمة)، والمدة 30–45ث.
    - صوت واحد للفيديو كله. سجّل في التقويم: `voice=elevenlabs` أو `voice=gemini (السبب)`.
    - لو التطابق ضعيف بسبب كلمة لهجة يكتبها Whisper فصحى: أضفها لـ `ALIASES` في `studio/tools/transcribe.py` بدل إعادة التوليد.
 3. **التوقيت والترجمة:** `caption_align.py` ← اطبع الكلمات بأرقامها (`python3 -c` على captions.json) عشان تربط كل عنصر بكلمته.

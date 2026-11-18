@@ -11,6 +11,7 @@
 - **اللغة:** لهجة سعودية بيضاء، والمصطلحات التقنية بالإنجليزي (GPU، RAM، FPS).
 - **الهدف:** **ثقة ومصداقية** عشان الرعايات. معلومة غلط وحدة تضر أكثر من فيديو ما نزل.
 - **الوتيرة (من 2026-11-17، بطلب صاحب الحساب):** فيديو واحد يومياً 3 أيام (6:00م) ← فيديوهين يومياً أسبوع (6:00م، 10:00م) ← 3 فيديوهات يومياً أسبوعين (1:00م، 6:00م، 10:00م) ← بعدها فيديو واحد يومياً (6:00م). المراحل في `config.json → phases`. الحساب: `python3 scripts/day_info.py`.
+- **الأخبار (`tech-news`، بطلب صاحب الحساب 2026-11-18):** خبر PC واحد يومياً **لو فيه خبر يستاهل** (مهمة `news` 9:35ص)، خارج العدد اليومي وخارج التقويم الدوري. الثاني يتأجل لبكرة (`content/news/queue.md`). لازم يمر على المدقق بقواعد الأخبار. التفاصيل: `brand/series.md` و`schedules/news.md`.
 
 ## قواعد ثابتة (كل الوكلاء، كل المهام)
 1. **لا معلومة بدون مرجع، ولا سعر بدون تاريخ.** ما لقيت مصدر موثوق؟ احذف المعلومة. لا تخمّن.
@@ -33,6 +34,7 @@
 | `content/scripts/YYYY-MM-DD-NN-slug.md` | السكربتات (التاريخ = يوم النشر) |
 | `content/production/<ID>/` | جدول المشاهد، scene.json، تقارير الصوت والفحص، credits.md |
 | `content/published.md` | سجل المنشورات |
+| `content/news/` | طابور الأخبار `queue.md` + ورقة حقائق لكل خبر مختار |
 | `reports/weekly-YYYY-WW.md` | تقارير المحلل الأسبوعية |
 | **متابعة تيربو** (https://claude.ai/artifact/PrWHxTrQfN1GKoUkZFFyKs) | صفحة الجوال لصاحب الحساب (نفس الأقسام بدون Schedulin المباشر) — `scripts/build_status_page.py` + `studio/dashboard/status_template.html` |
 | **لوحة تيربو** (https://claude.ai/artifact/8iyutVvJT3xEYyjPpkAyje) | للكمبيوتر (لوحة Data ما تفتح على iOS القديم): يوم النشر الجاي، مسار الإنتاج، التقويم، منشورات Schedulin (مباشرة)، المهام وسجل التشغيل. تتحدث في نهاية كل مهمة (`schedules/dashboard.md`)، وصفحتها في `studio/dashboard/index.html` |
@@ -42,7 +44,7 @@
 | `studio/` | قوالب المشاهد والأدوات — **ابدأ بـ `studio/README.md`** |
 | `.claude/agents/` | الوكلاء: scriptwriter · fact-checker · video-producer · publisher · analyst |
 | `schedules/` | تعليمات المهام الخمس + `README.md` (المواعيد ومعرّفات المهام) |
-| `scripts/` | bootstrap · install_packs · day_info · cal · git_save |
+| `scripts/` | bootstrap · install_packs · day_info · cal · git_save · news_slot (موعد الخبر) |
 | `design-refs/` | الملفات الأصلية (zip الحزم + الشعار) — لا تُعدَّل |
 | `CHANGELOG.md` | سجل كل تعديل على النظام (التاريخ + السبب) |
 
@@ -78,6 +80,7 @@ bash scripts/git_save.sh "رسالة"               # حفظ على main
 | `video-producer` | صوت ← توقيت ← مشهد ← رندر ← فحص ← رفع Cloudinary |
 | `publisher` | جدولة في Schedulin، تأكيد النشر، تنظيف Cloudinary |
 | `analyst` | تقرير أسبوعي + 3 توصيات |
+| `news-editor` | (الأخبار) يراجع أخبار الـ PC يومياً، يختار الأهم، يأجّل الثاني، ويكتب ورقة الحقائق |
 لو أداة Agent ما اشتغلت لأي سبب: نفّذ تعليمات ملف الوكيل بنفسك في نفس الجلسة.
 
 ---

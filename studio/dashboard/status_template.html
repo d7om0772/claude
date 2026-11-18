@@ -99,6 +99,7 @@ a { color: var(--brand); }
       <button type="button" data-s="budget-builds" aria-pressed="false">تجميعات</button>
       <button type="button" data-s="shortcuts" aria-pressed="false">اختصارات</button>
       <button type="button" data-s="troubleshooting" aria-pressed="false">المشاكل وحلولها</button>
+      <button type="button" data-s="tech-news" aria-pressed="false">أخبار</button>
     </div>
     <div class="list" id="cal"></div>
   </section>
@@ -126,7 +127,7 @@ a { color: var(--brand); }
   var D = JSON.parse(document.getElementById('data').textContent);
   var H = 3600000;
   var CLS = { 'فكرة': 'idea', 'سكربت': 'wip', 'معتمد': 'wip', 'فيديو جاهز': 'ready', 'مجدول': 'done', 'منشور': 'done', 'فشل': 'bad', 'مرفوض': 'bad', 'مستبدل': 'idea', 'ملغي': 'idea' };
-  var TASK_AR = { write: 'الكتابة', produce: 'الإنتاج', publish: 'النشر', rescue: 'الإنقاذ', analyze: 'التحليل', setup: 'الإعداد' };
+  var TASK_AR = { write: 'الكتابة', produce: 'الإنتاج', publish: 'النشر', rescue: 'الإنقاذ', analyze: 'التحليل', news: 'الأخبار', setup: 'الإعداد' };
   var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
   var MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 

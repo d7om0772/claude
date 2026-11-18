@@ -8,6 +8,7 @@
 | `produce` الإنتاج | يومياً 1:35ص | `CRON_TZ=Asia/Riyadh 35 1 * * *` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/produce.md` كاملاً. | [produce.md](produce.md) |
 | `publish` النشر | يومياً 7:05ص | `CRON_TZ=Asia/Riyadh 5 7 * * *` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/publish.md` كاملاً. | [publish.md](publish.md) |
 | `analyze` التحليل | السبت 7:35ص | `CRON_TZ=Asia/Riyadh 35 7 * * 6` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/analyze.md` كاملاً. | [analyze.md](analyze.md) |
+| `news` الأخبار | يومياً 9:35ص | `CRON_TZ=Asia/Riyadh 35 9 * * *` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/news.md` كاملاً. | [news.md](news.md) |
 | `rescue` الإنقاذ | يومياً 12:15ظ | `CRON_TZ=Asia/Riyadh 15 12 * * *` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/rescue.md` كاملاً. | [rescue.md](rescue.md) |
 
 **وين تشتغل:** كل المهام تنطلق في **جلسة المشغّل** الدائمة:
@@ -25,6 +26,7 @@
 | produce | `trig_018tWLxr5rzjK4wNotb9G1Vh` | ✅ 2026-11-15 | 2026-11-16 1:35ص |
 | publish | `trig_01F1cLs88FbqRCBxrEggjeAF` | ✅ 2026-11-15 | 2026-11-16 7:05ص |
 | analyze | `trig_01EAcBNY5JNUn9apaknx8Lsu` | ✅ 2026-11-15 | 2026-11-21 7:35ص (السبت) |
+| news | `trig_01GAyN7mHXdSXAFmQ6DrAKQL` | ✅ 2026-11-18 | 2026-11-19 9:35ص |
 | rescue | `trig_011fPGcosDnebZi1n77JMhRT` | ✅ 2026-11-15 | 2026-11-16 12:15ظ |
 
 البرومبت الفعلي لكل مهمة: `تشغيل مجدول (<المهمة>). اقرأ CLAUDE.md ثم نفّذ schedules/<المهمة>.md كاملاً. ابدأ من آخر main واعتبر ما سبق في هذه المحادثة سياق فقط — المرجع هو ملفات المستودع.`
