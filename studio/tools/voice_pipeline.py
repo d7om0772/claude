@@ -133,11 +133,15 @@ def split_chunks(text, limit=1100):
     if cur.strip(): chunks.append(cur.strip())
     return chunks
 
+MAX_GAP = 0.0   # --max-gap: أي سكتة داخلية أطول منها تنقص لها (حزمة الأخبار: 0.25ث)
+
 def trim_and_resample(src, dst, tempo=1.0, pitch=1.0):
     """pitch < 1 ينزّل طبقة الصوت بدون ما يغيّر المدة (asetrate ثم atempo يعوّض)."""
     af = ["silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.05",
           "areverse", "silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.05", "areverse",
           "apad=pad_dur=0.25"]
+    if MAX_GAP > 0:   # قص الفراغات الطويلة بين الجمل (يبقى منها MAX_GAP×0.9)
+        af.insert(0, f"silenceremove=stop_periods=-1:stop_duration={MAX_GAP:.2f}:stop_threshold=-42dB:stop_silence={MAX_GAP * 0.9:.2f}")
     if abs(pitch - 1.0) > 0.005:
         af[0:0] = ["aresample=48000", f"asetrate={48000 * pitch:.1f}", "aresample=48000", f"atempo={tempo / pitch:.4f}"]
     elif abs(tempo - 1.0) > 0.005:
@@ -187,9 +191,11 @@ def main():
     ap.add_argument("--audio", help="ملف الصوت المنزّل من ElevenLabs")
     ap.add_argument("--voice-text", required=True); ap.add_argument("--caption-text")
     ap.add_argument("--out", required=True); ap.add_argument("--no-tempo", action="store_true")
+    ap.add_argument("--max-gap", type=float, default=0.0, help="أطول سكتة مسموحة بين الجمل بالثواني (tech-news: 0.25). 0 = بدون قص")
     ap.add_argument("--prepare-only", action="store_true",
                     help="يكتب out/voice_<provider>.txt بعد استبدالات المزوّد ويطلع (استخدمه قبل ElevenLabs)")
     a = ap.parse_args()
+    global MAX_GAP; MAX_GAP = max(0.0, a.max_gap)
     os.makedirs(a.out, exist_ok=True)
     voice_text = open(a.voice_text, encoding="utf-8").read().strip()
     caption_text = open(a.caption_text, encoding="utf-8").read().strip() if a.caption_text else ""

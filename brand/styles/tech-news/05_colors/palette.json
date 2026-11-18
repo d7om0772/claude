@@ -1,0 +1,107 @@
+{
+  "style": "Quick Explainer · 3 Worlds + Top Captions",
+  "colors": [
+    {
+      "hex": "#EEF4FD",
+      "role_ar": "عالم الهوية: الهوك، والجواب، والـ CTA، والختام (تدرج من الأبيض لأزرق فاتح)",
+      "key": "identity",
+      "usage_pct": 26
+    },
+    {
+      "hex": "#E4C597",
+      "role_ar": "عالم الأمثلة: خامة خشب، أو أي خامة مختلفة بوضوح",
+      "key": "examples",
+      "usage_pct": 22
+    },
+    {
+      "hex": "#0E1830",
+      "role_ar": "عالم الشرح: كحلي غامق مع توهج",
+      "key": "explain",
+      "usage_pct": 12
+    },
+    {
+      "hex": "#1D4FA3",
+      "role_ar": "كرت الجسر: أزرق كامل",
+      "key": "bridge",
+      "usage_pct": 6
+    },
+    {
+      "hex": "#14284B",
+      "role_ar": "النص الأساسي والعناصر الداكنة",
+      "key": "text",
+      "usage_pct": 8
+    },
+    {
+      "hex": "#2F6BCF",
+      "role_ar": "أزرق الشعار: العنصر البطل، والدبابيس، وأيقونات الشارات",
+      "key": "brand",
+      "usage_pct": 10
+    },
+    {
+      "hex": "#F4F7FD",
+      "role_ar": "الكروت الفاتحة: الشارات، وعقد المخطط، ولوحة التكبير، وكبسولة الكابشن",
+      "key": "card",
+      "usage_pct": 8
+    },
+    {
+      "hex": "#5B6B82",
+      "role_ar": "النص الثانوي (السطور الصغيرة)",
+      "key": "muted",
+      "usage_pct": 3
+    },
+    {
+      "hex": "#EF8A00",
+      "role_ar": "الأكسنت الوحيد: الكلمة المفتاحية والأرقام المهمة (نسخته الفاتحة على الأزرق والغامق تحت)",
+      "key": "accent",
+      "usage_pct": 3
+    },
+    {
+      "hex": "#FFD28A",
+      "role_ar": "خطوط المخطط المضيئة في عالم الشرح",
+      "key": "glow",
+      "usage_pct": 2
+    }
+  ],
+  "gradients": [
+    {
+      "name_ar": "عالم الهوية",
+      "css": "radial-gradient(ellipse 80% 55% at 50% 45%, #ffffff 0%, #eef4fd 55%, #d9e6f9 100%)"
+    },
+    {
+      "name_ar": "كرت الجسر",
+      "css": "radial-gradient(ellipse 80% 55% at 50% 45%, #2f63c0 0%, #1d4fa3 60%, #173f86 100%)"
+    },
+    {
+      "name_ar": "عالم الشرح",
+      "css": "radial-gradient(ellipse 70% 50% at 50% 42%, #1a2a4c 0%, #0e1830 65%, #0a1124 100%)"
+    },
+    {
+      "name_ar": "عالم الأمثلة (خشب)",
+      "css": "repeating-linear-gradient(90deg, rgba(120,70,20,.07) 0 4px, transparent 4px 190px), linear-gradient(180deg, #f0dab5, #e4c597 70%, #dcb98a) · رف: linear-gradient(#b07a42, #8a5a2c)"
+    },
+    {
+      "name_ar": "التوهج",
+      "css": "radial-gradient(closest-side, rgba(255,176,32,.55), transparent) خلف العنصر · خطوط المخطط stroke #ffd28a + نسخة مغبّشة #ffb547 (blur 9)"
+    },
+    {
+      "name_ar": "الأكسنت على الأزرق والغامق",
+      "css": "#FFB020 · توهج النص: text-shadow 0 0 44px rgba(255,176,32,.75)"
+    },
+    {
+      "name_ar": "الحبيبات",
+      "css": "noise canvas بشفافية 0.07 (multiply على الفاتح، overlay على الغامق) وتتحرك كل فريم"
+    }
+  ],
+  "fonts": [
+    {
+      "family": "Baloo Bhaijaan 2",
+      "use_ar": "العناوين والكلمات الكبيرة والترجمة (يشبه خط شعار تيربو): وزن 700 إلى 800",
+      "url": "https://fonts.google.com/specimen/Baloo+Bhaijaan+2"
+    },
+    {
+      "family": "Inter",
+      "use_ar": "أسماء المنتجات والأرقام المهمة (معزولة LTR)",
+      "url": "https://fonts.google.com/specimen/Inter"
+    }
+  ]
+}

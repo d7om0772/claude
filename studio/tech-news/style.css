@@ -1,0 +1,99 @@
+/* tech-news — حزمة 16_quick_explainer: 3 عوالم (هوية فاتحة · أمثلة خشب · شرح غامق) + جسر أزرق + كابشن علوي.
+   الألوان من 05_colors/palette.json · المقاسات من 04_design_style/design_style.md */
+:root { --identity: #EEF4FD; --examples: #E4C597; --explain: #0E1830; --bridge: #1D4FA3; --ink: #14284B; --brand: #2F6BCF;
+  --card: #F4F7FD; --muted: #5B6B82; --acc: #EF8A00; --acc-light: #FFB020; --glow: #FFD28A; }
+#stage.tn { background: var(--identity); }
+.tn .world { position: absolute; inset: 0; display: none; }
+.tn .world.identity { background: radial-gradient(ellipse 80% 55% at 50% 45%, #ffffff 0%, #eef4fd 55%, #d9e6f9 100%); }
+.tn .world.bridge { background: radial-gradient(ellipse 80% 55% at 50% 45%, #2f63c0 0%, #1d4fa3 60%, #173f86 100%); }
+.tn .world.explain { background: radial-gradient(ellipse 70% 50% at 50% 42%, #1a2a4c 0%, #0e1830 65%, #0a1124 100%); }
+.tn .world.examples { background: repeating-linear-gradient(90deg, rgba(120,70,20,.07) 0 4px, transparent 4px 190px), linear-gradient(180deg, #f0dab5, #e4c597 70%, #dcb98a); }
+.tn .shot { position: absolute; inset: 0; display: none; transform-origin: 540px 760px; }
+.tn .abs { position: absolute; }
+.tn .ltr, .tn bdi.ltr { font-family: var(--en); }
+.tn .acc { color: var(--acc); }
+.tn .on-dark .acc, .tn .bridge-card .acc { color: var(--acc-light); text-shadow: 0 0 44px rgba(255,176,32,.75); }
+
+/* ---------- الكروت النصية ---------- */
+.tn .tcard { position: absolute; left: 150px; width: 780px; text-align: center; line-height: 1.12; }
+.tn .tcard .l1 { font-weight: 800; font-size: 104px; color: var(--ink); }
+.tn .tcard .big { font-weight: 800; font-size: 200px; line-height: 1; color: var(--acc); font-family: var(--ar); }
+.tn .tcard .big .ltr { font-weight: 800; letter-spacing: -2px; }
+.tn .tcard .small { font-weight: 700; font-size: 52px; color: var(--muted); }
+.tn .wd { display: inline-block; transform-origin: 50% 70%; }
+.tn .uline { height: 9px; border-radius: 5px; background: var(--acc); margin: 6px auto 0; width: 0; }
+.tn .bridge-card .l1 { color: #fff; }
+.tn .bridge-card .big { color: var(--acc-light); }
+
+/* ---------- العنصر البطل ---------- */
+.tn .hero { position: absolute; left: 130px; width: 820px; display: flex; align-items: center; justify-content: center; }
+.tn .hero svg { width: 100%; height: 100%; overflow: visible; }
+.tn .hero-glow { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,176,32,.55), transparent); }
+.tn .stamp { position: absolute; left: 50%; border: 8px solid var(--acc); border-radius: 22px; padding: 0 30px; background: rgba(255,255,255,.92);
+  color: var(--acc); font-weight: 800; font-size: 86px; line-height: 1.25; white-space: nowrap; }
+.tn .subline { position: absolute; left: 50%; max-width: 780px; white-space: nowrap; text-align: center; font-weight: 800; font-size: 54px; color: var(--ink); }
+.tn .tagchip { position: absolute; background: var(--brand); color: #fff; border-radius: 22px; padding: 4px 18px; font: 800 40px var(--en); }
+
+/* ---------- عالم الأمثلة (الرف) ---------- */
+.tn .shelfworld { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 0 0; }
+.tn .plank { position: absolute; height: 64px; background: linear-gradient(#c38a4f, #b07a42 30%, #8a5a2c); box-shadow: 0 18px 30px rgba(90,55,20,.25); }
+.tn .plank-top { position: absolute; height: 16px; background: #d6a46b; }
+.tn .pbox { position: absolute; width: 400px; height: 340px; }
+.tn .pbox .front { position: absolute; inset: 0; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  box-shadow: 0 22px 34px rgba(80,50,20,.22); }
+.tn .pbox .top { position: absolute; left: 10px; right: -26px; top: -40px; height: 40px; transform: skewX(-34deg); transform-origin: 0 100%; border-radius: 8px 8px 0 0; }
+.tn .pbox .side { position: absolute; top: -20px; right: -40px; width: 40px; height: 340px; transform: skewY(-34deg); transform-origin: 0 0; border-radius: 0 8px 8px 0; }
+.tn .pbox .front svg { width: 190px; height: 150px; }
+.tn .pbox .plabel { font: 800 54px var(--en); direction: ltr; }
+.tn .pbox.dark .front { background: linear-gradient(#3C7BDF, #2F6BCF 40%, #2a60bb); color: #fff; }
+.tn .pbox.dark .top { background: #4a87e6; } .tn .pbox.dark .side { background: #1F4E9E; }
+.tn .pbox.light .front { background: #F8FAFD; color: var(--ink); border-top: 22px solid var(--brand); }
+.tn .pbox.light .top { background: #ffffff; } .tn .pbox.light .side { background: #cfd9ea; }
+.tn .pbox.unknown .front { background: rgba(255,255,255,.12); border: 7px dashed rgba(20,40,75,.55); box-shadow: none; color: rgba(20,40,75,.55); }
+.tn .pbox.unknown .front .q { font: 800 170px var(--ar); line-height: .9; }
+.tn .pbox.unknown .top, .tn .pbox.unknown .side { display: none; }
+.tn .plate { position: absolute; left: 50%; top: 452px; background: #fff; border-radius: 14px; padding: 6px 26px; font: 800 44px var(--en); color: var(--ink);
+  box-shadow: 0 8px 20px rgba(80,50,20,.18); white-space: nowrap; direction: ltr; }
+.tn .exname { position: absolute; left: 50%; max-width: 780px; white-space: nowrap; top: 960px; text-align: center; font-weight: 800; font-size: 96px; line-height: 1.1; color: var(--ink); }
+.tn .badges { position: absolute; left: 150px; width: 780px; top: 1100px; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.tn .badge { display: inline-flex; align-items: center; gap: 12px; background: #fff; border-radius: 40px; padding: 8px 26px 8px 22px; font-weight: 800; font-size: 46px;
+  color: var(--ink); box-shadow: 0 6px 16px rgba(20,40,75,.14); white-space: nowrap; }
+.tn .badge svg { width: 44px; height: 44px; flex: none; }
+.tn .pin { position: absolute; width: 74px; height: 96px; }
+.tn .paper { position: absolute; width: 104px; height: 132px; background: #fff; border-radius: 8px; box-shadow: 0 8px 18px rgba(80,50,20,.22);
+  display: flex; align-items: center; justify-content: center; font: 800 70px var(--ar); color: var(--brand); }
+.tn .cal { position: absolute; width: 180px; height: 180px; background: #fff; border-radius: 18px; box-shadow: 0 10px 22px rgba(80,50,20,.25); overflow: hidden; perspective: 600px; }
+.tn .cal .bar { height: 44px; background: var(--brand); }
+.tn .cal .yr { position: absolute; left: 0; right: 0; top: 44px; bottom: 0; display: flex; align-items: center; justify-content: center; font: 800 50px var(--en);
+  color: var(--ink); transform-origin: 50% 0; backface-visibility: hidden; }
+
+/* ---------- عالم الشرح (المخطط) ---------- */
+.tn .hub { position: absolute; inset: 0; transform-origin: 540px 760px; }
+.tn .node { position: absolute; background: var(--card); border-radius: 26px; text-align: center; box-shadow: 0 0 40px rgba(255,210,138,.25), 0 14px 30px rgba(0,0,0,.35); }
+.tn .node .nt { font-weight: 800; font-size: 66px; color: var(--ink); line-height: 1.15; }
+.tn .node .ns { font-weight: 700; font-size: 32px; color: var(--muted); }
+.tn .fslot { position: absolute; border: 5px dashed rgba(255,210,138,.75); border-radius: 22px; }
+.tn .fcard { position: absolute; background: var(--card); border-radius: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  font-weight: 800; font-size: 40px; color: var(--ink); text-align: center; line-height: 1.15; padding: 10px; box-shadow: 0 12px 26px rgba(0,0,0,.35); }
+.tn .fcard svg { width: 76px; height: 76px; }
+.tn svg.links { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+.tn .panel { position: absolute; left: 90px; width: 900px; top: 560px; height: 520px; background: var(--card); border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
+.tn .panel .pi { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 12px; font-weight: 800; font-size: 42px; color: var(--ink); }
+.tn .panel .pi svg { width: 170px; height: 170px; }
+.tn .chipmini { position: absolute; width: 70px; height: 70px; }
+.tn .bars { position: absolute; left: 80px; right: 80px; bottom: 90px; top: 70px; display: flex; align-items: flex-end; justify-content: space-around; }
+.tn .bars .b { width: 150px; border-radius: 16px 16px 6px 6px; background: var(--brand); position: relative; }
+.tn .bars .b .bl { position: absolute; bottom: -62px; left: -40px; right: -40px; text-align: center; font-weight: 800; font-size: 38px; color: var(--ink); white-space: nowrap; }
+.tn .bars .b .bv { position: absolute; top: -66px; left: -40px; right: -40px; text-align: center; font: 800 46px var(--en); color: var(--acc); }
+
+/* ---------- الختام والـ CTA ---------- */
+.tn .logo { position: absolute; left: 50%; height: 120px; }
+
+/* ---------- كبسولة الكابشن العلوية (E16) ---------- */
+.tn .tcap { position: absolute; top: 312px; right: 120px; max-width: 842px; transform: translateY(-50%); background: var(--card); border-radius: 999px;
+  padding: 4px 36px 8px; box-shadow: 0 10px 26px rgba(20,40,75,.18); font-weight: 800; color: var(--ink); white-space: nowrap; line-height: 1.25; display: none; }
+.tn .tcap .cw { display: inline-block; }
+.tn .tcap .cw + .cw { margin-right: .26em; }
+.tn .tcap .acc { color: var(--acc); }
+
+.tn .grain { position: absolute; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: multiply; }

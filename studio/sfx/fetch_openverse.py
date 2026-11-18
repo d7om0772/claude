@@ -31,6 +31,11 @@ WANTED = {
     "Select Option 11": ("select_option11", "نقرات الماوس، زر التشغيل"),
     "Watch tick": ("watch_tick", "الساعة"),
     "Error 5": ("error5", "المشكلة (أحمر)"),
+    # حزمة الأخبار 16_quick_explainer
+    "Punch Gut": ("punch_gut", "thud على كرت الجسر وكلمة الـ CTA (tech-news)"),
+    "Dropping item": ("dropping_item", "نزول الدبابيس (tech-news)"),
+    "Bump 1": ("bump1", "الختم على الكلمة الأهم (tech-news)"),
+    "Reflect 2": ("reflect2", "shimmer مع التوهج (tech-news)"),
 }
 
 def get(url):

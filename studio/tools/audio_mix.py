@@ -20,7 +20,8 @@ SFX_BELOW_DB = 12.0   # هدفنا 12 (الحد الأدنى المطلوب 10؛
 # لو مؤثر الحزمة (Openverse) ما انتزّل: بديل مولّد بالكود بنفس الدور
 FALLBACK = {"gs_swipe2": "swoosh_up", "gs_swipe_grass2": "whoosh", "gs_swipe_grass5": "whoosh", "gs_lock": "snap", "gs_drop_item2": "thud",
             "gs_coins3": "tick", "gs_charging2": "rise", "gs_item_pickup4": "pop", "gs_selection12_fwd": "ding", "gs_selection9_fwd": "ding",
-            "gs_notification2": "ding", "gs_soft_keyboard": "click", "gs_select_option11": "click", "gs_watch_tick": "tick", "gs_error5": "error"}
+            "gs_notification2": "ding", "gs_soft_keyboard": "click", "gs_select_option11": "click", "gs_watch_tick": "tick", "gs_error5": "error",
+            "gs_punch_gut": "thud", "gs_dropping_item": "thud", "gs_bump1": "snap", "gs_reflect2": "rise"}
 DUCK_DB = 4.0   # الحزم: المؤثرات تنخفض 35–40% تحت الكلام (≈ −4dB)
 
 def load(path):

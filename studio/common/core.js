@@ -175,7 +175,7 @@ function visible(e) {
   }
   return e.textContent.trim().length > 0;
 }
-function qa(t) {
+export function qa(t) {
   const out = [];
   for (const e of [...document.querySelectorAll("[data-safe]")].filter(visible)) {
     const r = e.getBoundingClientRect(); const name = e.dataset.solo || e.className;

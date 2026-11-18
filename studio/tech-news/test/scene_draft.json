@@ -1,0 +1,7 @@
+{ "id": "selftest", "series": "tech-news", "style": "16_quick_explainer", "hero": "gpu", "keywords": ["NVIDIA"],
+  "events": [
+    { "el": "E01", "start": 0, "params": { "text": "لأول مرة من", "big": "**1999**" } },
+    { "el": "E02", "start": {"find": "NVIDIA", "shift": -0.05}, "params": { "hero": "gpu", "stamp": "ولا كرت ألعاب", "stamp_at": {"find": "ولا"}, "sub": "جديد هالسنة", "sub_at": {"find": "جديد"}, "tag": "2026" } },
+    { "el": "E03", "start": {"find": "هالسنة", "edge": "end"} }
+  ],
+  "auto_sfx": true }

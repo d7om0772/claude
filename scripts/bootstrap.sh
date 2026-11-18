@@ -80,11 +80,11 @@ fi
 
 # ---------- 7ب) مؤثرات الحزم (Openverse/Wikimedia): محاولة قصيرة لتنزيل الناقص (Wikimedia يحد الطلبات) ----------
 GS=$(ls studio/sfx/gs_*.wav 2>/dev/null | wc -l)
-if [ "$GS" -lt 15 ] && [ "${SKIP_SFX_FETCH:-0}" != 1 ]; then
+if [ "$GS" -lt 19 ] && [ "${SKIP_SFX_FETCH:-0}" != 1 ]; then
   SFX_MAX_WAIT=20 SFX_GAP=3 timeout 150 python3 -u -I studio/sfx/fetch_openverse.py >/tmp/sfx_fetch.log 2>&1
   GS2=$(ls studio/sfx/gs_*.wav 2>/dev/null | wc -l)
-  [ "$GS2" -ge 15 ] && ok "pack SFX complete" || warn "pack SFX $GS2/15 (الباقي يستخدم بديل مولّد بالكود؛ لا تنسَ تحفظ الجديد بـ git_save)"
-else ok "pack SFX $GS/15"; fi
+  [ "$GS2" -ge 19 ] && ok "pack SFX complete" || warn "pack SFX $GS2/19 (الباقي يستخدم بديل مولّد بالكود؛ لا تنسَ تحفظ الجديد بـ git_save)"
+else ok "pack SFX $GS/19"; fi
 
 # ---------- 8) المفاتيح والموصلات (تحقق فقط، ما نطبع القيم) ----------
 for k in GEMINI_API_KEY PEXELS_API_KEY; do

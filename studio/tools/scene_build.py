@@ -19,6 +19,10 @@ KNOWN = {  # عناصر كل حزمة (02_elements) + X01/X02 إضافات بن�
     "budget-builds": {f"E{i:02d}" for i in range(1, 16)} | {"T"},
     "shortcuts": {f"E{i:02d}" for i in range(1, 18)} | {"X01", "T"},
     "troubleshooting": {f"E{i:02d}" for i in range(1, 18)} | {"X01", "T"},
+    "tech-news": {f"E{i:02d}" for i in range(1, 17)} | {"X01"},
+}
+SERIES_DEFAULTS = {  # مدة الختام بعد آخر كلمة، ومدة ذوبان الحلقة (حسب الحزمة)
+    "tech-news": {"closing": 1.25, "loop": 0.85},   # الختام (E14) منطوق؛ بعده وقفة + ذوبان 0.85ث (E15)
 }
 # المؤثرات الافتراضية حسب جدول "المؤثرات" في 04_design_style/design_style.md لكل حزمة.
 # كل عنصر → [(المرجع، الإزاحة، الاسم، مدة القص اختيارية)]. المرجع: "start" أو اسم حقل وقت في params (drop_at, fix_at...).
@@ -51,6 +55,51 @@ AUTO = {
     },
 }
 KEY_TIME_FIELDS = ("key_times",)   # كل وقت ضغطة زر = نقرة كيبورد قصيرة
+
+def tn_auto_sfx(evs, words=()):
+    """مؤثرات حزمة 16_quick_explainer (جدول المؤثرات في 04_design_style): whoosh قبل كل قص بـ 0.15ث، tick مع الوميض،
+    thud على الجسر وكلمة الـ CTA، pop للشارات والعوامل، drop للدبوس، bump للختم، shimmer للتوهج، rise للخطوط."""
+    out = []; add = lambda t, n, **k: out.append({"t": round(t, 3), "name": n, **k}) if t is not None else None
+    first = True
+    for e in evs:
+        p = e.get("params", {}); el = e["el"]; st = e["start"]
+        if p.get("sfx") is False: continue
+        cut = not first and el not in ("E03",)
+        first = False if el != "E03" else first
+        if el == "E01": continue
+        if el == "E03": add(st, "gs_select_option11"); continue
+        if el == "E04": add(st, "gs_punch_gut"); continue
+        if el in ("E05", "E09", "E10", "E11", "E13") and cut: add(st - 0.15, "gs_swipe2")
+        if el == "E02":
+            add(st - 0.15, "gs_swipe2"); sa = p.get("stamp_at", st + 0.9); add(sa, "gs_bump1"); add(sa + 0.08, "gs_reflect2")
+        elif el == "E05":
+            for i, sl in enumerate(p.get("slots", [])): add(sl.get("at", st + 0.25 + 0.3 * i), "gs_item_pickup4")
+        elif el in ("E06", "E07"):
+            ent = p.get("enter", "pan"); dur = {"whip": 0.42, "pan": 0.55, "cut": 0.0}.get(ent, 0.6)
+            add(st - 0.15, "gs_swipe_grass2" if ent == "pan" else "gs_swipe2")
+            if el == "E06":
+                add(st + dur - 0.02, "gs_dropping_item")
+                for b in p.get("badges", []): add(b.get("at"), "gs_item_pickup4")
+        if el in ("E06", "E08"):
+            dt = p if el == "E08" else (p.get("details") or {})
+            if dt: add(dt.get("papers_at"), "gs_swipe_grass5"); [add(x, "gs_selection9_fwd") for x in dt.get("cal_times", [])[1:]]
+        if el == "E09":
+            for f in p.get("factors", []): add((f.get("at") or 0) - 0.25, "gs_charging2"); add(f.get("at"), "gs_item_pickup4")
+        if el == "E10": add(st + 0.15, "gs_item_pickup4"); add(st + 0.55, "gs_charging2")
+        if el in ("E11", "X01"):
+            if el == "X01" and cut: add(st - 0.15, "gs_swipe2")
+            add(st + 0.05, "gs_reflect2"); add(st + 0.35, "gs_watch_tick")
+            for b in p.get("badges", []) or ([{"at": p.get("badge_at")}] if p.get("badge") else []): add(b.get("at"), "gs_item_pickup4")
+        if el == "E12":
+            add(st - 0.15, "gs_swipe_grass2"); add(p.get("flip_at"), "gs_swipe_grass5")
+            for b in p.get("badges", []): add(b.get("at"), "gs_item_pickup4")
+        if el == "E13":
+            wl = p.get("words") or ([p["word"]] if p.get("word") else [])
+            if not p.get("word_times") and wl:   # وقت كل كلمة CTA من الترجمة (نفس منطق القالب)
+                p["word_times"] = [next((w["start"] for w in words if w["start"] >= st and x in w["w"]), st + 0.5 + 0.5 * i) for i, x in enumerate(wl)]
+            for wt in p.get("word_times", []) or [st + 0.5]: add(wt, "gs_punch_gut")
+        if el == "E14": add(st - 0.05, "gs_swipe2"); add(st + 0.1, "gs_item_pickup4"); add(st + 0.35, "gs_reflect2")
+    return [o for o in out if o["t"] >= 0]
 
 def main():
     ap = argparse.ArgumentParser()
@@ -85,12 +134,15 @@ def main():
 
     voice_end = max([w["end"] for w in words] + [float(vr.get("duration", 0)) - 0.25])
     voice_off = float(d.get("voice_offset", 0.0))
+    sd = SERIES_DEFAULTS.get(series, {})
+    if a.closing == 2.6 and "closing" in sd: a.closing = sd["closing"]
+    if a.loop == 1.0 and "loop" in sd: a.loop = sd["loop"]
     closing = round(voice_off + voice_end + a.tail, 3)
     duration = round(closing + a.closing, 3)
     scene = {k: v for k, v in d.items() if k not in ("events", "sfx", "auto_sfx")}
     scene.update({"duration": duration, "fps": 30, "closing": {"start": closing}, "captions": {"lines": caps["lines"]}})
     loop = float(d.get("loop", {}).get("dur", a.loop)) if isinstance(d.get("loop"), dict) else a.loop
-    loop = max(0.0, min(loop, a.closing - 0.6))
+    loop = max(0.0, min(loop, max(0.85, a.closing - 0.35)))
     if loop > 0:
         scene["loop"] = {"start": round(duration - loop, 3), "dur": round(loop, 3)}
     else:
@@ -103,12 +155,33 @@ def main():
                 if k in h["title"] and not isinstance(h["title"][k], (int, float)): h["title"][k] = round(resolve(h["title"][k], f"hook.title.{k}"), 3)
         scene["hook"] = h
     evs = []
-    for i, e in enumerate(d.get("events", [])):
-        e = dict(e); ctx = f"event#{i}({e.get('el')})"
+    raw = [dict(e) for e in d.get("events", [])]
+    for i, e in enumerate(raw):
+        e["start"] = round(resolve(e["start"], f"event#{i}({e.get('el')}).start") + float(e.pop("shift", 0)), 3)
+    order = sorted(range(len(raw)), key=lambda k: raw[k]["start"])
+    for pos, k in enumerate(order):   # end اختياري: لين بداية اللقطة الجاية (E03 = وميض 0.2ث)
+        e = raw[k]
+        if "end" not in e:
+            if e.get("el") == "E03": e["end"] = e["start"] + 0.2
+            else:
+                nxt = next((raw[j]["start"] for j in order[pos + 1:] if raw[j].get("el") != "E03" and raw[j]["start"] > e["start"]), None)
+                e["end"] = (nxt - 0.01) if nxt is not None else closing - 0.05
+    def walk(o, ctx):   # أي مفتاح at / *_at = وقت، و times / *_times = قائمة أوقات (داخل params وأي مستوى تحته)
+        if isinstance(o, dict):
+            for kk, v in list(o.items()):
+                if (kk == "at" or kk.endswith("_at")) and not isinstance(v, (int, float, bool)) and v is not None:
+                    o[kk] = round(resolve(v, f"{ctx}.{kk}"), 3)
+                elif (kk == "times" or kk.endswith("_times")) and isinstance(v, list):
+                    o[kk] = [round(resolve(x, f"{ctx}.{kk}"), 3) for x in v]
+                else: walk(v, f"{ctx}.{kk}")
+        elif isinstance(o, list):
+            for n, v in enumerate(o): walk(v, f"{ctx}[{n}]")
+    for i, e in enumerate(raw):
+        ctx = f"event#{i}({e.get('el')})"
         if e.get("el") not in KNOWN.get(series, set()): errors.append(f"{ctx}: unknown element for {series}")
-        e["start"] = round(resolve(e["start"], ctx + ".start") + float(e.pop("shift", 0)), 3)
         e["end"] = round(resolve(e["end"], ctx + ".end"), 3)
         p = e.get("params", {})
+        if series == "tech-news": walk(p, ctx + ".params")
         for k in ("times", "key_times"):
             if k in p: p[k] = [round(resolve(x, f"{ctx}.params.{k}"), 3) for x in p[k]]
         for k in ("drop_at", "price_at", "desc_at", "fix_at", "swap_at", "plug_at", "key_at", "at", "keys_ok_at", "until", "show_at", "pick_at", "star_at"):
@@ -123,7 +196,9 @@ def main():
     scene["events"] = evs
     sfx = []
     evs.sort(key=lambda e: e["start"])
-    if d.get("auto_sfx", True):
+    if d.get("auto_sfx", True) and series == "tech-news":
+        sfx += tn_auto_sfx(evs, words)
+    elif d.get("auto_sfx", True):
         auto = AUTO.get(series, {})
         for e in evs:
             p = e.get("params", {})
