@@ -1,0 +1,28 @@
+{
+ "series": "metaphor",
+ "data": "/home/user/claude/work/EX-ping/scene.json",
+ "out": "/home/user/claude/work/EX-ping/video.mp4",
+ "frames": 1375,
+ "fps": 30,
+ "from": 0,
+ "to": 45.84,
+ "workers": 3,
+ "ms_per_frame": 308,
+ "seconds": 2,
+ "meta": {
+  "series": "metaphor",
+  "duration": 45.84,
+  "images": {
+   "logo": true,
+   "cardA": true,
+   "cardA_fix": true,
+   "hero": true,
+   "cardB_fix": true,
+   "canvas": true,
+   "cardB": true
+  },
+  "logoFull": true
+ },
+ "violations": [],
+ "console_errors": []
+}

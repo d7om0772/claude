@@ -1,0 +1,75 @@
+/* metaphor — قالب «الاستعارة الشارحة» (مثال): 3 عوالم (هوية غامقة · قصة مرسومة · فكرة فحمية) + بطاقة بيضاء + لحظة أبيض وأسود.
+   لون تمييز واحد (برتقالي تيربو للأخبار) = المفهوم المهم. كابشن علوي كلمة كلمة. بدون ذوات أرواح. */
+:root { --acc: #FFB020; --acc2: #EF8A00; --glow: rgba(255,176,32,.75); --navy0: #060d22; --navy1: #0f2152; --navy2: #1d3a7a;
+  --char0: #0b0d12; --char1: #171b24; --wifi: #6B9FE9; --bad: #E5384A; --good: #1FAE5B; }
+#stage.mx { background: var(--navy0); }
+.mx .world { position: absolute; inset: 0; display: none; overflow: hidden; }
+.mx .world.identity { background: radial-gradient(ellipse 85% 58% at 50% 50%, var(--navy2) 0%, var(--navy1) 48%, var(--navy0) 100%); }
+.mx .world.white { background: #fff; }
+.mx .world.story { background: #c9c3a6; }
+.mx .world.idea { background: radial-gradient(ellipse 80% 55% at 50% 46%, var(--char1) 0%, #10131a 55%, var(--char0) 100%); }
+.mx .abs { position: absolute; }
+.mx .ltr, .mx bdi.ltr { font-family: var(--en); font-weight: 800; }
+.mx .acc { color: var(--acc); text-shadow: 0 0 36px var(--glow), 0 0 10px rgba(255,176,32,.45); }
+.mx .wd { display: inline-block; will-change: opacity, filter, transform; }
+
+/* ---------- نصوص ---------- */
+.mx .l2 { position: absolute; left: 120px; width: 840px; text-align: center; font-weight: 800; font-size: 100px; line-height: 1.15; color: #fff; }
+.mx .l2.dark { color: #0d0f14; font-size: 108px; }
+.mx .l1 { position: absolute; left: 120px; width: 840px; text-align: center; font-weight: 800; font-size: 230px; line-height: 1; color: #fff; }
+.mx .l1.outline { text-shadow: 0 0 0 #000, 7px 0 0 #000, -7px 0 0 #000, 0 7px 0 #000, 0 -7px 0 #000, 5px 5px 0 #000, -5px 5px 0 #000, 5px -5px 0 #000, -5px -5px 0 #000, 0 14px 30px rgba(0,0,0,.6); }
+.mx .l4 { position: absolute; left: 120px; width: 840px; text-align: center; font-weight: 800; font-size: 80px; line-height: 1.2; color: #fff; }
+.mx .uline { position: absolute; height: 9px; border-radius: 5px; background: var(--acc); box-shadow: 0 0 22px var(--glow); }
+.mx .tcap { position: absolute; left: 90px; width: 900px; top: 222px; text-align: center; font-weight: 800; font-size: 68px; line-height: 1.22; color: #fff;
+  text-shadow: 0 3px 2px rgba(0,0,0,.35), 0 4px 22px rgba(0,0,0,.55); z-index: 50; }
+.mx .topshade { position: absolute; left: 0; top: 0; width: 1080px; height: 640px; background: linear-gradient(rgba(6,13,34,.82) 0%, rgba(6,13,34,.62) 45%, rgba(6,13,34,0) 100%); z-index: 40; pointer-events: none; }
+
+/* ---------- البطل ---------- */
+.mx .hero { position: absolute; left: 90px; top: 640px; width: 900px; height: 1350px; transform-origin: 450px 600px; }
+.mx .hero img { width: 100%; height: 100%; display: block; }
+.mx .bglow { position: absolute; width: 760px; height: 760px; border-radius: 50%; margin: -380px 0 0 -380px;
+  background: radial-gradient(closest-side, rgba(255,190,80,.85), rgba(255,140,20,.35) 45%, rgba(255,120,0,0) 100%); mix-blend-mode: screen; }
+
+/* ---------- عالم القصة ---------- */
+.mx .cam { position: absolute; left: 0; top: 0; width: 3840px; height: 2160px; transform-origin: 0 0; will-change: transform, filter; }
+.mx .cam > img.canvas { position: absolute; left: 0; top: 0; width: 3840px; height: 2160px; }
+.mx .card { position: absolute; width: 760px; height: 1013px; box-shadow: 0 30px 60px rgba(10,20,40,.45), 0 6px 14px rgba(10,20,40,.3); transform-origin: 50% 50%; }
+.mx .card img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mx .stamp { position: absolute; width: 230px; height: 230px; margin: -115px 0 0 -115px; }
+.mx .gball { position: absolute; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #fff3d6 0%, #ffb64a 22%, #f07f00 62%, #b65200 100%); box-shadow: 0 0 40px 12px rgba(255,160,40,.55); }
+.mx .spark { position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #fff2c9; box-shadow: 0 0 18px 6px rgba(255,190,80,.8); }
+.mx .dip { position: absolute; inset: 0; background: #000; z-index: 60; pointer-events: none; }
+
+/* ---------- عالم الفكرة: المخطط ---------- */
+.mx .diag { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 540px 1000px; }
+.mx .diag svg.lines { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: visible; }
+.mx .chip { position: absolute; width: 360px; height: 140px; margin: -70px 0 0 -180px; border-radius: 30px; background: #12151c;
+  border: 4px solid var(--acc); box-shadow: 0 0 40px rgba(255,176,32,.45), inset 0 0 18px rgba(255,176,32,.15);
+  display: flex; align-items: center; justify-content: center; gap: 18px; color: #FFD28A; font-weight: 800; font-size: 58px; }
+.mx .chip svg { width: 84px; height: 84px; }
+.mx .tile { position: absolute; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 34px; background: #fff;
+  box-shadow: 0 14px 30px rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
+.mx .tile svg { width: 96px; height: 96px; }
+.mx .tile.big { width: 190px; height: 190px; margin: -95px 0 0 -95px; border-radius: 42px; }
+.mx .tile.big svg { width: 124px; height: 124px; }
+.mx .tlabel { position: absolute; width: 300px; margin-left: -150px; text-align: center; font-weight: 800; font-size: 46px; color: #fff; }
+.mx .bars { position: absolute; display: flex; align-items: flex-end; gap: 9px; height: 96px; }
+.mx .bars i { display: block; width: 20px; border-radius: 5px; background: rgba(255,255,255,.18); }
+.mx .wall { position: absolute; width: 420px; height: 34px; margin-left: -210px; border-radius: 6px;
+  background: repeating-linear-gradient(90deg, #8b5a43 0 58px, #6e4433 58px 62px), #8b5a43; box-shadow: 0 8px 18px rgba(0,0,0,.45); }
+
+/* ---------- النوافذ (الأمثلة) ---------- */
+.mx .win { position: absolute; left: 90px; width: 900px; border-radius: 40px; background: linear-gradient(#1b1f29, #12151c); border: 2px solid rgba(255,255,255,.08);
+  box-shadow: 0 40px 80px rgba(0,0,0,.6); overflow: hidden; }
+.mx .lane { position: absolute; left: 60px; width: 780px; height: 200px; border-radius: 26px; border: 3px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); overflow: hidden; }
+.mx .lane .lab { position: absolute; top: 12px; right: 22px; font: 800 46px var(--en); color: rgba(255,255,255,.85); direction: ltr; }
+.mx .lane .dot { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; }
+.mx .glab { position: absolute; font-weight: 800; font-size: 42px; }
+
+/* ---------- الحبيبات ---------- */
+.mx .grain { position: absolute; inset: -20px; opacity: .085; pointer-events: none; z-index: 90; mix-blend-mode: overlay; }
+.mx .flash { position: absolute; inset: 0; z-index: 95; pointer-events: none; display: none; }
+.mx .logo-pill { position: absolute; left: 96px; width: 128px; height: 180px; border-radius: 30px; background: #fff; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+.mx .logo-pill img { height: 150px; }
