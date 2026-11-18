@@ -14,11 +14,12 @@ score = نسبة كلمات النص المتوقع اللي طلعت في ال�
 """
 import argparse, json, re, sys, difflib, os
 
+LATIN_ACC = str.maketrans("öüäéèáàíóú", "ouaeeaaiou")  # Ragnarök = ragnarok
 AR_DIAC = re.compile(r"[ؐ-ًؚ-ٰٟۖ-ۭـ]")
 def norm(s: str) -> str:
     s = AR_DIAC.sub("", s)
     s = s.replace("أ","ا").replace("إ","ا").replace("آ","ا").replace("ى","ي").replace("ة","ه").replace("ؤ","و").replace("ئ","ي")
-    s = s.lower()
+    s = s.lower().translate(LATIN_ACC)
     s = re.sub(r"[^\w\s]", " ", s)
     return re.sub(r"\s+", " ", s).strip()
 
@@ -46,6 +47,7 @@ ALIASES = {
   "بيسي":"pc","كمبيوتر":"pc","جهاز":"pc",
   "اسكيب":"esc","اسكايب":"esc","ديليت":"del","ديلت":"del","سبيس":"space","انتير":"enter",
   "رايزن":"ryzen","كور":"core","ار تي اكس":"rtx",
+  "بايوس":"bios","كينغستن":"kingston","كينجستون":"kingston","كينغستون":"kingston","كورسير":"corsair","كورسair":"corsair","ايسس":"asus","اسوس":"asus","واط":"w","ترا":"ultra","الترا":"ultra","دارك":"darkflash",
   "مذربورد":"mobo","ماذربورد":"mobo","مذربوردات":"mobo","بورده":"mobo","win":"windows","giga":"giga","بي":"p","تي":"t","اف ان":"fn",
 }
 PREFIX = re.compile(r"^(و|ب|ل|ف)(?=\d)")

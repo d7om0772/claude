@@ -78,6 +78,9 @@ body { font-family: var(--ar); color: var(--ink); direction: rtl; -webkit-font-s
 .tzone .main.en { font: 700 70px var(--en); letter-spacing: -0.02em; direction: ltr; }
 .tzone .main.mid { font-size: 76px; }
 .tzone .main .hl { color: var(--brand); }
+.tzone .desc .hl { color: var(--brand); }
+.tzone .desc .bad { color: var(--problem); }
+.tzone .desc .good { color: var(--fix-badge); }
 .tzone .main .bad { color: var(--problem); }
 .tzone .main .good { color: var(--fix-badge); }
 .tzone .main .ltr { font-weight: 800; }

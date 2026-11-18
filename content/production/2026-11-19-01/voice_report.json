@@ -1,0 +1,43 @@
+{
+ "provider": "gemini",
+ "model": "gemini-3.8-flash-tts",
+ "models_skipped": [],
+ "duration": 63.056,
+ "tempo": 1.12,
+ "pitch_ratio": 1.0,
+ "text": "عندك 5000 ريال وتبي 1080p على أعدادات عالية؟ القاعدة الكرت أول كرت الشاشة Asus Dual RX 960 XT 16 جيجا ب2799 ريال يعني أكثر من نص الميزانية المعالج Ryzen 5 5600 ب669 ريال ومعه مبرد المotherبورد Asus Prime A520MR ب299 ريال وتدعمه من أول بايوس الرام 16 جيجا بـ 489 ريال التخزين كينغستن MV3 500 جيجا بـ 374 ريال الباور كورسير CX650 بـ 226 ريال وأيسس تنصح بـ 550 واط للكرت والكيس دارك فلاش A290 بـ 138 ريال مجموعة سعار القطع 4994 ريال والباقي 6 على 1080p ألترا God of War Ragnarok The Last of Us Part 1 تقريبا 85 فريم وش الميزانية الجاية؟ اكتبها بالتعليقات تابع تيربو عشان مايفوتك الجاية",
+ "match": {
+  "score": 0.911,
+  "expected_words": 123,
+  "missing": [
+   "mobo",
+   "m",
+   "r",
+   "nv",
+   "مجموع",
+   "اسعار",
+   "و",
+   "i",
+   "ما",
+   "يفوتك",
+   "جاي"
+  ],
+  "extra": [
+   "الم",
+   "other",
+   "بورد",
+   "mr",
+   "mv",
+   "فلاش",
+   "مجموعه",
+   "سعار",
+   "NUM",
+   "مايفوتك",
+   "جايه"
+  ],
+  "against": "caption",
+  "rescored": "ALIASES: bios/kingston/corsair/asus/w/ultra/darkflash + Ragnarök accents"
+ },
+ "starts_refined": 1,
+ "words_per_s": 1.77
+}

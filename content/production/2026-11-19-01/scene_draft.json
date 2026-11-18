@@ -1,0 +1,294 @@
+{
+ "id": "2026-11-19-01",
+ "series": "budget-builds",
+ "style": "15_iso_build_drop",
+ "camera": {
+  "variant": 2
+ },
+ "budget": 5000,
+ "goal": "1080p",
+ "hook_ghosts": [
+  "gpu"
+ ],
+ "header": {
+  "label": "تجميعة 5000 ريال",
+  "counter": {
+   "label": "باقي",
+   "start": 5000
+  }
+ },
+ "hook": {
+  "title": {
+   "main": "عندك **5000** ريال؟",
+   "desc": "**الكرت أول**",
+   "desc_at": "w8"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w7.end",
+   "params": {
+    "goal": "1080p"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w8",
+   "end": "w10.end"
+  },
+  {
+   "el": "E07",
+   "start": "w11",
+   "end": "w21.end",
+   "params": {
+    "part": "gpu",
+    "category": "كرت الشاشة",
+    "name": "ASUS Dual RX 9060 XT 16GB",
+    "size": "sm",
+    "list_name": "كرت الشاشة",
+    "drop_at": "w13",
+    "price": 2799,
+    "price_at": "w20",
+    "desc": "قلب التجميعة",
+    "desc_at": "w21"
+   }
+  },
+  {
+   "el": "E08",
+   "start": "w22",
+   "end": "w26.end",
+   "params": {
+    "title": "وين راحت الفلوس؟",
+    "bars": [
+     {
+      "label": "الكرت",
+      "value": 2799
+     },
+     {
+      "label": "باقي القطع",
+      "value": 2195
+     }
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": "w22",
+   "end": "w26.end",
+   "params": {
+    "main": "!!أكثر من نص!! الميزانية",
+    "size": "mid",
+    "desc": "2,799 من 5,000 ريال",
+    "desc_at": "w23"
+   }
+  },
+  {
+   "el": "E09",
+   "start": "w27",
+   "end": "w27.end"
+  },
+  {
+   "el": "E04",
+   "start": "w27",
+   "end": "w35.end",
+   "params": {
+    "part": "cpu",
+    "category": "المعالج",
+    "name": "Ryzen 5 5600",
+    "list_name": "المعالج",
+    "drop_at": "w28",
+    "price": 669,
+    "price_at": "w32",
+    "desc": "6 أنوية **+** مبرد",
+    "desc_at": "w34"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w36",
+   "end": "w46.end",
+   "params": {
+    "part": "mobo",
+    "category": "الماذربورد",
+    "name": "ASUS PRIME A520M-R",
+    "list_name": "الماذربورد",
+    "drop_at": "w37",
+    "price": 299,
+    "price_at": "w41",
+    "desc": "تدعم **5600** من أول BIOS",
+    "desc_at": "w43"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w47",
+   "end": "w51.end",
+   "params": {
+    "part": "ram",
+    "category": "الرام",
+    "name": "16GB (2×8GB) DDR4",
+    "en": true,
+    "list_name": "الرام",
+    "drop_at": "w48",
+    "price": 489,
+    "price_at": "w50"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w52",
+   "end": "w58.end",
+   "params": {
+    "part": "ssd",
+    "category": "التخزين",
+    "name": "Kingston NV3 500GB",
+    "list_name": "التخزين",
+    "drop_at": "w53",
+    "price": 374,
+    "price_at": "w57"
+   }
+  },
+  {
+   "el": "E10",
+   "start": "w59",
+   "end": "w64.end",
+   "params": {
+    "part": "psu",
+    "category": "الباور",
+    "name": "Corsair CX650",
+    "list_name": "الباور",
+    "drop_at": "w60",
+    "price": 226,
+    "price_at": "w63"
+   }
+  },
+  {
+   "el": "E08",
+   "start": "w65",
+   "end": "w69.end",
+   "params": {
+    "title": "باور الكرت",
+    "bars": [
+     {
+      "label": "ASUS تنصح",
+      "value": 550,
+      "unit": "W"
+     },
+     {
+      "label": "عندك",
+      "value": 650,
+      "unit": "W"
+     }
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": "w65",
+   "end": "w69.end",
+   "params": {
+    "chip": "الباور",
+    "main": "ASUS تنصح بـ **550W**",
+    "size": "mid",
+    "desc": "وعندك ++650W++",
+    "desc_at": "w68"
+   }
+  },
+  {
+   "el": "E11",
+   "start": "w70",
+   "end": "w75.end",
+   "params": {
+    "category": "الكيس",
+    "name": "darkFlash A290",
+    "list_name": "الكيس",
+    "price": 138,
+    "price_at": "w74",
+    "desc": "3 مراوح · النسخة السوداء",
+    "desc_at": "w72"
+   }
+  },
+  {
+   "el": "E12",
+   "start": "w76",
+   "end": "w82.end",
+   "params": {
+    "total": 4994,
+    "title": "مجموع القطع **4,994** ريال",
+    "desc": "أسعار القطع من Amazon.sa بتاريخ 18 نوفمبر، بدون رسوم الشحن، وممكن تتغير"
+   }
+  },
+  {
+   "el": "E13",
+   "start": "w83",
+   "end": "w89.end",
+   "params": {
+    "res": "1080p",
+    "head": "God of War ·",
+    "fps": 85,
+    "plus": false,
+    "chips": [
+     "Ultra",
+     "تقريبي"
+    ],
+    "title": "**God of War Ragnarök**",
+    "desc": "1080p Ultra · تقريباً 85 FPS"
+   }
+  },
+  {
+   "el": "E13",
+   "start": "w90",
+   "end": "w98.end",
+   "params": {
+    "res": "1080p",
+    "head": "The Last of Us ·",
+    "fps": 85,
+    "plus": false,
+    "chips": [
+     "Ultra",
+     "تقريبي"
+    ],
+    "title": "**The Last of Us Part I**",
+    "desc": "1080p Ultra · تقريباً 85 FPS"
+   }
+  },
+  {
+   "el": "E14",
+   "start": "w99",
+   "end": "w103.end",
+   "params": {
+    "title": "وش الميزانية الجاية؟",
+    "desc": "اكتبها بالتعليقات"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": "w32",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w41",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w50",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w57",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w63",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w74",
+   "name": "gs_coins3"
+  }
+ ],
+ "auto_sfx": true
+}

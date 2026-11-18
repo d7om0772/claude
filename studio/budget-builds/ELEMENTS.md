@@ -3,7 +3,7 @@
 > **المرجع البصري الملزم:** `brand/styles/budget-builds/` (01_prompt.md، 02_elements/elements.md + elements_sheet.jpg، 04_design_style، 05_colors، 03_preview.mp4).
 > هذا الملف يشرح **كيف تستدعي** كل عنصر في `scene_draft.json`. جدول اختيار العناصر (B1–B15) في `01_prompt.md`.
 
-**حقول المشهد:** `budget` (الميزانية = بداية عداد "باقي") · `goal` (هدف الشاشة مثل "1440p") · `header.label` (مثل "تجميعة 6500 ريال") · `header.counter: {label:"باقي", start}` · `hook.title: {main, desc, desc_at}` (أول فريم: "عندك **6500** ريال؟") · `preinstalled: []` · `ghost_parts: ["gpu"]` (خانات تبقى شبح أزرق فاضي طول الفيديو، مثل مكان كرت الشاشة في تجميعة بكرت مدمج) · `camera.variant` 0–3.
+**حقول المشهد:** `budget` (الميزانية = بداية عداد "باقي") · `goal` (هدف الشاشة مثل "1440p") · `header.label` (مثل "تجميعة 6500 ريال") · `header.counter: {label:"باقي", start}` · `hook.title: {main, desc, desc_at}` (أول فريم: "عندك **6500** ريال؟") · `preinstalled: []` · `ghost_parts: ["gpu"]` (خانات تبقى شبح أزرق فاضي طول الفيديو، مثل مكان كرت الشاشة في تجميعة بكرت مدمج) · `hook_ghosts: ["gpu"]` (خانة شبحها ينبض أزرق بومضة من أول فريم لين تنزل قطعتها — مثل "الكرت أول") · `camera.variant` 0–3. عناوين القطع E04/E07/E10 تقبل `size:"sm"` لاسم طويل.
 **تلقائي:** الختام E15 (الشعار على الشاشة + "تيربو · تجميعات")، والمؤثرات (`auto_sfx`)، والستارة في اللقطات القريبة.
 
 | العنصر | params | ملاحظات |

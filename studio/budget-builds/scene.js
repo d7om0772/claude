@@ -60,8 +60,9 @@ function buildCase(root) {
   K.place(panel(CASE.w, t, CASE.d), 0, t / 2, 0, c);                               // القاع
   K.place(panel(t, CASE.h, CASE.d), -CASE.w / 2 + t / 2, CASE.h / 2, 0, c);        // الطرف الخلفي
   K.place(panel(t, CASE.h, CASE.d), CASE.w / 2 - t / 2, CASE.h / 2, 0, c);         // الواجهة
-  for (const z of [-CASE.d / 2 + 0.03, CASE.d / 2 - 0.03]) K.place(K.rbox(CASE.w, 0.06, 0.06, 0.02, "#E7EEF9"), 0, CASE.h - 0.03, z, c); // إطار علوي (مفتوح من فوق)
-  K.place(K.rbox(CASE.w, 0.06, 0.06, 0.02, "#E7EEF9"), 0, 0.06, CASE.d / 2 - 0.03, c);
+  const rim = "#E7EEF9";
+  for (const z of [-CASE.d / 2 + 0.03, CASE.d / 2 - 0.03]) K.place(K.rbox(CASE.w, 0.06, 0.06, 0.02, rim), 0, CASE.h - 0.03, z, c); // إطار علوي (مفتوح من فوق)
+  K.place(K.rbox(CASE.w, 0.06, 0.06, 0.02, rim), 0, 0.06, CASE.d / 2 - 0.03, c);
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) K.place(K.cyl(0.06, 0.06, 0.05, "#C9D3E6", { seg: 12 }), sx * (CASE.w / 2 - 0.15), -0.01, sz * (CASE.d / 2 - 0.12), c);
   // الزجاج (E11): يتركب في الآخر
   const glass = new THREE.Mesh(new THREE.BoxGeometry(CASE.w - 0.02, CASE.h - 0.02, 0.02),
@@ -180,6 +181,8 @@ async function build(ctx) {
   for (const p of data.preinstalled || []) ctx.plan[p] = { ghostFrom: 0, drop: -10 };
   // خانات تبقى شبح فاضي طول الفيديو (مثل gpu في تجميعة بكرت مدمج: مكان الترقية جاهز)
   for (const p of data.ghost_parts || []) if (!ctx.plan[p]) ctx.plan[p] = { ghostFrom: roll + 0.9, drop: 1e9 };
+  // hook_ghosts: خانات شبحها ينبض أزرق من أول فريم (قبل لفّة الكاميرا) — مثل "الكرت أول"
+  for (const p of data.hook_ghosts || []) if (ctx.plan[p]) { ctx.plan[p].ghostFrom = -1; ctx.plan[p].hot = true; }
   // الكاميرا
   const P = POSES(ctx.variant);
   const keys = [{ t: 0, pose: P.room }];
@@ -217,7 +220,9 @@ async function build(ctx) {
         const landed = t >= pl.drop + 0.5;
         // الشبح ينبض وهو ينتظر، ويختفي مع الهبوط
         const ga = clamp((t - pl.ghostFrom) / 0.4) * (1 - clamp((t - pl.drop - 0.5) / 0.3));
-        gh.setGhost(ga, Math.sin(t * 5));
+        const hotNow = pl.hot && t < pl.drop; // نبض أقوى (ومضة زرقاء) لين تنزل القطعة
+        const pu = Math.sin(t * 6.3);
+        if (hotNow) gh.setGhost(Math.min(1.8, ga * (1.3 + 0.5 * pu)), pu); else gh.setGhost(ga, Math.sin(t * 5));
         if (t < pl.drop) { g.visible = false; } else {
           g.visible = true; const q = clamp((t - pl.drop) / 0.5);
           if (pl.side) { // E10: ينزل قدام الكيس ثم ينزلق للداخل
@@ -230,6 +235,7 @@ async function build(ctx) {
         const fq = clamp((t - pl.drop - (pl.side ? 0.8 : 0.5)) / 0.5);
         fl.material.opacity = t >= pl.drop + (pl.side ? 0.8 : 0.5) && fq < 1 ? 0.9 * (1 - fq) : 0;
         fl.scale.setScalar(fl.userData.base * (0.6 + 0.8 * fq));
+        if (hotNow) { fl.material.opacity = 0.32 + 0.22 * pu; fl.scale.setScalar(fl.userData.base * 1.7); }
       }
       // الزجاج يتركب (E11)
       const gq = E.inOutCubic(clamp((t - ctx.glassAt) / 0.6));
@@ -248,7 +254,7 @@ function priceTag(ev, ctx, price) {
 }
 function partTitle(ev, extra = {}) {
   const p = ev.params;
-  return { chip: p.category || CAT[p.part] || "", main: p.name || "", en: p.en ?? /^[\x00-\x7F]+$/.test(p.name || ""), ...extra };
+  return { chip: p.category || CAT[p.part] || "", main: p.name || "", en: p.en ?? /^[\x00-\x7F]+$/.test(p.name || ""), ...(p.size ? { size: p.size } : {}), ...extra };
 }
 function addPrice(ev, ctx, price, at) {
   ctx.counter.events.push({ t: at, delta: -price });

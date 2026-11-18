@@ -48,7 +48,7 @@ export const lastStarted = (arr, t, key = "start") => { let r = null; for (const
 // ---------- نصوص ----------
 export const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 // تسلسل لاتيني/أرقام واحد. ما ينتهي بـ + عشان علامة الربط تبقى بين الكلمتين.
-const LTR_RUN = /([A-Za-z0-9][A-Za-z0-9+.,%/:#×\-–_' ]*[A-Za-z0-9%#)]|[A-Za-z0-9])/g;
+const LTR_RUN = /([A-Za-z0-9À-ɏ][A-Za-z0-9À-ɏ+.,%/:#×\-–_' ]*[A-Za-z0-9À-ɏ%#)]|[A-Za-z0-9À-ɏ])/g;
 export function isolateLTR(s) { return esc(s).replace(LTR_RUN, (m) => `<bdi dir="ltr" class="ltr">${m}</bdi>`); }
 /** **نص** = أزرق الشعار · !!نص!! = أحمر · ++نص++ = أخضر */
 export function rich(s) {
@@ -59,7 +59,7 @@ export function rich(s) {
     return isolateLTR(part);
   }).join("");
 }
-export const hasLatin = (s) => /[A-Za-z0-9]/.test(s);
+export const hasLatin = (s) => /[A-Za-z0-9À-ɏ]/.test(s);
 export const fmt = (n) => Number(Math.round(n)).toLocaleString("en-US");
 
 // ---------- DOM ----------
