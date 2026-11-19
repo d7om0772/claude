@@ -2,6 +2,9 @@
 
 > كل تعديل على النظام (وكلاء، مهام، قوالب، إعدادات، تقويم) يتسجل هنا: التاريخ، وش تغيّر، وليش. الأحدث فوق.
 
+## 2026-11-19 — قالب troubleshooting: الرام وBIOS (فيديو 2026-11-20-01)
+- `studio/troubleshooting/scene.js`: شرائح رام داخل الكيس (إضاءتها مع الحالة)، وملصق الرام `X01 {mode:"keep", ram_tag}`؛ `bios_xmp` صار يقبل `fix_at` و`revert_at` و`profile_off` و`path` و`nav`/`nav_times`/`sub`؛ `spec_table` يقبل لون لكل صف. `scene_build.py` يحل `revert_at` و`ram_tag_until` و`nav_times`. السبب: فيديو XMP/EXPO احتاج عروض غير موجودة في الحزمة — مصمَّمة بنفس قواعدها وموثّقة في `ELEMENTS.md`.
+
 ## 2026-11-18 — قالب budget-builds + core: إضافات من فيديو 2026-11-19-01 (تجميعة 5000، الكرت أول)
 - `studio/budget-builds/scene.js`: حقل `hook_ghosts` (خانة شبحها ينبض أزرق بومضة من أول فريم لين تنزل القطعة — "الكرت أول")، و`size` في عناوين القطع E04/E07/E10 (اسم طويل بسطر واحد). موثّق في `studio/budget-builds/ELEMENTS.md`.
 - `studio/common/base.css` (كل السلاسل): تمييز `**`/`!!`/`++` يشتغل في الوصف `.desc` (كان يطلع رمادي).

@@ -1,0 +1,1325 @@
+{
+ "id": "2026-11-20-01",
+ "series": "troubleshooting",
+ "style": "14_desk_pc_red_green",
+ "camera": {
+  "variant": 3
+ },
+ "header": {
+  "label": "المشاكل وحلولها",
+  "dots": 3
+ },
+ "initial_state": "problem",
+ "hook": {
+  "title": {
+   "main": "رامك 6000 شغالة على !!4800؟!!"
+  }
+ },
+ "duration": 63.485,
+ "fps": 30,
+ "closing": {
+  "start": 60.885
+ },
+ "captions": {
+  "lines": [
+   {
+    "start": 0.0,
+    "end": 1.36,
+    "words": [
+     {
+      "w": "شريت",
+      "start": 0.0,
+      "end": 0.38
+     },
+     {
+      "w": "رام",
+      "start": 0.38,
+      "end": 0.62
+     },
+     {
+      "w": "6000",
+      "start": 0.62,
+      "end": 1.36
+     }
+    ]
+   },
+   {
+    "start": 1.651,
+    "end": 4.16,
+    "words": [
+     {
+      "w": "وممكن",
+      "start": 1.651,
+      "end": 1.98
+     },
+     {
+      "w": "تكون",
+      "start": 1.98,
+      "end": 2.26
+     },
+     {
+      "w": "شغالة",
+      "start": 2.26,
+      "end": 2.74
+     },
+     {
+      "w": "على",
+      "start": 2.74,
+      "end": 2.92
+     },
+     {
+      "w": "4800",
+      "start": 2.92,
+      "end": 4.16
+     }
+    ]
+   },
+   {
+    "start": 4.16,
+    "end": 6.9,
+    "words": [
+     {
+      "w": "لأن",
+      "start": 4.16,
+      "end": 4.94
+     },
+     {
+      "w": "الرام",
+      "start": 4.94,
+      "end": 5.34
+     },
+     {
+      "w": "افتراضياً",
+      "start": 5.34,
+      "end": 6.28
+     },
+     {
+      "w": "تشتغل",
+      "start": 6.28,
+      "end": 6.9
+     }
+    ]
+   },
+   {
+    "start": 6.9,
+    "end": 8.6,
+    "words": [
+     {
+      "w": "على",
+      "start": 6.9,
+      "end": 7.02
+     },
+     {
+      "w": "سرعة",
+      "start": 7.02,
+      "end": 7.36
+     },
+     {
+      "w": "أقل",
+      "start": 7.36,
+      "end": 7.78
+     },
+     {
+      "w": "من",
+      "start": 7.78,
+      "end": 7.9
+     },
+     {
+      "w": "المكتوب",
+      "start": 7.9,
+      "end": 8.3
+     },
+     {
+      "w": "عليها",
+      "start": 8.3,
+      "end": 8.6
+     }
+    ]
+   },
+   {
+    "start": 9.183,
+    "end": 12.78,
+    "words": [
+     {
+      "w": "مثلاً",
+      "start": 9.183,
+      "end": 9.94
+     },
+     {
+      "w": "طقم",
+      "start": 10.0,
+      "end": 10.28
+     },
+     {
+      "w": "DDR5-6000",
+      "start": 10.28,
+      "end": 11.62
+     },
+     {
+      "w": "من",
+      "start": 11.62,
+      "end": 12.08
+     },
+     {
+      "w": "Kingston",
+      "start": 12.08,
+      "end": 12.78
+     }
+    ]
+   },
+   {
+    "start": 12.892,
+    "end": 15.38,
+    "words": [
+     {
+      "w": "سرعته",
+      "start": 12.892,
+      "end": 13.26
+     },
+     {
+      "w": "الافتراضية",
+      "start": 13.26,
+      "end": 13.9
+     },
+     {
+      "w": "4800",
+      "start": 13.9,
+      "end": 15.38
+     }
+    ]
+   },
+   {
+    "start": 15.951,
+    "end": 16.88,
+    "words": [
+     {
+      "w": "الخطوة",
+      "start": 15.951,
+      "end": 16.3
+     },
+     {
+      "w": "1",
+      "start": 16.3,
+      "end": 16.88
+     }
+    ]
+   },
+   {
+    "start": 16.932,
+    "end": 18.16,
+    "words": [
+     {
+      "w": "افتح",
+      "start": 16.932,
+      "end": 17.26
+     },
+     {
+      "w": "Task",
+      "start": 17.26,
+      "end": 17.54
+     },
+     {
+      "w": "Manager",
+      "start": 17.54,
+      "end": 18.16
+     }
+    ]
+   },
+   {
+    "start": 18.254,
+    "end": 19.34,
+    "words": [
+     {
+      "w": "ثم",
+      "start": 18.254,
+      "end": 18.46
+     },
+     {
+      "w": "Performance",
+      "start": 18.46,
+      "end": 19.34
+     }
+    ]
+   },
+   {
+    "start": 19.444,
+    "end": 20.02,
+    "words": [
+     {
+      "w": "ثم",
+      "start": 19.444,
+      "end": 19.68
+     },
+     {
+      "w": "Memory",
+      "start": 19.68,
+      "end": 20.02
+     }
+    ]
+   },
+   {
+    "start": 20.634,
+    "end": 22.14,
+    "words": [
+     {
+      "w": "وشوف",
+      "start": 20.634,
+      "end": 20.9
+     },
+     {
+      "w": "الرقم",
+      "start": 20.9,
+      "end": 21.26
+     },
+     {
+      "w": "جنب",
+      "start": 21.26,
+      "end": 21.5
+     },
+     {
+      "w": "Speed",
+      "start": 21.5,
+      "end": 22.14
+     }
+    ]
+   },
+   {
+    "start": 22.075,
+    "end": 24.1,
+    "words": [
+     {
+      "w": "أقل",
+      "start": 22.075,
+      "end": 22.8
+     },
+     {
+      "w": "من",
+      "start": 22.8,
+      "end": 22.94
+     },
+     {
+      "w": "المكتوب",
+      "start": 22.94,
+      "end": 23.3
+     },
+     {
+      "w": "على",
+      "start": 23.3,
+      "end": 23.44
+     },
+     {
+      "w": "الرام؟",
+      "start": 23.44,
+      "end": 24.1
+     }
+    ]
+   },
+   {
+    "start": 24.209,
+    "end": 25.12,
+    "words": [
+     {
+      "w": "الخطوة",
+      "start": 24.209,
+      "end": 24.54
+     },
+     {
+      "w": "2",
+      "start": 24.54,
+      "end": 25.12
+     }
+    ]
+   },
+   {
+    "start": 25.236,
+    "end": 25.9,
+    "words": [
+     {
+      "w": "ادخل",
+      "start": 25.236,
+      "end": 25.5
+     },
+     {
+      "w": "BIOS",
+      "start": 25.5,
+      "end": 25.9
+     }
+    ]
+   },
+   {
+    "start": 25.9,
+    "end": 27.26,
+    "words": [
+     {
+      "w": "XMP",
+      "start": 25.9,
+      "end": 26.72
+     },
+     {
+      "w": "من",
+      "start": 26.72,
+      "end": 26.92
+     },
+     {
+      "w": "Intel",
+      "start": 26.92,
+      "end": 27.26
+     }
+    ]
+   },
+   {
+    "start": 27.26,
+    "end": 28.56,
+    "words": [
+     {
+      "w": "وEXPO",
+      "start": 27.26,
+      "end": 28.0
+     },
+     {
+      "w": "من",
+      "start": 28.0,
+      "end": 28.18
+     },
+     {
+      "w": "AMD",
+      "start": 28.18,
+      "end": 28.56
+     }
+    ]
+   },
+   {
+    "start": 28.56,
+    "end": 30.62,
+    "words": [
+     {
+      "w": "بروفايلات",
+      "start": 28.56,
+      "end": 29.58
+     },
+     {
+      "w": "سرعة",
+      "start": 29.58,
+      "end": 29.94
+     },
+     {
+      "w": "جاهزة",
+      "start": 29.94,
+      "end": 30.32
+     },
+     {
+      "w": "للرام",
+      "start": 30.32,
+      "end": 30.62
+     }
+    ]
+   },
+   {
+    "start": 30.62,
+    "end": 33.1,
+    "words": [
+     {
+      "w": "فعّل",
+      "start": 30.62,
+      "end": 31.5
+     },
+     {
+      "w": "اللي",
+      "start": 31.5,
+      "end": 31.68
+     },
+     {
+      "w": "تدعمه",
+      "start": 31.68,
+      "end": 32.14
+     },
+     {
+      "w": "رامك",
+      "start": 32.14,
+      "end": 32.44
+     },
+     {
+      "w": "وبوردتك",
+      "start": 32.44,
+      "end": 33.1
+     }
+    ]
+   },
+   {
+    "start": 33.1,
+    "end": 34.64,
+    "words": [
+     {
+      "w": "واحفظ",
+      "start": 33.1,
+      "end": 33.78
+     },
+     {
+      "w": "وأعد",
+      "start": 33.78,
+      "end": 34.18
+     },
+     {
+      "w": "التشغيل",
+      "start": 34.18,
+      "end": 34.64
+     }
+    ]
+   },
+   {
+    "start": 34.64,
+    "end": 36.52,
+    "words": [
+     {
+      "w": "مكانه",
+      "start": 34.64,
+      "end": 35.58
+     },
+     {
+      "w": "يختلف",
+      "start": 35.58,
+      "end": 35.9
+     },
+     {
+      "w": "حسب",
+      "start": 35.9,
+      "end": 36.16
+     },
+     {
+      "w": "البوردة",
+      "start": 36.16,
+      "end": 36.52
+     }
+    ]
+   },
+   {
+    "start": 36.52,
+    "end": 37.74,
+    "words": [
+     {
+      "w": "مثلاً",
+      "start": 36.52,
+      "end": 37.18
+     },
+     {
+      "w": "في",
+      "start": 37.18,
+      "end": 37.38
+     },
+     {
+      "w": "ASUS",
+      "start": 37.38,
+      "end": 37.74
+     }
+    ]
+   },
+   {
+    "start": 37.74,
+    "end": 38.98,
+    "words": [
+     {
+      "w": "Ai",
+      "start": 37.74,
+      "end": 38.36
+     },
+     {
+      "w": "Tweaker",
+      "start": 38.36,
+      "end": 38.98
+     }
+    ]
+   },
+   {
+    "start": 38.98,
+    "end": 40.68,
+    "words": [
+     {
+      "w": "ثم",
+      "start": 38.98,
+      "end": 39.44
+     },
+     {
+      "w": "Ai",
+      "start": 39.44,
+      "end": 39.8
+     },
+     {
+      "w": "Overclock",
+      "start": 39.8,
+      "end": 40.28
+     },
+     {
+      "w": "Tuner",
+      "start": 40.28,
+      "end": 40.68
+     }
+    ]
+   },
+   {
+    "start": 40.68,
+    "end": 42.0,
+    "words": [
+     {
+      "w": "الخطوة",
+      "start": 40.68,
+      "end": 41.64
+     },
+     {
+      "w": "3",
+      "start": 41.64,
+      "end": 42.0
+     }
+    ]
+   },
+   {
+    "start": 42.0,
+    "end": 43.34,
+    "words": [
+     {
+      "w": "ارجع",
+      "start": 42.0,
+      "end": 42.62
+     },
+     {
+      "w": "لـ",
+      "start": 42.62,
+      "end": 42.723
+     },
+     {
+      "w": "Task",
+      "start": 42.723,
+      "end": 42.929
+     },
+     {
+      "w": "Manager",
+      "start": 42.929,
+      "end": 43.34
+     }
+    ]
+   },
+   {
+    "start": 43.34,
+    "end": 45.88,
+    "words": [
+     {
+      "w": "وتأكد",
+      "start": 43.34,
+      "end": 44.3
+     },
+     {
+      "w": "إن",
+      "start": 44.3,
+      "end": 44.46
+     },
+     {
+      "w": "Speed",
+      "start": 44.46,
+      "end": 44.88
+     },
+     {
+      "w": "صار",
+      "start": 44.88,
+      "end": 45.2
+     },
+     {
+      "w": "نفس",
+      "start": 45.2,
+      "end": 45.44
+     },
+     {
+      "w": "المكتوب",
+      "start": 45.44,
+      "end": 45.88
+     }
+    ]
+   },
+   {
+    "start": 45.88,
+    "end": 46.94,
+    "words": [
+     {
+      "w": "انتبه",
+      "start": 45.88,
+      "end": 46.94
+     }
+    ]
+   },
+   {
+    "start": 46.94,
+    "end": 48.34,
+    "words": [
+     {
+      "w": "هذا",
+      "start": 46.94,
+      "end": 47.7
+     },
+     {
+      "w": "overclock",
+      "start": 47.7,
+      "end": 48.34
+     }
+    ]
+   },
+   {
+    "start": 48.34,
+    "end": 51.0,
+    "words": [
+     {
+      "w": "وIntel",
+      "start": 48.34,
+      "end": 49.012
+     },
+     {
+      "w": "تقول",
+      "start": 49.012,
+      "end": 49.46
+     },
+     {
+      "w": "ممكن",
+      "start": 49.46,
+      "end": 49.92
+     },
+     {
+      "w": "يقلل",
+      "start": 49.92,
+      "end": 50.38
+     },
+     {
+      "w": "الاستقرار",
+      "start": 50.38,
+      "end": 51.0
+     }
+    ]
+   },
+   {
+    "start": 51.0,
+    "end": 53.28,
+    "words": [
+     {
+      "w": "وAMD",
+      "start": 51.0,
+      "end": 51.92
+     },
+     {
+      "w": "تنبّه",
+      "start": 51.92,
+      "end": 52.36
+     },
+     {
+      "w": "إنه",
+      "start": 52.36,
+      "end": 52.7
+     },
+     {
+      "w": "يمس",
+      "start": 52.7,
+      "end": 52.9
+     },
+     {
+      "w": "الضمان",
+      "start": 52.9,
+      "end": 53.28
+     }
+    ]
+   },
+   {
+    "start": 53.28,
+    "end": 55.18,
+    "words": [
+     {
+      "w": "ولو",
+      "start": 53.28,
+      "end": 54.02
+     },
+     {
+      "w": "صار",
+      "start": 54.02,
+      "end": 54.2
+     },
+     {
+      "w": "الجهاز",
+      "start": 54.2,
+      "end": 54.56
+     },
+     {
+      "w": "يعلّق",
+      "start": 54.56,
+      "end": 55.0
+     },
+     {
+      "w": "أو",
+      "start": 55.0,
+      "end": 55.18
+     }
+    ]
+   },
+   {
+    "start": 55.18,
+    "end": 55.94,
+    "words": [
+     {
+      "w": "يعيد",
+      "start": 55.18,
+      "end": 55.48
+     },
+     {
+      "w": "التشغيل",
+      "start": 55.48,
+      "end": 55.94
+     }
+    ]
+   },
+   {
+    "start": 55.94,
+    "end": 57.68,
+    "words": [
+     {
+      "w": "رجّع",
+      "start": 55.94,
+      "end": 56.62
+     },
+     {
+      "w": "الإعداد",
+      "start": 56.62,
+      "end": 57.12
+     },
+     {
+      "w": "للافتراضي",
+      "start": 57.12,
+      "end": 57.68
+     }
+    ]
+   },
+   {
+    "start": 57.68,
+    "end": 59.96,
+    "words": [
+     {
+      "w": "تابع",
+      "start": 57.68,
+      "end": 58.72
+     },
+     {
+      "w": "تيربو",
+      "start": 58.72,
+      "end": 59.06
+     },
+     {
+      "w": "عشان",
+      "start": 59.06,
+      "end": 59.48
+     },
+     {
+      "w": "ما",
+      "start": 59.48,
+      "end": 59.6
+     },
+     {
+      "w": "يفوتك",
+      "start": 59.6,
+      "end": 59.96
+     }
+    ]
+   },
+   {
+    "start": 59.96,
+    "end": 60.48,
+    "words": [
+     {
+      "w": "الحل",
+      "start": 59.96,
+      "end": 60.2
+     },
+     {
+      "w": "الجاي",
+      "start": 60.2,
+      "end": 60.48
+     }
+    ]
+   }
+  ]
+ },
+ "loop": {
+  "start": 62.485,
+  "dur": 1.0
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0.0,
+   "end": 4.16,
+   "params": {}
+  },
+  {
+   "el": "X01",
+   "start": 0.0,
+   "end": 1.36,
+   "params": {
+    "mode": "text",
+    "text": "4800",
+    "color": "problem",
+    "pulse": true,
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0.0,
+   "end": 1.36,
+   "params": {
+    "mode": "keep",
+    "ram_tag": "6000",
+    "cam": "case",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 1.651,
+   "end": 4.16,
+   "params": {
+    "mode": "text",
+    "text": "4800",
+    "color": "problem",
+    "pulse": true,
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "E15",
+   "start": 4.16,
+   "end": 8.6,
+   "params": {}
+  },
+  {
+   "el": "T",
+   "start": 4.16,
+   "end": 8.6,
+   "params": {
+    "main": "افتراضياً تشتغل !!أقل!!",
+    "desc": "من السرعة المكتوبة عليها",
+    "desc_at": 7.02
+   }
+  },
+  {
+   "el": "X01",
+   "start": 9.183,
+   "end": 15.38,
+   "params": {
+    "mode": "spec_table",
+    "title": "Kingston DDR5-6000",
+    "rows": [
+     [
+      "Default (JEDEC)",
+      "4800",
+      "problem"
+     ],
+     [
+      "XMP / EXPO",
+      "6000"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": "gs_swipe2"
+   }
+  },
+  {
+   "el": "T",
+   "start": 9.183,
+   "end": 15.38,
+   "params": {
+    "main": "طقم ++DDR5-6000++",
+    "desc": "سرعته الافتراضية 4800",
+    "desc_at": 12.892
+   }
+  },
+  {
+   "el": "E03",
+   "start": 15.951,
+   "end": 20.02,
+   "params": {
+    "index": 1,
+    "title": "افتح ++Task Manager++",
+    "desc": "ثم Performance ثم Memory",
+    "desc_at": 18.254,
+    "fix_at": 45.44
+   }
+  },
+  {
+   "el": "X01",
+   "start": 16.932,
+   "end": 20.02,
+   "params": {
+    "mode": "settings_nav",
+    "title": "Task Manager",
+    "items": [
+     "Task Manager",
+     "Performance",
+     "Memory"
+    ],
+    "times": [
+     17.26,
+     18.46,
+     19.68
+    ],
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 20.634,
+   "end": 22.14,
+   "params": {
+    "mode": "text",
+    "text": "4800",
+    "sub": "Speed",
+    "color": "problem",
+    "pulse": true,
+    "state": "problem"
+   }
+  },
+  {
+   "el": "T",
+   "start": 20.634,
+   "end": 24.1,
+   "params": {
+    "main": "شوف الرقم جنب ++Speed++",
+    "desc": "أقل من !!المكتوب؟!!",
+    "desc_at": 22.075
+   }
+  },
+  {
+   "el": "E03",
+   "start": 24.209,
+   "end": 25.9,
+   "params": {
+    "index": 2,
+    "title": "ادخل ++BIOS++",
+    "fix_at": 30.62
+   }
+  },
+  {
+   "el": "X01",
+   "start": 25.236,
+   "end": 25.9,
+   "params": {
+    "mode": "bios_xmp",
+    "profile_off": "Default",
+    "speed_off": "4800",
+    "speed_on": "6000",
+    "fix_at": 51.0,
+    "cam": "monitor",
+    "sfx": "gs_swipe2"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 25.9,
+   "end": 30.62,
+   "params": {
+    "mode": "keep",
+    "ram_tag": "XMP / EXPO",
+    "cam": "case",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 25.9,
+   "end": 30.62,
+   "params": {
+    "chip": "تعريف",
+    "chip_color": "brand",
+    "main": "++XMP++ و ++EXPO++",
+    "desc": "بروفايلات سرعة جاهزة للرام",
+    "desc_at": 28.56
+   }
+  },
+  {
+   "el": "X01",
+   "start": 30.62,
+   "end": 34.64,
+   "params": {
+    "mode": "bios_xmp",
+    "profile": "XMP / EXPO",
+    "profile_off": "Default",
+    "speed_off": "4800",
+    "speed_on": "6000",
+    "fix_at": 30.62,
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 30.62,
+   "end": 34.64,
+   "params": {
+    "main": "فعّل اللي ++يدعمه جهازك++",
+    "desc": "واحفظ وأعد التشغيل",
+    "desc_at": 33.1
+   }
+  },
+  {
+   "el": "X01",
+   "start": 34.64,
+   "end": 40.68,
+   "params": {
+    "mode": "bios_xmp",
+    "path": "BIOS › Advanced Mode",
+    "sub": "ASUS",
+    "nav": [
+     "Ai Tweaker",
+     "Ai Overclock Tuner"
+    ],
+    "nav_times": [
+     37.74,
+     39.44
+    ],
+    "sfx": "gs_swipe2"
+   }
+  },
+  {
+   "el": "T",
+   "start": 34.64,
+   "end": 36.52,
+   "params": {
+    "main": "مكانه **يختلف** حسب البوردة"
+   }
+  },
+  {
+   "el": "T",
+   "start": 36.52,
+   "end": 40.68,
+   "params": {
+    "chip": "مثال",
+    "chip_color": "brand",
+    "main": "في ++ASUS++"
+   }
+  },
+  {
+   "el": "E03",
+   "start": 40.68,
+   "end": 45.88,
+   "params": {
+    "index": 3,
+    "title": "تأكد من ++Speed++",
+    "desc": "في Task Manager",
+    "desc_at": 42.0,
+    "fix_at": 45.44
+   }
+  },
+  {
+   "el": "X01",
+   "start": 42.0,
+   "end": 44.46,
+   "params": {
+    "mode": "settings_nav",
+    "title": "Task Manager",
+    "items": [
+     "Task Manager",
+     "Performance",
+     "Memory"
+    ],
+    "times": [
+     42.723,
+     42.929,
+     43.34
+    ],
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 44.46,
+   "end": 45.88,
+   "params": {
+    "mode": "text",
+    "text": "6000",
+    "sub": "Speed",
+    "color": "fix",
+    "ring": true,
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 45.88,
+   "end": 53.28,
+   "params": {
+    "mode": "keep",
+    "ram_tag": "overclock",
+    "ram_tag_color": "problem",
+    "cam": "case",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 45.88,
+   "end": 53.28,
+   "params": {
+    "chip": "تنبيه",
+    "chip_color": "problem",
+    "main": "هذا !!overclock!!",
+    "desc": "ممكن يقلل الاستقرار ويمس الضمان",
+    "desc_at": 49.46
+   }
+  },
+  {
+   "el": "X01",
+   "start": 53.28,
+   "end": 57.68,
+   "params": {
+    "mode": "bios_xmp",
+    "profile": "XMP / EXPO",
+    "profile_off": "Default",
+    "speed_off": "4800",
+    "speed_on": "6000",
+    "fix_at": 53.28,
+    "revert_at": 55.94,
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 53.28,
+   "end": 55.94,
+   "params": {
+    "main": "الجهاز !!يعلّق!! أو يعيد التشغيل؟"
+   }
+  },
+  {
+   "el": "T",
+   "start": 55.94,
+   "end": 57.68,
+   "params": {
+    "main": "رجّع ++الافتراضي++"
+   }
+  },
+  {
+   "el": "E16",
+   "start": 57.68,
+   "end": 60.48,
+   "params": {
+    "title": "تابع **تيربو**",
+    "desc": "عشان ما يفوتك الحل الجاي",
+    "text": "تابع تيربو"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.1,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 2.92,
+   "name": "gs_error5"
+  },
+  {
+   "t": 4.16,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 9.183,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 15.951,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 17.26,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 18.46,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 19.68,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 20.634,
+   "name": "gs_error5"
+  },
+  {
+   "t": 24.209,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 25.236,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 25.9,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 30.62,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 30.67,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 34.64,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 37.74,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 39.44,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 40.68,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 45.44,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 45.49,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 45.88,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 47.7,
+   "name": "gs_error5"
+  },
+  {
+   "t": 55.94,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 57.68,
+   "name": "gs_notification2"
+  },
+  {
+   "t": 60.585,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 61.135,
+   "name": "gs_notification2"
+  }
+ ]
+}

@@ -67,9 +67,10 @@ function monitorDraw(ctx) {
       return; }
     // spec_table — مواصفات الشاشة لكل منفذ بدون أرقام مخترعة: {rows:[[المنفذ، القيمة]]}
     if (m === "spec_table") { desk(); K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, s.title || "Monitor specs", { lines: 0 });
-      (s.rows || [["HDMI", "? Hz"], ["DisplayPort", "? Hz"]]).forEach(([k, v], i) => { const y = h * (0.36 + i * 0.2); g.globalAlpha = clamp(p * (s.dur || 1) / 0.3 - i * 0.6);
+      (s.rows || [["HDMI", "? Hz"], ["DisplayPort", "? Hz"]]).forEach(([k, v, c], i) => { const y = h * (0.36 + i * 0.2); g.globalAlpha = clamp(p * (s.dur || 1) / 0.3 - i * 0.6);
         g.fillStyle = "#F3F6FC"; K.rr(g, w * 0.13, y - h * 0.07, w * 0.74, h * 0.14, 12); g.fill();
-        K.text(g, k, w * 0.16, y, { size: h * 0.065, align: "left", font: K.FONT_EN, weight: 700 }); K.text(g, v, w * 0.84, y, { size: h * 0.07, align: "right", font: K.FONT_EN, weight: 800, color: PAL.brand }); g.globalAlpha = 1; });
+        const rc = c === "problem" ? PAL.problem : c === "fix" ? PAL.fix : null; if (rc) { g.strokeStyle = rc; g.lineWidth = 5; K.rr(g, w * 0.13, y - h * 0.07, w * 0.74, h * 0.14, 12); g.stroke(); }
+        K.text(g, k, w * 0.16, y, { size: h * 0.065, align: "left", font: K.FONT_EN, weight: 700 }); K.text(g, v, w * 0.84, y, { size: h * 0.07, align: "right", font: K.FONT_EN, weight: 800, color: rc || PAL.brand }); g.globalAlpha = 1; });
       return; }
     if (m === "display_settings") { desk(); K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, "Settings › Display › Advanced display", { lines: 0 });
       K.text(g, "Choose a refresh rate", w * 0.13, h * 0.3, { size: h * 0.055, weight: 600, align: "left", font: K.FONT_EN, color: PAL.muted });
@@ -80,10 +81,27 @@ function monitorDraw(ctx) {
       if (s.star_at != null && tNow >= s.star_at) { const q = E.outBack(clamp((tNow - s.star_at) / 0.3)); g.save(); g.translate(w * 0.56, h * 0.435); g.scale(q, q);
         g.fillStyle = PAL.brand; g.beginPath(); g.arc(0, 0, h * 0.06, 0, 7); g.fill(); K.text(g, "*", 0, h * 0.015, { size: h * 0.11, color: "#fff", font: K.FONT_EN, weight: 800 }); g.restore(); }
       return; }
-    if (m === "bios_xmp") { g.fillStyle = "#0F1B33"; g.fillRect(0, 0, w, h); K.text(g, "BIOS › Memory", w * 0.06, h * 0.12, { size: h * 0.06, align: "left", font: K.FONT_EN, weight: 700, color: "#9DB8F5" });
-      const on = p > 0.45; [["Memory Profile", on ? (s.profile || "XMP / EXPO Profile 1") : "Disabled"], ["Memory Speed", on ? (s.speed_on || "6000 MT/s") : (s.speed_off || "4800 MT/s")]].forEach(([k, v], i) => {
-        const y = h * (0.32 + i * 0.22); g.fillStyle = "#1B2B4F"; K.rr(g, w * 0.06, y - h * 0.08, w * 0.88, h * 0.16, 12); g.fill();
-        K.text(g, k, w * 0.09, y, { size: h * 0.06, align: "left", font: K.FONT_EN, weight: 600, color: "#fff" }); K.text(g, v, w * 0.91, y, { size: h * 0.06, align: "right", font: K.FONT_EN, weight: 700, color: on ? "#4BE3A8" : "#FF7A87" }); }); return; }
+    // bios_xmp — شاشة BIOS للذاكرة: {profile, profile_off, speed_off, speed_on, fix_at, revert_at, path, nav, nav_times, sub}
+    //   fix_at: البروفايل يتفعّل على كلمة · revert_at: يرجع للافتراضي · nav: مسار قوائم BIOS (كل خطوة تتحدد مع كلمتها، مثال بوردة معيّنة)
+    if (m === "bios_xmp") { g.fillStyle = "#0F1B33"; g.fillRect(0, 0, w, h); const tNow = (s.start ?? 0) + p * (s.dur ?? 1);
+      K.text(g, s.path || "BIOS › Memory", w * 0.06, h * 0.1, { size: h * 0.055, align: "left", font: K.FONT_EN, weight: 700, color: "#9DB8F5" });
+      g.fillStyle = "#2A3B5C"; g.fillRect(w * 0.06, h * 0.165, w * 0.88, 3);
+      if (s.nav) { let cur = -1; s.nav.forEach((_, i) => { if (tNow >= (s.nav_times?.[i] ?? (s.start ?? 0) + i * 0.6)) cur = i; });
+        s.nav.forEach((it, i) => { const y = h * (0.33 + i * 0.2), on = i === cur; g.globalAlpha = i > cur ? 0.35 : 1;
+          g.fillStyle = on ? PAL.brand : "#1B2B4F"; K.rr(g, w * 0.06 + i * w * 0.06, y - h * 0.075, w * 0.82 - i * w * 0.06, h * 0.15, 12); g.fill();
+          K.text(g, (i ? "› " : "") + it, w * 0.09 + i * w * 0.06, y, { size: h * 0.062, align: "left", font: K.FONT_EN, weight: on ? 800 : 600, color: "#fff" }); g.globalAlpha = 1; });
+        if (s.sub) K.text(g, s.sub, w * 0.94, h * 0.1, { size: h * 0.05, align: "right", weight: 700, color: "#FFB020", font: /^[\x00-\x7F]+$/.test(s.sub) ? K.FONT_EN : undefined });
+        return; }
+      let on = s.fix_at != null ? tNow >= s.fix_at : p > 0.45; if (s.revert_at != null && tNow >= s.revert_at) on = false;
+      const sw = s.fix_at != null ? E.outBack(clamp((tNow - s.fix_at) / 0.3)) : 1;
+      [["Memory Profile", on ? (s.profile || "XMP / EXPO") : (s.profile_off || "Disabled")], ["Memory Speed", on ? (s.speed_on || "6000") : (s.speed_off || "4800")]].forEach(([k, v], i) => {
+        const y = h * (0.36 + i * 0.24); g.fillStyle = "#1B2B4F"; K.rr(g, w * 0.06, y - h * 0.085, w * 0.88, h * 0.17, 12); g.fill();
+        g.strokeStyle = on ? "#4BE3A8" : "#FF7A87"; g.lineWidth = 4; K.rr(g, w * 0.06, y - h * 0.085, w * 0.88, h * 0.17, 12); g.stroke();
+        K.text(g, k, w * 0.09, y, { size: h * 0.06, align: "left", font: K.FONT_EN, weight: 600, color: "#fff" });
+        g.save(); g.translate(w * 0.91, y); const sc = on && s.fix_at != null ? 0.85 + 0.15 * sw : 1; g.scale(sc, sc);
+        K.text(g, v, 0, 0, { size: h * 0.07, align: "right", font: K.FONT_EN, weight: 800, color: on ? "#4BE3A8" : "#FF7A87" }); g.restore(); });
+      K.text(g, "F10  Save & Exit", w * 0.94, h * 0.9, { size: h * 0.045, align: "right", font: K.FONT_EN, weight: 600, color: "#9DB8F5" });
+      return; }
     if (m === "temps") { desk(); K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, s.title || "Temperatures", { lines: 0 });
       (s.items || [["CPU", 92, 65], ["GPU", 84, 70]]).forEach(([n, hot, ok], i) => { const v = lerp(hot, ok, clamp((p - 0.5) / 0.3)); const y = h * (0.32 + i * 0.24);
         K.text(g, n, w * 0.13, y, { size: h * 0.065, align: "left", font: K.FONT_EN, weight: 700 }); g.fillStyle = "#EEF2FA"; K.rr(g, w * 0.13, y + h * 0.05, w * 0.6, h * 0.06, h * 0.03); g.fill();
@@ -155,6 +173,9 @@ function buildPC(root) {
   const gstrip = K.box(0.95, 0.03, 0.02, PAL.problem, { emissive: PAL.problem, ei: 1.3, unique: true }); K.place(gstrip, -0.1, 0.95, 0.07, inner);
   const fan = K.fan(0.33, { ring: PAL.problem }); fan.rotation.y = -Math.PI / 2; K.place(fan, PC.w / 2 - 0.12, 1.55, -0.02, inner);
   const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.03, 8, 40), K.mat(PAL.problem, { emissive: PAL.problem, ei: 1.4, unique: true })); K.place(ring2, -0.15, 1.65, -PC.d / 2 + 0.16, inner);
+  // شرائح الرام جنب مبرد المعالج (إضاءتها RGB مع الحالة)
+  const ramTops = []; for (let k = 0; k < 2; k++) { const rx = 0.2 + k * 0.12; K.place(K.rbox(0.075, 0.56, 0.13, 0.015, "#E9EFF9"), rx, 1.62, -PC.d / 2 + 0.2, inner);
+    const rt = K.box(0.075, 0.06, 0.13, PAL.problem, { emissive: PAL.problem, ei: 1.4, unique: true }); K.place(rt, rx, 1.93, -PC.d / 2 + 0.2, inner); ramTops.push(rt); }
   const strip = K.box(0.04, PC.h - 0.35, 0.04, PAL.problem, { emissive: PAL.problem, ei: 1.4, unique: true }); K.place(strip, PC.w / 2 - 0.12, PC.h / 2, PC.d / 2 - 0.1, inner);
   const glass = new THREE.Mesh(new THREE.BoxGeometry(PC.w - 0.05, PC.h - 0.05, 0.02), new THREE.MeshStandardMaterial({ color: "#DCE9FF", transparent: true, opacity: 0.18, roughness: 0.05, depthWrite: false }));
   K.place(glass, 0, PC.h / 2, PC.d / 2, inner);
@@ -164,7 +185,7 @@ function buildPC(root) {
   const fio = K.rbox(0.3, 0.03, 0.14, 0.01, PAL.navy); K.place(fio, PC.w / 2 - 0.3, PC.h + 0.005, 0.15, inner);
   const plug = new THREE.Group(); K.place(K.rbox(0.09, 0.22, 0.05, 0.015, "#C9D3E6", { metal: 0.3 }), 0, 0.11, 0, plug); K.place(K.rbox(0.11, 0.12, 0.07, 0.02, PAL.navy), 0, 0.27, 0, plug);
   const plugGlow = K.glowSprite(PAL.problem, 0.7); plug.add(plugGlow); plugGlow.position.y = 0.05; plug.visible = false; inner.add(plug);
-  return { group: g, inner, rgb: [gstrip, ring2, strip, fan.userData.ring], fan, light, glow, plug, plugGlow, rearTex };
+  return { group: g, inner, rgb: [gstrip, ring2, strip, fan.userData.ring, ...ramTops], fan, light, glow, plug, plugGlow, rearTex };
 }
 function buildMouse(root) {
   const m = new THREE.Group(); m.position.set(MOUSE.x, 0.03, MOUSE.z); root.add(m);
@@ -228,7 +249,7 @@ async function build(ctx) {
   ctx.T = { mon, kb, ms, pc, lap };
   ctx.states = [{ t: -1, mode: data.initial_state || "problem" }];
   ctx.screens = [{ start: 0, mode: data.idle_screen || "desktop" }]; ctx.lapScreens = [{ start: 0, cursor: false }];
-  ctx.presses = []; ctx.marks = []; ctx.fx = { flip: [], batt: [], sw: [], frontPlug: [], rot: [], laptop: [], fkey: [], fnFix: [], hop: [] };
+  ctx.presses = []; ctx.marks = []; ctx.ramTags = []; ctx.fx = { flip: [], batt: [], sw: [], frontPlug: [], rot: [], laptop: [], fkey: [], fnFix: [], hop: [] };
   const evs = (data.events || []).slice().sort((a, b) => a.start - b.start);
   const v = VAR[ctx.variant % VAR.length];
   const pose = (n) => ({ ...POSE[n], yaw: (POSE[n].yaw || 0) + (v.yaw || 0), pitch: POSE[n].pitch + (v.pitch || 0) });
@@ -296,6 +317,10 @@ async function build(ctx) {
         if (t <= hpp.end + 0.4) ms.group.position.set(lerp(MOUSE.x, to.x, q), 0.03 + 0.8 * Math.sin(Math.PI * q) + (to.y - 0.03) * q, lerp(MOUSE.z, to.z, q)); }
       // الشاشة
       const sc = lastStarted(ctx.screens, t); mon.userData.tex.redraw({ ...sc, p: sc.dur ? Math.round(prog(t, sc.start, sc.dur) * 45) / 45 : 1 });
+      // ملصق الرام (X01 ram_tag)
+      for (const tg of ctx.ramTags) { const L = life(t, tg.start, tg.end, 0.3, 0.25); tg.el.style.opacity = L.a;
+        const s = ctx.project(new THREE.Vector3(PC.x + 0.26, 2.08, PC.z - PC.d / 2 + 0.2)); const wd = tg.el.offsetWidth || 160;
+        tg.el.style.transform = `translate(${clamp(s.x - wd / 2, 130, 900 - wd)}px, ${clamp(s.y - 110, 650, 1300)}px) scale(${0.6 + 0.4 * L.s})`; }
       // علامات الاستفهام (E15)
       for (const mk of ctx.marks) { const L = life(t, mk.start, mk.end, 0.3, 0.25); mk.el.style.opacity = L.a;
         const s = ctx.project(mk.anchor()); mk.el.style.transform = `translate(${clamp(s.x - 42, 130, 870)}px, ${clamp(s.y - 120, 650, 1300)}px) scale(${0.6 + 0.4 * L.s})`; }
@@ -358,7 +383,12 @@ const handlers = {
   // E17 الختام — تلقائي
   E17: {},
   // X01 عرض شاشة بنفس الأسلوب — {mode:'no_signal'|'display_settings'|'bios_xmp'|'temps'|'startup'|'fan_curve'|'ping'|'stutter'|'text'|'off'|'desktop', state?:'problem'|'fix', ...}
-  X01: { setup(ev, ctx) { const p = ev.params; ctx.screens.push({ start: ev.start, dur: Math.max(0.6, ev.end - ev.start), ...p }); if (p.state) ctx.states.push({ t: ev.start, mode: p.state }); ctx.sortAll(); } },
+  //   ram_tag: ملصق رقم فوق شرائح الرام داخل الكيس (ram_tag_color: problem/fix/brand)
+  X01: { setup(ev, ctx) { const p = ev.params;
+    if (p.ram_tag) { const c = el("div", "tag3d", esc(p.ram_tag), ctx.ov); c.dataset.solo = `ram-${ev._i}`; const col = { problem: "rgba(255,51,71,.9)", fix: "rgba(31,174,91,.92)" }[p.ram_tag_color]; if (col) c.style.background = col;
+      ctx.ramTags.push({ el: c, start: ev.start, end: p.ram_tag_until ?? ev.end }); }
+    if (p.mode === "keep") return;
+    ctx.screens.push({ start: ev.start, dur: Math.max(0.6, ev.end - ev.start), ...p }); if (p.state) ctx.states.push({ t: ev.start, mode: p.state }); ctx.sortAll(); } },
 };
 
 boot({ series: "troubleshooting", loopHold: 1.1, label: "المشاكل وحلولها", closingLabel: "المشاكل وحلولها · تيربو", grid: false, header: "dots", build, handlers });

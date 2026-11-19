@@ -182,9 +182,9 @@ def main():
         e["end"] = round(resolve(e["end"], ctx + ".end"), 3)
         p = e.get("params", {})
         if series == "tech-news": walk(p, ctx + ".params")
-        for k in ("times", "key_times"):
+        for k in ("times", "key_times", "nav_times"):
             if k in p: p[k] = [round(resolve(x, f"{ctx}.params.{k}"), 3) for x in p[k]]
-        for k in ("drop_at", "price_at", "desc_at", "fix_at", "swap_at", "plug_at", "key_at", "at", "keys_ok_at", "until", "show_at", "pick_at", "star_at"):
+        for k in ("drop_at", "price_at", "desc_at", "fix_at", "swap_at", "plug_at", "key_at", "at", "keys_ok_at", "until", "show_at", "pick_at", "star_at", "revert_at", "ram_tag_until"):
             if k in p and not isinstance(p[k], (int, float)): p[k] = round(resolve(p[k], f"{ctx}.params.{k}"), 3)
         if "title" in p and isinstance(p["title"], dict):
             for k in ("price_at", "desc_at", "chip_fix_at", "keys_ok_at"):
