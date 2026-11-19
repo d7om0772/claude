@@ -3,3 +3,8 @@
 
 /* اسم طويل بسطر واحد (size:"sm") — 2026-11-16-01 */
 .tzone .main.sm { font-size: 58px; }
+
+/* وسم رجوع العداد (مسار بديل) "+946" — 2026-11-20-02 */
+.tag3d.plus { background: var(--fix-badge); color: #fff; }
+/* اسم طويل جداً بسطر واحد (size:"xs") — 2026-11-20-02 */
+.tzone .main.xs { font-size: 48px; }

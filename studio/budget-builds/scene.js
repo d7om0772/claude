@@ -113,6 +113,16 @@ function drawScreen(ctx) {
         K.text(g, b.label, x + bw / 2, base + h * 0.075, { size: h * 0.075, color: PAL.muted, weight: 700 }); });
       return;
     }
+    if (s.mode === "vs") { // E08 بدون أرقام: "قبل" رمادي ← "بعد" أزرق
+      g.fillStyle = "rgba(255,255,255,.95)"; K.rr(g, w * 0.07, h * 0.08, w * 0.86, h * 0.8, 26); g.fill();
+      K.text(g, s.title || "", w / 2, h * 0.2, { size: h * 0.1, color: PAL.ink });
+      const L = s.labels || []; L.slice(0, 2).forEach((lb, i) => { const q = E.outBack(clamp(p * 2.2 - i * 0.5)); if (q <= 0) return;
+        const cx = w * (i ? 0.29 : 0.71), cy = h * 0.56, bw = w * 0.3, bh = h * 0.26;
+        g.save(); g.translate(cx, cy); g.scale(q, q); g.fillStyle = i ? PAL.brand : "#A9B9D6"; K.rr(g, -bw / 2, -bh / 2, bw, bh, 22); g.fill();
+        K.text(g, lb, 0, 4, { size: h * 0.12, color: "#fff", font: K.FONT_EN, weight: 800 }); g.restore(); });
+      const qa = clamp(p * 2.2 - 0.6); if (qa > 0) { g.globalAlpha = qa; K.text(g, "←", w / 2, h * 0.56, { size: h * 0.14, color: PAL.brand, font: K.FONT_EN, weight: 800 }); g.globalAlpha = 1; }
+      return;
+    }
     if (s.mode === "list") { // E12: قائمة القطع + شريط الميزانية + المجموع
       g.fillStyle = "rgba(255,255,255,.96)"; K.rr(g, w * 0.06, h * 0.06, w * 0.88, h * 0.86, 26); g.fill();
       const X1 = w * 0.9, X0 = w * 0.1;
@@ -169,6 +179,13 @@ async function build(ctx) {
     const fl = K.glowSprite("#bcd6ff", 1.2); fl.position.set(P.pos[0], P.pos[1], P.pos[2] + 0.3); kase.group.add(fl); flashes[name] = fl;
   }
   ctx.parts = parts; ctx.kase = kase; ctx.mon = mon;
+  // منفذ PCIe x16 على الماذربورد (يُبنى فقط لو فيه E06 part:"pcie") — 2026-11-20-02
+  ctx.flashList = []; ctx.pcie = null;
+  if ((data.events || []).some((e) => e.el === "E06" && e.params?.part === "pcie")) {
+    const slot = K.box(1.15, 0.06, 0.05, "#2B3B63", { emissive: PAL.brand, ei: 0 }); slot.position.set(0, 1.0 - 1.35, 0.05); parts.mobo.add(slot);
+    const sfl = K.glowSprite("#bcd6ff", 1.5); sfl.position.set(-0.12, 1.0, -0.2); kase.group.add(sfl);
+    ctx.pcie = { slot, fl: sfl, wins: [] };
+  }
   // خطة التجميع من الأحداث
   const evs = (data.events || []).slice().sort((a, b) => a.start - b.start);
   const at = (x, d) => (x == null ? d : +x);
@@ -237,6 +254,19 @@ async function build(ctx) {
         fl.scale.setScalar(fl.userData.base * (0.6 + 0.8 * fq));
         if (hotNow) { fl.material.opacity = 0.32 + 0.22 * pu; fl.scale.setScalar(fl.userData.base * 1.7); }
       }
+      // E06 mode:"flash" — ومضة/نبض على قطعة موجودة (مثل الباور الموجود) بدون ما تنزل من جديد
+      for (const f of ctx.flashList) {
+        const L = life(t, f.t0, f.t1, 0.25, 0.3); if (L.a <= 0) continue;
+        const pu = 0.5 + 0.5 * Math.sin((t - f.t0) * 7.5);
+        const gh = ghosts[f.part], fl = flashes[f.part]; if (!gh || !parts[f.part].visible) continue;
+        gh.setGhost(L.a * (1.2 + 0.6 * pu), pu); fl.material.opacity = Math.max(fl.material.opacity, L.a * (0.35 + 0.3 * pu)); fl.scale.setScalar(fl.userData.base * 1.8);
+      }
+      // E06 part:"pcie" — الكرت يرتفع شوي ويبان المنفذ الطويل وهو يومض
+      if (ctx.pcie) { let a = 0, a0 = 0; for (const w of ctx.pcie.wins) { const L = life(t, w.t0, w.t1, 0.4, 0.4); if (L.a > a) { a = L.a; a0 = t - w.t0; } }
+        const pu = 0.5 + 0.5 * Math.sin(a0 * 7.5), q = E.inOutCubic(a);
+        ctx.pcie.slot.material.emissiveIntensity = 1.6 * q * (0.5 + 0.5 * pu);
+        ctx.pcie.fl.material.opacity = q * (0.3 + 0.3 * pu); ctx.pcie.fl.scale.setScalar(1.5 * (1 + 0.3 * pu));
+        if (q > 0 && parts.gpu.visible) { const s = parts.gpu.userData.slot; parts.gpu.position.set(s.x, s.y + 0.62 * q, s.z + 0.28 * q); } }
       // الزجاج يتركب (E11)
       const gq = E.inOutCubic(clamp((t - ctx.glassAt) / 0.6));
       kase.glass.material.opacity = 0.28 * gq; kase.glass.position.x = (1 - gq) * -2.4; kase.glass.visible = gq > 0;
@@ -267,13 +297,19 @@ function updTag(ev, t, ctx) {
   const w = ev._tag.offsetWidth; ev._tag.style.transform = `translate(${clamp(s.x - w / 2, 130, 950 - w)}px, ${s.y - 30 - 30 * L.pin}px) scale(${0.8 + 0.2 * L.s})`;
 }
 
+// رجوع العداد (مسار ثاني بديل): params.counter_delta (موجب = يرجع) + counter_at اختياري، مع وسم أخضر "+946" — 2026-11-20-02
+function counterReset(ev, ctx) {
+  const p = ev.params; if (!p.counter_delta) return;
+  const at = p.counter_at ?? ev.start; ctx.counter.events.push({ t: at, delta: +p.counter_delta });
+  ev._tag = el("div", "tag3d plus", `${p.counter_delta > 0 ? "+" : "−"}${fmt(Math.abs(p.counter_delta))}`, ctx.ov); ev._tag.dataset.safe = "1"; ev._tag.dataset.solo = "tag-" + ev._i; ev._tagAt = at;
+}
 const handlers = {
   // E01 الغرفة الأيزومترية — params: {goal:"1440p"} (العنوان من data.hook.title)
   E01: { setup(ev, ctx) { if (ev.params.goal) ctx.screens.push({ start: ev.start, mode: "goal", text: ev.params.goal, dur: 0.8 }); ctx.screens.sort((a, b) => a.start - b.start); } },
   // E02 الهدف على الشاشة — params: {goal:"1440p"} الرقم يكبر بنطّة
   E02: { setup(ev, ctx) { ctx.screens.push({ start: ev.start, mode: "goal", text: ev.params.goal || ctx.data.goal || "", dur: 0.8 }); ctx.screens.sort((a, b) => a.start - b.start); } },
   // E03 لفّة الكاميرا للأمام (1.25ث) — توقيتها يحدد بداية الأشباح
-  E03: {},
+  E03: { setup: counterReset, update: updTag },
   // E04 الكيس وأماكن القطع — {part, category, name, drop_at?}  (+ price/desc اختياري بدل E05)
   E04: { setup(ev, ctx) { const p = ev.params; ctx.addTitle({ start: ev.start, ...partTitle(ev, p.price != null ? { price: p.price, price_at: p.price_at ?? ev.start + 0.9, desc: p.desc, desc_at: p.desc_at } : {}) });
     if (p.price != null) addPrice(ev, ctx, p.price, p.price_at ?? ev.start + 0.9); },
@@ -283,15 +319,20 @@ const handlers = {
       if (s) { s.price = p.price; s.price_at = ev.start; if (p.desc) { s.desc = p.desc; s.desc_at = p.desc_at ?? ev.start + 0.5; } }
       addPrice(ev, ctx, p.price, ev.start); }, update: updTag },
   // E06 تثبيت قطعة — {part}: ومضة إضافية + انضغاط (الهبوط نفسه فيه ومضة تلقائياً)
-  E06: { setup(ev, ctx) { const pl = ctx.plan[ev.params.part]; if (pl && pl.drop < -1) pl.drop = ev.start - 0.5; } },
+  //   mode:"flash" = نبض على قطعة موجودة [start, end] بدون نزول · part:"pcie" = الكرت يرتفع والمنفذ الطويل يومض [start, end]
+  E06: { setup(ev, ctx) { const p = ev.params;
+      if (p.part === "pcie") { ctx.pcie?.wins.push({ t0: ev.start, t1: ev.end }); return; }
+      if (p.mode === "flash") { ctx.flashList.push({ part: p.part, t0: ev.start, t1: ev.end }); return; }
+      const pl = ctx.plan[p.part]; if (pl && pl.drop < -1) pl.drop = ev.start - 0.5; } },
   // E07 القطعة الرئيسية — {part:'gpu', category, name, price, desc:"قلب التجميعة"}
   E07: { setup(ev, ctx) { const p = ev.params; const pa = p.price_at ?? ev.start + 0.9;
       ctx.addTitle({ start: ev.start, ...partTitle(ev, { price: p.price, price_at: pa, desc: p.desc, desc_at: p.desc_at ?? pa + 0.5 }) });
       if (p.price != null) addPrice(ev, ctx, p.price, pa); }, update: updTag },
   // E08 بيانات على الشاشة — {title, bars:[{label, value, unit}]} الكاميرا تنزلق للشاشة
-  E08: { setup(ev, ctx) { ctx.screens.push({ start: ev.start + 0.4, mode: "bars", title: ev.params.title, bars: ev.params.bars || [], dur: 1.4 }); ctx.screens.sort((a, b) => a.start - b.start); } },
+  //   أو {title, labels:["HDD","SSD"]} = مقارنة نصية بدون أرقام (شارتين + سهم) — 2026-11-20-02
+  E08: { setup(ev, ctx) { ctx.screens.push({ start: ev.start + 0.4, mode: ev.params.labels ? "vs" : "bars", title: ev.params.title, labels: ev.params.labels, bars: ev.params.bars || [], dur: 1.4 }); ctx.screens.sort((a, b) => a.start - b.start); } },
   // E09 الرجوع للكيس — {} (انزلاق 0.85ث)
-  E09: {},
+  E09: { setup: counterReset, update: updTag },
   // E10 قطعة تدخل من الجنب — {part:'psu', category, name, price}
   E10: { setup(ev, ctx) { const p = ev.params; const pa = p.price_at ?? ev.start + 1.0;
       ctx.addTitle({ start: ev.start, ...partTitle(ev, p.price != null ? { price: p.price, price_at: pa, desc: p.desc, desc_at: p.desc_at } : {}) });
@@ -306,7 +347,7 @@ const handlers = {
         .map((e) => { const src = e.el === "E05" ? (ctx.data.events || []).filter((x) => ["E04", "E07", "E10"].includes(x.el) && x.start <= e.start).pop() : e;
           return { name: e.params.list_name || src?.params.list_name || CAT[src?.params.part] || src?.params.category || src?.params.name || "", price: e.params.price }; });
       const total = ev.params.total ?? items.reduce((s, x) => s + x.price, 0);
-      ctx.screens.push({ start: ev.start + 0.4, mode: "list", items, total, budget: ctx.data.budget || total, dur: 1.6 }); ctx.screens.sort((a, b) => a.start - b.start);
+      ctx.screens.push({ start: ev.start + 0.4, mode: "list", head: ev.params.head, items, total, budget: ctx.data.budget || total, dur: 1.6 }); ctx.screens.sort((a, b) => a.start - b.start);
       ctx.addTitle({ start: ev.start, main: ev.params.title || `المجموع **${total}** ريال`, size: "mid", desc: ev.params.desc }); } },
   // E13 الأداء — {res:"1440p", fps:100, plus:true, chips:["DLSS ✓","إعدادات عالية · تقريبي"], title, desc}
   E13: { setup(ev, ctx) { const p = ev.params;
