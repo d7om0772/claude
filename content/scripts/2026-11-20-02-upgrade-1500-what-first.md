@@ -4,7 +4,7 @@ publish_date: 2026-11-20
 slot: "22:00"
 series: budget-builds
 topic: ترقية جهازك القديم بـ 1500 ريال: وش تغيّر أول؟
-status: سكربت
+status: مرفوض
 version: 1
 target_length_s: 70
 researched_at: 2026-11-19
@@ -99,3 +99,21 @@ NVIDIA تطلب باور ثلاث مية واط على الأقل، وتأكد �
 - **النص الصغير تحت المجموع (غير منطوق):** "الأسعار من Amazon.sa بتاريخ 2026-11-19 وممكن تتغير".
 - **بدون شعارات:** Lexar/Corsair/MSI/NVIDIA نص فقط، والمجسمات عامة بدون علامات.
 - **الطول:** نص التعليق 146 كلمة ≈ 70ث (2.05 كلمة/ث) ضمن 55–80ث. لو طلع أطول من 75ث: احذف "ويبقى لك 175" من الجملة 11 في النسختين (العداد يوضحه).
+
+## التدقيق — جولة 1 — 2026-11-19 21:06
+**النتيجة: مرفوض**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | كل ادعاء له مرجع | ✅ | الـ 14 جملة كلها مغطاة بجدول المراجع (1–13). |
+| 2 | Tom's Hardware SSD (2011) — الاقتباسات | ✅ | فتحت الصفحة (HTTP 200): "It'll speed up the boot process, accelerate application loading times…" و"most significant upgrade available to you" و"if you're a gamer, a new graphics card is almost always going to be the way to go" و"more performance than a RAM upgrade" و"64 or 128 GB drive for your operating system…" — كلها حرفياً. المنطق (HDD ← SSD أكبر فرق في الإقلاع وفتح البرامج) ما تغيّر فيزيائياً، و"غالباً" صادقة (المقال نفسه يستثني). **تصحيح بسيط في الجدول (غير منطوق):** المؤلفين "Achim Roos, Patrick Schmid" مو Patrick Schmid بس. **مستحسن:** أضف مرجع حديث للسطر 1: XDA Developers — "Adding an SSD is the best upgrade for an old PC to improve its performance" (Karthik Iyer، محدّث 2024-03-21) https://www.xda-developers.com/best-upgrade-for-old-pc-m2-ssd/ ("An SSD-equipped PC will boo[t] faster… It'll also launch and run apps faster"). |
+| 3 | Tom's Hardware 8GB RAM (2022-09-27، Avram Piltch) | ✅ | "modern Windows PCs really need 16GB of RAM"، "bring it up to 16GB"، "paging file… significantly harming performance"، "check the service manual… exact type of RAM you need" — موجودة حرفياً. |
+| 4 | أسعار Amazon.sa (فحصي 21:03–21:05 الرياض، GET عادي HTTP 200 بدون CAPTCHA) | ✅ | Lexar NS100 512GB = SAR297.00، In Stock، Sold by Tikiz / FBA، FREE delivery Saturday 21 November. Corsair LPX 16GB (2x8GB) DDR4 3200 = SAR649.00، In Stock، Amazon.sa، Overnight. MSI RTX 3050 VENTUS 2X 6G OC = SAR1,325.00، "Only 2 left in stock"، PCPALACE / FBA، Monday 23 November. ولا وحدة فيها "Ships from outside the KSA"، وكلها "All prices include VAT". التاريخ اليوم (≤ 3 أيام). |
+| 5 | الميزانية والمسارين | ✅ | 297 + 649 = 946، الباقي 554 ✓. 1,500 − 1,325 = 175 ✓. المسارين منفصلين بوضوح ("ولو عندك SSD و16GB…" + "ويبقى لك 175" من 1,500)، وما فيه جملة تجمع الثلاث. خطة العداد (يرجع 1,500 قبل الكرت) تمنع الإيحاء بالجمع. |
+| 6 | بديل الكرت لو خلص | ✅ | تأكدت بنفسي: Gigabyte WINDFORCE OC V2 6G = 1,378 (Only 1 left)، ZOTAC Twin Edge OC 6GB = 1,379 (Only 2 left)، INNO3D Twin X2 V2 6GB = 1,399 (Only 2 left) — كلها FBA، شحن مجاني محلي، وتحت 1,500. والكابشن المنشور فيه "الأسعار بتاريخ 2026-11-19 وممكن تتغير". |
+| 7 | NVIDIA 300W | ✅ | صفحة NVIDIA الرسمية، RTX 3050 6GB: Required System Power 300، Graphics Card Power 70، Supplementary Power Connectors "-"، PCI Express Gen 4: Yes. الصياغة "تطلب 300W على الأقل" مطابقة للجدول، وما فيه ادعاء "بدون كيبل باور". |
+| 8 | **"تأكد إن نوعها يطابق جهازك: DDR4 ولا DDR5"** | ❌ | الفيديو موجّه لـ **جهاز قديم على هارد ميكانيكي**، وهذي الأجهزة كثير منها **DDR3** (وDDR5 أقلها احتمال). حصر الخيار بين DDR4/DDR5 يوحي للمشاهد اللي جهازه DDR3 إن "مو DDR5 = يركب" — شراء غلط. **الصح (الكابشن):** "بس تأكد من دليل جهازك أو الماذربورد إن رامه DDR4." **(التعليق):** "بس تأكد من دليل جهازك أو الماذربورد إن رامه DDR four." وعدّل وصف E05 إلى `desc:"جهازك !!DDR4!!؟ تأكد من الدليل"`. المرجع (موجود عندك): Tom's Hardware "Just check the service manual for your PC or motherboard… to find out the exact type of RAM you need" https://www.tomshardware.com/news/dont-buy-pc-with-8gb-of-ram |
+| 9 | **"وتأكد إن عندك مكان PCIe فاضي"** | ❌ | غير دقيق للمبتدئ: كثير من الأجهزة القديمة فيها منافذ PCIe x1 صغيرة فاضية، والكرت يحتاج منفذ **x16** (الطويل). **الصح (الكابشن):** "وتأكد إن عندك مكان PCIe x16 فاضي." **(التعليق):** "وتأكد إن عندك مكان PCIe إكس ستطعش فاضي." المرجع: صفحة المنتج نفسها في Amazon.sa، جدول المواصفات: "Graphics Card Interface: PCI-Express x16" https://www.amazon.sa/-/en/dp/B0CSPNYB42 (أضفه في السطر 12 من جدول المراجع). ومشهد 12: ومضة على المنفذ الطويل وT `main:"منفذ **PCIe x16**"`. |
+| 10 | التعليق ↔ الكابشن | ✅ | 14 جملة مقابل 14، نفس المعنى. التحويلات صح: 1500=ألف وخمس مية، 512GB=خمس مية واطنعش giga، 297/649/946/554/1,325/175 صح، RTX 3050=ثلاثين خمسين، 300W=ثلاث مية واط، DDR4=DDR four. (بعد تصحيح 8 و9 عدّل النسختين مع بعض.) |
+| 11 | الطول | ✅ | 146 كلمة؛ مرجع قريب: 2026-11-19-01 بـ 152 كلمة طلع 63ث ← المتوقع ~60–70ث ضمن 55–80ث. التصحيحات تزيد ~3 كلمات فقط. |
+| 12 | الهوك والقواعد العامة | ✅ | الهوك "SSD ولا رام ولا كرت؟" يتحقق في الفيديو. لا ذوات أرواح، لا شعارات (نص فقط)، لا نصيحة خطيرة (تحذير الباور تحذير سلامة/توافق). |
+| 13 | التكرار | ✅ | ما فيه موضوع ترقية جهاز قديم في `content/published.md` (المنشور: تجميعات 3000/5000، اختصارات، مشاكل). |
