@@ -1,97 +1,155 @@
-# فحص الأسعار — 2026-11-20-02 (جولة 2)
+# فحص الأسعار — 2026-11-20-02 (موضوع بديل: ترقية جهازك القديم بـ 1500 ريال)
 
-> **الطريقة:** طلب GET عادي لصفحة المنتج العامة في Amazon.sa (`/-/en/dp/<ASIN>`) بدون تسجيل دخول، والموقع رجّع الصفحة كاملة (HTTP 200، بدون CAPTCHA). النص تحت **منقول حرفياً من الصفحة** (العنوان، السعر في صندوق الشراء، التوفر، سطر التوصيل، البائع/الشحن، وأي "Import Charges"). موقع التوصيل اللي عرضته الصفحة: **Riyadh**. ما تم تجاوز أي حماية، وما استخدمت صفحات AJAX الداخلية (قائمة "كل العروض") — السعر المسجّل هو **عرض صندوق الشراء** الظاهر في الصفحة نفسها.
-> **وقت الفحص:** 2026-11-19 بين 20:44 و20:47 بتوقيت الرياض (الفحص النهائي أدناه 20:47).
-> **صفحات ما انفتحت:** noon.com (قطع الاتصال HTTP/2 INTERNAL_ERROR)، وقائمة كل العروض في Amazon (`/gp/product/ajax/aodAjaxMain`) ما استخدمتها (منعتها صلاحيات الجلسة)، فما قارنت إلا بعروض صندوق الشراء ونتائج البحث.
+> **يستبدل فحص الموضوع القديم** (تجميعة 2500 — مرفوض جولة 2). السكربت: `content/scripts/2026-11-20-02-upgrade-1500-what-first.md`.
+> **الطريقة:** طلب GET عادي (curl) لصفحة المنتج العامة في Amazon.sa (`/-/en/dp/<ASIN>`) بدون تسجيل دخول. الموقع رجّع الصفحة كاملة (HTTP 200، بدون CAPTCHA). ما تم تجاوز أي حماية، وما استخدمت صفحات AJAX ولا قائمة "كل العروض" — السعر المسجّل هو **عرض صندوق الشراء** الظاهر في الصفحة نفسها. الحقول تحت منقولة حرفياً من الصفحة (العنوان `productTitle`، السعر في `corePrice`، `availability`، سطر التوصيل، البائع/الشاحن). موقع التوصيل في رأس الصفحة ظهر "Update location" (بدون تسجيل دخول)؛ التوصيل المعروض هو الافتراضي للموقع. كل الصفحات فيها "All prices include VAT".
+> **وقت الفحص النهائي:** 2026-11-19 بين 21:00 و21:01 بتوقيت الرياض (فحص أول للقطع نفسها 20:55–21:00 بنفس الأسعار).
+> **شرط الاختيار (من المدير):** بائع يشحن من داخل السعودية (Amazon.sa أو Fulfilled by Amazon)، توصيل مجاني خلال أيام، متوفر، بدون "Ships from outside the KSA"، وهامش واضح تحت 1,500.
 
-## القطع المختارة (النص كما في الصفحة)
+## القطع المختارة
 
-### B09MDH6B1P
-- URL: https://www.amazon.sa/-/en/dp/B09MDH6B1P
-- وقت الفحص: 2026-11-19 20:47 بتوقيت الرياض
-- Title: "Processore - Intel - Core I5-12400 - 18 m Cache, Fino A 4.40 GHz (bx8071512400)"
-- Price: "SAR904.82"
-- Availability: "In Stock Ships from outside the KSA. Learn more"
-- Delivery: "SAR 95.50 delivery 2 - 5 December . Details"
-- Delivering to: "Riyadh"
-- Seller: "Shipper / Seller The Full-Cart The Full-Cart Shipper / Seller The Full-Cart"
-- Badge: "Ships from outside the KSA"
+### B07TQSYBPH
+- URL: https://www.amazon.sa/-/en/dp/B07TQSYBPH
+- وقت الفحص: 2026-11-19 21:00 بتوقيت الرياض
+- Title: Lexar NS100 512GB 2.5” SATA III Internal SSD, Solid State Drive, Up to 550MB/s Read (LNS100-512RBNA)
+- Price: SAR297.00
+- Availability: In Stock
+- Delivery: FREE delivery Saturday, 21 November . Order within 2 hrs 22 mins
+- Seller: Sold by Tikiz Tikiz Sold by Tikiz
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
 
-### B0DRVKLX9S
-- URL: https://www.amazon.sa/-/en/dp/B0DRVKLX9S
-- وقت الفحص: 2026-11-19 20:47 بتوقيت الرياض
-- Title: "PRIME H610M-F D4 R2.0"
-- Price: "SAR309.00"
-- Availability: "In Stock"
-- Delivery: "FREE delivery Tomorrow, 20 November . Order within 12 mins"
-- Delivering to: "Riyadh"
-- Seller: "Shipper / Seller Amazon.sa Amazon.sa Shipper / Seller Amazon.sa"
+### B07RS1G6XW
+- URL: https://www.amazon.sa/-/en/dp/B07RS1G6XW
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: CORSAIR VENGEANCE LPX 16GB (2x8GB) DDR4 3200 (PC4-25600) C16 1.35V Desktop Memory - Black
+- Price: SAR649.00
+- Availability: In Stock
+- Delivery: FREE delivery Overnight by 1:13 AM . Order within 2 hrs 33 mins
+- Seller: Shipper / Seller Amazon.sa Amazon.sa Shipper / Seller Amazon.sa
+- Shipper: Shipper / Seller Amazon.sa Amazon.sa Shipper / Seller Amazon.sa
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
+
+### B0CSPNYB42
+- URL: https://www.amazon.sa/-/en/dp/B0CSPNYB42
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: MSI GeForce RTX 3050 VENTUS 2X 6G OC Gaming Graphics Card - 6GB GDDR6, 1492 MHz, PCI Express Gen 4, 96-bit, 1x DP (v1.4a), 2x HDMI 2.1 (Supports 4K)
+- Price: SAR1,325.00
+- Availability: Only 2 left in stock - order soon.
+- Delivery: FREE delivery Monday, 23 November Or fastest delivery Sunday, 22 November
+- Seller: Sold by قصر الحاسبات PCPALACE قصر الحاسبات PCPALACE Sold by قصر الحاسبات PCPALACE
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
+
+## الحساب
+- **المسار 1 (جهاز على هارد ورامه 8GB):** 297.00 + 649.00 = **946.00** ← الباقي من 1,500 = **554** (63٪ من الميزانية).
+- **المسار 2 (فيه SSD و16GB ويبي يلعب):** **1,325.00** ← الباقي = **175** (88٪).
+- المسارين **منفصلين** (المشاهد ياخذ واحد منهم على حسب جهازه)، فما فيه جمع للثلاث قطع.
+
+## بدائل متوفرة (لو تغيّر سعر قطعة أو خلصت) — كلها محلية، شحن مجاني، والمجموع يبقى تحت 1,500
+- SSD: Kingston A400 960GB = 440.00 ← المسار 1 = 1,089 (باقي 411).
+- رام: DATO 16GB (2×8GB) DDR4 3200 = 514.76 ← المسار 1 = 812 (باقي 688).
+- كرت: Gigabyte RTX 3050 WINDFORCE OC V2 6G = 1,378.00 (Only 1 left) · ZOTAC RTX 3050 6GB Twin Edge OC = 1,379.00 (Only 2 left) · INNO3D RTX 3050 Twin X2 V2 6GB = 1,399.00 (Only 2 left) — كلها تحت 1,500.
+- **مستبعد عمداً:** ZOTAC RTX 3050 6GB **Low-Profile** (1,250.00، أرخص): الصفحة تقول "Included components … Low-profile bracket" بس، يعني ممكن ما يركب في كيس عادي بدون قاعدة كاملة — خطر على المبتدئ. ASUS Dual RTX 3050 6GB (1,189.00): "Ships from outside the KSA" و"SAR88 delivery 2 - 5 December" — مخالف للشرط. GeIL Orion 16GB DDR4 (489.00): "Only 1 left in stock".
+
+## نص صفحات البدائل
+
+### B079XC5PVV
+- URL: https://www.amazon.sa/-/en/dp/B079XC5PVV
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: Kingston A400 SATA SSD Internal Solid State Drive 2.5 Inch, 960 GB SA400S37/960G
+- Price: SAR440.00
+- Availability: In Stock
+- Delivery: FREE delivery Overnight by 1:13 AM . Order within 2 hrs 33 mins
+- Seller: Sold by PrimePicks SA PrimePicks SA Sold by PrimePicks SA
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
 
 ### B0DF29K1X9
 - URL: https://www.amazon.sa/-/en/dp/B0DF29K1X9
-- وقت الفحص: 2026-11-19 20:47 بتوقيت الرياض
-- Title: "DATO DDR4 RAM 16GB kit 8GBx2 3200 CL22 3200MHz PC4-25600 1.2V 288pin Non-ECC unbuffered memory dimm, Computer Desktop Memory Module Udimm"
-- Price: "SAR514.76"
-- Availability: "In Stock"
-- Delivery: "FREE delivery Saturday, 21 November Or fastest delivery Tomorrow, 20 November . Order within 5 mins"
-- Delivering to: "Riyadh"
-- Seller: "Sold by Datotek International Co., Ltd. Datotek International Co., Ltd. Sold by Datotek International Co., Ltd."
-- Fulfilment: "Fulfilled by Amazon Amazon Fulfilled by Amazon"
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: DATO DDR4 RAM 16GB kit 8GBx2 3200 CL22 3200MHz PC4-25600 1.2V 288pin Non-ECC unbuffered memory dimm, Computer Desktop Memory Module Udimm
+- Price: SAR514.76
+- Availability: In Stock
+- Delivery: FREE delivery Saturday, 21 November . Order within 2 hrs 21 mins
+- Seller: Sold by Datotek International Co., Ltd. Datotek International Co., Ltd. Sold by Datotek International Co., Ltd.
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
 
-### B0BFRCV8K8
-- URL: https://www.amazon.sa/-/en/dp/B0BFRCV8K8
-- وقت الفحص: 2026-11-19 20:47 بتوقيت الرياض
-- Title: "Lexar NM610PRO 500GB SSD, M.2 2280 PCIe Gen3x4 NVMe 1.4 Internal SSD, Up to 3300MB/s Reading, 1700MB/s Write, 3D NAND Flash Internal SSD Drives for Notebook, Desktop, PC"
-- Price: "SAR320.00"
-- Availability: "In Stock"
-- Delivery: "FREE delivery Tomorrow, 20 November . Order within 12 mins"
-- Delivering to: "Riyadh"
-- Seller: "Sold by Tikiz Tikiz Sold by Tikiz"
-- Fulfilment: "Fulfilled by Amazon Amazon Fulfilled by Amazon"
+### B0DQK4XSC7
+- URL: https://www.amazon.sa/-/en/dp/B0DQK4XSC7
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: GIGABYTE GeForce RTX 3050 WINDFORCE OC V2 6G Graphics Card, 2X WINDFORCE Fans, 6GB GDDR6 96-bit GDDR6, GV-N3050WF2OCV2-6GD Graphics Card
+- Price: SAR1,378.00
+- Availability: Only 1 left in stock - order soon.
+- Delivery: FREE delivery Saturday, 21 November . Order within 2 hrs 21 mins
+- Seller: Sold by TechTroniX Sa TechTroniX Sa Sold by TechTroniX Sa
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
 
-### B07M9VTKQB
-- URL: https://www.amazon.sa/-/en/dp/B07M9VTKQB
-- وقت الفحص: 2026-11-19 20:47 بتوقيت الرياض
-- Title: "Aerocool Lux RGB M 550W Modular RGB Power Supply, 80Plus Bronze 230V"
-- Price: "SAR145.00"
-- Availability: "In Stock"
-- Delivery: "FREE delivery Monday, 23 November Or fastest delivery Sunday, 22 November"
-- Delivering to: "Riyadh"
-- Seller: "Sold by IT Technology IT Technology Sold by IT Technology"
-- Fulfilment: "Fulfilled by Amazon Amazon Fulfilled by Amazon"
+### B0GK8SR441
+- URL: https://www.amazon.sa/-/en/dp/B0GK8SR441
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: ZOTAC Gaming GeForce RTX 3050 6GB GDDR6 Twin Edge OC 96-bit 14 Gbps PCIE 4.0 Super Compact Gaming Graphics Card, ZT-A30510H-10L
+- Price: SAR1,379.00
+- Availability: Only 2 left in stock - order soon.
+- Delivery: FREE delivery Monday, 23 November Or fastest delivery Sunday, 22 November
+- Seller: Sold by قصر الحاسبات PCPALACE قصر الحاسبات PCPALACE Sold by قصر الحاسبات PCPALACE
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
 
-### B0HMS1PJ74
-- URL: https://www.amazon.sa/-/en/dp/B0HMS1PJ74
-- وقت الفحص: 2026-11-19 20:47 بتوقيت الرياض
-- Title: "darkFlash A290 Black + 3 fans included, ATX PC Case, Tempered Glass Side Panel, Mesh Front, Supports ATX/Micro-ATX/Mini-ITX, USB 3.0, 2 YEAR WARRANTY - Tech Hive Edition"
-- Price: "SAR138.00"
-- Availability: "In Stock"
-- Delivery: "FREE delivery Tomorrow, 20 November . Order within 12 mins"
-- Delivering to: "Riyadh"
-- Seller: "Sold by Tech Hive Store Tech Hive Store Sold by Tech Hive Store"
-- Fulfilment: "Fulfilled by Amazon Amazon Fulfilled by Amazon"
+### B0DY4NSLCR
+- URL: https://www.amazon.sa/-/en/dp/B0DY4NSLCR
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: INNO3D NVIDIA GEFORCE Pci_E_4 RTX 3050 Twin X2 V2 6GB GDDR6 96-Bit Pcie 4.0 Gaming Graphics Card - N30502-06D6-1880VA60
+- Price: SAR1,399.00
+- Availability: Only 2 left in stock - order soon.
+- Delivery: FREE delivery Monday, 23 November Or fastest delivery Sunday, 22 November
+- Seller: Sold by قصر الحاسبات PCPALACE قصر الحاسبات PCPALACE Sold by قصر الحاسبات PCPALACE
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
 
-## ملاحظة على المعالج (بائع دولي)
-- الصفحة فيها شارة **"Ships from outside the KSA"** والبائع والشاحن **The Full-Cart** (بائع خارجي، **مو** Amazon Global Store). جدول تفاصيل المنتج في نفس الصفحة: **"Brand Intel … Model Number BX8071512400"** = رمز النسخة **Boxed** حسب صفحة Ordering في Intel.
-- السعر في الصفحة ما يذكر "Import Charges" منفصلة. صفحة المساعدة الرسمية في Amazon.sa اللي يربط لها "Learn more" (Shop from International Sellers، https://www.amazon.sa/-/en/gp/help/customer/display.html/?nodeId=201996910) نصها: **"The product price shown on Amazon.sa is inclusive of import taxes and duties to be paid for the product. Shipping fees may be extra depending on seller"** و **"Products shipped from International Sellers generally have longer delivery times as they ship from other countries and require customs clearance."**
-- رسوم الشحن ظاهرة في الصفحة: **SAR 95.50**، والتوصيل **2–5 December** (حوالي أسبوعين من 20 نوفمبر).
-- **السعر المحسوب للمعالج = 904.82 + 95.50 = 1,000.32 ريال** (يظهر في الفيديو "1,000 مع الشحن").
+### B0D4TRRSDV
+- URL: https://www.amazon.sa/-/en/dp/B0D4TRRSDV
+- وقت الفحص: 2026-11-19 21:01 بتوقيت الرياض
+- Title: ZOTAC GAMING GeForce RTX 3050 6GB GDDR6 Low-Profile 96-bit 14 Gbps PCIE 4.0 Super Compact Gaming Graphics Card, ZT-A30510L-10L
+- Price: SAR1,250.00
+- Availability: In Stock
+- Delivery: FREE delivery Saturday, 21 November Or fastest delivery Tomorrow, 20 November . Order within 2 hrs 58 mins
+- Seller: Sold by PRO Tech Solutions PRO Tech Solutions Sold by PRO Tech Solutions
+- Shipper: Fulfilled by Amazon Amazon Fulfilled by Amazon
+- Import Charges: (لا يوجد في الصفحة)
+- "Ships from outside the KSA": غير موجود في الصفحة
+- Deliver to: Update location
+- "All prices include VAT": موجود
 
-## المجموع
-| القطعة | ASIN | السعر (SAR) | التوصيل |
-|---|---|---|---|
-| Intel Core i5-12400 (BX8071512400) | B09MDH6B1P | 904.82 + 95.50 شحن = **1,000.32** | 2–5 ديسمبر (بائع دولي) |
-| ASUS PRIME H610M-F D4 R2.0 | B0DRVKLX9S | **309.00** | مجاني، 20 نوفمبر |
-| DATO DDR4 16GB (2×8GB) 3200 | B0DF29K1X9 | **514.76** | مجاني، 21 نوفمبر |
-| Lexar NM610PRO 500GB | B0BFRCV8K8 | **320.00** | مجاني، 20 نوفمبر |
-| Aerocool Lux RGB M 550W | B07M9VTKQB | **145.00** | مجاني، 23 نوفمبر |
-| darkFlash A290 | B0HMS1PJ74 | **138.00** | مجاني، 20 نوفمبر |
-| **المجموع** | | **2,427.08** (مقرّب 2,427) | الباقي **73** |
 
-## بدائل فحصتها وما اخترتها (نفس الوقت)
-- **i5-12400 (B09NMPD8V2):** "Intel Core i5-12400 Desktop Processor 18M Cache, up to 4.40 GHz"، SAR 1,131.00، "Usually ships within 3 to 4 days Ships from outside the KSA"، "FREE delivery 28 - 29 November"، البائع Desertcart SA ← المجموع يطلع فوق 2,500.
-- **i5-13400 (B0BN68JXR2)** (بديل المدقق): "Intel® Core™ i5-13400 Desktop Processor 10 cores (6 P-cores + 4 E-cores) 20MB Cache, up to 4.6 GHz"، **SAR 1,152.93** "Import Charges Included" (987.55 + 165.38)، "Only 1 left in stock"، Amazon Germany، "FREE delivery 9 - 10 December" ← أغلى من حد المدقق (916) فما ينفع.
-- **i5-14400 (B0CQ1M1YXM):** SAR 822.89 في نتائج البحث — مستبعد بقرار المدير (BIOS).
-- رامات أرخص/قريبة: GeIL Orion 16GB (B0H6PB7XN5) SAR 489.00 لكن **"Only 1 left in stock"**؛ TEAMGROUP Elite (B086X2SWTT) SAR 528.68 Amazon US "Import Charges Included" (توصيل أطول)؛ PNY (B0GYT643W7) SAR 520.35 Amazon US.
-- باور: CORSAIR CX650 (B0CJRXX5WT) SAR 216.98 مجاني — يطلّع المجموع 2,499 (هامش ريال واحد) فما اخترته؛ XPG Probe 600W (B0DQPB1SR8) SAR 199.00 "Only 2 left"؛ darkFlash EMT650 SAR 190.00 + شحن SAR12.
-- تخزين: Kingston NV3 500GB (B0DBR9RZLV) SAR 390.93 مجاني؛ WD Blue SN5000 500GB SAR 349 + شحن SAR12؛ Lexar NM620 512GB SAR 330.97.
+### B0CVCG2VPK (مستبعد — من برا السعودية، فحص 20:55)
+- Title: ASUS Dual NVIDIA GeForce RTX 3050 6GB OC Edition Gaming Graphics Card - PCIe 4.0, 6GB GDDR6 Memory, HDMI 2.1, DisplayPort 1.4a, 2-Slot Design, Axial-tech Fan Design, 0dB Technology, Steel Bracket
+- Price: SAR1,189.00
+- Delivery: SAR88 delivery 2 - 5 December . Details
+- Seller: Shipper / Seller Muhammad Saad Store FZE LLC
+- Badge: "Ships from outside the KSA"
