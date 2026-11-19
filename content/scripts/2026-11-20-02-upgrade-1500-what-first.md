@@ -4,7 +4,7 @@ publish_date: 2026-11-20
 slot: "22:00"
 series: budget-builds
 topic: ترقية جهازك القديم بـ 1500 ريال: وش تغيّر أول؟
-status: سكربت
+status: معتمد
 version: 2
 target_length_s: 70
 researched_at: 2026-11-19
@@ -123,3 +123,16 @@ NVIDIA تطلب باور ثلاث مية واط على الأقل، وتأكد �
   1. الرام (بند 8): الجملة 8 صارت "بس تأكد من دليل جهازك أو الماذربورد إن رامه DDR4." (التعليق: "... إن رامه DDR four.")، ووصف E05 صار `desc:"جهازك !!DDR4!!؟ تأكد من الدليل"`، وتحدّث السطر 6 في المراجع. المصدر: Tom's Hardware "Just check the service manual for your PC or motherboard…".
   2. منفذ الكرت (بند 9): "مكان PCIe فاضي" ← "مكان PCIe x16 فاضي" (التعليق: "PCIe إكس ستطعش")، وأضفت مرجع Amazon.sa B0CSPNYB42 ("Graphics Card Interface: PCI-Express x16"، فتحته بنفسي HTTP 200) للسطر 12، ومشهد 12 صار ومضة على المنفذ الطويل مع T `main:"منفذ **PCIe x16**"`.
   3. غير منطوق (بند 2): مؤلفين مقال Tom's Hardware عن الـ SSD صاروا "Achim Roos, Patrick Schmid"، وأضفت مرجع XDA Developers (Karthik Iyer، محدّث 2024-03-21) للسطر 1 بعد ما فتحته وتأكدت من الاقتباسين.
+
+## التدقيق — جولة 2 — 2026-11-19 21:10
+**النتيجة: معتمد**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | نطاق التعديل (diff v1 ← v2) | ✅ | قارنت commit `fa2b515` بـ `f29a843`: التغييرات محصورة في الجملة 8 والجملة 12 (الكابشن والتعليق)، والسطور 1 و6 و12 في المراجع، ووصف E05 ومشهد 12، وسجل التعديلات، والـ front matter (version/status). ما فيه شي ثاني تغيّر. |
+| 2 | تصحيح الرام (بند 8 جولة 1) | ✅ | الكابشن: "بس تأكد من دليل جهازك أو الماذربورد إن رامه DDR4." والتعليق: "... إن رامه DDR four." — حرفياً كما طُلب. وصف E05: `desc:"جهازك !!DDR4!!؟ تأكد من الدليل"` ✓. المرجع Tom's Hardware ("Just check the service manual for your PC or motherboard…") موجود ومتحقق في جولة 1. |
+| 3 | تصحيح منفذ الكرت (بند 9 جولة 1) | ✅ | الكابشن: "مكان PCIe x16 فاضي"، والتعليق: "PCIe إكس ستطعش" (متسق مع voice.md §٣.٤/§٣.٦: الحرف المفرد بالعربي، والأرقام عامية). مشهد 12: ومضة على المنفذ الطويل + T `main:"منفذ **PCIe x16**"` ✓. مرجع السطر 12: فتحت https://www.amazon.sa/-/en/dp/B0CSPNYB42 (HTTP 200، 21:08 الرياض، بدون CAPTCHA): "Graphics Card Interface: PCI-Express x16" ✓. |
+| 4 | مرجع XDA الجديد | ✅ | فتحته: العنوان "Adding an SSD is the best upgrade for an old PC to improve its performance"، Karthik Iyer، "Updated Mar 21, 2024". النص: "An SSD-equipped PC will boost faster, often in seconds." (كذا في الأصل، و`[boot]` في الجدول توضيح تحريري) و"It'll also launch and run apps faster" ✓. يدعم جملة 4 ("الإقلاع وفتح البرامج") بدون أرقام. |
+| 5 | المؤلفين | ✅ | Tom's Hardware SSD: "Achim Roos, Patrick Schmid" (متحقق جولة 1). مقال الرام: Avram Piltch ✓. XDA: Karthik Iyer ✓. |
+| 6 | سعر الكرت B0CSPNYB42 (فحص سريع) | ✅ | 21:08 الرياض: العنوان نفسه (MSI GeForce RTX 3050 VENTUS 2X 6G OC…)، السعر **1,325** (بدون تغيير)، "Only 2 left in stock - order soon."، FREE delivery، "All prices include VAT"، ولا فيه "Ships from outside". البدائل المحلية تحت 1,500 (Gigabyte 1,378 · ZOTAC 1,379 · INNO3D 1,399) متحققة في جولة 1 ومسجلة في السطر 9. |
+| 7 | التعليق ↔ الكابشن | ✅ | 14 جملة مقابل 14، نفس المعنى، والتحويلات كلها صح (بدون تغيير عن جولة 1 إلا الجملتين المصححتين). |
+| 8 | باقي البنود (أسعار SSD/الرام، الحسابات، NVIDIA 300W، الهوك، القواعد العامة، التكرار، الطول) | ✅ | ما تغيّرت من جولة 1 (كلها ✅). الطول زاد ~4 كلمات (~150) ← ضمن 55–80ث. ملاحظة غير ملزمة: عنوان مشهد 8 في الملاحظات لسه مكتوب "تأكد إن نوعها…" — تسمية داخلية فقط، والوصف الفعلي مصحح. |
