@@ -1,0 +1,286 @@
+{
+ "out": "work/mix.wav",
+ "duration": 34.5,
+ "voice_lufs_raw": -18.6,
+ "final_lufs": -14.0,
+ "final_true_peak_dbfs": -2.8,
+ "sfx_count": 39,
+ "sfx_below_voice_db": 12.0,
+ "ducking_db": 4.0,
+ "sfx": [
+  {
+   "t": 0.05,
+   "name": "swoosh_up",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 2.339,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 2.689,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 3.14,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 5.26,
+   "name": "whoosh",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 7.58,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 7.73,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 10.53,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 12.72,
+   "name": "success",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 12.97,
+   "name": "error",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 13.0,
+   "name": "whoosh",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 14.83,
+   "name": "swoosh_up",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 15.56,
+   "name": "gs_coins3",
+   "level_vs_voice_db": -14.0,
+   "license": "CC BY 4.0",
+   "attribution": "\"Coins 3 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons"
+  },
+  {
+   "t": 16.5,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 17.5,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 18.4,
+   "name": "snap",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 20.46,
+   "name": "tick",
+   "level_vs_voice_db": -16.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 20.56,
+   "name": "tick",
+   "level_vs_voice_db": -16.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 20.66,
+   "name": "tick",
+   "level_vs_voice_db": -16.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 20.76,
+   "name": "tick",
+   "level_vs_voice_db": -16.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 20.86,
+   "name": "tick",
+   "level_vs_voice_db": -16.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 20.96,
+   "name": "tick",
+   "level_vs_voice_db": -16.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 21.02,
+   "name": "thud",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 21.1,
+   "name": "whoosh",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 23.183,
+   "name": "click",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 23.369,
+   "name": "click",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 23.554,
+   "name": "click",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 23.74,
+   "name": "click",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 23.926,
+   "name": "click",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 24.111,
+   "name": "click",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 24.297,
+   "name": "click",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 25.58,
+   "name": "success",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 26.06,
+   "name": "whoosh",
+   "level_vs_voice_db": -15.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 27.62,
+   "name": "error",
+   "level_vs_voice_db": -13.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 27.62,
+   "name": "thud",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 27.84,
+   "name": "whoosh",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 29.04,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 29.64,
+   "name": "pop",
+   "level_vs_voice_db": -14.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  },
+  {
+   "t": 30.39,
+   "name": "success",
+   "level_vs_voice_db": -12.0,
+   "license": "CC0 (إنتاج داخلي — بدون حقوق لطرف ثالث)",
+   "attribution": null
+  }
+ ],
+ "music": "none"
+}

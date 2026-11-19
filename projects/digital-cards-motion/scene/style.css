@@ -1,0 +1,139 @@
+@font-face { font-family: "Alexandria"; font-weight: 400; src: url(../assets/fonts/alexandria-arabic-400.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+@font-face { font-family: "Alexandria"; font-weight: 600; src: url(../assets/fonts/alexandria-arabic-600.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+@font-face { font-family: "Alexandria"; font-weight: 700; src: url(../assets/fonts/alexandria-arabic-700.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+@font-face { font-family: "Alexandria"; font-weight: 800; src: url(../assets/fonts/alexandria-arabic-800.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+@font-face { font-family: "Alexandria"; font-weight: 900; src: url(../assets/fonts/alexandria-arabic-900.woff2) format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F; }
+@font-face { font-family: "Alexandria"; font-weight: 400; src: url(../assets/fonts/alexandria-latin-400.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: "Alexandria"; font-weight: 700; src: url(../assets/fonts/alexandria-latin-700.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F; }
+@font-face { font-family: "Alexandria"; font-weight: 900; src: url(../assets/fonts/alexandria-latin-900.woff2) format("woff2"); unicode-range: U+0000-00FF, U+2000-206F; }
+
+:root {
+  --ink: #07071f;
+  --navy: #14113a;
+  --violet: #7c5cff;
+  --violet-2: #a78bfa;
+  --cyan: #22d3ee;
+  --mint: #34d399;
+  --coral: #fb7185;
+  --gold: #fbbf24;
+  --text: #f5f3ff;
+  --muted: #b9b4e0;
+  --glass: rgba(255, 255, 255, 0.07);
+  --glass-line: rgba(255, 255, 255, 0.16);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--ink); }
+body { font-family: "Alexandria", sans-serif; color: var(--text); direction: rtl; -webkit-font-smoothing: antialiased; }
+
+#stage { position: absolute; inset: 0; overflow: hidden; }
+.abs { position: absolute; will-change: transform, opacity; }
+
+/* ---------- الخلفية ---------- */
+#bg { position: absolute; inset: -60px; background-size: cover; background-position: center; }
+#bgTint { position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 700px at 50% 38%, rgba(124, 92, 255, 0.18), transparent 70%),
+    linear-gradient(180deg, rgba(7, 7, 31, 0.35) 0%, rgba(7, 7, 31, 0.05) 40%, rgba(7, 7, 31, 0.55) 75%, rgba(7, 7, 31, 0.92) 100%); }
+#spot { position: absolute; width: 1100px; height: 1100px; left: -10px; top: 180px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.20), rgba(124, 92, 255, 0.10) 40%, transparent 68%); }
+#fx { position: absolute; inset: 0; }
+
+/* ---------- الهيدر ---------- */
+#header { left: 90px; top: 196px; width: 840px; height: 84px; display: flex; align-items: center; justify-content: space-between; }
+.pill { display: flex; align-items: center; gap: 14px; height: 72px; padding: 0 28px 0 30px; border-radius: 40px;
+  background: rgba(20, 17, 58, 0.72); border: 2px solid var(--glass-line); box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+.pill .ico { width: 44px; height: 30px; border-radius: 7px; background: linear-gradient(135deg, var(--violet), var(--cyan)); position: relative; }
+.pill .ico::after { content: ""; position: absolute; left: 7px; right: 7px; bottom: 7px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.75); }
+.pill span { font-size: 32px; font-weight: 700; letter-spacing: 0; }
+#steps { display: flex; gap: 12px; direction: rtl; }
+.step { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; font-family: "Alexandria"; font-weight: 900; font-size: 30px;
+  background: rgba(20, 17, 58, 0.72); border: 2px solid var(--glass-line); color: var(--muted); }
+.step.on { background: linear-gradient(135deg, var(--violet), var(--cyan)); color: #fff; border-color: transparent; box-shadow: 0 0 30px rgba(34, 211, 238, .45); }
+.step.done { background: rgba(52, 211, 153, .18); border-color: rgba(52, 211, 153, .7); color: var(--mint); }
+
+/* ---------- الصور ---------- */
+.art { position: absolute; transform-origin: 50% 50%; }
+.art img { width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 40px 60px rgba(0, 0, 0, .55)); }
+.glow { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(124, 92, 255, .45), transparent 65%); }
+
+/* ---------- العناوين ---------- */
+.titleBox { left: 90px; width: 840px; text-align: center; }
+.kicker { display: inline-flex; align-items: center; gap: 14px; font-size: 34px; font-weight: 700; color: var(--cyan); }
+.num { width: 76px; height: 76px; border-radius: 24px; display: inline-grid; place-items: center; font-weight: 900; font-size: 44px; color: #fff;
+  background: linear-gradient(135deg, var(--violet), var(--cyan)); box-shadow: 0 10px 40px rgba(34, 211, 238, .35); }
+.h1 { font-size: 92px; font-weight: 900; line-height: 1.25; text-shadow: 0 6px 30px rgba(0,0,0,.45); }
+.h2 { font-size: 64px; font-weight: 800; line-height: 1.3; }
+.sub { font-size: 38px; font-weight: 600; color: var(--muted); line-height: 1.5; }
+.grad { background: linear-gradient(90deg, var(--cyan), var(--violet-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lat { direction: ltr; unicode-bidi: isolate; display: inline-block; font-family: "Alexandria"; }
+
+/* ---------- بطاقات صغيرة (CSS) ---------- */
+.gcard { width: 330px; height: 208px; border-radius: 26px; padding: 22px 24px; display: flex; flex-direction: column; justify-content: space-between;
+  background: linear-gradient(135deg, #3a2a8f, #1a1650 60%, #0e2b48); border: 2px solid rgba(255,255,255,.18); box-shadow: 0 30px 60px rgba(0,0,0,.45); overflow: hidden; }
+.gcard::before { content: ""; position: absolute; inset: 0; background: radial-gradient(400px 160px at 20% 0%, rgba(255,255,255,.16), transparent 70%); }
+.gcard .row { display: flex; justify-content: space-between; align-items: center; position: relative; }
+.gcard .chip { width: 52px; height: 38px; border-radius: 9px; background: linear-gradient(135deg, #ffe08a, #c99a2e); }
+.gcard .reg { font-size: 30px; font-weight: 800; }
+.gcard .lbl { font-size: 26px; font-weight: 600; color: var(--muted); }
+.gcard .code { font-size: 26px; font-weight: 700; letter-spacing: 3px; color: rgba(255,255,255,.8); }
+.gcard.sa { background: linear-gradient(135deg, #0f6b55, #0f3b46 60%, #172a5c); }
+.gcard.us { background: linear-gradient(135deg, #5b2a6e, #2a1b55 60%, #1c2047); }
+
+.badge { position: absolute; width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; box-shadow: 0 14px 40px rgba(0,0,0,.4); }
+.badge svg { width: 54px; height: 54px; }
+.badge.ok { background: var(--mint); }
+.badge.no { background: var(--coral); }
+
+.account { left: 260px; width: 500px; height: 96px; border-radius: 48px; display: flex; align-items: center; justify-content: center; gap: 18px;
+  background: rgba(20, 17, 58, .8); border: 2px solid var(--glass-line); font-size: 36px; font-weight: 700; }
+.account .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 18px var(--mint); }
+.account b { color: var(--mint); font-weight: 900; }
+
+/* بطاقة الكود الكبيرة */
+#codeCard { width: 720px; height: 420px; border-radius: 40px; padding: 40px 46px; left: 150px;
+  background: linear-gradient(135deg, #4b34c9, #241c78 55%, #0c3a5a); border: 2px solid rgba(255,255,255,.2); box-shadow: 0 40px 90px rgba(0,0,0,.55); overflow: hidden; }
+#codeCard .shine { position: absolute; top: -40%; width: 160px; height: 180%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent); transform: rotate(18deg); }
+#codeCard .top { display: flex; justify-content: space-between; align-items: center; }
+#codeCard .top .t { font-size: 34px; font-weight: 800; }
+#codeCard .val { font-size: 30px; font-weight: 700; color: var(--muted); margin-top: 10px; }
+#codeStrip { position: absolute; left: 46px; right: 46px; bottom: 46px; height: 120px; border-radius: 24px; background: rgba(7,7,31,.55);
+  border: 2px dashed rgba(255,255,255,.25); display: grid; place-items: center; overflow: hidden; }
+#codeTxt { font-family: "Alexandria"; font-weight: 900; font-size: 58px; letter-spacing: 6px; direction: ltr; color: #fff; }
+#scratch { position: absolute; inset: 0; background: repeating-linear-gradient(135deg, #b9b4e0 0 14px, #9f98d6 14px 28px); }
+#codeMask { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(7,7,31,.75); font-size: 58px; font-weight: 900; letter-spacing: 10px; color: var(--muted); direction: ltr; }
+
+.noIcon { width: 170px; height: 170px; border-radius: 44px; display: grid; place-items: center; background: rgba(20, 17, 58, .85); border: 3px solid rgba(251, 113, 133, .75); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+.noIcon svg { width: 100px; height: 100px; }
+.noLbl { font-size: 32px; font-weight: 800; text-align: center; width: 240px; }
+
+.cashTag { height: 110px; border-radius: 30px; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 50px; font-weight: 900;
+  background: linear-gradient(135deg, rgba(251,191,36,.22), rgba(251,191,36,.08)); border: 3px solid rgba(251,191,36,.75); color: var(--gold); }
+
+/* الجوال وحقل الكود */
+#inputBox { width: 560px; height: 118px; border-radius: 30px; left: 230px; display: flex; align-items: center; justify-content: center;
+  background: rgba(7,7,31,.88); border: 3px solid var(--cyan); box-shadow: 0 0 40px rgba(34,211,238,.35); }
+#inputTxt { font-family: "Alexandria"; font-weight: 900; font-size: 48px; letter-spacing: 4px; direction: ltr; }
+#caret { display: inline-block; width: 5px; height: 56px; background: var(--cyan); margin-left: 4px; vertical-align: middle; }
+.okTag { height: 92px; border-radius: 46px; padding: 0 36px; display: flex; align-items: center; gap: 16px; font-size: 36px; font-weight: 800;
+  background: rgba(52, 211, 153, .16); border: 3px solid var(--mint); color: var(--mint); }
+.okTag svg, .noTag svg { width: 40px; height: 40px; }
+.noTag { height: 92px; border-radius: 46px; padding: 0 36px; display: flex; align-items: center; gap: 16px; font-size: 36px; font-weight: 800;
+  background: rgba(251, 113, 133, .16); border: 3px solid var(--coral); color: var(--coral); }
+.link { direction: ltr; font-family: "Alexandria"; font-weight: 700; font-size: 34px; color: var(--coral); text-decoration: line-through; text-decoration-thickness: 4px; }
+.stamp { width: 220px; height: 220px; border-radius: 50%; border: 12px solid var(--coral); display: grid; place-items: center; }
+.stamp svg { width: 120px; height: 120px; }
+
+/* الملخص */
+.check { left: 110px; width: 800px; height: 112px; border-radius: 30px; display: flex; align-items: center; gap: 24px; padding: 0 30px;
+  background: rgba(20, 17, 58, .78); border: 2px solid var(--glass-line); font-size: 40px; font-weight: 800; }
+.check .box { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; background: var(--mint); flex: none; }
+.check .box svg { width: 40px; height: 40px; }
+
+/* ---------- الترجمة ---------- */
+#subs { left: 100px; width: 840px; top: 1318px; height: 170px; display: flex; align-items: center; justify-content: center; text-align: center; }
+#subsIn { display: inline-block; padding: 18px 34px; border-radius: 30px; background: rgba(7, 7, 31, .62); border: 2px solid rgba(255,255,255,.08);
+  font-size: 50px; font-weight: 800; line-height: 1.45; text-wrap: balance; }
+#subsIn .w { color: rgba(245, 243, 255, .55); }
+#subsIn .w.said { color: #fff; }
+#subsIn .w.now { color: var(--cyan); }

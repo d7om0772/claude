@@ -1,0 +1,44 @@
+{
+ "_note": "GPT Image-2 عبر kie.ai. القاعدة في كل برومبت: لا ذوات أرواح (لا أشخاص ولا أيادي ولا وجوه ولا حيوانات)، لا نصوص، لا شعارات.",
+ "bg": {
+  "aspect_ratio": "9:16",
+  "resolution": "2K",
+  "prompt": "Abstract dark background for a vertical educational video about digital gift cards. Deep midnight indigo to near-black gradient (#07071F to #14113A). Soft out-of-focus bokeh lights in electric violet (#7C5CFF) and cyan (#22D3EE), a few blurred translucent frosted-glass rectangles with rounded corners (like gift cards) floating at different depths, very subtle perspective grid glowing faintly near the bottom. Large calm empty negative space in the center for typography. Cinematic, minimal, premium, high detail, clean. Strictly no text, no letters, no numbers, no logos, no brand marks, no people, no hands, no faces, no silhouettes, no animals, no living creatures."
+ },
+ "card_hero": {
+  "aspect_ratio": "1:1",
+  "resolution": "1K",
+  "background": "transparent",
+  "prompt": "A single premium digital gift card floating in the air at a dynamic three-quarter 3D angle, rounded corners, made of glossy tinted glass over brushed metal, vibrant gradient from electric violet (#7C5CFF) to cyan (#22D3EE), an embossed abstract flowing wave pattern, a glowing holographic strip where a redeem code would be (shown only as soft blurred light, no characters), a small abstract chip shape, soft studio rim light, crisp reflections, high-end 3D product render. Centered isolated object with a little empty margin around it, on a fully transparent background. Strictly no text, no letters, no numbers, no logos, no brand marks, no people, no hands, no fingers, no faces, no animals."
+ },
+ "globe": {
+  "aspect_ratio": "1:1",
+  "resolution": "1K",
+  "background": "transparent",
+  "prompt": "A stylized 3D globe made of frosted dark glass with glowing cyan (#22D3EE) latitude and longitude lines and softly lit continents in violet (#7C5CFF), three glowing map location pins standing on different continents, two tiny abstract gift cards orbiting the globe on a thin glowing ring. Clean modern premium 3D icon style, soft glow, isolated, centered, fully transparent background. Strictly no text, no letters, no numbers, no country flags, no logos, no people, no hands, no faces, no animals."
+ },
+ "vault": {
+  "aspect_ratio": "1:1",
+  "resolution": "1K",
+  "background": "transparent",
+  "prompt": "A 3D security concept icon: a glossy rounded shield in violet (#7C5CFF) with a polished gold (#FBBF24) padlock in front of it, a digital gift card partially tucked behind the shield, a faint glowing cyan protective aura around it. Premium clean 3D render, soft studio lighting, isolated, centered, fully transparent background. Strictly no text, no letters, no numbers, no logos, no people, no hands, no faces, no eyes, no animals."
+ },
+ "phone": {
+  "aspect_ratio": "2:3",
+  "resolution": "1K",
+  "background": "transparent",
+  "prompt": "A modern generic smartphone floating upright at a slight 3D angle, thin bezels, dark graphite frame. Its screen shows a clean abstract dark interface with violet (#7C5CFF) and cyan (#22D3EE) accents: one rounded empty input field containing only a row of glowing dots, and below it one large rounded glowing button with a simple check mark symbol. Premium 3D product render, soft reflections, isolated, centered, fully transparent background. Strictly no readable text, no letters, no numbers, no app icons, no logos, no brand marks, no people, no hands, no fingers, no faces, no animals."
+ },
+ "phish": {
+  "aspect_ratio": "1:1",
+  "resolution": "1K",
+  "background": "transparent",
+  "prompt": "A 3D warning concept icon about suspicious links: a glossy chat message bubble in dark navy with a shiny chain-link symbol on it, a sharp metal fishing hook hanging from the chain link, and a glowing coral-red (#FB7185) warning triangle badge with an exclamation mark floating beside it. Clean premium 3D icon render, soft studio light, isolated, centered, fully transparent background. Strictly no text, no letters, no numbers, no logos, no people, no hands, no faces, no animals, no fish."
+ },
+ "giftbox": {
+  "aspect_ratio": "1:1",
+  "resolution": "1K",
+  "background": "transparent",
+  "prompt": "An open 3D gift box made of glossy violet (#7C5CFF) material with a cyan (#22D3EE) satin ribbon, three abstract digital gift cards in violet, cyan and gold gradients rising out of the box in a fan, small glowing sparkles and light particles around them. Joyful, premium, clean 3D render, soft studio lighting, isolated, centered, fully transparent background. Strictly no text, no letters, no numbers, no logos, no people, no hands, no faces, no animals."
+ }
+}
