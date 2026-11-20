@@ -153,3 +153,10 @@
 - Delivery: SAR88 delivery 2 - 5 December . Details
 - Seller: Shipper / Seller Muhammad Saad Store FZE LLC
 - Badge: "Ships from outside the KSA"
+
+## فحص الناشر — 2026-11-20 (قبل الجدولة)
+صفحات Amazon.sa انفتحت عادي (HTTP 200، بدون CAPTCHA، "All prices include VAT"):
+- B07TQSYBPH Lexar NS100 512GB: SAR297.00، In Stock، Sold by Tikiz، FREE delivery Sunday, 22 November.
+- B07RS1G6XW Corsair Vengeance LPX 16GB DDR4 3200: SAR649.00، In Stock، Shipper / Seller Amazon.sa.
+- B0CSPNYB42 MSI RTX 3050 VENTUS 2X 6G OC: SAR1,325.00، Only 2 left in stock، Sold by قصر الحاسبات PCPALACE، FREE delivery Monday, 23 November.
+- المسار 1 = 946 ≤ 1500، المسار 2 = 1,325 ≤ 1500. ما فيه "Ships from outside the KSA". بدون تغيير عن 2026-11-19.
