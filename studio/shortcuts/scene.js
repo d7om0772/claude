@@ -119,6 +119,73 @@ function docScreen(g, w, h, s) {   // مستند Notes: اللصق عند at (ا
     g.fillStyle = PAL.brand; g.fillRect(X + 22 + cw + 14, ly + 10, 4, ch - 20); }
   else if (Math.floor(T * 2.5) % 2 === 0) { g.fillStyle = PAL.brand; g.fillRect(X + 22, ly + 6, 4, h * 0.07); }
 }
+// ---- مساعدات X01 (Ctrl + Shift + Esc، 2026-11-21): شاشة الأمان + مدير المهام + عداد الخطوات — نص وأشكال مجردة فقط، بدون شعارات ولا أفاتار ----
+const SEC_ROWS = ["Lock", "Switch user", "Sign out", "···", "Task Manager"];
+function secRowsGeo(w, h) { return SEC_ROWS.map((_, i) => ({ y: h * 0.15 + i * h * 0.145, pw: w * 0.56, ph: h * 0.125 })); }
+function secBg(g, w, h, grey) { const gr = g.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, grey ? "#8E98AA" : "#1D2C48"); gr.addColorStop(1, grey ? "#A9B2C2" : "#263E6B"); g.fillStyle = gr; g.fillRect(0, 0, w, h); }
+function secScreen(g, w, h, s) {   // شاشة الأمان (Ctrl + Alt + Delete): خيارات نص فقط، تتظلل وحدة وحدة، والمؤشر ينقر Task Manager
+  const t0 = s.start ?? 0, T = t0 + (s.p ?? 1) * (s.dur ?? 1), a = s.fade === false ? 1 : E.outCubic(clamp((T - t0) / 0.3));
+  if (a < 1) { K.screenBg(g, w, h); K.taskbar(g, w, h); }
+  g.save(); g.globalAlpha = a; secBg(g, w, h, false);
+  const geo = secRowsGeo(w, h), hl = s.times || [], tmAt = s.show_at, pickAt = s.pick_at;
+  let cur = -1; hl.forEach((tt, i) => { if (T >= tt) cur = i; }); if (tmAt != null && T >= tmAt) cur = 4;
+  SEC_ROWS.forEach((r, i) => { const G = geo[i], x = w / 2 - G.pw / 2, on = i === cur, tm = i === 4 && tmAt != null && T >= tmAt;
+    const st = i === 4 ? tmAt : hl[i], pop = on && st != null ? E.outBack(clamp((T - st) / 0.25)) : 0;
+    const press = pickAt != null && i === 4 && T >= pickAt && T < pickAt + 0.18 ? 0.95 : 1;
+    g.save(); g.translate(w / 2, G.y); g.scale(press, press); g.translate(-w / 2, -G.y);
+    if (on || tm) { g.fillStyle = tm ? PAL.brand : `rgba(255,255,255,${0.3 * pop})`; K.rr(g, x, G.y - G.ph / 2, G.pw, G.ph, G.ph / 2); g.fill();
+      if (!tm) { g.fillStyle = "#8fc0ff"; K.rr(g, x + 14, G.y - G.ph * 0.28, 8, G.ph * 0.56, 4); g.fill(); } }
+    K.text(g, r, w / 2, G.y + 2, { size: h * (i === 3 ? 0.095 : 0.082), weight: on || tm ? 700 : 500, color: on || tm ? "#fff" : "rgba(255,255,255,.82)", font: K.FONT_EN });
+    g.restore(); });
+  K.text(g, "Cancel", w * 0.9, h * 0.9, { size: h * 0.045, weight: 600, color: "rgba(255,255,255,.75)", font: K.FONT_EN, align: "right" });
+  if (pickAt != null && tmAt != null && T >= tmAt) { const G = geo[4], q = E.inOutCubic(clamp((T - tmAt - 0.1) / Math.max(0.3, pickAt - tmAt - 0.15)));
+    const tx = w / 2 + G.pw * 0.3, ty = G.y + G.ph * 0.15; K.cursor(g, lerp(w * 0.86, tx, q), lerp(h * 0.95, ty, q), h / 420);
+    if (T >= pickAt && T < pickAt + 0.4) { const r = clamp((T - pickAt) / 0.4); g.strokeStyle = `rgba(143,192,255,${1 - r})`; g.lineWidth = 6; g.beginPath(); g.arc(tx, ty, h * (0.02 + 0.06 * r), 0, 7); g.stroke(); } }
+  g.restore(); }
+function secMini(g, w, h, s) {   // شاشة الأمان مصغّرة رمادية وعليها خط شطب أحمر (بدون ما تمر عليها)
+  const t0 = s.start ?? 0, T = t0 + (s.p ?? 1) * (s.dur ?? 1), at = s.at ?? t0 + 0.4; K.screenBg(g, w, h); K.taskbar(g, w, h);
+  const b = E.outBack(clamp((T - t0) / 0.35)), cw = w * 0.5, ch = h * 0.62, cx = w / 2, cy = h * 0.43;
+  g.save(); g.translate(cx, cy); g.scale(b, b); g.translate(-cw / 2, -ch / 2);
+  g.save(); g.shadowColor = "rgba(20,40,75,.3)"; g.shadowBlur = 20; g.beginPath(); K.rr(g, 0, 0, cw, ch, 16); g.clip(); secBg(g, cw, ch, true); g.restore();
+  ["Lock", "Switch user", "Sign out", "Task Manager"].forEach((r, i) => K.text(g, r, cw / 2, ch * 0.2 + i * ch * 0.2, { size: ch * 0.09, weight: 500, color: "rgba(255,255,255,.85)", font: K.FONT_EN }));
+  const fl = T >= at ? Math.max(0, Math.sin(clamp((T - at) / 0.5) * Math.PI)) : 0; if (fl > 0) { g.fillStyle = `rgba(255,51,71,${0.3 * fl})`; K.rr(g, 0, 0, cw, ch, 16); g.fill(); }
+  const d = E.outCubic(clamp((T - at) / 0.3)); if (d > 0) { g.strokeStyle = PAL.problem; g.lineWidth = h * 0.028; g.lineCap = "round"; g.beginPath(); g.moveTo(cw * 0.06, ch * 0.08); g.lineTo(cw * 0.06 + cw * 0.88 * d, ch * 0.08 + ch * 0.84 * d); g.stroke(); }
+  g.restore(); }
+function stepsScreen(g, w, h, s) {   // عداد الخطوات: two = دائرتين (1 ← 2، بترتيب القراءة من اليمين) · one = خطوة وحدة
+  const t0 = s.start ?? 0, T = t0 + (s.p ?? 1) * (s.dur ?? 1); K.screenBg(g, w, h); K.taskbar(g, w, h);
+  const R = h * 0.14, cy = h * 0.4, circ = (x, n, k, fill, ring) => { const b = E.outBack(clamp((T - t0 - k) / 0.3)); if (b <= 0) return; g.save(); g.translate(x, cy); g.scale(b, b);
+    if (ring > 0) { g.strokeStyle = `rgba(255,255,255,${ring})`; g.lineWidth = 8; g.beginPath(); g.arc(0, 0, R * (1.15 + 0.35 * (1 - ring)), 0, 7); g.stroke(); }
+    g.fillStyle = fill ? PAL.brand : "#fff"; g.beginPath(); g.arc(0, 0, R, 0, 7); g.fill(); g.lineWidth = 6; g.strokeStyle = "#fff"; g.stroke();
+    K.text(g, n, 0, 4, { size: R * 1.15, weight: 800, color: fill ? "#fff" : PAL.ink, font: K.FONT_EN }); g.restore(); };
+  if ((s.phase || "two") === "two") { const at = s.at, on = at != null && T >= at, ring = on ? 1 - clamp((T - at) / 0.6) : 0;
+    circ(w * 0.7, "1", 0, false, 0); circ(w * 0.3, "2", 0.15, on, ring);
+    const q = E.outCubic(clamp((T - t0 - 0.1) / 0.3)); if (q > 0) { g.save(); g.globalAlpha = q; g.strokeStyle = "#fff"; g.lineWidth = 10; g.lineCap = "round"; g.lineJoin = "round";
+      const x1 = w * 0.7 - R * 1.4, x2 = w * 0.3 + R * 1.4; g.beginPath(); g.moveTo(x1, cy); g.lineTo(x2, cy); g.moveTo(x2 + 26, cy - 24); g.lineTo(x2, cy); g.lineTo(x2 + 26, cy + 24); g.stroke(); g.restore(); }
+    K.text(g, on ? "خطوة زيادة" : "خطوتين", w / 2, h * 0.76, { size: h * 0.1, color: "#fff" }); return; }
+  circ(w / 2, "1", 0, true, 1 - clamp((T - t0) / 0.6));
+  const cb = E.outBack(clamp((T - t0 - 0.25) / 0.3)); if (cb > 0) { g.save(); g.translate(w / 2 + R * 0.8, cy - R * 0.75); g.scale(cb, cb); g.fillStyle = "#fff"; g.beginPath(); g.arc(0, 0, R * 0.38, 0, 7); g.fill();
+    g.strokeStyle = PAL.brand; g.lineWidth = R * 0.13; g.lineCap = "round"; g.lineJoin = "round"; g.beginPath(); g.moveTo(-R * 0.17, 0); g.lineTo(-R * 0.03, R * 0.14); g.lineTo(R * 0.2, -R * 0.14); g.stroke(); g.restore(); }
+  K.text(g, "خطوة وحدة", w / 2, h * 0.76, { size: h * 0.1, color: "#fff" }); }
+function tmOpen(g, w, h, s) {   // مدير المهام ينفتح مباشرة: نافذة نص فقط (Processes)، أشرطة للزينة بدون أرقام
+  const t0 = s.start ?? 0, T = t0 + (s.p ?? 1) * (s.dur ?? 1), at = s.at ?? t0; K.screenBg(g, w, h); K.taskbar(g, w, h);
+  if (T < at) return; const b = E.outBack(clamp((T - at) / 0.35)), gl = 1 - clamp((T - at - 0.3) / 0.7);
+  const X = w * 0.05, Y = h * 0.04, W = w * 0.9, H = h * 0.83;
+  g.save(); g.translate(X + W / 2, Y + H / 2); g.scale(0.82 + 0.18 * b, 0.82 + 0.18 * b); g.translate(-(X + W / 2), -(Y + H / 2)); g.globalAlpha = clamp((T - at) / 0.15);
+  K.windowBox(g, X, Y, W, H, "Task Manager", { lines: 0, glow: gl });
+  const rail = W * 0.075; g.fillStyle = "#F4F7FC"; g.fillRect(X, Y + 44, rail, H - 56);
+  for (let i = 0; i < 5; i++) { g.fillStyle = i === 0 ? PAL.brand : "#C9D6EC"; K.rr(g, X + rail * 0.25, Y + 70 + i * h * 0.1, rail * 0.5, rail * 0.5, 8); g.fill(); }
+  const cx = X + rail + 26; K.text(g, "Processes", cx, Y + 82, { size: h * 0.055, weight: 700, align: "left", font: K.FONT_EN });
+  const c1 = X + W * 0.6, c2 = X + W * 0.8, hy = Y + 140; K.text(g, "Name", cx, hy, { size: h * 0.035, weight: 600, align: "left", color: PAL.muted, font: K.FONT_EN });
+  K.text(g, "CPU", c1, hy, { size: h * 0.035, weight: 600, align: "left", color: PAL.muted, font: K.FONT_EN }); K.text(g, "Memory", c2, hy, { size: h * 0.035, weight: 600, align: "left", color: PAL.muted, font: K.FONT_EN });
+  g.fillStyle = "#E3EAF5"; g.fillRect(cx, hy + 22, X + W - 30 - cx, 2);
+  (s.rows || ["Browser", "Game", "Updater", "Chat", "Notes"]).forEach((n, i) => { const y = hy + 62 + i * h * 0.085, rv = clamp((T - at - 0.15 - i * 0.06) / 0.25); if (rv <= 0) return;
+    g.save(); g.globalAlpha *= rv; g.fillStyle = "#DCE5F5"; K.rr(g, cx, y - 13, 26, 26, 6); g.fill();
+    K.text(g, n, cx + 40, y, { size: h * 0.042, weight: 600, align: "left", font: K.FONT_EN });
+    const v1 = 0.25 + 0.5 * Math.abs(Math.sin(i * 1.7 + 0.3)) + 0.06 * Math.sin(T * 2 + i), v2 = 0.3 + 0.45 * Math.abs(Math.cos(i * 1.3));
+    [[c1, v1], [c2, v2]].forEach(([x, v]) => { g.fillStyle = "#EEF3FB"; K.rr(g, x, y - 9, W * 0.13, 18, 9); g.fill(); g.fillStyle = "#9CBDF0"; K.rr(g, x, y - 9, W * 0.13 * v, 18, 9); g.fill(); });
+    g.restore(); });
+  g.restore(); }
 function demo(ctx) {
   return (g, w, h, s) => {
     const p = s.p ?? 1, m = s.mode || "desktop";
@@ -256,6 +323,10 @@ function demo(ctx) {
         else K.text(g, it, x + 34, iy + h * 0.06, { size: h * 0.045, align: "left", font: K.FONT_EN, weight: 600 }); }); return; }
     if (m === "cliphist") return cliphist(g, w, h, s);
     if (m === "doc") return docScreen(g, w, h, s);
+    if (m === "secscreen") return secScreen(g, w, h, s);
+    if (m === "secmini") return secMini(g, w, h, s);
+    if (m === "steps") return stepsScreen(g, w, h, s);
+    if (m === "tmopen") return tmOpen(g, w, h, s);
     if (m === "taskmgr") { desk(); g.globalAlpha = clamp(p / 0.12); K.windowBox(g, w * 0.08, h * 0.06, w * 0.84, h * 0.8, "Task Manager", { lines: 0 });
       (s.rows || [["Browser", 34], ["Game", 51], ["Updater", 8], ["Chat", 3]]).forEach(([n, c], i) => { const y = h * 0.24 + i * h * 0.14;
         K.text(g, n, w * 0.13, y, { size: h * 0.05, align: "left", font: K.FONT_EN, weight: 600 }); g.fillStyle = c > 30 ? "#FFD2D7" : "#DCE8FF"; K.rr(g, w * 0.45, y - h * 0.025, w * 0.32 * (c / 60) * clamp(p * 2), h * 0.05, 8); g.fill();
@@ -279,7 +350,7 @@ function buildRoom(ctx) {
   const desk = K.desk(root, { w: 6.4, d: 2.5, legH: 2.2 }); items.push(desk);
   const mons = { left: K.monitor(root, { w: MONW, h: MONH, draw: demo(ctx) }), right: K.monitor(root, { w: MONW, h: MONH, draw: demo(ctx) }) };
   mons.left.position.set(LM.x, 0, LM.z); mons.right.position.set(RM.x, 0, RM.z); items.push(mons.left, mons.right);
-  const kb = K.keyboard(root, { u: 0.158 }); kb.position.set(-1.25, 0, 0.45); kb.rotation.x = 0.06; items.push(kb);
+  const kb = K.keyboard(root, { u: 0.158, fnRow: !!(ctx.data.keyboard && ctx.data.keyboard.fn) }); kb.position.set(-1.25, 0, 0.45); kb.rotation.x = 0.06; items.push(kb);
   const pad = K.rbox(1.1, 0.025, 0.85, 0.04, PAL.light); K.place(pad, 1.15, 0.012, 0.5, root); items.push(pad);
   const ms = K.mouse(root); ms.position.set(1.15, 0.02, 0.5); items.push(ms);
   const mg = K.mug(root); mg.position.set(2.65, 0, 0.35); items.push(mg);
