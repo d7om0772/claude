@@ -9,7 +9,7 @@
 1. `bash scripts/bootstrap.sh`
 2. `git fetch origin main && git checkout -B main origin/main` (لو فيه تعديلات محلية غير محفوظة، احفظها أول بـ `bash scripts/git_save.sh`).
 3. اقرأ `CLAUDE.md` و`config.json → series.news` و`brand/series.md` (قسم tech-news) و`content/news/queue.md`.
-4. `python3 scripts/day_info.py --json` (اليوم ومواعيده الثابتة).
+4. `python3 scripts/sync_times.py` (يحدّث أوقات التقويم حسب سياسة الأوقات العشوائية) ثم `python3 scripts/day_info.py --json` (اليوم ومواعيده الثابتة).
 
 ## قواعد التشغيل
 نفس قواعد المهام (`schedules/write.md` § قواعد التشغيل): احفظ بعد كل خطوة على `main`، لا تسأل ولا تنتظر، الفشل ما يوقف الخط، وسجّل كل قرار.

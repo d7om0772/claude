@@ -7,7 +7,7 @@
   python3 scripts/news_slot.py              → {"date", "time", "iso", "id"}  أو {"time": null, "reason": ...}
   python3 scripts/news_slot.py --lead 20
 """
-import argparse, datetime, json, os, subprocess, sys
+import argparse, datetime, json, os, random, subprocess, sys
 from zoneinfo import ZoneInfo
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +32,11 @@ def main():
     busy_dt = sorted({to_dt(b) for b in busy})
     w0, w1 = to_dt(n["publish_window"][0]), to_dt(n["publish_window"][1])
     t = max(w0, now + datetime.timedelta(minutes=a.lead)) if day == now.date() else w0
-    t = t.replace(second=0, microsecond=0); t += datetime.timedelta(minutes=(-t.minute) % 5)
+    t = t.replace(second=0, microsecond=0)
+    # دقيقة عشوائية مو مدوّرة (سياسة الأوقات: ما يبان بوت) — ثابتة لنفس التاريخ
+    jit = random.Random(f"news:{day.isoformat()}").randint(3, 17)
+    t += datetime.timedelta(minutes=jit)
+    if t.minute % 5 == 0: t += datetime.timedelta(minutes=2)
     gap = datetime.timedelta(minutes=n["min_gap_minutes"])
     while t <= w1:
         clash = next((b for b in busy_dt if abs(t - b) < gap), None)
@@ -40,8 +44,8 @@ def main():
             n_today = sum(1 for r in rows if r["date"] == day.isoformat() and r["series"] == "tech-news")
             print(json.dumps({"date": day.isoformat(), "time": t.strftime("%H:%M"), "iso": t.isoformat(), "id": f"{day.isoformat()}-N{n_today + 1}",
                               "busy": [b.strftime("%H:%M") for b in busy_dt]}, ensure_ascii=False)); return
-        t = clash + gap
-        t += datetime.timedelta(minutes=(-t.minute) % 5)
+        t = clash + gap + datetime.timedelta(minutes=jit)
+        if t.minute % 5 == 0: t += datetime.timedelta(minutes=2)
     print(json.dumps({"date": day.isoformat(), "time": None, "reason": "ما فيه وقت متاح اليوم داخل نافذة النشر", "busy": [b.strftime("%H:%M") for b in busy_dt]}, ensure_ascii=False))
 
 

@@ -8,12 +8,56 @@ day_info.py — يحسب التاريخ بتوقيت الرياض، ورقم ا�
   python3 scripts/day_info.py --json     # نفس الشي JSON
   python3 scripts/day_info.py --date 2026-12-01 --json   # ليوم محدد
 """
-import json, os, sys, datetime
+import json, os, sys, datetime, random
+from functools import lru_cache
 from zoneinfo import ZoneInfo
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CFG = json.load(open(os.path.join(ROOT, "config.json"), encoding="utf-8"))
 TZ = ZoneInfo(CFG.get("timezone", "Asia/Riyadh"))
+
+POST = CFG.get("posting", {})
+_hm = lambda m: f"{m // 60:02d}:{m % 60:02d}"
+_mins = lambda hm: int(hm[:2]) * 60 + int(hm[3:5])
+
+def _phase(d):
+    launch = datetime.date.fromisoformat(CFG["launch_date"]); n = (d - launch).days + 1
+    if n < 1: return n, None
+    for ph in CFG["phases"]:
+        if n >= ph["from_day"] and (ph.get("to_day") is None or n <= ph["to_day"]): return n, ph
+    raise SystemExit("config.json phases do not cover day %d" % n)
+
+@lru_cache(maxsize=None)
+def slot_minutes(d):
+    """أوقات فيديوهات اليوم بالدقائق. قبل posting.from: المواعيد الثابتة (publish_times).
+    بعده: وقت عشوائي (ثابت لنفس التاريخ) داخل نافذة الذروة لكل فيديو، بدقيقة مو مدوّرة،
+    ويبعد min_diff_adjacent_days_min عن نفس النافذة أمس (فبكرة بدوره يبعد عن اليوم)."""
+    n, ph = _phase(d)
+    if ph is None: return ()
+    vpd = ph["videos_per_day"]
+    if not POST or d < datetime.date.fromisoformat(POST.get("from", "9999-12-31")):
+        return tuple(_mins(t) for t in ph["publish_times"][:vpd])
+    wins = POST["by_count"].get(str(vpd)) or POST["by_count"][max(POST["by_count"], key=int)]
+    prev = slot_minutes(d - datetime.timedelta(days=1))
+    prev_by_win = {}
+    pn, pph = _phase(d - datetime.timedelta(days=1))
+    if pph is not None:
+        pw = POST["by_count"].get(str(pph["videos_per_day"]), [])
+        for i, m in enumerate(prev):
+            prev_by_win[pw[i] if i < len(pw) else f"#{i}"] = m
+    out = []
+    for i, w in enumerate(wins):
+        a, b = map(_mins, POST["windows"][w])
+        for attempt in range(500):
+            r = random.Random(f"{POST.get('seed', 'x')}:{d.isoformat()}:{w}:{attempt}")
+            m = r.randint(a, b)
+            if POST.get("avoid_round_minutes", True) and m % 5 == 0: continue
+            if m in prev: continue                                             # ما يطابق أي موعد أمس
+            if w in prev_by_win and abs(m - prev_by_win[w]) < POST.get("min_diff_adjacent_days_min", 7): continue
+            if any(abs(m - o) < POST.get("min_gap_same_day_min", 60) for o in out): continue
+            break
+        out.append(m)
+    return tuple(out)
 
 def phase_for(d: datetime.date):
     launch = datetime.date.fromisoformat(CFG["launch_date"])
@@ -22,9 +66,8 @@ def phase_for(d: datetime.date):
         return {"date": d.isoformat(), "day_number": n, "phase": "pre-launch", "videos_per_day": 0, "slots": []}
     for ph in CFG["phases"]:
         if n >= ph["from_day"] and (ph.get("to_day") is None or n <= ph["to_day"]):
-            times = list(ph["publish_times"])
             vpd = ph["videos_per_day"]
-            times = times[:vpd]
+            times = [_hm(m) for m in slot_minutes(d)]
             slots = []
             for i, t in enumerate(times, 1):
                 hh, mm = map(int, t.split(":"))
@@ -49,6 +92,7 @@ def main():
         "launch_date": CFG["launch_date"],
         "today": phase_for(today),
         "tomorrow": phase_for(tomorrow),
+        "posting": {"policy": POST.get("policy", "fixed"), "from": POST.get("from"), "windows": POST.get("windows")},
         "phases": [{"name": ph["name"], "from": (datetime.date.fromisoformat(CFG["launch_date"]) + datetime.timedelta(days=ph["from_day"] - 1)).isoformat(),
                     "to": ((datetime.date.fromisoformat(CFG["launch_date"]) + datetime.timedelta(days=ph["to_day"] - 1)).isoformat() if ph.get("to_day") else None),
                     "videos_per_day": ph["videos_per_day"], "times": ph["publish_times"][:ph["videos_per_day"]]} for ph in CFG["phases"]],
