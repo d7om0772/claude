@@ -4,7 +4,7 @@ publish_date: 2026-11-25
 slot: "18:06"
 series: troubleshooting
 topic: الجهاز يطفي فجأة وقت اللعب: الحرارة
-status: سكربت
+status: مرفوض
 version: 1
 target_length_s: 62
 researched_at: 2026-11-24
@@ -114,3 +114,32 @@ researched_at: 2026-11-24
 
 - نصوص الواجهة بخط Inter بالإنجليزي: Task Manager، Performance، GPU، CPU، Throttling. بدون شعارات Intel/Microsoft/Dell/Windows.
 - لا ذوات أرواح: التنظيف يتمثّل بحركة الغبار نفسه وعلبة الهواء جماد، بدون يد.
+
+## التدقيق — جولة 1 — 2026-11-24 20:19
+**النتيجة: مرفوض**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | الطفي المفاجئ من أعراض الحرارة (Dell 000130867 + Intel 000005791) | ✅ | فتحت الصفحتين: Dell "Computer locks up, stops responding, reboots randomly, or shuts down unexpectedly… These are the typical symptoms of overheating"؛ Intel "System boots up but shuts down automatically after a short period of time". "من أشهر الأسباب" مقبولة كإعادة صياغة لـ"typical symptoms" (Dell ما ترتّب الأسباب، فلا تصعّدها لـ"أشهر سبب"). |
+| 2 | Throttling ثم Shutdown لحماية المعالج (Intel 000005597) | ✅ | "Processors have two modes of thermal protection, throttling and automatic shutdown" موجودة بنفس المعنى. |
+| 3 | Task Manager ← Performance ← GPU يعرض حرارة كرت الشاشة | ❌ | Microsoft نفسها (مرجع 3): "Showing the GPU temperature in Task Manager is currently **only supported if you have a dedicated GPU card**" + "You may need an updated graphics driver… WDDM 2.4 (or higher)". الكابشن والتعليق وكابشن المنشور يقولون "حرارة كرت الشاشة" بإطلاق، وصاحب الجهاز بمعالج فيه كرت مدمج (APU، وهذا نوع جهاز سبق ونصحنا فيه 16-01) ما راح يلقاها، وسطر "كرت شاشة منفصل" على الشاشة ما يكفي لأن الكلام هو الادعاء. **التصحيح (بالكابشن والتعليق):** "افتح Task Manager، ثم Performance، ثم GPU، وتلقى حرارة كرت الشاشة **المنفصل**." **وكابشن المنشور:** "Task Manager ← Performance ← GPU يوريك حرارة كرت الشاشة المنفصل." How-To Geek (2023-11-08) يثبت مكانها في Windows 11: "The temperature is displayed at the bottom of the GPU page" ✅. |
+| 4 | برنامج مراقبة يدعم معالجك | ❌ (مرجع) | الادعاء صحيح، بس اقتباس "contact the software vendor to ensure the software is validated to work with your processor" **مو في 000005597**، هو في **000005791**. صحّح خانة الرابط في السطر 4 لـ https://www.intel.com/content/www/us/en/support/articles/000005791/processors/intel-core-processors.html (وخل 000005597 لجملة "many third-party utilities can monitor the digital thermal sensor (DTS)"، وهي موجودة فيها). |
+| 5 | "حد الشركة المصنّعة" (للمعالج **وكرت الشاشة**) | ❌ (مرجع ناقص) | الجملة 8 تجي بعد شرح حرارة الـ GPU والمعالج، والمرجع 5 يغطي المعالج بس (Intel Tjunction max، وموجودة: "varies per product"). أضف سطر مرجع لكرت الشاشة: NVIDIA — GeForce Graphics Cards Compare، فيها صف **"Maximum GPU Temperature (in C)"** لكل كرت: https://www.nvidia.com/en-us/geforce/graphics-cards/compare/ (فتحتها 2026-11-24). بدون أي رقم في الكابشن أو على الشاشة. |
+| 6 | طفّ وافصل الكهرباء قبل التنظيف (Dell 000124077) | ✅ | "Turn off your computer and unplug the power cable from both the computer and wall outlet before cleaning" موجودة. |
+| 7 | هواء مضغوط مو مكنسة (Dell 000124077 + Intel 000005791) | ✅ | "Use compressed air to blow dust out of vents" + "don't use a vacuum or blower, they create static" + Intel "excessive build-up of dust… on all the fans" و"intake vents and exhaust vents are clear of dust and lint" — كلها موجودة. |
+| 8 | مروحة المعالج تدور وما فيه شي يوقفها (Intel 000005791) | ✅ | "Check to see that the processor's fan is still operating" + "Verify CPU fan impeller isn't blocked and nothing is preventing it from spinning" موجودة. |
+| 9 | مسافة قدام الكيس ووراه (Dell 000179087) | ✅ | "Provide sufficient clearance at the front and back of the computer" موجودة. |
+| 10 | الكيابل عن طريق الهواء (Intel 000005791) | ✅ | "Verify system cabling or other components aren't obstructing system air flow" موجودة. |
+| 11 | المعجون الحراري للمتقدم + فك المبرد (Intel How to Apply Thermal Paste + 000005791) | ✅ | "if you find your CPU temperatures are climbing" و"you should replace your paste if you remove your cooler for any reason" و"Inspect for… (TIM) degradation" موجودة. موسومة "للمتقدم بس" = مقبول أمنياً. |
+| 12 | لو الحرارة طبيعية فالسبب شي ثاني | ✅ | استنتاج بدون ادعاء سبب محدد، مقبول. |
+| 13 | أرقام الحرارة | ✅ | ما فيه أي رقم في الكابشن ولا التعليق، وملاحظات صانع الفيديو تمنعها على الشاشة. لا أسعار ولا FPS. |
+| 14 | الطول (السقف 65ث) | ❌ | التعليق 133 كلمة (بعد التصحيح 3 تصير 135). مقارنة بـ 20-01 (نفس القالب: 131 كلمة نصية ← صوت 60.8ث ← مشهد 63.5ث، و`voice_report` 2.02 كلمة/ث) المتوقع هنا ≈ 62.5–63ث صوت + ≈2.7ث ختام = **≈65–66ث، فوق السقف**. **المطلوب: احذف 5 كلمات أو أكثر بدون ما يتغير المعنى، بنفس الصيغة في الكابشن والتعليق.** اقتراح: الجملة 15 ← "ولو الحرارة طبيعية، فالسبب غالباً شي ثاني." (−3) والجملة 11 ← "وتأكد إن مروحة المعالج تدور بحرية." (−3؛ نفس معنى "nothing is preventing it from spinning"). صانع الفيديو يتأكد إن المدة النهائية ≤ 65ث. |
+| 15 | التعليق ↔ الكابشن | ✅ | 16 جملة مقابل 16، نفس المعنى حرفياً؛ "الخطوة 1/2/3" ← "واحد/ثنين/ثلاث" حسب voice.md §٣.١؛ Task Manager/Performance/GPU بالإنجليزي. (أي تعديل من البنود 3 و14 لازم يدخل في النسختين وجدول المشاهد.) |
+| 16 | الهوك والختام | ✅ | "جهازك يطفي فجأة وسط اللعب؟" والفيديو يجاوب عليه فعلاً (الحرارة + 3 خطوات) ويقول بصراحة إن السبب ممكن يكون شي ثاني لو الحرارة طبيعية. مو clickbait. |
+| 17 | المرئيات والسلامة | ✅ | بدون ذوات أرواح (التنظيف بحركة الغبار بدون يد)، بدون شعارات، بدون فتح باور ولا فولت ولا مكنسة ولا نفخ بالفم. |
+| 18 | التكرار | ✅ | ما فيه موضوع حرارة/طفي في `content/published.md` ولا في السكربتات السابقة؛ 25-01 عن اختصار Ctrl + Shift + Esc وهنا Task Manager أداة بس. |
+
+**التصحيحات المطلوبة (4):**
+1. أضف "المنفصل" بعد "حرارة كرت الشاشة" في الكابشن والتعليق (الجملة 6) وكابشن المنشور — Microsoft Build 18963: "only supported if you have a dedicated GPU card".
+2. خفّض التعليق 5 كلمات أو أكثر (الاقتراح في البند 14) عشان المدة ما تتعدى 65ث.
+3. سطر مرجع 4: رابط اقتباس "software vendor… validated" = Intel 000005791 مو 000005597.
+4. أضف سطر مرجع لحد حرارة كرت الشاشة: NVIDIA Compare "Maximum GPU Temperature (in C)" — https://www.nvidia.com/en-us/geforce/graphics-cards/compare/ (بدون رقم).
