@@ -30,4 +30,18 @@
 | **X01** عرض شاشة إضافي (بنفس الأسلوب) | `mode`: `no_signal` / `display_settings` (`from`,`to`) / `bios_xmp` (`profile`,`profile_off`,`speed_off`,`speed_on`,`fix_at`,`revert_at`؛ أو `path`+`nav`+`nav_times`+`sub` لمسار قوائم BIOS) / `keep` (ما يغيّر الشاشة — مع `ram_tag`) / `temps` (`items:[[الاسم، قبل، بعد]]`) / `startup` (`apps`) / `fan_curve` / `ping` (`bad`,`good`) / `stutter` / `text` / `off` / `desktop` / `input_menu` (`items`,`from`,`to`,`pick_at`: قائمة مدخلات الشاشة، التحديد يقلب أخضر) / `cursor_back` / `settings_nav` (`items`,`times`: مسار Settings، كل خطوة تتحدد مع كلمتها) / `spec_table` (`rows:[[المفتاح،القيمة،لون اختياري problem/fix]]`) · `display_settings` يقبل `fix_at` (القلب على كلمة) و`star_at` (علامة *) و`state:"problem"` (يبقى أحمر) · `text` يقبل `color` (problem/fix)، `sub`، `ring`، `pulse` · `ram_tag` (+`ram_tag_color` problem/fix): ملصق رقم/اسم فوق شرائح الرام داخل الكيس · أي عنصر: `sfx:false` يلغي مؤثره التلقائي أو `sfx:"gs_…"` بديل · `state`: `problem`/`fix` · `cam` | لمشاكل ما لها عنصر في الحزمة (الشاشة السوداء، 60Hz، XMP، الحرارة، برامج بدء التشغيل، المراوح، البنق). سجّله في جدول المشاهد كعنصر مصمَّم بنفس قواعد الحزمة |
 | **T** عنوان فقط | `chip`, `chip_color`, `main`, `desc`, `keys`... | |
 
+### إضافات X01 (2026-11-24 — فيديو 2026-11-25-02، بنفس قواعد الحزمة)
+| params | الوصف |
+|---|---|
+| `mode:"game"` · `glitch_at` | شاشة لعبة مجرّدة (جبال، طريق، تصويب، أشرطة HUD **بدون أرقام**)؛ `glitch_at` = تقطّع قبل الطفي. بديل `stutter` لما ما نبي أرقام FPS |
+| `mode:"temps_limit"` · `items` · `base` · `rise_at` · `rise_dur` · `limit_at` · `limit_label` · `title` | مراقبة حرارة **بأشرطة فقط** + خط أحمر متقطع "حد الشركة المصنّعة" (`limit_at`)؛ الشريط يطلع للخط مع `rise_at` ويقلب أحمر وينبض. استخدمه بدل `temps` لما ما فيه رقم من مصدر |
+| `settings_nav` + `foot`,`foot_at` · `sub`,`sub_at` | سطر قراءة تحت المسار بشريط بدون رقم (مثل "GPU Temperature") + سطر صغير توضيحي (مثل "كرت شاشة منفصل") |
+| `pc_fx:"unplug"` · `fx_at` | كيبل الكهرباء في ظهر الكيس، القابس ينسحب على `fx_at` (يظهر من start لين end) |
+| `pc_fx:"dust"` · `fx_at` | غبار رمادي حول المروحة وفوق الكيس، يطير ويختفي على `fx_at` (cam `caseTop`) |
+| `pc_fx:"fan_ok"` · `fx_at` | ✓ أخضر فوق مروحة مبرد المعالج |
+| `pc_fx:"airflow"` | أسهم هواء زرقاء تدخل من قدام الكيس وتطلع من ورا (cam `case`) |
+| `mode:"keep"` + `state` | (جديد) `keep` صار يقبل `state` (problem/fix/normal) بدون ما يغيّر الشاشة. `state:"normal"` = إضاءة زرقاء محايدة |
+
+ملاحظة تقنية: `mode:"off"` صار يرسم لمعة خفيفة فوق الأسود — بدونها Chrome (swiftshader) ما كان يحدّث الشاشة بعد تعبئة كاملة، وتبقى الشاشة السابقة ظاهرة في الرندر.
+
 **قواعد:** أي رقم على الشاشة (حرارة، بنق، Hz) لازم من المصدر أو يُقال "مثلاً" في الكلام. لا خطوات خطيرة.

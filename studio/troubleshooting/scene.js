@@ -36,7 +36,38 @@ function monitorDraw(ctx) {
     if (m === "no_signal") { g.fillStyle = "#05090F"; g.fillRect(0, 0, w, h); g.globalAlpha = 0.65 + 0.35 * Math.sin(p * 20);
       g.fillStyle = "#fff"; K.rr(g, w / 2 - w * 0.18, h / 2 - h * 0.1, w * 0.36, h * 0.2, 16); g.fill(); g.globalAlpha = 1;
       K.text(g, s.text || "No Signal", w / 2, h / 2, { size: h * 0.08, weight: 700, color: "#05090F", font: K.FONT_EN }); return; }
-    if (m === "off") { g.fillStyle = "#0B1426"; g.fillRect(0, 0, w, h); return; }
+    if (m === "off") { g.fillStyle = "#0B1426"; g.fillRect(0, 0, w, h);   // + لمعة خفيفة (وتضمن إن Chrome يحدّث الكانفس بعد المسح الكامل)
+      const gl = g.createLinearGradient(0, 0, w, h); gl.addColorStop(0, "rgba(157,184,245,.10)"); gl.addColorStop(0.45, "rgba(157,184,245,0)"); g.fillStyle = gl; g.fillRect(0, 0, w * 0.7, h * 0.7); return; }
+    // game — لعبة شغالة (مشهد مجرّد: سماء، جبال، طريق، تصويب، أشرطة HUD بدون أرقام) · glitch_at: تقطّع قبل الطفي
+    if (m === "game") { const tNow = (s.start ?? 0) + p * (s.dur ?? 1);
+      const gr = g.createLinearGradient(0, 0, 0, h * 0.62); gr.addColorStop(0, "#1D2C48"); gr.addColorStop(1, "#3A7BD5"); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+      g.fillStyle = "#9DB8F5"; g.beginPath(); g.arc(w * 0.72, h * 0.22, h * 0.07, 0, 7); g.fill();
+      g.fillStyle = "#14284B"; g.beginPath(); g.moveTo(0, h * 0.62); [[0.12, 0.38], [0.26, 0.54], [0.42, 0.33], [0.58, 0.52], [0.74, 0.4], [0.9, 0.55], [1, 0.46], [1, 0.62]].forEach(([x, y]) => g.lineTo(w * x, h * y)); g.fill();
+      g.fillStyle = "#2A3B5C"; g.fillRect(0, h * 0.62, w, h * 0.38);
+      g.fillStyle = "#5B6B82"; g.beginPath(); g.moveTo(w * 0.47, h * 0.62); g.lineTo(w * 0.53, h * 0.62); g.lineTo(w * 0.8, h); g.lineTo(w * 0.2, h); g.fill();
+      g.fillStyle = "#F8FAFD"; for (let i = 0; i < 6; i++) { const q = ((i / 6 + tNow * 0.9) % 1), y0 = h * (0.62 + 0.38 * q * q), hh = h * 0.05 * q + 2; g.fillRect(w / 2 - (2 + 10 * q), y0, 4 + 20 * q, hh); }
+      g.strokeStyle = "#fff"; g.lineWidth = 4; g.beginPath(); g.moveTo(w / 2 - 26, h * 0.45); g.lineTo(w / 2 - 8, h * 0.45); g.moveTo(w / 2 + 8, h * 0.45); g.lineTo(w / 2 + 26, h * 0.45);
+      g.moveTo(w / 2, h * 0.45 - 26); g.lineTo(w / 2, h * 0.45 - 8); g.moveTo(w / 2, h * 0.45 + 8); g.lineTo(w / 2, h * 0.45 + 26); g.stroke();
+      [[PAL.fix, 0.8], ["#3A7BD5", 0.55]].forEach(([c, f], i) => { g.fillStyle = "rgba(11,20,38,.55)"; K.rr(g, w * 0.04, h * (0.84 + i * 0.065), w * 0.24, h * 0.04, 8); g.fill(); g.fillStyle = c; K.rr(g, w * 0.04, h * (0.84 + i * 0.065), w * 0.24 * f, h * 0.04, 8); g.fill(); });
+      if (s.glitch_at != null && tNow >= s.glitch_at) { const k = Math.floor(tNow * 30); for (let i = 0; i < 7; i++) { const r = ((k * 37 + i * 101) % 97) / 97;
+        g.fillStyle = i % 2 ? "rgba(255,51,71,.35)" : "rgba(11,20,38,.6)"; g.fillRect(0, h * r, w, h * (0.02 + 0.05 * ((i * 13 + k) % 5) / 5)); } }
+      return; }
+    // temps_limit — مراقبة الحرارة بأشرطة فقط (بدون أي رقم): {items, base:[..], rise_at, rise_dur, limit_at, limit_label}
+    //   الخط الأحمر المتقطع = "حد الشركة المصنّعة"؛ الشريط يطلع له مع rise_at ويقلب أحمر وينبض لما يوصله
+    if (m === "temps_limit") { desk(); const tNow = (s.start ?? 0) + p * (s.dur ?? 1);
+      K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, s.title || "Hardware Monitor", { lines: 0 });
+      const items = s.items || ["CPU", "GPU"], X0 = w * 0.13, TW = w * 0.66, LIM = 0.86, limX = X0 + TW * LIM;
+      items.forEach((n, i) => { const y = h * (0.4 + i * 0.22), base = (s.base || [0.42, 0.36])[i] ?? 0.4;
+        const q = s.rise_at != null ? E.inOutCubic(clamp((tNow - s.rise_at) / (s.rise_dur || 1.6))) : 0; const lv = lerp(base, LIM + 0.005, q); const hit = lv >= LIM;
+        K.text(g, n, X0, y, { size: h * 0.065, align: "left", font: K.FONT_EN, weight: 700 });
+        g.fillStyle = "#EEF2FA"; K.rr(g, X0, y + h * 0.05, TW, h * 0.065, h * 0.032); g.fill();
+        g.fillStyle = hit ? PAL.problem : lv > 0.66 ? "#FFB020" : PAL.brand; g.globalAlpha = hit ? 0.75 + 0.25 * Math.sin(tNow * 12) : 1;
+        K.rr(g, X0, y + h * 0.05, TW * lv, h * 0.065, h * 0.032); g.fill(); g.globalAlpha = 1; });
+      if (s.limit_at != null && tNow >= s.limit_at) { const q = E.outCubic(clamp((tNow - s.limit_at) / 0.35)); const y0 = h * 0.42, y1 = h * (0.4 + (items.length - 1) * 0.22 + 0.15);
+        g.strokeStyle = PAL.problem; g.lineWidth = 6; g.setLineDash([16, 10]); g.beginPath(); g.moveTo(limX, y0); g.lineTo(limX, y0 + (y1 - y0) * q); g.stroke(); g.setLineDash([]);
+        g.globalAlpha = q; g.fillStyle = PAL.problem; const pw = w * 0.36, px = clamp(limX - pw / 2, w * 0.1, w * 0.9 - pw); K.rr(g, px, h * 0.2, pw, h * 0.09, h * 0.045); g.fill();
+        K.text(g, s.limit_label || "حد الشركة المصنّعة", px + pw / 2, h * 0.245, { size: h * 0.052, color: "#fff", weight: 800 }); g.globalAlpha = 1; }
+      return; }
     // input_menu — قائمة مدخلات الشاشة (OSD) على شاشة سوداء: {items, from, to, pick_at}: التحديد ينتقل من المدخل الغلط (أحمر) للصح (أخضر)
     if (m === "input_menu") { g.fillStyle = "#05090F"; g.fillRect(0, 0, w, h);
       const items = s.items || ["HDMI 1", "HDMI 2", "DisplayPort"], tNow = (s.start ?? 0) + p * (s.dur ?? 1);
@@ -64,6 +95,13 @@ function monitorDraw(ctx) {
       items.forEach((it, i) => { const y = h * (0.3 + i * 0.13); const on = i === cur, done = i < cur;
         if (i > cur) g.globalAlpha = 0.35; g.fillStyle = on ? PAL.brand : done ? "#E6EEFB" : "#F3F6FC"; K.rr(g, w * 0.13 + i * w * 0.04, y - h * 0.05, w * 0.6, h * 0.1, 10); g.fill();
         K.text(g, (i ? "› " : "") + it, w * 0.16 + i * w * 0.04, y, { size: h * 0.055, align: "left", font: K.FONT_EN, weight: on ? 800 : 600, color: on ? "#fff" : PAL.navy }); g.globalAlpha = 1; });
+      // foot: سطر قراءة تحت المسار (مثل "GPU Temperature") بشريط بدون رقم · sub: سطر صغير توضيحي (مثل "كرت شاشة منفصل")
+      if (s.foot && tNow >= (s.foot_at ?? 1e9)) { const q = E.outCubic(clamp((tNow - s.foot_at) / 0.3)), y = h * 0.7; g.globalAlpha = q;
+        g.fillStyle = "#F3F6FC"; K.rr(g, w * 0.13, y - h * 0.055, w * 0.74, h * 0.11, 10); g.fill(); g.strokeStyle = "#FFB020"; g.lineWidth = 4; K.rr(g, w * 0.13, y - h * 0.055, w * 0.74, h * 0.11, 10); g.stroke();
+        K.text(g, s.foot, w * 0.16, y, { size: h * 0.05, align: "left", font: K.FONT_EN, weight: 700, color: PAL.navy });
+        g.fillStyle = "#E2EBFA"; K.rr(g, w * 0.58, y - h * 0.018, w * 0.26, h * 0.036, h * 0.018); g.fill(); g.fillStyle = "#FFB020"; K.rr(g, w * 0.58, y - h * 0.018, w * 0.26 * 0.62 * q, h * 0.036, h * 0.018); g.fill(); g.globalAlpha = 1; }
+      if (s.sub && tNow >= (s.sub_at ?? 1e9)) { const q = E.outBack(clamp((tNow - s.sub_at) / 0.3)); g.save(); g.translate(w * 0.72, h * 0.8); g.scale(q, q);
+        g.fillStyle = PAL.navy; K.rr(g, -w * 0.15, -h * 0.035, w * 0.3, h * 0.07, h * 0.035); g.fill(); K.text(g, s.sub, 0, 0, { size: h * 0.042, color: "#fff", weight: 700 }); g.restore(); }
       return; }
     // spec_table — مواصفات الشاشة لكل منفذ بدون أرقام مخترعة: {rows:[[المنفذ، القيمة]]}
     if (m === "spec_table") { desk(); K.windowBox(g, w * 0.08, h * 0.08, w * 0.84, h * 0.78, s.title || "Monitor specs", { lines: 0 });
@@ -173,6 +211,7 @@ function buildPC(root) {
   const gstrip = K.box(0.95, 0.03, 0.02, PAL.problem, { emissive: PAL.problem, ei: 1.3, unique: true }); K.place(gstrip, -0.1, 0.95, 0.07, inner);
   const fan = K.fan(0.33, { ring: PAL.problem }); fan.rotation.y = -Math.PI / 2; K.place(fan, PC.w / 2 - 0.12, 1.55, -0.02, inner);
   const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.03, 8, 40), K.mat(PAL.problem, { emissive: PAL.problem, ei: 1.4, unique: true })); K.place(ring2, -0.15, 1.65, -PC.d / 2 + 0.16, inner);
+  const cpuFan = K.fan(0.2, {}); K.place(cpuFan, -0.15, 1.65, -PC.d / 2 + 0.17, inner);   // مروحة مبرد المعالج داخل الحلقة
   // شرائح الرام جنب مبرد المعالج (إضاءتها RGB مع الحالة)
   const ramTops = []; for (let k = 0; k < 2; k++) { const rx = 0.2 + k * 0.12; K.place(K.rbox(0.075, 0.56, 0.13, 0.015, "#E9EFF9"), rx, 1.62, -PC.d / 2 + 0.2, inner);
     const rt = K.box(0.075, 0.06, 0.13, PAL.problem, { emissive: PAL.problem, ei: 1.4, unique: true }); K.place(rt, rx, 1.93, -PC.d / 2 + 0.2, inner); ramTops.push(rt); }
@@ -185,7 +224,17 @@ function buildPC(root) {
   const fio = K.rbox(0.3, 0.03, 0.14, 0.01, PAL.navy); K.place(fio, PC.w / 2 - 0.3, PC.h + 0.005, 0.15, inner);
   const plug = new THREE.Group(); K.place(K.rbox(0.09, 0.22, 0.05, 0.015, "#C9D3E6", { metal: 0.3 }), 0, 0.11, 0, plug); K.place(K.rbox(0.11, 0.12, 0.07, 0.02, PAL.navy), 0, 0.27, 0, plug);
   const plugGlow = K.glowSprite(PAL.problem, 0.7); plug.add(plugGlow); plugGlow.position.y = 0.05; plug.visible = false; inner.add(plug);
-  return { group: g, inner, rgb: [gstrip, ring2, strip, fan.userData.ring, ...ramTops], fan, light, glow, plug, plugGlow, rearTex };
+  // X01 pc_fx — عناصر مصمّمة بنفس الأسلوب (جمادات فقط): كيبل الكهرباء ورا الكيس، غبار على المروحة، أسهم مسار الهواء
+  K.place(K.rbox(0.05, 0.2, 0.26, 0.01, PAL.navy), -PC.w / 2 - 0.02, 0.34, -0.2, inner);   // مقبس الباور في الظهر
+  const pwr = new THREE.Group(); K.place(K.rbox(0.16, 0.15, 0.2, 0.03, "#1D2C48"), -0.08, 0, 0, pwr);
+  const cab = K.cyl(0.028, 0.028, 1.2, "#1D2C48"); cab.rotation.z = Math.PI / 2 + 0.35; K.place(cab, -0.7, -0.2, 0, pwr);
+  pwr.position.set(-PC.w / 2 - 0.05, 0.34, -0.2); inner.add(pwr); pwr.visible = false;
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const dust = new THREE.Group(); inner.add(dust); dust.visible = false;
+  for (let i = 0; i < 90; i++) { const r = 0.012 + 0.03 * rnd(); const m = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), new THREE.MeshBasicMaterial({ color: i % 3 ? "#9AA3B2" : "#7D879A", transparent: true, opacity: 0.9, depthWrite: false }));
+    const top = i < 26; m.position.set(top ? -0.55 + 1.1 * rnd() : PC.w / 2 - 0.3 + 0.25 * rnd(), top ? PC.h + 0.03 : 1.2 + 0.7 * rnd(), top ? -0.4 + 0.8 * rnd() : -0.35 + 0.7 * rnd());
+    m.userData.p0 = m.position.clone(); m.userData.v = new THREE.Vector3(0.4 + 0.8 * rnd(), 0.4 + 0.9 * rnd(), (rnd() - 0.5) * 0.8); dust.add(m); }
+  return { group: g, inner, rgb: [gstrip, ring2, strip, fan.userData.ring, ...ramTops], fan, light, glow, plug, plugGlow, rearTex, pwr, dust, cpuFan };
 }
 function buildMouse(root) {
   const m = new THREE.Group(); m.position.set(MOUSE.x, 0.03, MOUSE.z); root.add(m);
@@ -240,6 +289,11 @@ async function build(ctx) {
   const kb = K.keyboard(root, { u: 0.165 }); kb.position.set(KB.x, 0, KB.z);
   K.place(K.rbox(1.25, 0.025, 1.0, 0.05, PAL.navy), MOUSE.x, 0.012, MOUSE.z, root);
   const ms = buildMouse(root); const pc = buildPC(root); const lap = buildLaptop(root);
+  const air = new THREE.Group(); root.add(air); air.visible = false;   // أسهم الهواء: تدخل من قدام الكيس (+x) وتطلع من ورا (-x)
+  for (let i = 0; i < 6; i++) { const a = new THREE.Group(), mt = new THREE.MeshBasicMaterial({ color: PAL.light, transparent: true, opacity: 0.9, depthWrite: false });
+    const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.5, 10), mt); sh.rotation.z = Math.PI / 2; a.add(sh);
+    const hd = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.2, 14), mt); hd.rotation.z = Math.PI / 2; hd.position.x = -0.33; a.add(hd);
+    a.userData = { y: [0.55, 1.2, 1.85][i % 3], ph: (i >= 3 ? 0.5 : 0) + (i % 3) * 0.17, mt }; air.add(a); }
   const plate = K.logoPlate(root, ctx.logoIcon, { w: 0.9, h: 1.05 }); plate.position.set(-3.4, 2.0, -2.6);
   const shelf = new THREE.Group(); shelf.position.set(1.2, 2.6, -2.55); root.add(shelf);
   K.place(K.rbox(2.2, 0.08, 0.45, 0.03, "#FFFFFF"), 0, 0, 0, shelf);
@@ -249,7 +303,7 @@ async function build(ctx) {
   ctx.T = { mon, kb, ms, pc, lap };
   ctx.states = [{ t: -1, mode: data.initial_state || "problem" }];
   ctx.screens = [{ start: 0, mode: data.idle_screen || "desktop" }]; ctx.lapScreens = [{ start: 0, cursor: false }];
-  ctx.presses = []; ctx.marks = []; ctx.ramTags = []; ctx.fx = { flip: [], batt: [], sw: [], frontPlug: [], rot: [], laptop: [], fkey: [], fnFix: [], hop: [] };
+  ctx.presses = []; ctx.marks = []; ctx.ramTags = []; ctx.fx = { flip: [], batt: [], sw: [], frontPlug: [], rot: [], laptop: [], fkey: [], fnFix: [], hop: [], unplug: [], dust: [], air: [] };
   const evs = (data.events || []).slice().sort((a, b) => a.start - b.start);
   const v = VAR[ctx.variant % VAR.length];
   const pose = (n) => ({ ...POSE[n], yaw: (POSE[n].yaw || 0) + (v.yaw || 0), pitch: POSE[n].pitch + (v.pitch || 0) });
@@ -264,7 +318,7 @@ async function build(ctx) {
       for (const it of items) { const q = E.spring(clamp((t - it.userData.popDelay) / 0.7)); it.scale.copy(it.userData.baseScale).multiplyScalar(Math.max(0.001, q)); }
       root.position.y = 0.03 * Math.sin(t * 1.1); rm.position.y = root.position.y;
       K.setCam(ctx.camera, K.cameraTrack(ctx.camKeys, t));
-      pc.fan.userData.rotor.rotation.z = -t * 7;
+      pc.fan.userData.rotor.rotation.z = -t * 7; if (pc.cpuFan.userData.rotor) pc.cpuFan.userData.rotor.rotation.z = -t * 9;
       // الحالة اللونية: أحمر ↔ أخضر (ومع الختام: أزرق)
       const st = lastStarted(ctx.states, t, "t"); const mode = t >= ctx.closingStart ? "normal" : st.mode;
       const prev = ctx.states[Math.max(0, ctx.states.indexOf(st) - 1)]; const bl = E.outCubic(clamp((t - st.t) / 0.4));
@@ -315,6 +369,15 @@ async function build(ctx) {
       ms.group.position.set(MOUSE.x, 0.03, MOUSE.z);
       for (const hpp of ctx.fx.hop) if (t >= hpp.start) { const q = E.inOutCubic(clamp((t - hpp.start) / 0.6)); const to = new THREE.Vector3(PC.x - 0.2 + 0.45, 0.08, PC.z + 1.25);
         if (t <= hpp.end + 0.4) ms.group.position.set(lerp(MOUSE.x, to.x, q), 0.03 + 0.8 * Math.sin(Math.PI * q) + (to.y - 0.03) * q, lerp(MOUSE.z, to.z, q)); }
+      // X01 pc_fx: كيبل الكهرباء ينفصل · الغبار يطير مع الهواء المضغوط · أسهم مسار الهواء
+      pc.pwr.visible = false; for (const u of ctx.fx.unplug) if (t >= u.start && t <= u.end) { pc.pwr.visible = true; const q = E.inOutCubic(clamp((t - u.at) / 0.45));
+        pc.pwr.position.set(-PC.w / 2 - 0.05 - 0.4 * q, 0.34 - 0.06 * q, -0.2); }
+      pc.dust.visible = false; for (const d of ctx.fx.dust) if (t >= d.start && t <= d.end) { pc.dust.visible = true; const a0 = clamp((t - d.start) / 0.35), q = clamp((t - d.at) / 0.9);
+        pc.dust.children.forEach((m, i) => { m.position.copy(m.userData.p0).addScaledVector(m.userData.v, E.outCubic(q) * 1.1); m.position.y += 0.01 * Math.sin(t * 5 + i);
+          m.material.opacity = 0.9 * a0 * (1 - q); }); }
+      air.visible = false; for (const a of ctx.fx.air) if (t >= a.start && t <= a.end) { air.visible = true; const L = clamp((t - a.start) / 0.3) * clamp((a.end - t) / 0.3);
+        air.children.forEach((ar) => { const q = ((t - a.start) * 0.75 + ar.userData.ph) % 1; ar.position.set(PC.x + PC.w / 2 + 0.75 - q * (PC.w + 1.5), ar.userData.y, PC.z + PC.d / 2 + 0.2);
+          ar.userData.mt.opacity = 0.9 * L * Math.sin(Math.PI * q); }); }
       // الشاشة
       const sc = lastStarted(ctx.screens, t); mon.userData.tex.redraw({ ...sc, p: sc.dur ? Math.round(prog(t, sc.start, sc.dur) * 45) / 45 : 1 });
       // ملصق الرام (X01 ram_tag)
@@ -387,7 +450,13 @@ const handlers = {
   X01: { setup(ev, ctx) { const p = ev.params;
     if (p.ram_tag) { const c = el("div", "tag3d", esc(p.ram_tag), ctx.ov); c.dataset.solo = `ram-${ev._i}`; const col = { problem: "rgba(255,51,71,.9)", fix: "rgba(31,174,91,.92)" }[p.ram_tag_color]; if (col) c.style.background = col;
       ctx.ramTags.push({ el: c, start: ev.start, end: p.ram_tag_until ?? ev.end }); }
-    if (p.mode === "keep") return;
+    // pc_fx (عناصر مصمّمة): unplug {at} · dust {at = لحظة النفخ} · airflow · fan_ok (✓ أخضر فوق المروحة)
+    if (p.pc_fx === "unplug") ctx.fx.unplug.push({ start: ev.start, end: ev.end, at: p.fx_at ?? ev.start + 0.5 });
+    if (p.pc_fx === "dust") ctx.fx.dust.push({ start: ev.start, end: ev.end, at: p.fx_at ?? ev.end - 0.9 });
+    if (p.pc_fx === "airflow") ctx.fx.air.push({ start: ev.start, end: ev.end });
+    if (p.pc_fx === "fan_ok") { const c = el("div", "qmark", "✓", ctx.ov); c.style.background = "var(--fix-badge)"; c.dataset.solo = "fan-" + ev._i;
+      ctx.marks.push({ el: c, start: p.fx_at ?? ev.start, end: ev.end, anchor: () => new THREE.Vector3(PC.x - 0.15, 2.15, PC.z - PC.d / 2 + 0.17) }); }
+    if (p.mode === "keep") { if (p.state) { ctx.states.push({ t: p.state_at ?? ev.start, mode: p.state }); ctx.sortAll(); } return; }
     ctx.screens.push({ start: ev.start, dur: Math.max(0.6, ev.end - ev.start), ...p }); if (p.state) ctx.states.push({ t: ev.start, mode: p.state }); ctx.sortAll(); } },
 };
 
