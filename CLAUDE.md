@@ -48,6 +48,7 @@
 | `scripts/` | bootstrap · install_packs · day_info · cal · git_save · news_slot (موعد الخبر) |
 | `design-refs/` | الملفات الأصلية (zip الحزم + الشعار) — لا تُعدَّل |
 | `CHANGELOG.md` | سجل كل تعديل على النظام (التاريخ + السبب) |
+| `START_HERE.md` · `AGENTS.md` | نقل النظام لبيئة/ذكاء اصطناعي ثاني (المتطلبات، المهام، القيم الخاصة بالحساب، خطوات التشغيل) |
 
 ## أدوات سريعة
 ```bash

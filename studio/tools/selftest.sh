@@ -6,7 +6,7 @@
 # =============================================================================
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
-SERIES=("$@"); [ ${#SERIES[@]} -eq 0 ] && SERIES=(budget-builds shortcuts troubleshooting)
+SERIES=("$@"); [ ${#SERIES[@]} -eq 0 ] && SERIES=(budget-builds shortcuts troubleshooting tech-news)
 TO="${SELFTEST_TO:-5}"
 for s in "${SERIES[@]}"; do
   T=studio/$s/test; W=work/selftest/$s; mkdir -p "$W"
