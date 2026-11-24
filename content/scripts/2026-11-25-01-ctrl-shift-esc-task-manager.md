@@ -1,7 +1,8 @@
 ---
-id: 2026-11-21-01
-publish_date: 2026-11-21
-slot: "08:43"
+id: 2026-11-25-01
+moved_from: 2026-11-21-01
+publish_date: 2026-11-25
+slot: "08:38"
 series: shortcuts
 topic: "Ctrl + Shift + Esc: مدير المهام مباشرة"
 status: معتمد
