@@ -1,0 +1,332 @@
+{
+ "id": "2026-11-26-01",
+ "series": "budget-builds",
+ "style": "15_iso_build_drop",
+ "camera": {
+  "variant": 1
+ },
+ "budget": 12000,
+ "goal": "1440p",
+ "hook_ghosts": [
+  "gpu"
+ ],
+ "header": {
+  "label": "تجميعة 12,000 ريال",
+  "counter": {
+   "label": "باقي",
+   "start": 12000
+  }
+ },
+ "hook": {
+  "title": {
+   "main": "تلعب **وتبث** بـ **12,000**؟",
+   "desc": "1440p · ستريم",
+   "desc_at": "w6"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w9.end",
+   "params": {
+    "goal": "1440p"
+   }
+  },
+  {
+   "el": "E02",
+   "start": 0,
+   "end": "w9.end",
+   "params": {
+    "goal": "1440p"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w10",
+   "end": "w11.end"
+  },
+  {
+   "el": "E07",
+   "start": "w12",
+   "end": "w17.end",
+   "params": {
+    "part": "gpu",
+    "category": "كرت الشاشة",
+    "name": "ASUS Prime RTX 5070 OC",
+    "size": "sm",
+    "list_name": "RTX 5070",
+    "drop_at": "w12",
+    "price": 4313,
+    "price_at": "w17",
+    "desc": "12GB GDDR7",
+    "desc_at": "w15"
+   }
+  },
+  {
+   "el": "E08",
+   "start": "w18",
+   "end": "w33.end",
+   "params": {
+    "title": "NVENC",
+    "labels": [
+     "CPU",
+     "NVENC"
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": "w18",
+   "end": "w26.end",
+   "params": {
+    "chip": "ليش NVIDIA للستريم؟",
+    "main": "**NVENC** في الكرت",
+    "size": "mid",
+    "desc": "جزء مخصص للترميز بس",
+    "desc_at": "w23"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w27",
+   "end": "w33.end",
+   "params": {
+    "main": "البث ما يشيله **المعالج**",
+    "size": "mid",
+    "desc": "على حساب اللعبة",
+    "desc_at": "w31"
+   }
+  },
+  {
+   "el": "E09",
+   "start": "w34",
+   "end": "w34.end"
+  },
+  {
+   "el": "E04",
+   "start": "w34",
+   "end": "w44.end",
+   "params": {
+    "part": "cpu",
+    "category": "المعالج",
+    "name": "Core Ultra 7 270K Plus",
+    "size": "sm",
+    "list_name": "Core Ultra 7 270K Plus",
+    "drop_at": "w35",
+    "price": 1559,
+    "price_at": "w44",
+    "desc": "24 نواة · 8P + 16E",
+    "desc_at": "w41"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w45",
+   "end": "w52.end",
+   "params": {
+    "part": "cooler",
+    "category": "تبريد مائي",
+    "name": "Corsair NAUTILUS 360 RS",
+    "size": "sm",
+    "list_name": "NAUTILUS 360 RS",
+    "drop_at": "w47",
+    "price": 329,
+    "price_at": "w52",
+    "desc": "360mm · LGA 1851",
+    "desc_at": "w49"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w53",
+   "end": "w60.end",
+   "params": {
+    "part": "mobo",
+    "category": "الماذربورد",
+    "name": "ASUS TUF Gaming B860-PLUS WiFi",
+    "size": "xs",
+    "list_name": "TUF B860-PLUS WiFi",
+    "drop_at": "w54",
+    "price": 818,
+    "price_at": "w60",
+    "desc": "3 فتحات M.2 · Wi-Fi 7",
+    "desc_at": "w58"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w61",
+   "end": "w66.end",
+   "params": {
+    "part": "ram",
+    "category": "الرام",
+    "name": "32GB DDR5 6000",
+    "en": true,
+    "list_name": "32GB DDR5 6000",
+    "drop_at": "w62",
+    "price": 2218,
+    "price_at": "w66",
+    "desc": "XMP",
+    "desc_at": "w64"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w67",
+   "end": "w72.end",
+   "params": {
+    "part": "ssd",
+    "category": "التخزين",
+    "name": "Kingston NV3 2TB",
+    "list_name": "NV3 2TB",
+    "drop_at": "w68",
+    "price": 1179,
+    "price_at": "w72",
+    "desc": "NVMe PCIe 4.0",
+    "desc_at": "w70"
+   }
+  },
+  {
+   "el": "E06",
+   "start": "w73",
+   "end": "w77.end",
+   "params": {
+    "part": "ssd",
+    "mode": "flash"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w73",
+   "end": "w77.end",
+   "params": {
+    "chip": "SSD ثاني",
+    "main": "NV3 1TB",
+    "en": true,
+    "desc": "للتسجيلات",
+    "desc_at": "w75"
+   }
+  },
+  {
+   "el": "E05",
+   "start": "w77",
+   "end": "w77.end",
+   "params": {
+    "price": 576,
+    "list_name": "NV3 1TB"
+   }
+  },
+  {
+   "el": "E10",
+   "start": "w78",
+   "end": "w82.end",
+   "params": {
+    "part": "psu",
+    "category": "الباور",
+    "name": "Corsair RM850e",
+    "list_name": "RM850e",
+    "drop_at": "w79",
+    "price": 399,
+    "price_at": "w82",
+    "desc": "850W · الكرت يطلب 650W",
+    "desc_at": "w80"
+   }
+  },
+  {
+   "el": "E11",
+   "start": "w83",
+   "end": "w90.end",
+   "params": {
+    "category": "الكيس",
+    "name": "Corsair FRAME 4000D RS ARGB",
+    "size": "sm",
+    "list_name": "FRAME 4000D RS",
+    "price": 299,
+    "price_at": "w90",
+    "desc": "3 مراوح",
+    "desc_at": "w87"
+   }
+  },
+  {
+   "el": "E12",
+   "start": "w91",
+   "end": "w96.end",
+   "params": {
+    "total": 11690,
+    "title": "المجموع **11,690** · الباقي ++310++",
+    "desc": "أسعار Amazon.sa بتاريخ 26 نوفمبر، شاملة الضريبة، شحن مجاني، وممكن تتغير"
+   }
+  },
+  {
+   "el": "E13",
+   "start": "w97",
+   "end": "w106.end",
+   "params": {
+    "res": "1440p",
+    "fps": 80,
+    "plus": false,
+    "chips": [
+     "Ultra",
+     "متوسط 16 لعبة",
+     "تقريبي"
+    ],
+    "title": "Tom's Hardware",
+    "desc": "اختبار الكرت · 1440p Ultra · تقريباً 80 FPS",
+    "desc_at": "w102"
+   }
+  },
+  {
+   "el": "E14",
+   "start": "w107",
+   "end": "w111.end",
+   "params": {
+    "title": "وش الميزانية الجاية؟",
+    "desc": "اكتبها بالتعليقات"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": "w17",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w44",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w52",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w60",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w66",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w72",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w77",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w82",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w90",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w91",
+   "name": "gs_notification2"
+  }
+ ],
+ "auto_sfx": true
+}

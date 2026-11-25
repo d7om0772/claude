@@ -1,0 +1,1294 @@
+{
+ "id": "2026-11-26-01",
+ "series": "budget-builds",
+ "style": "15_iso_build_drop",
+ "camera": {
+  "variant": 1
+ },
+ "budget": 12000,
+ "goal": "1440p",
+ "hook_ghosts": [
+  "gpu"
+ ],
+ "header": {
+  "label": "تجميعة 12,000 ريال",
+  "counter": {
+   "label": "باقي",
+   "start": 12000
+  }
+ },
+ "hook": {
+  "title": {
+   "main": "تلعب **وتبث** بـ **12,000**؟",
+   "desc": "1440p · ستريم",
+   "desc_at": 2.2
+  }
+ },
+ "duration": 77.709,
+ "fps": 30,
+ "closing": {
+  "start": 75.109
+ },
+ "captions": {
+  "lines": [
+   {
+    "start": 0.0,
+    "end": 1.54,
+    "words": [
+     {
+      "w": "تلعب",
+      "start": 0.0,
+      "end": 0.38
+     },
+     {
+      "w": "وتبث",
+      "start": 0.38,
+      "end": 0.76
+     },
+     {
+      "w": "من",
+      "start": 0.76,
+      "end": 0.86
+     },
+     {
+      "w": "نفس",
+      "start": 0.86,
+      "end": 1.08
+     },
+     {
+      "w": "الجهاز؟",
+      "start": 1.08,
+      "end": 1.54
+     }
+    ]
+   },
+   {
+    "start": 1.54,
+    "end": 3.84,
+    "words": [
+     {
+      "w": "هذي",
+      "start": 1.54,
+      "end": 2.2
+     },
+     {
+      "w": "تجميعة",
+      "start": 2.2,
+      "end": 2.68
+     },
+     {
+      "w": "12,000",
+      "start": 2.68,
+      "end": 3.26
+     },
+     {
+      "w": "ريال",
+      "start": 3.26,
+      "end": 3.56
+     },
+     {
+      "w": "لها",
+      "start": 3.56,
+      "end": 3.84
+     }
+    ]
+   },
+   {
+    "start": 3.84,
+    "end": 5.2,
+    "words": [
+     {
+      "w": "نبدأ",
+      "start": 3.84,
+      "end": 4.72
+     },
+     {
+      "w": "بالكرت",
+      "start": 4.72,
+      "end": 5.2
+     }
+    ]
+   },
+   {
+    "start": 5.2,
+    "end": 7.5,
+    "words": [
+     {
+      "w": "ASUS",
+      "start": 5.2,
+      "end": 5.74
+     },
+     {
+      "w": "Prime",
+      "start": 5.74,
+      "end": 6.04
+     },
+     {
+      "w": "RTX",
+      "start": 6.04,
+      "end": 6.5
+     },
+     {
+      "w": "5070",
+      "start": 6.5,
+      "end": 7.5
+     }
+    ]
+   },
+   {
+    "start": 8.56,
+    "end": 9.48,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 8.56,
+      "end": 9.48
+     },
+     {
+      "w": "4,313",
+      "start": 8.56,
+      "end": 9.48
+     }
+    ]
+   },
+   {
+    "start": 9.48,
+    "end": 11.568,
+    "words": [
+     {
+      "w": "وليش",
+      "start": 9.48,
+      "end": 10.44
+     },
+     {
+      "w": "NVIDIA",
+      "start": 10.44,
+      "end": 10.923
+     },
+     {
+      "w": "للستريم؟",
+      "start": 10.923,
+      "end": 11.568
+     }
+    ]
+   },
+   {
+    "start": 11.568,
+    "end": 12.64,
+    "words": [
+     {
+      "w": "فيه",
+      "start": 11.568,
+      "end": 11.76
+     },
+     {
+      "w": "NVENC",
+      "start": 11.76,
+      "end": 12.64
+     }
+    ]
+   },
+   {
+    "start": 12.64,
+    "end": 14.48,
+    "words": [
+     {
+      "w": "جزء",
+      "start": 12.64,
+      "end": 13.26
+     },
+     {
+      "w": "مخصص",
+      "start": 13.26,
+      "end": 13.8
+     },
+     {
+      "w": "للترميز",
+      "start": 13.8,
+      "end": 14.24
+     },
+     {
+      "w": "بس",
+      "start": 14.24,
+      "end": 14.48
+     }
+    ]
+   },
+   {
+    "start": 14.48,
+    "end": 16.2,
+    "words": [
+     {
+      "w": "فالبث",
+      "start": 14.48,
+      "end": 15.36
+     },
+     {
+      "w": "ما",
+      "start": 15.36,
+      "end": 15.48
+     },
+     {
+      "w": "يشيله",
+      "start": 15.48,
+      "end": 15.7
+     },
+     {
+      "w": "المعالج",
+      "start": 15.7,
+      "end": 16.12
+     },
+     {
+      "w": "على",
+      "start": 16.12,
+      "end": 16.2
+     }
+    ]
+   },
+   {
+    "start": 16.2,
+    "end": 16.78,
+    "words": [
+     {
+      "w": "حساب",
+      "start": 16.2,
+      "end": 16.44
+     },
+     {
+      "w": "اللعبة",
+      "start": 16.44,
+      "end": 16.78
+     }
+    ]
+   },
+   {
+    "start": 16.78,
+    "end": 19.52,
+    "words": [
+     {
+      "w": "المعالج",
+      "start": 16.78,
+      "end": 18.22
+     },
+     {
+      "w": "Intel",
+      "start": 18.22,
+      "end": 18.6
+     },
+     {
+      "w": "Core",
+      "start": 18.6,
+      "end": 18.94
+     },
+     {
+      "w": "Ultra",
+      "start": 18.94,
+      "end": 19.18
+     },
+     {
+      "w": "7",
+      "start": 19.18,
+      "end": 19.52
+     }
+    ]
+   },
+   {
+    "start": 19.52,
+    "end": 20.74,
+    "words": [
+     {
+      "w": "270K",
+      "start": 19.52,
+      "end": 20.4
+     },
+     {
+      "w": "Plus",
+      "start": 20.4,
+      "end": 20.74
+     }
+    ]
+   },
+   {
+    "start": 20.74,
+    "end": 22.6,
+    "words": [
+     {
+      "w": "24",
+      "start": 20.74,
+      "end": 21.58
+     },
+     {
+      "w": "نواة",
+      "start": 21.58,
+      "end": 22.6
+     }
+    ]
+   },
+   {
+    "start": 22.6,
+    "end": 23.9,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 22.6,
+      "end": 23.9
+     },
+     {
+      "w": "1,559",
+      "start": 22.6,
+      "end": 23.9
+     }
+    ]
+   },
+   {
+    "start": 23.9,
+    "end": 25.7,
+    "words": [
+     {
+      "w": "والمبرد",
+      "start": 23.9,
+      "end": 25.32
+     },
+     {
+      "w": "مائي",
+      "start": 25.32,
+      "end": 25.7
+     }
+    ]
+   },
+   {
+    "start": 25.7,
+    "end": 27.92,
+    "words": [
+     {
+      "w": "Corsair",
+      "start": 25.7,
+      "end": 26.4
+     },
+     {
+      "w": "NAUTILUS",
+      "start": 26.4,
+      "end": 27.04
+     },
+     {
+      "w": "360",
+      "start": 27.04,
+      "end": 27.44
+     },
+     {
+      "w": "RS",
+      "start": 27.44,
+      "end": 27.92
+     }
+    ]
+   },
+   {
+    "start": 27.92,
+    "end": 29.1,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 27.92,
+      "end": 29.1
+     },
+     {
+      "w": "329",
+      "start": 27.92,
+      "end": 29.1
+     }
+    ]
+   },
+   {
+    "start": 29.1,
+    "end": 32.0,
+    "words": [
+     {
+      "w": "الماذربورد",
+      "start": 29.1,
+      "end": 30.66
+     },
+     {
+      "w": "ASUS",
+      "start": 30.66,
+      "end": 31.38
+     },
+     {
+      "w": "TUF",
+      "start": 31.38,
+      "end": 31.68
+     },
+     {
+      "w": "Gaming",
+      "start": 31.68,
+      "end": 32.0
+     }
+    ]
+   },
+   {
+    "start": 32.0,
+    "end": 33.72,
+    "words": [
+     {
+      "w": "B860-PLUS",
+      "start": 32.0,
+      "end": 33.28
+     },
+     {
+      "w": "WiFi",
+      "start": 33.28,
+      "end": 33.72
+     }
+    ]
+   },
+   {
+    "start": 33.72,
+    "end": 34.96,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 33.72,
+      "end": 34.34
+     },
+     {
+      "w": "818",
+      "start": 34.34,
+      "end": 34.96
+     }
+    ]
+   },
+   {
+    "start": 34.96,
+    "end": 38.73,
+    "words": [
+     {
+      "w": "الرام",
+      "start": 34.96,
+      "end": 36.28
+     },
+     {
+      "w": "32GB",
+      "start": 36.28,
+      "end": 37.66
+     },
+     {
+      "w": "DDR5",
+      "start": 37.66,
+      "end": 38.68
+     },
+     {
+      "w": "6000",
+      "start": 38.68,
+      "end": 38.73
+     }
+    ]
+   },
+   {
+    "start": 38.68,
+    "end": 40.56,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 38.68,
+      "end": 39.72
+     },
+     {
+      "w": "2,218",
+      "start": 39.72,
+      "end": 40.56
+     }
+    ]
+   },
+   {
+    "start": 40.56,
+    "end": 43.96,
+    "words": [
+     {
+      "w": "التخزين",
+      "start": 40.56,
+      "end": 42.0
+     },
+     {
+      "w": "Kingston",
+      "start": 42.0,
+      "end": 42.52
+     },
+     {
+      "w": "NV3",
+      "start": 42.52,
+      "end": 43.62
+     },
+     {
+      "w": "2TB",
+      "start": 43.62,
+      "end": 43.96
+     }
+    ]
+   },
+   {
+    "start": 43.96,
+    "end": 45.44,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 43.96,
+      "end": 44.9
+     },
+     {
+      "w": "1,179",
+      "start": 44.9,
+      "end": 45.44
+     }
+    ]
+   },
+   {
+    "start": 46.56,
+    "end": 47.84,
+    "words": [
+     {
+      "w": "وNV3",
+      "start": 46.56,
+      "end": 46.86
+     },
+     {
+      "w": "1TB",
+      "start": 46.86,
+      "end": 47.22
+     },
+     {
+      "w": "للتسجيلات",
+      "start": 47.22,
+      "end": 47.84
+     }
+    ]
+   },
+   {
+    "start": 47.84,
+    "end": 49.14,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 47.84,
+      "end": 48.54
+     },
+     {
+      "w": "576",
+      "start": 48.54,
+      "end": 49.14
+     }
+    ]
+   },
+   {
+    "start": 49.14,
+    "end": 52.14,
+    "words": [
+     {
+      "w": "الباور",
+      "start": 49.14,
+      "end": 50.26
+     },
+     {
+      "w": "Corsair",
+      "start": 50.26,
+      "end": 50.82
+     },
+     {
+      "w": "RM850e",
+      "start": 50.82,
+      "end": 52.14
+     }
+    ]
+   },
+   {
+    "start": 52.14,
+    "end": 53.4,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 52.14,
+      "end": 52.8
+     },
+     {
+      "w": "399",
+      "start": 52.8,
+      "end": 53.4
+     }
+    ]
+   },
+   {
+    "start": 53.4,
+    "end": 56.5,
+    "words": [
+     {
+      "w": "والكيس",
+      "start": 53.4,
+      "end": 54.86
+     },
+     {
+      "w": "Corsair",
+      "start": 54.86,
+      "end": 55.54
+     },
+     {
+      "w": "FRAME",
+      "start": 55.54,
+      "end": 55.86
+     },
+     {
+      "w": "4000D",
+      "start": 55.86,
+      "end": 56.5
+     }
+    ]
+   },
+   {
+    "start": 56.5,
+    "end": 57.52,
+    "words": [
+     {
+      "w": "RS",
+      "start": 56.5,
+      "end": 56.94
+     },
+     {
+      "w": "ARGB",
+      "start": 56.94,
+      "end": 57.52
+     }
+    ]
+   },
+   {
+    "start": 57.52,
+    "end": 58.7,
+    "words": [
+     {
+      "w": "بـ",
+      "start": 57.52,
+      "end": 58.3
+     },
+     {
+      "w": "299",
+      "start": 58.3,
+      "end": 58.7
+     }
+    ]
+   },
+   {
+    "start": 60.664,
+    "end": 62.4,
+    "words": [
+     {
+      "w": "المجموع",
+      "start": 60.664,
+      "end": 61.22
+     },
+     {
+      "w": "11,690",
+      "start": 61.22,
+      "end": 62.06
+     },
+     {
+      "w": "ريال",
+      "start": 62.06,
+      "end": 62.4
+     }
+    ]
+   },
+   {
+    "start": 62.4,
+    "end": 64.28,
+    "words": [
+     {
+      "w": "والباقي",
+      "start": 62.4,
+      "end": 63.26
+     },
+     {
+      "w": "310",
+      "start": 63.26,
+      "end": 63.86
+     },
+     {
+      "w": "احتياط",
+      "start": 63.86,
+      "end": 64.28
+     }
+    ]
+   },
+   {
+    "start": 64.28,
+    "end": 66.58,
+    "words": [
+     {
+      "w": "حسب",
+      "start": 64.28,
+      "end": 65.12
+     },
+     {
+      "w": "اختبار",
+      "start": 65.12,
+      "end": 65.48
+     },
+     {
+      "w": "Tom's",
+      "start": 65.48,
+      "end": 65.749
+     },
+     {
+      "w": "Hardware",
+      "start": 65.749,
+      "end": 66.18
+     },
+     {
+      "w": "للكرت",
+      "start": 66.18,
+      "end": 66.58
+     }
+    ]
+   },
+   {
+    "start": 66.58,
+    "end": 70.04,
+    "words": [
+     {
+      "w": "1440p",
+      "start": 66.58,
+      "end": 68.2
+     },
+     {
+      "w": "Ultra",
+      "start": 68.2,
+      "end": 68.52
+     },
+     {
+      "w": "تقريباً",
+      "start": 68.52,
+      "end": 69.36
+     },
+     {
+      "w": "80",
+      "start": 69.36,
+      "end": 69.62
+     },
+     {
+      "w": "FPS",
+      "start": 69.62,
+      "end": 70.04
+     }
+    ]
+   },
+   {
+    "start": 70.04,
+    "end": 71.6,
+    "words": [
+     {
+      "w": "وش",
+      "start": 70.04,
+      "end": 70.225
+     },
+     {
+      "w": "الميزانية",
+      "start": 70.225,
+      "end": 71.06
+     },
+     {
+      "w": "الجاية؟",
+      "start": 71.06,
+      "end": 71.6
+     }
+    ]
+   },
+   {
+    "start": 71.782,
+    "end": 72.66,
+    "words": [
+     {
+      "w": "اكتبها",
+      "start": 71.782,
+      "end": 72.06
+     },
+     {
+      "w": "بالتعليقات",
+      "start": 72.06,
+      "end": 72.66
+     }
+    ]
+   },
+   {
+    "start": 72.66,
+    "end": 74.7,
+    "words": [
+     {
+      "w": "تابع",
+      "start": 72.66,
+      "end": 73.26
+     },
+     {
+      "w": "تيربو",
+      "start": 73.26,
+      "end": 73.66
+     },
+     {
+      "w": "عشان",
+      "start": 73.66,
+      "end": 74.04
+     },
+     {
+      "w": "ما",
+      "start": 74.04,
+      "end": 74.12
+     },
+     {
+      "w": "يفوتك",
+      "start": 74.12,
+      "end": 74.44
+     },
+     {
+      "w": "الجاي",
+      "start": 74.44,
+      "end": 74.7
+     }
+    ]
+   }
+  ]
+ },
+ "loop": {
+  "start": 76.709,
+  "dur": 1.0
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0.0,
+   "end": 3.84,
+   "params": {
+    "goal": "1440p"
+   }
+  },
+  {
+   "el": "E02",
+   "start": 0.0,
+   "end": 3.84,
+   "params": {
+    "goal": "1440p"
+   }
+  },
+  {
+   "el": "E03",
+   "start": 3.84,
+   "end": 5.2
+  },
+  {
+   "el": "E07",
+   "start": 5.2,
+   "end": 9.48,
+   "params": {
+    "part": "gpu",
+    "category": "كرت الشاشة",
+    "name": "ASUS Prime RTX 5070 OC",
+    "size": "sm",
+    "list_name": "RTX 5070",
+    "drop_at": 5.2,
+    "price": 4313,
+    "price_at": 8.56,
+    "desc": "12GB GDDR7",
+    "desc_at": 6.5
+   }
+  },
+  {
+   "el": "E08",
+   "start": 9.48,
+   "end": 16.78,
+   "params": {
+    "title": "NVENC",
+    "labels": [
+     "CPU",
+     "NVENC"
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": 9.48,
+   "end": 14.48,
+   "params": {
+    "chip": "ليش NVIDIA للستريم؟",
+    "main": "**NVENC** في الكرت",
+    "size": "mid",
+    "desc": "جزء مخصص للترميز بس",
+    "desc_at": 12.64
+   }
+  },
+  {
+   "el": "T",
+   "start": 14.48,
+   "end": 16.78,
+   "params": {
+    "main": "البث ما يشيله **المعالج**",
+    "size": "mid",
+    "desc": "على حساب اللعبة",
+    "desc_at": 16.12
+   }
+  },
+  {
+   "el": "E09",
+   "start": 16.78,
+   "end": 18.22
+  },
+  {
+   "el": "E04",
+   "start": 16.78,
+   "end": 23.9,
+   "params": {
+    "part": "cpu",
+    "category": "المعالج",
+    "name": "Core Ultra 7 270K Plus",
+    "size": "sm",
+    "list_name": "Core Ultra 7 270K Plus",
+    "drop_at": 18.22,
+    "price": 1559,
+    "price_at": 22.6,
+    "desc": "24 نواة · 8P + 16E",
+    "desc_at": 20.74
+   }
+  },
+  {
+   "el": "E04",
+   "start": 23.9,
+   "end": 29.1,
+   "params": {
+    "part": "cooler",
+    "category": "تبريد مائي",
+    "name": "Corsair NAUTILUS 360 RS",
+    "size": "sm",
+    "list_name": "NAUTILUS 360 RS",
+    "drop_at": 25.7,
+    "price": 329,
+    "price_at": 27.92,
+    "desc": "360mm · LGA 1851",
+    "desc_at": 27.04
+   }
+  },
+  {
+   "el": "E04",
+   "start": 29.1,
+   "end": 34.96,
+   "params": {
+    "part": "mobo",
+    "category": "الماذربورد",
+    "name": "ASUS TUF Gaming B860-PLUS WiFi",
+    "size": "xs",
+    "list_name": "TUF B860-PLUS WiFi",
+    "drop_at": 30.66,
+    "price": 818,
+    "price_at": 34.34,
+    "desc": "3 فتحات M.2 · Wi-Fi 7",
+    "desc_at": 33.28
+   }
+  },
+  {
+   "el": "E04",
+   "start": 34.96,
+   "end": 40.56,
+   "params": {
+    "part": "ram",
+    "category": "الرام",
+    "name": "32GB DDR5 6000",
+    "en": true,
+    "list_name": "32GB DDR5 6000",
+    "drop_at": 36.28,
+    "price": 2218,
+    "price_at": 39.72,
+    "desc": "XMP",
+    "desc_at": 38.68
+   }
+  },
+  {
+   "el": "E04",
+   "start": 40.56,
+   "end": 45.44,
+   "params": {
+    "part": "ssd",
+    "category": "التخزين",
+    "name": "Kingston NV3 2TB",
+    "list_name": "NV3 2TB",
+    "drop_at": 42.0,
+    "price": 1179,
+    "price_at": 44.9,
+    "desc": "NVMe PCIe 4.0",
+    "desc_at": 43.62
+   }
+  },
+  {
+   "el": "E06",
+   "start": 46.56,
+   "end": 49.14,
+   "params": {
+    "part": "ssd",
+    "mode": "flash"
+   }
+  },
+  {
+   "el": "T",
+   "start": 46.56,
+   "end": 49.14,
+   "params": {
+    "chip": "SSD ثاني",
+    "main": "NV3 1TB",
+    "en": true,
+    "desc": "للتسجيلات",
+    "desc_at": 47.22
+   }
+  },
+  {
+   "el": "E05",
+   "start": 48.54,
+   "end": 49.14,
+   "params": {
+    "price": 576,
+    "list_name": "NV3 1TB"
+   }
+  },
+  {
+   "el": "E10",
+   "start": 49.14,
+   "end": 53.4,
+   "params": {
+    "part": "psu",
+    "category": "الباور",
+    "name": "Corsair RM850e",
+    "list_name": "RM850e",
+    "drop_at": 50.26,
+    "price": 399,
+    "price_at": 52.8,
+    "desc": "850W · الكرت يطلب 650W",
+    "desc_at": 50.82
+   }
+  },
+  {
+   "el": "E11",
+   "start": 53.4,
+   "end": 58.7,
+   "params": {
+    "category": "الكيس",
+    "name": "Corsair FRAME 4000D RS ARGB",
+    "size": "sm",
+    "list_name": "FRAME 4000D RS",
+    "price": 299,
+    "price_at": 58.3,
+    "desc": "3 مراوح",
+    "desc_at": 56.5
+   }
+  },
+  {
+   "el": "E12",
+   "start": 60.664,
+   "end": 64.28,
+   "params": {
+    "total": 11690,
+    "title": "المجموع **11,690** · الباقي ++310++",
+    "desc": "أسعار Amazon.sa بتاريخ 26 نوفمبر، شاملة الضريبة، شحن مجاني، وممكن تتغير"
+   }
+  },
+  {
+   "el": "E13",
+   "start": 64.28,
+   "end": 70.04,
+   "params": {
+    "res": "1440p",
+    "fps": 80,
+    "plus": false,
+    "chips": [
+     "Ultra",
+     "متوسط 16 لعبة",
+     "تقريبي"
+    ],
+    "title": "Tom's Hardware",
+    "desc": "اختبار الكرت · 1440p Ultra · تقريباً 80 FPS",
+    "desc_at": 66.58
+   }
+  },
+  {
+   "el": "E14",
+   "start": 70.04,
+   "end": 72.66,
+   "params": {
+    "title": "وش الميزانية الجاية؟",
+    "desc": "اكتبها بالتعليقات"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.0,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 0.1,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 3.84,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 5.2,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 5.7,
+   "name": "gs_lock"
+  },
+  {
+   "t": 8.56,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 9.48,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 9.88,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 16.78,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 18.22,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 18.72,
+   "name": "gs_drop_item2"
+  },
+  {
+   "t": 18.77,
+   "name": "gs_lock"
+  },
+  {
+   "t": 22.6,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 25.7,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 26.2,
+   "name": "gs_drop_item2"
+  },
+  {
+   "t": 26.25,
+   "name": "gs_lock"
+  },
+  {
+   "t": 27.92,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 30.66,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 31.16,
+   "name": "gs_drop_item2"
+  },
+  {
+   "t": 31.21,
+   "name": "gs_lock"
+  },
+  {
+   "t": 34.34,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 36.28,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 36.78,
+   "name": "gs_drop_item2"
+  },
+  {
+   "t": 36.83,
+   "name": "gs_lock"
+  },
+  {
+   "t": 39.72,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 42.0,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 42.5,
+   "name": "gs_drop_item2"
+  },
+  {
+   "t": 42.55,
+   "name": "gs_lock"
+  },
+  {
+   "t": 44.9,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 46.56,
+   "name": "gs_lock"
+  },
+  {
+   "t": 48.54,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 50.26,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 51.06,
+   "name": "gs_lock"
+  },
+  {
+   "t": 52.8,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 53.4,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 53.7,
+   "name": "gs_charging2"
+  },
+  {
+   "t": 58.3,
+   "name": "gs_coins3"
+  },
+  {
+   "t": 60.664,
+   "name": "gs_notification2"
+  },
+  {
+   "t": 61.064,
+   "name": "gs_notification2"
+  },
+  {
+   "t": 64.58,
+   "name": "gs_charging2"
+  },
+  {
+   "t": 65.68,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 74.809,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 75.359,
+   "name": "gs_notification2"
+  }
+ ]
+}
