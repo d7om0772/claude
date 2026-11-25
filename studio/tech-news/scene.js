@@ -117,7 +117,7 @@ async function main() {
     // الوميض المعكوس (E03): مرتين × فريمين
     const inv = flashes.some((f) => (t >= f && t < f + 2 / FPS) || (t >= f + 4 / FPS && t < f + 6 / FPS));
     stage.style.filter = inv ? "invert(1)" : "none";
-    const fr = Math.round(t * FPS); grain.style.backgroundPosition = `${(fr * 37) % 192}px ${(fr * 53) % 192}px`;
+    grain.style.backgroundPosition = "0px 0px";   // حبيبات ثابتة: المتحركة كل فريم تضخّم الحجم (~210MB لـ 40ث)
     grain.style.mixBlendMode = world === "explain" || world === "bridge" ? "overlay" : "multiply";
     let la = 0;
     if (loop && loopImg.src && t >= loop.start) { const u = clamp((t - loop.start) / Math.max(1 / FPS, loop.end - loop.start)); la = u * u * (3 - 2 * u); }
@@ -254,8 +254,8 @@ function buildHub(ctx, ev) {
   const root = el("div", "hub on-dark", null, ctx.layer); root.style.display = "none";
   const node = el("div", "node", `<div class="nt">${acc(p.center || "السبب")}</div>${p.sub ? `<div class="ns">${acc(p.sub)}</div>` : ""}`, root);
   Object.assign(node.style, { left: "290px", width: "500px", top: "520px", padding: "18px 20px" }); node.dataset.safe = "1";
-  const pos = n === 2 ? [750, 330] : [830, 540, 250];   // يمين ← يسار (ترتيب القراءة)
-  const SY = n === 2 ? 900 : 940, SW = n === 2 ? 340 : 250, SH = 210;
+  const pos = n === 2 ? [750, 330] : [805, 540, 275];   // 3 عوامل: الكرت الأيمن داخل x≤960 مع push-in وتكبير E10   // يمين ← يسار (ترتيب القراءة)
+  const SY = n === 2 ? 900 : 940, SW = n === 2 ? 340 : 240, SH = 210;
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("class", "links"); root.insertBefore(svg, node);
   const items = fs.map((f, i) => {
     const x = pos[i]; const d = `M540 ${700} C540 ${(700 + SY) / 2}, ${x} ${(700 + SY) / 2 - 20}, ${x} ${SY}`;

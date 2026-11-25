@@ -363,5 +363,100 @@
    "distinct_notes": 1,
    "melody_warning": false
   }
+ },
+ "gs_error5": {
+  "file": "studio/sfx/gs_error5.wav",
+  "duration_s": 0.999,
+  "peak_dbfs": -3.0,
+  "description": "Error 5 (Gravity Sound)",
+  "use": "المشكلة (أحمر)",
+  "pack_name": "Error 5",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Error_5_%28Gravity_Sound%29.wav",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710088",
+  "attribution": "\"Error 5 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 3,
+   "melody_warning": true
+  }
+ },
+ "gs_punch_gut": {
+  "file": "studio/sfx/gs_punch_gut.wav",
+  "duration_s": 0.216,
+  "peak_dbfs": -3.0,
+  "description": "Punch Gut (Gravity Sound)",
+  "use": "thud على كرت الجسر وكلمة الـ CTA (tech-news)",
+  "pack_name": "Punch Gut",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Punch_Gut_%28Gravity_Sound%29.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710174",
+  "attribution": "\"Punch Gut (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 1,
+   "melody_warning": false
+  }
+ },
+ "gs_dropping_item": {
+  "file": "studio/sfx/gs_dropping_item.wav",
+  "duration_s": 0.25,
+  "peak_dbfs": -3.0,
+  "description": "Dropping item (Gravity Sound)",
+  "use": "نزول الدبابيس (tech-news)",
+  "pack_name": "Dropping item",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/3/3d/Dropping_item_%28Gravity_Sound%29.wav/Dropping_item_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710603",
+  "attribution": "\"Dropping item (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 0,
+   "melody_warning": false
+  }
+ },
+ "gs_bump1": {
+  "file": "studio/sfx/gs_bump1.wav",
+  "duration_s": 0.38,
+  "peak_dbfs": -3.0,
+  "description": "Bump 1 (Gravity Sound)",
+  "use": "الختم على الكلمة الأهم (tech-news)",
+  "pack_name": "Bump 1",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/17/Bump_1_%28Gravity_Sound%29.wav/Bump_1_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710111",
+  "attribution": "\"Bump 1 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 1,
+   "melody_warning": false
+  }
+ },
+ "gs_reflect2": {
+  "file": "studio/sfx/gs_reflect2.wav",
+  "duration_s": 0.217,
+  "peak_dbfs": -3.0,
+  "description": "Reflect 2 (Gravity Sound)",
+  "use": "shimmer مع التوهج (tech-news)",
+  "pack_name": "Reflect 2",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5d/Reflect_2_%28Gravity_Sound%29.wav/Reflect_2_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710888",
+  "attribution": "\"Reflect 2 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 2,
+   "melody_warning": false
+  }
  }
 }
