@@ -439,5 +439,24 @@
    "distinct_notes": 1,
    "melody_warning": false
   }
+ },
+ "gs_reflect2": {
+  "file": "studio/sfx/gs_reflect2.wav",
+  "duration_s": 0.217,
+  "peak_dbfs": -3.0,
+  "description": "Reflect 2 (Gravity Sound)",
+  "use": "shimmer مع التوهج (tech-news)",
+  "pack_name": "Reflect 2",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5d/Reflect_2_%28Gravity_Sound%29.wav/Reflect_2_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710888",
+  "attribution": "\"Reflect 2 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 2,
+   "melody_warning": false
+  }
  }
 }
