@@ -1,0 +1,419 @@
+{
+ "id": "2026-11-26-02",
+ "series": "shortcuts",
+ "style": "13_mini_desk_diorama",
+ "camera": {
+  "variant": 0
+ },
+ "header": {
+  "label": "اختصارات ويندوز",
+  "dots": 1
+ },
+ "hook": {
+  "title": {
+   "main": "قمت.. وجهازك **مفتوح**؟",
+   "desc": "Win + L",
+   "desc_at": "w3"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "big": "",
+    "text": "",
+    "clock": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0,
+   "end": "w15.end",
+   "params": {
+    "mode": "desktop",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0,
+   "end": "w10.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "مفتوح",
+    "size": 0.22
+   }
+  },
+  {
+   "el": "T",
+   "start": "w5",
+   "end": "w10.end",
+   "params": {
+    "cam": "main",
+    "chip": "بدون قفل",
+    "main": "**أي أحد** يقدر يستخدمه"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w11",
+   "end": "w18.end",
+   "params": {
+    "index": 1,
+    "label": "الحل",
+    "keys": [
+     "Win",
+     "L"
+    ],
+    "key_times": [
+     "w13",
+     "w15"
+    ],
+    "desc": "قبل ما تقوم",
+    "desc_at": "w16"
+   }
+  },
+  {
+   "el": "X01",
+   "start": {
+    "find": "L",
+    "nth": 1,
+    "edge": "end",
+    "shift": 0.15
+   },
+   "end": "w65.end",
+   "params": {
+    "mode": "lock",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w19",
+   "end": "w22.end",
+   "params": {
+    "cam": "main",
+    "chip": "Win + L",
+    "main": "يتقفل **على طول**"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w23",
+   "end": "w29.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "✓ مفتوحة",
+    "size": 0.18
+   }
+  },
+  {
+   "el": "T",
+   "start": "w23",
+   "end": "w29.end",
+   "params": {
+    "cam": "screens",
+    "chip": "القفل",
+    "main": "برامجك **تبقى مفتوحة**",
+    "desc": "زي ما تركتها",
+    "desc_at": "w27"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w30",
+   "end": "w40.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "PIN",
+    "size": 0.22
+   }
+  },
+  {
+   "el": "T",
+   "start": "w30",
+   "end": "w40.end",
+   "params": {
+    "cam": "screens",
+    "chip": "ما ينفتح إلا بـ",
+    "main": "**كلمة المرور**",
+    "desc": "أو PIN أو Windows Hello",
+    "desc_at": "w35"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w41",
+   "end": "w45.end",
+   "params": {
+    "mode": "secscreen",
+    "screen": "right",
+    "cam": "right",
+    "times": [
+     "w41",
+     "w42",
+     "w43",
+     "w44"
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": "w41",
+   "end": "w47.end",
+   "params": {
+    "chip": "غير تسجيل الخروج",
+    "main": "الخروج **يسكّر برامجك**"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w46",
+   "end": "w53.end",
+   "params": {
+    "mode": "secmini",
+    "screen": "right",
+    "cam": "screens",
+    "at": "w47"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w48",
+   "end": "w53.end",
+   "params": {
+    "main": "وممكن !!يضيع شغلك!!",
+    "desc": "اللي ما حفظته",
+    "desc_at": "w51"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w54",
+   "end": "w55.end",
+   "params": {
+    "cam": "wide",
+    "main": "تنسى **تقفله**؟"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w56",
+   "end": "w59.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "Dynamic lock",
+    "size": 0.14
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w60",
+   "end": "w65.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "Sign-in options",
+    "size": 0.12
+   }
+  },
+  {
+   "el": "T",
+   "start": "w56",
+   "end": "w65.end",
+   "params": {
+    "cam": "screens",
+    "chip": "Dynamic lock",
+    "main": "فعّله من **الإعدادات**",
+    "desc": "Settings ثم Accounts ثم Sign-in options",
+    "desc_at": "w60"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w66",
+   "end": "w73.end",
+   "params": {
+    "mode": "desktop",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w66",
+   "end": "w72.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "Bluetooth",
+    "size": 0.16
+   }
+  },
+  {
+   "el": "T",
+   "start": "w66",
+   "end": "w72.end",
+   "params": {
+    "cam": "screens",
+    "chip": "Dynamic lock",
+    "main": "يرتبط بـ **جوالك**",
+    "desc": "ولما يبعد عن المدى",
+    "desc_at": "w69"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w74",
+   "end": "w77.end",
+   "params": {
+    "mode": "lock",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w73",
+   "end": "w77.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "دقيقة",
+    "size": 0.22
+   }
+  },
+  {
+   "el": "T",
+   "start": "w73",
+   "end": "w77.end",
+   "params": {
+    "cam": "screens",
+    "main": "يتقفل **خلال دقيقة**"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w78",
+   "end": "w81.end",
+   "params": {
+    "mode": "desktop",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w78",
+   "end": {
+    "find": "L",
+    "nth": 2,
+    "edge": "end",
+    "shift": 0.3
+   },
+   "params": {
+    "cam": "main",
+    "keys": [
+     "Win",
+     "L"
+    ],
+    "key_times": [
+     "w79",
+     "w81"
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": "w78",
+   "end": {
+    "find": "L",
+    "nth": 2,
+    "edge": "end",
+    "shift": 0.3
+   },
+   "params": {
+    "chip": "احفظها",
+    "keys": [
+     "Win",
+     "L"
+    ],
+    "key_times": [
+     "w79",
+     "w81"
+    ]
+   }
+  },
+  {
+   "el": "E05",
+   "start": {
+    "find": "L",
+    "nth": 2,
+    "edge": "end"
+   },
+   "end": {
+    "find": "L",
+    "nth": 2,
+    "edge": "end",
+    "shift": 0.3
+   },
+   "params": {
+    "at": {
+     "find": "L",
+     "nth": 2,
+     "edge": "end",
+     "shift": 0.02
+    }
+   }
+  },
+  {
+   "el": "X01",
+   "start": {
+    "find": "L",
+    "nth": 2,
+    "edge": "end",
+    "shift": 0.15
+   },
+   "end": "w87.end",
+   "params": {
+    "mode": "lock",
+    "screen": "left"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": {
+    "find": "L",
+    "nth": 1,
+    "edge": "end",
+    "shift": 0.15
+   },
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": "w23",
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": "w41",
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": "w47",
+   "name": "gs_swipe_grass5"
+  },
+  {
+   "t": "w56",
+   "name": "gs_select_option11"
+  },
+  {
+   "t": "w74",
+   "name": "gs_selection12_fwd"
+  }
+ ],
+ "auto_sfx": true
+}
