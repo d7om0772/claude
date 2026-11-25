@@ -1,0 +1,814 @@
+{
+ "id": "2026-11-25-N1",
+ "series": "tech-news",
+ "style": "16_quick_explainer",
+ "hero": "ssd",
+ "keywords": [
+  "SSD"
+ ],
+ "duration": 39.669,
+ "fps": 30,
+ "closing": {
+  "start": 38.419
+ },
+ "captions": {
+  "lines": [
+   {
+    "start": 0.0,
+    "end": 1.78,
+    "words": [
+     {
+      "w": "تعريفك",
+      "start": 0.0,
+      "end": 0.64
+     },
+     {
+      "w": "يكتب",
+      "start": 0.64,
+      "end": 1.22
+     },
+     {
+      "w": "على",
+      "start": 1.22,
+      "end": 1.36
+     },
+     {
+      "w": "الـ",
+      "start": 1.36,
+      "end": 1.54
+     },
+     {
+      "w": "SSD؟",
+      "start": 1.54,
+      "end": 1.78
+     }
+    ]
+   },
+   {
+    "start": 1.78,
+    "end": 3.68,
+    "words": [
+     {
+      "w": "NVIDIA",
+      "start": 1.78,
+      "end": 2.84
+     },
+     {
+      "w": "أكدت",
+      "start": 2.84,
+      "end": 3.28
+     },
+     {
+      "w": "الخلل",
+      "start": 3.28,
+      "end": 3.68
+     }
+    ]
+   },
+   {
+    "start": 3.68,
+    "end": 4.76,
+    "words": [
+     {
+      "w": "ونزّلت",
+      "start": 3.68,
+      "end": 4.34
+     },
+     {
+      "w": "إصلاحه",
+      "start": 4.34,
+      "end": 4.76
+     }
+    ]
+   },
+   {
+    "start": 4.76,
+    "end": 5.94,
+    "words": [
+     {
+      "w": "وش",
+      "start": 4.76,
+      "end": 5.36
+     },
+     {
+      "w": "اللي",
+      "start": 5.36,
+      "end": 5.48
+     },
+     {
+      "w": "صار؟",
+      "start": 5.48,
+      "end": 5.94
+     }
+    ]
+   },
+   {
+    "start": 6.172,
+    "end": 7.22,
+    "words": [
+     {
+      "w": "السطر",
+      "start": 6.172,
+      "end": 6.5
+     },
+     {
+      "w": "الرسمي",
+      "start": 6.5,
+      "end": 6.94
+     },
+     {
+      "w": "يقول",
+      "start": 6.94,
+      "end": 7.22
+     }
+    ]
+   },
+   {
+    "start": 7.22,
+    "end": 8.38,
+    "words": [
+     {
+      "w": "كتابة",
+      "start": 7.22,
+      "end": 7.92
+     },
+     {
+      "w": "زايدة",
+      "start": 7.92,
+      "end": 8.38
+     }
+    ]
+   },
+   {
+    "start": 8.38,
+    "end": 9.48,
+    "words": [
+     {
+      "w": "على",
+      "start": 8.38,
+      "end": 8.76
+     },
+     {
+      "w": "ملف",
+      "start": 8.76,
+      "end": 9.06
+     },
+     {
+      "w": "سجل",
+      "start": 9.06,
+      "end": 9.48
+     }
+    ]
+   },
+   {
+    "start": 9.48,
+    "end": 10.3,
+    "words": [
+     {
+      "w": "بالخلفية",
+      "start": 9.48,
+      "end": 10.3
+     }
+    ]
+   },
+   {
+    "start": 10.3,
+    "end": 11.94,
+    "words": [
+     {
+      "w": "وحسب",
+      "start": 10.3,
+      "end": 11.0
+     },
+     {
+      "w": "تقارير",
+      "start": 11.0,
+      "end": 11.36
+     },
+     {
+      "w": "مستخدمين",
+      "start": 11.36,
+      "end": 11.94
+     }
+    ]
+   },
+   {
+    "start": 11.94,
+    "end": 14.88,
+    "words": [
+     {
+      "w": "وصلت",
+      "start": 11.94,
+      "end": 12.74
+     },
+     {
+      "w": "عند",
+      "start": 12.74,
+      "end": 12.86
+     },
+     {
+      "w": "بعضهم",
+      "start": 12.86,
+      "end": 13.26
+     },
+     {
+      "w": "لـ",
+      "start": 13.26,
+      "end": 13.7
+     },
+     {
+      "w": "30GB",
+      "start": 13.7,
+      "end": 14.42
+     },
+     {
+      "w": "بالساعة",
+      "start": 14.42,
+      "end": 14.88
+     }
+    ]
+   },
+   {
+    "start": 14.88,
+    "end": 16.1,
+    "words": [
+     {
+      "w": "حسب",
+      "start": 14.88,
+      "end": 15.58
+     },
+     {
+      "w": "التقارير",
+      "start": 15.58,
+      "end": 16.1
+     }
+    ]
+   },
+   {
+    "start": 16.1,
+    "end": 19.7,
+    "words": [
+     {
+      "w": "التعريف",
+      "start": 16.1,
+      "end": 17.02
+     },
+     {
+      "w": "621.14",
+      "start": 17.02,
+      "end": 19.08
+     },
+     {
+      "w": "متأثر",
+      "start": 19.08,
+      "end": 19.7
+     }
+    ]
+   },
+   {
+    "start": 19.7,
+    "end": 22.52,
+    "words": [
+     {
+      "w": "ومعه",
+      "start": 19.7,
+      "end": 20.54
+     },
+     {
+      "w": "621.24",
+      "start": 20.54,
+      "end": 22.52
+     }
+    ]
+   },
+   {
+    "start": 22.52,
+    "end": 26.74,
+    "words": [
+     {
+      "w": "والإصلاح",
+      "start": 22.52,
+      "end": 23.5
+     },
+     {
+      "w": "الرسمي",
+      "start": 23.5,
+      "end": 23.92
+     },
+     {
+      "w": "في",
+      "start": 23.92,
+      "end": 24.42
+     },
+     {
+      "w": "621.40",
+      "start": 24.42,
+      "end": 26.74
+     }
+    ]
+   },
+   {
+    "start": 26.74,
+    "end": 29.02,
+    "words": [
+     {
+      "w": "حدّث",
+      "start": 26.74,
+      "end": 27.6
+     },
+     {
+      "w": "من",
+      "start": 27.6,
+      "end": 27.72
+     },
+     {
+      "w": "تطبيق",
+      "start": 27.72,
+      "end": 28.06
+     },
+     {
+      "w": "NVIDIA",
+      "start": 28.06,
+      "end": 28.5
+     },
+     {
+      "w": "أو",
+      "start": 28.5,
+      "end": 29.02
+     }
+    ]
+   },
+   {
+    "start": 29.02,
+    "end": 30.02,
+    "words": [
+     {
+      "w": "GeForce.com",
+      "start": 29.02,
+      "end": 30.02
+     }
+    ]
+   },
+   {
+    "start": 30.02,
+    "end": 32.08,
+    "words": [
+     {
+      "w": "اكتب",
+      "start": 30.02,
+      "end": 30.76
+     },
+     {
+      "w": "«حدّثت»",
+      "start": 30.76,
+      "end": 31.46
+     },
+     {
+      "w": "بالتعليقات",
+      "start": 31.46,
+      "end": 32.08
+     }
+    ]
+   },
+   {
+    "start": 32.08,
+    "end": 33.3,
+    "words": [
+     {
+      "w": "الرقم",
+      "start": 32.08,
+      "end": 32.86
+     },
+     {
+      "w": "اللي",
+      "start": 32.86,
+      "end": 32.98
+     },
+     {
+      "w": "تدوره",
+      "start": 32.98,
+      "end": 33.3
+     }
+    ]
+   },
+   {
+    "start": 33.3,
+    "end": 35.16,
+    "words": [
+     {
+      "w": "621.40",
+      "start": 33.3,
+      "end": 35.16
+     }
+    ]
+   },
+   {
+    "start": 35.16,
+    "end": 36.76,
+    "words": [
+     {
+      "w": "حسب",
+      "start": 35.16,
+      "end": 35.9
+     },
+     {
+      "w": "ملاحظات",
+      "start": 35.9,
+      "end": 36.34
+     },
+     {
+      "w": "NVIDIA",
+      "start": 36.34,
+      "end": 36.76
+     }
+    ]
+   },
+   {
+    "start": 36.76,
+    "end": 38.04,
+    "words": [
+     {
+      "w": "تابع",
+      "start": 36.76,
+      "end": 37.42
+     },
+     {
+      "w": "تيربو",
+      "start": 37.42,
+      "end": 37.702
+     },
+     {
+      "w": "للجاي",
+      "start": 37.702,
+      "end": 38.04
+     }
+    ]
+   }
+  ]
+ },
+ "loop": {
+  "start": 38.819,
+  "dur": 0.85
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0.0,
+   "end": 1.78,
+   "params": {
+    "text": "تعريفك يكتب على الـ",
+    "big": "**SSD**؟",
+    "big_at": 1.54
+   }
+  },
+  {
+   "el": "E02",
+   "start": 1.78,
+   "end": 4.76,
+   "params": {
+    "hero": "ssd",
+    "stamp": "إصلاح",
+    "stamp_at": 4.34,
+    "sub": "NVIDIA",
+    "sub_at": 1.78
+   }
+  },
+  {
+   "el": "E03",
+   "start": 4.4,
+   "end": 4.6
+  },
+  {
+   "el": "E04",
+   "start": 4.76,
+   "end": 6.172,
+   "params": {
+    "text": "وش اللي صار؟"
+   }
+  },
+  {
+   "el": "E09",
+   "start": 6.172,
+   "end": 10.3,
+   "params": {
+    "center": "السطر الرسمي",
+    "sub": "ملاحظات 621.40",
+    "slots_at": 6.94,
+    "factors": [
+     {
+      "icon": "chart",
+      "text": "كتابة زايدة",
+      "at": 7.22
+     },
+     {
+      "icon": "doc",
+      "text": "ملف سجل",
+      "at": 8.76
+     },
+     {
+      "icon": "pc",
+      "text": "بالخلفية",
+      "at": 9.48
+     }
+    ]
+   }
+  },
+  {
+   "el": "E10",
+   "start": 10.3,
+   "end": 14.88,
+   "params": {
+    "focus": 0,
+    "mode": "flow",
+    "from": {
+     "icon": "doc",
+     "label": "ملف سجل"
+    },
+    "to": {
+     "icon": "ssd",
+     "label": "SSD"
+    }
+   }
+  },
+  {
+   "el": "E03",
+   "start": 14.52,
+   "end": 14.72
+  },
+  {
+   "el": "E05",
+   "start": 14.88,
+   "end": 16.1,
+   "params": {
+    "plate": "تعريفات GeForce",
+    "slots": [
+     {
+      "icon": "warn",
+      "label": "621.14",
+      "at": 10.45
+     },
+     {
+      "icon": "warn",
+      "label": "621.24",
+      "at": 15.58
+     },
+     {
+      "icon": "check",
+      "label": "621.40",
+      "light": true,
+      "at": 15.88
+     }
+    ]
+   }
+  },
+  {
+   "el": "E06",
+   "start": 16.1,
+   "end": 19.7,
+   "params": {
+    "slot": 0,
+    "enter": "zoom",
+    "name": "621.14",
+    "name_at": 17.02,
+    "badges": [
+     {
+      "icon": "warn",
+      "text": "متأثر",
+      "at": 19.08
+     },
+     {
+      "icon": "doc",
+      "text": "حسب التقارير",
+      "at": 18.02
+     }
+    ]
+   }
+  },
+  {
+   "el": "E06",
+   "start": 19.7,
+   "end": 22.52,
+   "params": {
+    "slot": 1,
+    "enter": "pan",
+    "name": "621.24",
+    "name_at": 20.54,
+    "badges": [
+     {
+      "icon": "warn",
+      "text": "متأثر",
+      "at": 21.44
+     },
+     {
+      "icon": "doc",
+      "text": "حسب التقارير",
+      "at": 21.94
+     }
+    ]
+   }
+  },
+  {
+   "el": "E06",
+   "start": 22.52,
+   "end": 30.02,
+   "params": {
+    "slot": 2,
+    "enter": "whip",
+    "name": "**621.40**",
+    "name_at": 24.42,
+    "badges": [
+     {
+      "icon": "check",
+      "text": "إصلاح رسمي",
+      "at": 23.5
+     },
+     {
+      "icon": "download",
+      "text": "تطبيق NVIDIA",
+      "at": 27.72
+     },
+     {
+      "icon": "globe",
+      "text": "GeForce.com",
+      "at": 29.02
+     }
+    ]
+   }
+  },
+  {
+   "el": "E13",
+   "start": 30.02,
+   "end": 32.08,
+   "params": {
+    "top": "اكتب بالتعليقات",
+    "words": [
+     "حدّثت"
+    ],
+    "word_times": [
+     30.76
+    ]
+   }
+  },
+  {
+   "el": "E14",
+   "start": 32.08,
+   "params": {
+    "top": "الرقم اللي تدوره",
+    "big": "**621.40**",
+    "bottom": "حسب ملاحظات NVIDIA",
+    "hero": "ssd"
+   },
+   "end": 38.369
+  }
+ ],
+ "sfx": [
+  {
+   "t": 1.63,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 4.34,
+   "name": "gs_bump1"
+  },
+  {
+   "t": 4.4,
+   "name": "gs_select_option11"
+  },
+  {
+   "t": 4.42,
+   "name": "gs_reflect2"
+  },
+  {
+   "t": 4.76,
+   "name": "gs_punch_gut"
+  },
+  {
+   "t": 6.022,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 6.97,
+   "name": "gs_charging2"
+  },
+  {
+   "t": 7.22,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 8.51,
+   "name": "gs_charging2"
+  },
+  {
+   "t": 8.76,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 9.23,
+   "name": "gs_charging2"
+  },
+  {
+   "t": 9.48,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 10.15,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 10.45,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 10.85,
+   "name": "gs_charging2"
+  },
+  {
+   "t": 14.52,
+   "name": "gs_select_option11"
+  },
+  {
+   "t": 14.73,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 15.58,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 15.88,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 15.95,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 16.68,
+   "name": "gs_dropping_item"
+  },
+  {
+   "t": 18.02,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 19.08,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 19.55,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 20.23,
+   "name": "gs_dropping_item"
+  },
+  {
+   "t": 21.44,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 21.94,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 22.37,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 22.92,
+   "name": "gs_dropping_item"
+  },
+  {
+   "t": 23.5,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 27.72,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 29.02,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 29.87,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 30.76,
+   "name": "gs_punch_gut"
+  },
+  {
+   "t": 32.03,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 32.18,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 32.43,
+   "name": "gs_reflect2"
+  }
+ ]
+}
