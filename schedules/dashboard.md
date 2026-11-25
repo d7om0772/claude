@@ -1,4 +1,6 @@
-# تحديث لوحة تيربو (آخر خطوة في كل مهمة مجدولة)
+# تحديث لوحة تيربو (مرة باليوم: آخر خطوة في مهمة `write` — من 2026-11-25)
+
+> المهام الثانية ما تحدّث اللوحة (التوفير)، إلا لو صار فشل في النشر. الاستثناء الوحيد: قراءة **نسبة الاستهلاك** (تحت) لسطر runs.md في كل مهمة.
 
 **صفحتين يشوف فيها صاحب الحساب الشغل:**
 - **متابعة تيربو** (الجوال — **الأهم**): https://claude.ai/artifact/PrWHxTrQfN1GKoUkZFFyKs — صفحة HTML واحدة البيانات داخلها، تنبني من `studio/dashboard/status_template.html`.
@@ -10,14 +12,14 @@
 
 ## نسبة الاستهلاك (قبل سطر runs.md — قاعدة ٨)
 صاحب الحساب يتابع كم استهلكت كل مهمة من حد الـ5 ساعات (دائرة جنب المهمة في الصفحة).
-1. `mcp__claude-code-remote__list_events` بـ `session_id: "session_01HkQMRN3rFeQBfXgPbeFuEj"` (جلسة المشغّل نفسها)، `kinds: ["rate_limit_event"]`، `limit: 100`، بدون مؤشر (يرجّع الأحدث).
+1. `mcp__claude-code-remote__list_events` بـ `session_id` = جلسة المشغّل الحالية (معرّفها في `schedules/README.md` § وين تشتغل؛ تتغيّر مع التدوير)، `kinds: ["rate_limit_event"]`، `limit: 100`، بدون مؤشر (يرجّع الأحدث).
 2. خذ **آخر** حدث في `data` ← `rate_limit_info.unifiedWindows.five_hour.utilization` و`seven_day.utilization` (كسور 0–1) ← اضربها في 100 وقرّبها لعدد صحيح: مثل `42%` و`76%`.
 3. ما فيه حدث في الصفحة؟ عيد بـ `before_id` = `first_id` حتى 3 مرات. ما لقيت أو فشلت الأداة: اكتب `—` في العمودين وكمّل.
 4. لو الأسبوعي ≥ 90%: أضف في الملخص "⚠️ الحد الأسبوعي <النسبة>".
 
 ## الخطوات
 1. `python3 -I scripts/build_status_page.py` ← يطلع `work/dashboard/status.html` ومعه `calendar.json` و`runs.json` و`tasks.json`.
-2. **صفحة الجوال:** أداة `Artifact` بـ `action: "read"` و`url` = رابط "متابعة تيربو" (لازم قبل النشر من محادثة ما نشرتها)، ثم `Artifact` publish بـ `url` نفسه و`file_path` = `work/dashboard/status.html` (بدون `icon`). لو انرفض لأن فيه نسخة أحدث: أعد نفس النشر مرة ثانية بدون تغيير (الصفحة كلها مولّدة من المستودع، فملفك يشمل كل شي فيها).
+2. **صفحة الجوال:** `Artifact` publish مباشرة بـ `url` = رابط "متابعة تيربو" و`file_path` = `work/dashboard/status.html` (بدون `icon`، و**بدون read قبله**: الملف مبني من المستودع فهو دايماً الأحدث). انرفض لأن المحادثة ما قرأته (جلسة مشغّل جديدة) أو لأن فيه نسخة أحدث؟ أعد نفس النشر مرة وحدة بدون تغيير.
 3. **لوحة Data:** لكل ملف من الثلاثة (الملف ↔ مجموعة البيانات بنفس الاسم: `calendar` / `runs` / `tasks`):
    1. ارفعه للوحة كأصل: أداة `Artifact` بـ `url` = رابط اللوحة، `file_path` = مسار الملف، `asset: true` ← خذ الرابط اللي يرجع (`/_blob/<id>`).
    2. اقرأ وثيقة مجموعة البيانات: `ArtifactData` `get` بـ `collection: "datasets"` و`doc_id: "<الاسم>"` ← خذ `version` والرابط القديم `source.url`.

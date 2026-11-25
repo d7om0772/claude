@@ -27,7 +27,7 @@ def main():
         "tiktok_calls": [{"tool": "xtdata--tiktok-scraper", "input": {"type": "SEARCH", "keywords": [k], "region": tk["region"],
                           "publishTime": tk["publishTime"], "sortType": tk["sortType"], "maxItems": tk["maxItems"], "waitSecs": 45}} for k in kws],
         "tiktok_fields": "desc,create_time,share_url,video.duration,author.unique_id,author.follower_count,statistics.play_count,statistics.digg_count,statistics.comment_count,statistics.share_count,statistics.collect_count",
-        "instagram_call": {"tool": "call-actor", "actor": ig["actor"], "input": {"directUrls": [f"https://www.instagram.com/explore/tags/{h}/" for h in tags],
+        "instagram_call": None if not ig.get("enabled", True) else {"tool": "call-actor", "actor": ig["actor"], "input": {"directUrls": [f"https://www.instagram.com/explore/tags/{h}/" for h in tags],
                            "resultsType": ig["resultsType"], "resultsLimit": ig["resultsLimit"], "onlyPostsNewerThan": ig["onlyPostsNewerThan"]},
                            "callOptions": {"maxTotalChargeUsd": ig["max_usd"]}, "waitSecs": 45},
         "instagram_fields": "url,caption,ownerUsername,timestamp,productType,videoDuration,videoPlayCount,videoViewCount,likesCount,commentsCount,hashtags",
