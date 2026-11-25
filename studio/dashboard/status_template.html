@@ -93,7 +93,7 @@ a { color: var(--brand); }
   </section>
 
   <section id="ideas">
-    <div class="sec-head"><h2>أفكار المفكر</h2><p class="sub">فكرة جديدة كل يوم من تيك توك وإنستقرام، تروح للكاتب</p></div>
+    <div class="sec-head"><h2>أفكار المفكر</h2><p class="sub">3 أفكار جديدة من تيك توك كل أحد وأربعاء، تروح للكاتب</p></div>
     <div class="list" id="idea-list"></div>
   </section>
 
@@ -191,7 +191,7 @@ a { color: var(--brand); }
 
   // أفكار المفكر
   var il = document.getElementById('idea-list'), ideas = (D.ideas || []).slice().reverse();
-  if (!ideas.length) il.appendChild(el('div', 'empty', 'ما فيه أفكار للحين. المفكر يشتغل كل يوم الساعة 3:47 العصر.'));
+  if (!ideas.length) il.appendChild(el('div', 'empty', 'ما فيه أفكار للحين. المفكر يشتغل مع مهمة الكتابة كل أحد وأربعاء الساعة 8:05 مساءً.'));
   ideas.forEach(function (x) {
     var row = el('div', 'row'); row.appendChild(el('span', 'when', x.date ? dayLabel(x.date) : ''));
     var w = el('div', 'what'); w.appendChild(el('div', '', x.idea));
