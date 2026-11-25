@@ -159,5 +159,57 @@
     "min_gap_same_day_min": 60,
     "seed": "torbo-posting-v1",
     "note": "بطلب صاحب الحساب 2026-11-20: وقت كل فيديو عشوائي داخل أوقات الذروة (الصبح 8–9، العصر 5–7، والثالث بالليل 9–11)، بدقيقة مو مدوّرة (مثل 7:18 أو 6:42)، ويختلف 7 دقايق على الأقل عن نفس الموعد في اليوم اللي قبله واللي بعده. day_info يحسبه (ثابت لنفس التاريخ)، و sync_times يحدّث التقويم."
+  },
+  "thinker": {
+    "_note": "المفكر (بطلب صاحب الحساب 2026-11-25): يومياً يتجول في تيك توك وإنستقرام عبر Apify (موصل tiktok_scraper) ويطلع فكرة جديدة وحدة للكاتب. scripts/thinker_plan.py يختار كلمات اليوم بالتدوير.",
+    "task_time": "15:47",
+    "series": [
+      "budget-builds",
+      "shortcuts",
+      "troubleshooting"
+    ],
+    "tiktok": {
+      "actor": "xtdata/tiktok-scraper",
+      "region": "SA",
+      "publishTime": "WEEK",
+      "sortType": 1,
+      "maxItems": 20,
+      "keywords_per_day": 2,
+      "keywords": [
+        "تجميعة بي سي",
+        "كرت شاشة",
+        "مشكلة الكمبيوتر",
+        "اختصارات ويندوز",
+        "قيمنق بي سي",
+        "ترقية الكمبيوتر",
+        "ويندوز 11",
+        "تبريد الكمبيوتر",
+        "معالج انتل ولا امد",
+        "شاشة قيمنق",
+        "لابتوب ولا بي سي",
+        "بي سي للمبتدئين"
+      ]
+    },
+    "instagram": {
+      "actor": "apify/instagram-scraper",
+      "resultsType": "posts",
+      "resultsLimit": 10,
+      "onlyPostsNewerThan": "7 days",
+      "max_usd": 0.1,
+      "hashtags_per_day": 2,
+      "hashtags": [
+        "تجميعة_بي_سي",
+        "بي_سي_جيمنج",
+        "pcbuild",
+        "قيمنق",
+        "pcsetup",
+        "كرت_شاشة",
+        "gamingpc",
+        "ويندوز"
+      ]
+    },
+    "candidates": 3,
+    "dup_reject": 0.85,
+    "max_apify_usd_per_day": 0.25
   }
 }

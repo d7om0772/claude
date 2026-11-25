@@ -4,10 +4,11 @@
 في المرحلة الثانية: احتياط — تكمل لو `write` ما خلصت الفيديو الواحد.
 
 ## البداية (إلزامي — نفس الترتيب)
-1. `bash scripts/bootstrap.sh` — يثبت الأدوات الناقصة، ويثبّت أي حزمة ستايل أو شعار جديد في `design-refs/`.
+0. **التوفير أول شي:** استدعِ مهارة `lean-scheduled-runs` بأداة Skill (`anthropic-skills:lean-scheduled-runs`) وطبّقها على التشغيل كامل، وأولها **بوابة الميزانية** حسب جدول `schedules/lean.md`. ما لقيت المهارة؟ نفس القواعد في `schedules/lean.md`.
+1. `bash scripts/bootstrap.sh 2>&1 | tail -5` — يثبت الأدوات الناقصة، ويثبّت أي حزمة ستايل أو شعار جديد في `design-refs/`.
 2. `git fetch origin main && git checkout -B main origin/main` — اشتغل على آخر نسخة من `main` (لو فيه تعديلات محلية غير محفوظة، احفظها أول بـ `bash scripts/git_save.sh`).
-3. اقرأ `CLAUDE.md` و`config.json` و`content/calendar.md`.
-4. `python3 scripts/sync_times.py` (يحدّث أوقات التقويم حسب سياسة الأوقات العشوائية) ثم `python3 scripts/day_info.py --json` — **اعتمد عليه** في "اليوم" و"بكرة" ورقم اليوم والمرحلة وعدد الفيديوهات والمواعيد ومعرّفاتها. لا تحسب التواريخ بنفسك.
+3. اقرأ `CLAUDE.md` و`config.json` (مرة وحدة بالتشغيل). **لا تقرأ `content/calendar.md` كامل** — `python3 scripts/cal.py list --from <اليوم> --to <آخر يوم تحتاجه>` (أو `get <ID>`).
+4. `python3 scripts/sync_times.py | tail -3` (يحدّث أوقات التقويم حسب سياسة الأوقات العشوائية) ثم `python3 scripts/day_info.py --json` — **اعتمد عليه** في "اليوم" و"بكرة" ورقم اليوم والمرحلة وعدد الفيديوهات والمواعيد ومعرّفاتها. لا تحسب التواريخ بنفسك.
 5. لو `bootstrap` ثبّت حزمة جديدة (سطر ✓ فيه "أعد بناء قالب"): سجّل في `CHANGELOG.md` إن القالب يحتاج إعادة بناء من المدير، وكمّل بالقالب الحالي.
 
 ## قواعد التشغيل (تنطبق على كل المهام)

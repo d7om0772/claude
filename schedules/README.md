@@ -1,6 +1,6 @@
 # المهام المجدولة — تيربو
 
-كل الأوقات بتوقيت الرياض (`Asia/Riyadh`)، مزاحة 5 دقايق عن رأس الساعة. برومبت كل مهمة قصير وثابت؛ الشغل الفعلي في ملف المهمة، فالمدير يعدّل الشغل بتعديل الملف بدون ما يلمس المهمة.
+كل الأوقات بتوقيت الرياض (`Asia/Riyadh`)، مزاحة دقايق عن رأس الساعة. **كل مهمة تبدأ بالتوفير** (مهارة `lean-scheduled-runs` + بوابة الميزانية في [lean.md](lean.md)). برومبت كل مهمة قصير وثابت؛ الشغل الفعلي في ملف المهمة، فالمدير يعدّل الشغل بتعديل الملف بدون ما يلمس المهمة.
 
 | المهمة | الموعد | cron | البرومبت | الملف |
 |---|---|---|---|---|
@@ -10,6 +10,7 @@
 | `analyze` التحليل | السبت 7:35ص | `CRON_TZ=Asia/Riyadh 35 7 * * 6` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/analyze.md` كاملاً. | [analyze.md](analyze.md) |
 | `news` الأخبار | يومياً 9:35ص | `CRON_TZ=Asia/Riyadh 35 9 * * *` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/news.md` كاملاً. | [news.md](news.md) |
 | `rescue` الإنقاذ | يومياً 12:15ظ | `CRON_TZ=Asia/Riyadh 15 12 * * *` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/rescue.md` كاملاً. | [rescue.md](rescue.md) |
+| `ideas` المفكر | يومياً 3:47العصر | `CRON_TZ=Asia/Riyadh 47 15 * * *` | اقرأ `CLAUDE.md` ثم نفّذ `schedules/ideas.md` كاملاً. | [ideas.md](ideas.md) |
 
 **وين تشتغل:** كل المهام تنطلق في **جلسة المشغّل** الدائمة:
 **"تيربو · المشغّل (المهام المجدولة)"** — `session_01HkQMRN3rFeQBfXgPbeFuEj` (بيئة `video`، المستودع `d7om0772/claude` على `main` مع صلاحية الدفع عليه، وكل الموصلات: Schedulin، Cloudinary، ElevenLabs، pexels، tiktok scraper).
@@ -28,6 +29,7 @@
 | analyze | `trig_01EAcBNY5JNUn9apaknx8Lsu` | ✅ 2026-11-15 | 2026-11-21 7:35ص (السبت) |
 | news | `trig_01GAyN7mHXdSXAFmQ6DrAKQL` | ✅ 2026-11-18 | 2026-11-19 9:35ص |
 | rescue | `trig_011fPGcosDnebZi1n77JMhRT` | ✅ 2026-11-15 | 2026-11-16 12:15ظ |
+| ideas | `trig_01P5wNRwtG8ieEFX1H6YyV9s` | ✅ 2026-11-25 | 2026-11-25 3:47العصر |
 
 البرومبت الفعلي لكل مهمة: `تشغيل مجدول (<المهمة>). اقرأ CLAUDE.md ثم نفّذ schedules/<المهمة>.md كاملاً. ابدأ من آخر main واعتبر ما سبق في هذه المحادثة سياق فقط — المرجع هو ملفات المستودع.`
 

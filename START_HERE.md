@@ -20,8 +20,8 @@
 | **بيئة تشغيل كود** | Linux، Python 3.11+، Node 18+، ffmpeg، Chromium + Playwright، مساحة ~3GB | رندر الفيديو (Three.js/HTML ← فريمات ← ffmpeg)، Whisper للتوقيت |
 | **مستودع Git** | GitHub (فرع `main`) | المستودع هو الذاكرة الوحيدة؛ الحاويات السحابية تنمسح |
 | **مفاتيح (متغيرات بيئة فقط، لا تنكتب في أي ملف)** | `GEMINI_API_KEY` (الصوت الاحتياطي Gemini TTS) · `PEXELS_API_KEY` (اختياري) | |
-| **خدمات/موصلات** | **Schedulin** (جدولة ونشر تيك توك) · **Cloudinary** (رفع الفيديو) · **ElevenLabs** (صوت فهد الأساسي) · **Apify TikTok scraper** (التحليل الأسبوعي) · **Pexels** (اختياري) | |
-| **مجدول مهام** | 6 مهام (قسم ٣) تصحى وترسل برومبت ثابت | التشغيل لحاله |
+| **خدمات/موصلات** | **Schedulin** (جدولة ونشر تيك توك) · **Cloudinary** (رفع الفيديو) · **ElevenLabs** (صوت فهد الأساسي) · **Apify** (`xtdata/tiktok-scraper` + `apify/instagram-scraper`: المفكر اليومي والتحليل الأسبوعي) · **Pexels** (اختياري) | |
+| **مجدول مهام** | 7 مهام (قسم ٣) تصحى وترسل برومبت ثابت | التشغيل لحاله |
 
 **الأنسب:** Claude Code (سحابي) — النظام مبني عليه: `CLAUDE.md` و`.claude/agents/` و`.claude/settings.json` تشتغل مباشرة.
 **ذكاء اصطناعي ثاني** (Codex، Gemini CLI، Cursor…): `AGENTS.md` يحيله لـ `CLAUDE.md`. الوكلاء في `.claude/agents/*.md` تعليمات نصية عادية: شغّل كل واحد كوكيل فرعي، أو خلّ الوكيل الرئيسي ينفذ تعليماته بنفسه (مكتوب في CLAUDE.md). الموصلات تتبدل بما يقابلها (API أو MCP).
@@ -36,6 +36,7 @@
 | publish (النشر) | `CRON_TZ=Asia/Riyadh 5 7 * * *` | `schedules/publish.md` |
 | news (الأخبار) | `CRON_TZ=Asia/Riyadh 35 9 * * *` | `schedules/news.md` |
 | rescue (الإنقاذ) | `CRON_TZ=Asia/Riyadh 15 12 * * *` | `schedules/rescue.md` |
+| ideas (المفكر) | `CRON_TZ=Asia/Riyadh 47 15 * * *` | `schedules/ideas.md` |
 | analyze (التحليل، السبت) | `CRON_TZ=Asia/Riyadh 35 7 * * 6` | `schedules/analyze.md` |
 
 **مهم (Claude Code):** المهام اللي تنشأ بخيار "جلسة جديدة كل مرة" ممكن تطلع **بدون المستودع وبدون الموصلات**. الحل المجرّب: **جلسة مشغّل دائمة** فيها المستودع والموصلات، والمهام مربوطة فيها (`persistent_session_id`)، ولا تأرشفها. التفاصيل في `schedules/README.md`.
@@ -57,7 +58,7 @@
 3. تأكد من الموصلات: Schedulin `list_social_accounts` (حساب تيك توك)، Cloudinary `sign-upload`، ElevenLabs `creative_list_voices` (صوت فهد).
 4. اختبار القوالب بدون نشر: `bash studio/tools/selftest.sh` (السلاسل الأربع) — لازم QA بدون issues.
 5. حدّث القيم في قسم ٤.
-6. أنشئ جلسة المشغّل والمهام الست (قسم ٣)، وحدّث معرّفاتها في `schedules/README.md`.
+6. أنشئ جلسة المشغّل والمهام السبع (قسم ٣)، وحدّث معرّفاتها في `schedules/README.md`.
 7. `python3 scripts/day_info.py` (اليوم والمرحلة والمواعيد) و`python3 scripts/cal.py list --from <اليوم>` (التقويم) — لو التقويم فاضي أو قديم، مهمة write تخطط الأسبوع الجاي.
 8. سجّل في `CHANGELOG.md` ("نقل النظام لبيئة جديدة") واحفظ.
 
@@ -65,12 +66,12 @@
 | المسار | المحتوى |
 |---|---|
 | `CLAUDE.md` (و`AGENTS.md`) | الدستور: الهدف، القواعد الثابتة، خريطة الملفات، دور المدير |
-| `.claude/agents/` | الوكلاء: scriptwriter · fact-checker · video-producer · publisher · analyst · news-editor |
+| `.claude/agents/` | الوكلاء (مع النموذج والجهد لكل واحد): thinker · scriptwriter · fact-checker · video-producer · publisher · analyst · news-editor |
 | `schedules/` | تعليمات كل مهمة + المواعيد + سجل التشغيل `runs.md` |
 | `config.json` | الإطلاق، المراحل، أوقات النشر، السلاسل، الأخبار، مواصفات الفيديو |
 | `content/` | التقويم (حالة كل فيديو)، السكربتات، ملفات الإنتاج، المنشورات، طابور الأخبار |
 | `brand/` | الهوية، الصوت وقواعد النطق، السلاسل، حزم التصميم الأربع (`styles/`)، الشعار |
 | `studio/` | قوالب الفيديو (4 سلاسل) + أدوات الخط: الصوت، التوقيت، المشهد، المكس، الرندر، الفحص، الرفع |
-| `scripts/` | bootstrap · day_info · cal · git_save · sync_times · news_slot · install_packs · لوحات المتابعة |
+| `scripts/` | bootstrap · day_info · cal · git_save · sync_times · news_slot · ideas · thinker_plan · install_packs · لوحات المتابعة |
 | `docs/team-blueprint.md` | شرح النموذج + برومبت جاهز لبناء فريق مشابه لمشروع ثاني |
 | `CHANGELOG.md` | كل تعديل صار على النظام وليش |

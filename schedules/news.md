@@ -6,10 +6,11 @@
 - **لازم يمر على المدقق** بقواعد الأخبار. **لا موسيقى، لا ذوات أرواح، لا شعارات شركات.**
 
 ## البداية (إلزامي — نفس الترتيب)
-1. `bash scripts/bootstrap.sh`
+0. **التوفير أول شي:** استدعِ مهارة `lean-scheduled-runs` بأداة Skill (`anthropic-skills:lean-scheduled-runs`) وطبّقها على التشغيل كامل، وأولها **بوابة الميزانية** حسب جدول `schedules/lean.md`. ما لقيت المهارة؟ نفس القواعد في `schedules/lean.md`.
+1. `bash scripts/bootstrap.sh 2>&1 | tail -5`
 2. `git fetch origin main && git checkout -B main origin/main` (لو فيه تعديلات محلية غير محفوظة، احفظها أول بـ `bash scripts/git_save.sh`).
-3. اقرأ `CLAUDE.md` و`config.json → series.news` و`brand/series.md` (قسم tech-news) و`content/news/queue.md`.
-4. `python3 scripts/sync_times.py` (يحدّث أوقات التقويم حسب سياسة الأوقات العشوائية) ثم `python3 scripts/day_info.py --json` (اليوم ومواعيده الثابتة).
+3. اقرأ `CLAUDE.md` (مرة وحدة) و`config.json → series.news` و`content/news/queue.md`، ومن `brand/series.md` قسم tech-news بس (`grep -n "tech-news"` ثم Read بـ offset/limit). **لا تقرأ `content/calendar.md` كامل.**
+4. `python3 scripts/sync_times.py | tail -3` (يحدّث أوقات التقويم حسب سياسة الأوقات العشوائية) ثم `python3 scripts/day_info.py --json` (اليوم ومواعيده الثابتة).
 
 ## قواعد التشغيل
 نفس قواعد المهام (`schedules/write.md` § قواعد التشغيل): احفظ بعد كل خطوة على `main`، لا تسأل ولا تنتظر، الفشل ما يوقف الخط، وسجّل كل قرار.

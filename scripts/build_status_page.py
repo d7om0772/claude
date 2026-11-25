@@ -35,7 +35,8 @@ def main():
     meta = {m["label"]: m["value"] for m in cal["meta"]}
     for r in cal["rows"]:
         r["date_ar"] = label(r["date"])
-    data = {"calendar": cal["rows"], "runs": runs["rows"], "tasks": tasks["rows"],
+    ideas = load("ideas.json") if os.path.exists(os.path.join(a.dir, "ideas.json")) else {"rows": []}
+    data = {"calendar": cal["rows"], "runs": runs["rows"], "tasks": tasks["rows"], "ideas": ideas["rows"],
             "exported": meta.get("وقت التصدير (الرياض)", ""), "commit": meta.get("آخر commit", ""),
             "board": BOARD_URL}
     blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")

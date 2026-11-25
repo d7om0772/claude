@@ -24,6 +24,7 @@ TASKS = [  # المهمة، الاسم، الدقيقة، الساعة، أيا�
     ("publish", "النشر", 5, 7, "*"),
     ("news", "الأخبار", 35, 9, "*"),
     ("rescue", "الإنقاذ", 15, 12, "*"),
+    ("ideas", "المفكر", 47, 15, "*"),
     ("analyze", "التحليل", 35, 7, "6"),
 ]
 
@@ -97,7 +98,17 @@ def main():
     tasks = [{"task": t, "name": n, "minute": mi, "hour": h, "dow": dow, "trigger": trig.get(t, "")}
              for t, n, mi, h, dow in TASKS]
 
+    ideas = []
+    ip = os.path.join(ROOT, "content", "ideas", "ideas.md")
+    if os.path.exists(ip):
+        for c in table_rows(ip, 9):
+            if re.match(r"I-\d+", c[0]):
+                ideas.append({"id": c[0], "date": c[1], "series": c[2], "series_ar": SERIES_AR.get(c[2], c[2]), "idea": c[3],
+                              "angle": c[4], "why": c[5][:220], "cal": c[7], "status": c[8]})
+    ideas = ideas[-7:]
+
     for name, data, src in [("calendar.json", cal_rows, "content/calendar.md"),
+                            ("ideas.json", ideas, "content/ideas/ideas.md"),
                             ("runs.json", runs, "schedules/runs.md"),
                             ("tasks.json", tasks, "schedules/README.md")]:
         doc = {"rows": data, "meta": [{"label": "الملف", "value": src}] + meta_common}

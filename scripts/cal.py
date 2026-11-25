@@ -10,6 +10,7 @@ cal.py — أداة قراءة/تعديل تقويم المحتوى content/cale
   add    --date D --time HH:MM --series X --topic "..." [--angle "..."] [--status فكرة]
   backlog-add --series X --topic "..." [--angle "..."]     فكرة بدون تاريخ (ID = B-###)
   assign BACKLOG_ID --date D --time HH:MM [--slot NN]     ينقل فكرة من البنك لموعد
+  swap   BACKLOG_ID ROW_ID                     يبدّل موضوع/زاوية فكرة البنك مع صف مجدول حالته "فكرة" (نفس السلسلة)؛ القديم يرجع للبنك
   topics                                       كل المواضيع (لمنع التكرار)
   dup    "موضوع"                               يفحص تشابه موضوع مع المواضيع الموجودة
   count  --from D --to D [--series X]          عدد المواضيع المجدولة في فترة
@@ -75,6 +76,7 @@ def main():
     p = sub.add_parser("backlog-add"); p.add_argument("--series", required=True); p.add_argument("--topic", required=True); p.add_argument("--angle", default="")
     p = sub.add_parser("assign"); p.add_argument("id"); p.add_argument("--date", required=True); p.add_argument("--time", required=True); p.add_argument("--slot")
     sub.add_parser("topics")
+    p = sub.add_parser("swap"); p.add_argument("id"); p.add_argument("row")
     p = sub.add_parser("dup"); p.add_argument("topic")
     p = sub.add_parser("count"); p.add_argument("--from", dest="dfrom", required=True); p.add_argument("--to", required=True); p.add_argument("--series")
     sub.add_parser("check")
@@ -127,6 +129,18 @@ def main():
         r.update({"id": rid, "date": a.date, "time": a.time})
         r["notes"] = (r["notes"] + " ؛ " if r["notes"] else "") + f"من البنك {a.id}"
         save(pre, rows, post); print(f"✓ {a.id} → {rid}")
+    elif a.cmd == "swap":
+        b, r = find(rows, a.id), find(rows, a.row)
+        if b["date"]: sys.exit(f"{a.id} مو من البنك")
+        if r["status"] != "فكرة": sys.exit(f"{a.row} حالته {r['status']} — التبديل لصفوف حالتها فكرة فقط")
+        if b["series"] != r["series"]: sys.exit(f"السلسلة مختلفة: {b['series']} ≠ {r['series']}")
+        stamp = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=3))).strftime("%m-%d %H:%M")
+        old = (r["topic"], r["angle"])
+        r["topic"], r["angle"] = b["topic"], b["angle"]
+        b["topic"], b["angle"] = old
+        r["notes"] = (r["notes"] + " ؛ " if r["notes"] else "") + f"[{stamp}] من البنك {a.id} (الموضوع السابق رجع للبنك {a.id})"
+        b["notes"] = (b["notes"] + " ؛ " if b["notes"] else "") + f"[{stamp}] رجع من {a.row}"
+        save(pre, rows, post); print(f"✓ {a.id} ⇄ {a.row}")
     elif a.cmd == "topics":
         for r in rows: print(f"{r['id']}\t{r['series']}\t{r['status']}\t{r['topic']}")
     elif a.cmd == "dup":
