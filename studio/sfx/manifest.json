@@ -420,5 +420,24 @@
    "distinct_notes": 0,
    "melody_warning": false
   }
+ },
+ "gs_bump1": {
+  "file": "studio/sfx/gs_bump1.wav",
+  "duration_s": 0.38,
+  "peak_dbfs": -3.0,
+  "description": "Bump 1 (Gravity Sound)",
+  "use": "الختم على الكلمة الأهم (tech-news)",
+  "pack_name": "Bump 1",
+  "source": "Openverse → Wikimedia Commons",
+  "creator": "Gravity Sound",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/17/Bump_1_%28Gravity_Sound%29.wav/Bump_1_%28Gravity_Sound%29.wav.mp3",
+  "landing_url": "https://commons.wikimedia.org/w/index.php?curid=85710111",
+  "attribution": "\"Bump 1 (Gravity Sound)\" by Gravity Sound, CC BY 4.0, via Wikimedia Commons",
+  "tonal_check": {
+   "distinct_notes": 1,
+   "melody_warning": false
+  }
  }
 }
