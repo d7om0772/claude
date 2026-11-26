@@ -4,7 +4,7 @@ publish_date: 2026-11-27
 slot: "08:09"
 series: troubleshooting
 topic: البنق عالي بالألعاب: الواي فاي ولا الكيبل؟
-status: سكربت
+status: معتمد
 version: 1
 target_length_s: 58
 researched_at: 2026-11-26
@@ -105,3 +105,16 @@ researched_at: 2026-11-26
 - نصوص الواجهة بخط Inter: Ping، Mbps، ms، Ethernet، Wi-Fi، 2.4GHz، 5GHz. **بدون شعارات** Intel/HP/Microsoft ولا شعار Wi-Fi Alliance (كلمة "Wi-Fi" نص بس) ولا شعارات ألعاب/منصات.
 - لا ذوات أرواح: كل الفعل بحركة الكيبل والراوتر والموجات نفسها، بدون يد.
 - **الطول:** ≈ 125 كلمة في التعليق ← ≈ 58–62ث مع الختام (ضمن ≤ 65ث). لو طلع أطول من 65ث: اقصص "لو راوترك يدعمها" من الجملة 10 (في النسختين).
+
+## التدقيق — جولة 1 — 2026-11-26 20:50
+**النتيجة: معتمد**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | مرجع لكل ادعاء | ✅ | كل ادعاء في الكابشن له سطر (1–10). |
+| 2 | فتح الروابط | ✅ | Intel: "latency is arguably the most important networking factor when gaming"، "less than 100ms is ideal"، "Disable other devices…"، "check background processes"، "choose the one closest to you"، "ideally provides a stable signal". HP: تعريفات bandwidth/latency/ping، "most reliable… lowest and most consistent latency"، "Ping depends more on connection type, distance to the server, and network quality". Microsoft: "Move your access point… reduce walls"، 5GHz "Less congested" و"Shorter range". كلها مطابقة. |
+| 3 | أرقام بنق | ✅ | الرقم الوحيد 100ms (Intel). ملاحظة صانع الفيديو تمنع أي رقم بنق ثاني على الشاشة (لا X01 `ping` بأرقامه الافتراضية). |
+| 4 | الاختصارات/الأسعار/FPS | ✅ | لا ينطبق. |
+| 5 | الكابشن ↔ التعليق | ✅ | 14 جملة = 14 جملة؛ التحويلات صحيحة (مية ملي ثانية، خمسة قيقاهيرتز، الخطوة ثنين/ثلاث). |
+| 6 | الطول | ✅ | 121 كلمة؛ مرجع 25-02: 128 كلمة = 60.7ث، فالمتوقع ≈ 57–60ث ≤ 65ث. |
+| 7 | القواعد العامة | ✅ | لا ذوات أرواح، لا شعارات، لا نصيحة خطيرة، الهوك صادق (السرعة تمام والبنق هو الفرق). |
+| 8 | التكرار | ✅ | ما فيه بنق/شبكة في published.md. |
