@@ -1,0 +1,320 @@
+{
+ "id": "2026-11-27-02",
+ "series": "budget-builds",
+ "style": "15_iso_build_drop",
+ "camera": {
+  "variant": 0
+ },
+ "budget": 8000,
+ "goal": "1440p",
+ "hook_ghosts": [
+  "gpu"
+ ],
+ "header": {
+  "label": "تجميعة 8,000 ريال",
+  "counter": {
+   "label": "باقي",
+   "start": 8000
+  }
+ },
+ "hook": {
+  "title": {
+   "main": "عندك **8,000** ريال؟",
+   "desc": "1440p",
+   "desc_at": "w3"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "goal": "1440p"
+   }
+  },
+  {
+   "el": "E02",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "goal": "1440p"
+   }
+  },
+  {
+   "el": "E08",
+   "start": "w5",
+   "end": "w11.end",
+   "params": {
+    "title": "البكسلات +78٪",
+    "labels": [
+     "1080p",
+     "1440p"
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": "w5",
+   "end": "w11.end",
+   "params": {
+    "chip": "1080p ← 1440p",
+    "main": "بكسلات أكثر بـ **78٪**",
+    "size": "mid"
+   }
+  },
+  {
+   "el": "E08",
+   "start": "w12",
+   "end": "w26.end",
+   "params": {
+    "title": "RX 9060 XT 16GB",
+    "bars": [
+     {
+      "label": "1080p",
+      "value": 98,
+      "unit": "FPS"
+     },
+     {
+      "label": "1440p",
+      "value": 67,
+      "unit": "FPS"
+     }
+    ]
+   }
+  },
+  {
+   "el": "T",
+   "start": "w12",
+   "end": "w26.end",
+   "params": {
+    "chip": "Tom's Hardware",
+    "main": "RX 9060 XT 16GB",
+    "en": true,
+    "desc": "Ultra · متوسط 11 لعبة",
+    "desc_at": "w16"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w27",
+   "end": "w34.end"
+  },
+  {
+   "el": "T",
+   "start": "w27",
+   "end": "w34.end",
+   "params": {
+    "chip": "Tom's Hardware",
+    "main": "اللي يفرق غالباً **الكرت**",
+    "size": "mid",
+    "desc": "والمعالج دوره ثانوي",
+    "desc_at": "w32"
+   }
+  },
+  {
+   "el": "E07",
+   "start": "w35",
+   "end": "w49.end",
+   "params": {
+    "part": "gpu",
+    "category": "كرت الشاشة",
+    "name": "XFX Swift RX 9070 XT 16GB",
+    "size": "sm",
+    "list_name": "RX 9070 XT",
+    "drop_at": "w43",
+    "price": 4160,
+    "price_at": "w49",
+    "desc": "أكثر من نص الميزانية",
+    "desc_at": "w39"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w50",
+   "end": "w55.end",
+   "params": {
+    "part": "cpu",
+    "category": "المعالج",
+    "name": "Ryzen 5 7500F",
+    "list_name": "Ryzen 5 7500F",
+    "drop_at": "w51",
+    "price": 548,
+    "price_at": "w55",
+    "desc": "AM5 · بدون مبرد",
+    "desc_at": "w53"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w56",
+   "end": "w59.end",
+   "params": {
+    "part": "cooler",
+    "category": "مبرد هوائي",
+    "name": "Thermalright Assassin X120 SE",
+    "size": "sm",
+    "list_name": "Assassin X120 SE",
+    "drop_at": "w57",
+    "price": 75,
+    "price_at": "w59"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w60",
+   "end": "w67.end",
+   "params": {
+    "part": "mobo",
+    "category": "الماذربورد",
+    "name": "ASUS B650E MAX GAMING WIFI",
+    "size": "xs",
+    "list_name": "B650E MAX GAMING WIFI",
+    "drop_at": "w61",
+    "price": 539,
+    "price_at": "w67",
+    "desc": "AM5 · DDR5",
+    "desc_at": "w63"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w68",
+   "end": "w75.end",
+   "params": {
+    "part": "ram",
+    "category": "الرام",
+    "name": "16GB DDR5 6000",
+    "en": true,
+    "list_name": "16GB DDR5 6000",
+    "drop_at": "w69",
+    "price": 1215,
+    "price_at": "w72",
+    "desc": "CL38 · EXPO",
+    "desc_at": "w70"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w76",
+   "end": "w81.end",
+   "params": {
+    "part": "ssd",
+    "category": "التخزين",
+    "name": "Kingston NV3 1TB",
+    "list_name": "NV3 1TB",
+    "drop_at": "w77",
+    "price": 610,
+    "price_at": "w81",
+    "desc": "NVMe PCIe 4.0",
+    "desc_at": "w79"
+   }
+  },
+  {
+   "el": "E10",
+   "start": "w82",
+   "end": "w86.end",
+   "params": {
+    "part": "psu",
+    "category": "الباور",
+    "name": "Corsair RM850e",
+    "list_name": "RM850e",
+    "drop_at": "w83",
+    "price": 399,
+    "price_at": "w86",
+    "desc": "850W · AMD تطلب 750W",
+    "desc_at": "w84"
+   }
+  },
+  {
+   "el": "E11",
+   "start": "w87",
+   "end": "w94.end",
+   "params": {
+    "category": "الكيس",
+    "name": "GAMEON EMPERORVX",
+    "list_name": "EMPERORVX",
+    "price": 219,
+    "price_at": "w91",
+    "desc": "4 مراوح",
+    "desc_at": "w93"
+   }
+  },
+  {
+   "el": "E12",
+   "start": "w95",
+   "end": "w99.end",
+   "params": {
+    "total": 7765,
+    "title": "المجموع **7,765** · الباقي ++235++",
+    "desc": "أسعار Amazon.sa بتاريخ 26 نوفمبر، شاملة الضريبة، شحن مجاني، وممكن تتغير"
+   }
+  },
+  {
+   "el": "E13",
+   "start": "w100",
+   "end": "w109.end",
+   "params": {
+    "res": "1440p",
+    "fps": 117,
+    "plus": false,
+    "chips": [
+     "Ultra",
+     "متوسط 11 لعبة",
+     "تقريبي"
+    ],
+    "title": "جدول Tom's Hardware للكرت",
+    "desc": "RX 9070 XT · 1440p Ultra · تقريباً 117 FPS",
+    "desc_at": "w107"
+   }
+  },
+  {
+   "el": "E14",
+   "start": "w110",
+   "end": "w116.end",
+   "params": {
+    "title": "وش الدقة اللي تلعب عليها؟",
+    "desc": "اكتبها بالتعليقات"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": "w49",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w55",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w59",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w67",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w72",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w81",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w86",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w91",
+   "name": "gs_coins3"
+  },
+  {
+   "t": "w95",
+   "name": "gs_notification2"
+  }
+ ],
+ "auto_sfx": true
+}

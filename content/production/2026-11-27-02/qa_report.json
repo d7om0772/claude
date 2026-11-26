@@ -1,0 +1,17 @@
+{
+ "video": "/home/user/claude/work/2026-11-27-02/video.mp4",
+ "duration": 77.566667,
+ "size_mb": 15.6,
+ "lufs": -14.0,
+ "true_peak": -3.0,
+ "issues": [
+  "page errors: ['console.warning: [.WebGL-0x1cfc00381e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels', 'console.warning: [.WebGL-0x1cfc00381e00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)', 'console.warning: [.WebGL-0x5d4003ade00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels']"
+ ],
+ "sheets": [
+  "/home/user/claude/work/2026-11-27-02/sheets/sheet_01.jpg",
+  "/home/user/claude/work/2026-11-27-02/sheets/sheet_02.jpg",
+  "/home/user/claude/work/2026-11-27-02/sheets/sheet_03.jpg",
+  "/home/user/claude/work/2026-11-27-02/sheets/sheet_04.jpg",
+  "/home/user/claude/work/2026-11-27-02/sheets/sheet_05.jpg"
+ ]
+}
