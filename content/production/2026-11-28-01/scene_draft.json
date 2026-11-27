@@ -1,0 +1,379 @@
+{
+ "id": "2026-11-28-01",
+ "series": "shortcuts",
+ "style": "13_mini_desk_diorama",
+ "camera": {
+  "variant": 1
+ },
+ "header": {
+  "label": "اختصارات ويندوز",
+  "dots": 3
+ },
+ "hook": {
+  "title": {
+   "main": "نافذتين جنب بعض **بثانية**",
+   "desc": "Win + الأسهم",
+   "desc_at": "w10"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "big": "",
+    "text": "",
+    "clock": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0,
+   "end": "w12.end",
+   "params": {
+    "mode": "desktop",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 0,
+   "end": "w18.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "Snap",
+    "size": 0.22
+   }
+  },
+  {
+   "el": "T",
+   "start": "w5",
+   "end": "w9.end",
+   "params": {
+    "cam": "main",
+    "chip": "بدون ماوس",
+    "main": "!!بدون سحب!! ولا تكبير"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w10",
+   "end": "w13.end",
+   "params": {
+    "index": 1,
+    "label": "الاختصار الأول",
+    "keys": [
+     "Win",
+     "←"
+    ],
+    "key_times": [
+     "w11",
+     "w13"
+    ]
+   }
+  },
+  {
+   "el": "X01",
+   "start": {
+    "find": "←",
+    "nth": 1,
+    "edge": "end",
+    "shift": 0.1
+   },
+   "end": "w18.end",
+   "params": {
+    "mode": "snap",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w14",
+   "end": "w18.end",
+   "params": {
+    "cam": "main",
+    "chip": "Snap",
+    "main": "تاخذ **نص الشاشة** اليسار"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w19",
+   "end": "w29.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "Snap Assist",
+    "size": 0.13
+   }
+  },
+  {
+   "el": "T",
+   "start": "w19",
+   "end": "w29.end",
+   "params": {
+    "cam": "screens",
+    "chip": "Snap Assist",
+    "main": "يعرض لك **باقي النوافذ**",
+    "desc": "اختر وحدة تعبّي النص الثاني",
+    "desc_at": "w25"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w30",
+   "end": "w40.end",
+   "params": {
+    "mode": "text",
+    "screen": "left",
+    "text": "Browser  |  Docs",
+    "size": 0.12
+   }
+  },
+  {
+   "el": "T",
+   "start": "w30",
+   "end": "w40.end",
+   "params": {
+    "cam": "main",
+    "chip": "مثلاً",
+    "main": "المتصفح **يسار** والملف **يمين**",
+    "desc": "تقارن وتنسخ بدون ما تقلّب",
+    "desc_at": "w35"
+   }
+  },
+  {
+   "el": "E05",
+   "start": "w36",
+   "end": "w37.end",
+   "params": {}
+  },
+  {
+   "el": "T",
+   "start": "w41",
+   "end": "w45.end",
+   "params": {
+    "cam": "main",
+    "chip": "وتبيها يمين؟",
+    "keys": [
+     "Win",
+     "→"
+    ],
+    "key_times": [
+     "w43",
+     "w45"
+    ]
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w41",
+   "end": "w45.end",
+   "params": {
+    "keys": [
+     "Win",
+     "→"
+    ],
+    "key_times": [
+     "w43",
+     "w45"
+    ]
+   }
+  },
+  {
+   "el": "X01",
+   "start": {
+    "find": "→",
+    "nth": 1,
+    "edge": "end",
+    "shift": 0.1
+   },
+   "end": "w47.end",
+   "params": {
+    "mode": "snap",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "E07",
+   "start": "w46",
+   "end": "w47.end",
+   "params": {}
+  },
+  {
+   "el": "T",
+   "start": "w46",
+   "end": "w47.end",
+   "params": {
+    "cam": "screens",
+    "main": "عندك **شاشتين**؟"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w48",
+   "end": "w58.end",
+   "params": {
+    "index": 2,
+    "label": "الاختصار الثاني",
+    "keys": [
+     "Win",
+     "Shift",
+     "←",
+     "→"
+    ],
+    "key_times": [
+     "w48",
+     "w50",
+     "w52",
+     "w54"
+    ],
+    "desc": "ينقل النافذة للشاشة الثانية",
+    "desc_at": "w55"
+   }
+  },
+  {
+   "el": "E06",
+   "start": "w55",
+   "end": "w58.end",
+   "params": {
+    "title": "Docs",
+    "cam": "screens"
+   }
+  },
+  {
+   "el": "T",
+   "start": "w59",
+   "end": "w61.end",
+   "params": {
+    "cam": "wide",
+    "main": "تبي **تقسيمات جاهزة**؟"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w62",
+   "end": "w68.end",
+   "params": {
+    "index": 3,
+    "label": "الاختصار الثالث",
+    "keys": [
+     "Win",
+     "Z"
+    ],
+    "key_times": [
+     "w62",
+     "w64"
+    ],
+    "desc": "Snap layouts",
+    "desc_at": "w67"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w65",
+   "end": "w68.end",
+   "params": {
+    "mode": "snap",
+    "screen": "left"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w65",
+   "end": "w72.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "Snap layouts",
+    "size": 0.12
+   }
+  },
+  {
+   "el": "T",
+   "start": "w69",
+   "end": "w81.end",
+   "params": {
+    "cam": "screens",
+    "chip": "وما اشتغل؟ شيّك",
+    "main": "**Snap windows**",
+    "desc": "Settings / System / Multitasking",
+    "desc_at": "w77"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w73",
+   "end": "w81.end",
+   "params": {
+    "mode": "text",
+    "screen": "left",
+    "text": "Snap windows",
+    "size": 0.12
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w75",
+   "end": "w81.end",
+   "params": {
+    "mode": "text",
+    "screen": "right",
+    "text": "On",
+    "size": 0.24
+   }
+  },
+  {
+   "el": "E15",
+   "start": "w82",
+   "end": "w85.end",
+   "params": {
+    "text": "احفظ",
+    "title": "احفظها",
+    "desc": "Win + الأسهم"
+   }
+  },
+  {
+   "el": "E04",
+   "start": "w82",
+   "end": "w85.end",
+   "params": {
+    "keys": [
+     "Win",
+     "←",
+     "→"
+    ],
+    "key_times": [
+     "w83",
+     "w85",
+     {
+      "find": "الأسهم",
+      "edge": "start",
+      "shift": 0.2
+     }
+    ]
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": "w6",
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": "w25",
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": "w36",
+   "name": "gs_selection9_fwd"
+  },
+  {
+   "t": "w75",
+   "name": "gs_select_option11"
+  }
+ ],
+ "auto_sfx": true
+}
