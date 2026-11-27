@@ -4,7 +4,7 @@ publish_date: 2026-11-28
 slot: "08:52"
 series: shortcuts
 topic: "Win + الأسهم: تقسيم الشاشة (Snap)"
-status: سكربت
+status: معتمد
 version: 1
 target_length_s: 48
 researched_at: 2026-11-27
@@ -87,3 +87,15 @@ researched_at: 2026-11-27
 - **لا تعرض ولا تذكر** Win + ↑ أو Win + ↓ ولا تقسيم أرباع بالكيبورد (محذوفة، شوف المراجع).
 - ما فيه أسعار ولا FPS.
 - عدد كلمات التعليق ≈ 96 كلمة ← ~46ث كلام + الختام ≈ 48ث.
+
+## التدقيق — جولة 1 — 2026-11-27 12:00
+**النتيجة: معتمد**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | Win + ← / → (تثبيت يسار/يمين) | ✅ | Microsoft Support (keyboard shortcuts): "Snap the window to the left/right side of the screen" |
+| 2 | Snap Assist (مصغّرات النوافذ الأخرى) + Win + Arrow | ✅ | صفحة Snap your windows: "Snap Assist will display thumbnails of your other open windows" |
+| 3 | Win + Shift + ← / → (نقل للشاشة الثانية) | ✅ | "Move the active window to the monitor on the left/right" |
+| 4 | Win + Z (Snap layouts) | ✅ | "Open the snap layouts" |
+| 5 | Settings > System > Multitasking + زر Snap windows | ✅ | صفحة Snap your windows: "Use the Snap windows toggle to turn Snap On or Off" |
+| 6 | الكابشن ↔ التعليق الصوتي (12 جملة) | ✅ | نفس المعنى والعدد؛ Win=Windows، Ctrl/Shift، السهم اليسار/اليمين، Z=زد حسب voice.md §٣.٤ |
+| 7 | القواعد العامة (لا ذوات أرواح/شعارات، مؤشر سهم) والتكرار | ✅ | نفس الموضوع كان 22-01 وانلغى ولم ينشر؛ لا يوجد تكرار منشور |

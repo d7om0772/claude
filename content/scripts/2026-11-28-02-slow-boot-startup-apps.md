@@ -4,7 +4,7 @@ publish_date: 2026-11-28
 slot: "18:31"
 series: troubleshooting
 topic: "الويندوز بطيء بعد التشغيل: برامج بدء التشغيل"
-status: سكربت
+status: معتمد
 version: 1
 target_length_s: 60
 researched_at: 2026-11-27
@@ -96,3 +96,16 @@ High يعني البرنامج أخذ أكثر من ثانية من المعال
 - نصوص الواجهة بخط Inter: Task Manager، Startup apps، Startup impact، High، Medium، Low، Disable، Enable، Search online، Settings، Apps، Startup، CPU، Disk، 3MB.
 - لا ذوات أرواح: كل الفعل بحركة المؤشر (سهم عادي، مو كف) والقوائم نفسها.
 - **الطول:** ≈ 118 كلمة في التعليق ← ≈ 58–62ث مع الختام (ضمن ≤ 65ث). لو طلع أطول من 65ث: اقصص الجملة 11 (Settings) في النسختين.
+
+## التدقيق — جولة 1 — 2026-11-27 12:00
+**النتيجة: معتمد**
+| # | البند | الحالة | الملاحظة/التصحيح المطلوب (مع المصدر الصحيح) |
+|---|---|---|---|
+| 1 | "تبطّئ الإقلاع وتزيد الشغل في الخلفية" | ✅ | Microsoft Tips: "Apps that run at startup can slow boot time and increase background usage." |
+| 2 | Ctrl + Shift + Esc ← Startup apps | ✅ | نفس الصفحة، Solution 5 |
+| 3 | عمود Startup impact + تعريف High (أكثر من 1 ثانية CPU أو 3MB قرص) | ✅ | Microsoft Configure startup apps: "Total CPU usage takes more than 1 second or total disk usage is more than 3 megabytes." |
+| 4 | كليك يمين ← Disable / Enable | ✅ | Microsoft Tips + Configure |
+| 5 | لا تعطّل الحماية ولا تعريفات الصوت/الكرت/التاتش باد + Search online | ✅ | How-To Geek (محدّث 11 نوفمبر 2026): antivirus + audio/graphics/touchpad drivers؛ "Open file location" أو "Search online" |
+| 6 | Settings ثم Apps ثم Startup | ✅ | Microsoft Configure: Start > Settings > Apps > Startup |
+| 7 | الكابشن ↔ التعليق الصوتي | ✅ | نفس الجمل والمعنى؛ الخطوة واحد/ثنين/ثلاث، Control/Shift/Escape، "ثلاث ميقابايت" (ملاحظة: MB غير مذكورة صراحة في voice.md §٣.٥ لكن النطق مقبول) |
+| 8 | القواعد العامة والتكرار | ✅ | بدون شعارات/ذوات أرواح/أرقام وقت إقلاع؛ 23-02 نفس الموضوع انلغى ولم ينشر |
