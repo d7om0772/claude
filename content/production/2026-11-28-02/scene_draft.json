@@ -1,0 +1,490 @@
+{
+ "id": "2026-11-28-02",
+ "series": "troubleshooting",
+ "style": "14_desk_pc_red_green",
+ "camera": {
+  "variant": 2
+ },
+ "header": {
+  "label": "المشاكل وحلولها",
+  "dots": 3
+ },
+ "initial_state": "problem",
+ "hook": {
+  "title": {
+   "main": "الويندوز !!ثقيل!! أول ما يشتغل؟"
+  }
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0,
+   "end": "w4.end",
+   "params": {}
+  },
+  {
+   "el": "X01",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "mode": "text",
+    "text": "Loading",
+    "size": 0.13,
+    "color": "problem",
+    "pulse": true,
+    "sfx": false
+   }
+  },
+  {
+   "el": "E15",
+   "start": 0,
+   "end": "w4.end",
+   "params": {
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w5",
+   "end": "w11.end",
+   "params": {
+    "mode": "spec_table",
+    "title": "Startup apps",
+    "rows": [
+     [
+      "Auto Updater",
+      "Enabled",
+      "problem"
+     ],
+     [
+      "Cloud Sync",
+      "Enabled",
+      "problem"
+     ],
+     [
+      "Game Launcher",
+      "Enabled",
+      "problem"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w5",
+   "end": "w11.end",
+   "params": {
+    "chip": "من الأسباب",
+    "main": "برامج تشتغل ++لحالها++",
+    "desc": "مع الويندوز",
+    "desc_at": "w10"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w12",
+   "end": "w19.end",
+   "params": {
+    "mode": "text",
+    "text": "Boot",
+    "size": 0.15,
+    "color": "problem",
+    "pulse": true,
+    "sub": "شغل في الخلفية",
+    "cam": "wide",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w12",
+   "end": "w19.end",
+   "params": {
+    "main": "ممكن !!تبطّئ الإقلاع!!",
+    "desc": "وتزيد الشغل في الخلفية",
+    "desc_at": "w16"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w20",
+   "end": "w27.end",
+   "params": {
+    "index": 1,
+    "title": "افتح ++Startup apps++",
+    "keys": [
+     "Ctrl",
+     "Shift",
+     "Esc"
+    ],
+    "key_times": [
+     "w23",
+     "w25",
+     "w27"
+    ],
+    "fix_at": "w29",
+    "cam": "desk"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w20",
+   "end": "w27.end",
+   "params": {
+    "mode": "desktop",
+    "state": "problem",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w28",
+   "end": "w30.end",
+   "params": {
+    "mode": "settings_nav",
+    "title": "Task Manager",
+    "items": [
+     "Task Manager",
+     "Startup apps"
+    ],
+    "times": [
+     "w28",
+     "w29"
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w31",
+   "end": "w36.end",
+   "params": {
+    "index": 2,
+    "title": "عمود ++Startup impact++",
+    "fix_at": "w35",
+    "cam": "wide"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w33",
+   "end": "w36.end",
+   "params": {
+    "mode": "spec_table",
+    "title": "Startup impact",
+    "rows": [
+     [
+      "Auto Updater",
+      "High",
+      "problem"
+     ],
+     [
+      "Cloud Sync",
+      "Medium"
+     ],
+     [
+      "Chat App",
+      "Low"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w37",
+   "end": "w51.end",
+   "params": {
+    "mode": "spec_table",
+    "title": "High impact",
+    "rows": [
+     [
+      "CPU time",
+      "More than 1 s",
+      "problem"
+     ],
+     [
+      "Disk usage",
+      "More than 3MB",
+      "problem"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w37",
+   "end": "w51.end",
+   "params": {
+    "main": "!!High!! يعني",
+    "desc": "أكثر من 1 ثانية معالج، أو أكثر من 3MB قرص",
+    "desc_at": "w41"
+   }
+  },
+  {
+   "el": "E03",
+   "start": "w52",
+   "end": "w62.end",
+   "params": {
+    "index": 3,
+    "title": "عطّل ++اللي ما تحتاجه++",
+    "fix_at": "w62",
+    "cam": "wide"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w54",
+   "end": "w62.end",
+   "params": {
+    "mode": "input_menu",
+    "title": "Auto Updater",
+    "items": [
+     "Disable",
+     "Open file location",
+     "Search online"
+    ],
+    "from": 0,
+    "to": 0,
+    "pick_at": "w62",
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w63",
+   "end": "w67.end",
+   "params": {
+    "mode": "spec_table",
+    "title": "Keep enabled",
+    "rows": [
+     [
+      "Security app",
+      "Keep on",
+      "fix"
+     ]
+    ],
+    "state": "problem",
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w63",
+   "end": "w67.end",
+   "params": {
+    "main": "لا تعطّل !!برامج الحماية!!"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w68",
+   "end": "w75.end",
+   "params": {
+    "mode": "spec_table",
+    "title": "Keep enabled",
+    "rows": [
+     [
+      "Audio driver",
+      "Keep on",
+      "fix"
+     ],
+     [
+      "Graphics driver",
+      "Keep on",
+      "fix"
+     ],
+     [
+      "Touchpad driver",
+      "Keep on",
+      "fix"
+     ]
+    ],
+    "state": "problem",
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w68",
+   "end": "w75.end",
+   "params": {
+    "main": "ولا !!تعريفات القطع!!",
+    "desc": "الصوت والكرت والتاتش باد",
+    "desc_at": "w72"
+   }
+  },
+  {
+   "el": "E15",
+   "start": "w76",
+   "end": "w79.end",
+   "params": {
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w76",
+   "end": "w84.end",
+   "params": {
+    "mode": "input_menu",
+    "title": "Unknown app",
+    "items": [
+     "Disable",
+     "Open file location",
+     "Search online"
+    ],
+    "from": 0,
+    "to": 2,
+    "pick_at": "w83",
+    "cam": "wide",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w76",
+   "end": "w84.end",
+   "params": {
+    "main": "مو متأكد من ++برنامج؟++",
+    "desc": "كليك يمين واختر Search online",
+    "desc_at": "w80"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w85",
+   "end": "w89.end",
+   "params": {
+    "mode": "text",
+    "text": "Disabled",
+    "size": 0.12,
+    "color": "problem",
+    "sub": "ما يشتغل لحاله",
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w85",
+   "end": "w89.end",
+   "params": {
+    "main": "التعطيل ++يمنعه يشتغل لحاله++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w90",
+   "end": "w93.end",
+   "params": {
+    "mode": "text",
+    "text": "Enable",
+    "size": 0.13,
+    "color": "fix",
+    "ring": true,
+    "state": "fix",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w90",
+   "end": "w93.end",
+   "params": {
+    "main": "ولو احتجته رجّع ++Enable++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w94",
+   "end": "w102.end",
+   "params": {
+    "mode": "settings_nav",
+    "items": [
+     "Settings",
+     "Apps",
+     "Startup"
+    ],
+    "times": [
+     "w98",
+     "w100",
+     "w102"
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w94",
+   "end": "w102.end",
+   "params": {
+    "main": "نفس القائمة في ++Settings++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w103",
+   "end": "w104.end",
+   "params": {
+    "mode": "off",
+    "cam": "wide",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": "w105",
+   "end": "w108.end",
+   "params": {
+    "mode": "cursor_back",
+    "state": "fix",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": "w103",
+   "end": "w108.end",
+   "params": {
+    "main": "أعد التشغيل و++شوف الفرق++"
+   }
+  },
+  {
+   "el": "E16",
+   "start": "w109",
+   "end": "w115.end",
+   "params": {
+    "title": "تابع **تيربو**",
+    "desc": "عشان ما يفوتك الحل الجاي",
+    "text": "تابع تيربو"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.05,
+   "name": "gs_error5"
+  },
+  {
+   "t": "w64",
+   "name": "gs_error5"
+  },
+  {
+   "t": "w98",
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  }
+ ],
+ "auto_sfx": true
+}

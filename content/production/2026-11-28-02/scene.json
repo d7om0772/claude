@@ -1,0 +1,1341 @@
+{
+ "id": "2026-11-28-02",
+ "series": "troubleshooting",
+ "style": "14_desk_pc_red_green",
+ "camera": {
+  "variant": 2
+ },
+ "header": {
+  "label": "المشاكل وحلولها",
+  "dots": 3
+ },
+ "initial_state": "problem",
+ "hook": {
+  "title": {
+   "main": "الويندوز !!ثقيل!! أول ما يشتغل؟"
+  }
+ },
+ "duration": 59.876,
+ "fps": 30,
+ "closing": {
+  "start": 57.276
+ },
+ "captions": {
+  "lines": [
+   {
+    "start": 0.0,
+    "end": 1.96,
+    "words": [
+     {
+      "w": "الويندوز",
+      "start": 0.0,
+      "end": 0.4
+     },
+     {
+      "w": "ثقيل",
+      "start": 0.4,
+      "end": 0.82
+     },
+     {
+      "w": "أول",
+      "start": 0.82,
+      "end": 1.18
+     },
+     {
+      "w": "ما",
+      "start": 1.18,
+      "end": 1.28
+     },
+     {
+      "w": "يشتغل؟",
+      "start": 1.28,
+      "end": 1.96
+     }
+    ]
+   },
+   {
+    "start": 1.96,
+    "end": 3.482,
+    "words": [
+     {
+      "w": "من",
+      "start": 1.96,
+      "end": 2.78
+     },
+     {
+      "w": "الأسباب",
+      "start": 2.78,
+      "end": 3.482
+     }
+    ]
+   },
+   {
+    "start": 3.482,
+    "end": 5.28,
+    "words": [
+     {
+      "w": "برامج",
+      "start": 3.482,
+      "end": 3.92
+     },
+     {
+      "w": "تشتغل",
+      "start": 3.92,
+      "end": 4.3
+     },
+     {
+      "w": "لحالها",
+      "start": 4.3,
+      "end": 4.7
+     },
+     {
+      "w": "مع",
+      "start": 4.7,
+      "end": 4.82
+     },
+     {
+      "w": "الويندوز",
+      "start": 4.82,
+      "end": 5.28
+     }
+    ]
+   },
+   {
+    "start": 5.28,
+    "end": 7.84,
+    "words": [
+     {
+      "w": "وهذي",
+      "start": 5.28,
+      "end": 6.32
+     },
+     {
+      "w": "ممكن",
+      "start": 6.32,
+      "end": 6.76
+     },
+     {
+      "w": "تبطّئ",
+      "start": 6.76,
+      "end": 7.24
+     },
+     {
+      "w": "الإقلاع",
+      "start": 7.24,
+      "end": 7.84
+     }
+    ]
+   },
+   {
+    "start": 7.84,
+    "end": 9.18,
+    "words": [
+     {
+      "w": "وتزيد",
+      "start": 7.84,
+      "end": 8.34
+     },
+     {
+      "w": "الشغل",
+      "start": 8.34,
+      "end": 8.66
+     },
+     {
+      "w": "في",
+      "start": 8.66,
+      "end": 8.76
+     },
+     {
+      "w": "الخلفية",
+      "start": 8.76,
+      "end": 9.18
+     }
+    ]
+   },
+   {
+    "start": 10.056,
+    "end": 11.1,
+    "words": [
+     {
+      "w": "الخطوة",
+      "start": 10.056,
+      "end": 10.46
+     },
+     {
+      "w": "1",
+      "start": 10.46,
+      "end": 11.1
+     }
+    ]
+   },
+   {
+    "start": 11.35,
+    "end": 13.736,
+    "words": [
+     {
+      "w": "اضغط",
+      "start": 11.35,
+      "end": 11.72
+     },
+     {
+      "w": "Ctrl",
+      "start": 11.72,
+      "end": 12.08
+     },
+     {
+      "w": "+",
+      "start": 12.08,
+      "end": 12.54
+     },
+     {
+      "w": "Shift",
+      "start": 12.54,
+      "end": 12.8
+     },
+     {
+      "w": "+",
+      "start": 12.8,
+      "end": 12.987
+     },
+     {
+      "w": "Esc",
+      "start": 12.987,
+      "end": 13.736
+     }
+    ]
+   },
+   {
+    "start": 13.736,
+    "end": 14.76,
+    "words": [
+     {
+      "w": "وافتح",
+      "start": 13.736,
+      "end": 14.14
+     },
+     {
+      "w": "Startup",
+      "start": 14.14,
+      "end": 14.52
+     },
+     {
+      "w": "apps",
+      "start": 14.52,
+      "end": 14.76
+     }
+    ]
+   },
+   {
+    "start": 15.797,
+    "end": 16.78,
+    "words": [
+     {
+      "w": "الخطوة",
+      "start": 15.797,
+      "end": 16.14
+     },
+     {
+      "w": "2",
+      "start": 16.14,
+      "end": 16.78
+     }
+    ]
+   },
+   {
+    "start": 16.78,
+    "end": 18.58,
+    "words": [
+     {
+      "w": "شوف",
+      "start": 16.78,
+      "end": 17.08
+     },
+     {
+      "w": "عمود",
+      "start": 17.08,
+      "end": 17.54
+     },
+     {
+      "w": "Startup",
+      "start": 17.54,
+      "end": 18.22
+     },
+     {
+      "w": "impact",
+      "start": 18.22,
+      "end": 18.58
+     }
+    ]
+   },
+   {
+    "start": 19.358,
+    "end": 21.16,
+    "words": [
+     {
+      "w": "High",
+      "start": 19.358,
+      "end": 19.66
+     },
+     {
+      "w": "يعني",
+      "start": 19.66,
+      "end": 20.24
+     },
+     {
+      "w": "البرنامج",
+      "start": 20.24,
+      "end": 20.9
+     },
+     {
+      "w": "أخذ",
+      "start": 20.9,
+      "end": 21.16
+     }
+    ]
+   },
+   {
+    "start": 21.16,
+    "end": 22.5,
+    "words": [
+     {
+      "w": "أكثر",
+      "start": 21.16,
+      "end": 21.42
+     },
+     {
+      "w": "من",
+      "start": 21.42,
+      "end": 21.54
+     },
+     {
+      "w": "ثانية",
+      "start": 21.54,
+      "end": 21.82
+     },
+     {
+      "w": "من",
+      "start": 21.82,
+      "end": 21.94
+     },
+     {
+      "w": "المعالج",
+      "start": 21.94,
+      "end": 22.5
+     }
+    ]
+   },
+   {
+    "start": 22.5,
+    "end": 24.26,
+    "words": [
+     {
+      "w": "أو",
+      "start": 22.5,
+      "end": 23.24
+     },
+     {
+      "w": "أكثر",
+      "start": 23.24,
+      "end": 23.64
+     },
+     {
+      "w": "من",
+      "start": 23.64,
+      "end": 23.82
+     },
+     {
+      "w": "3MB",
+      "start": 23.82,
+      "end": 24.26
+     }
+    ]
+   },
+   {
+    "start": 24.72,
+    "end": 25.22,
+    "words": [
+     {
+      "w": "من",
+      "start": 24.72,
+      "end": 24.82
+     },
+     {
+      "w": "القرص",
+      "start": 24.82,
+      "end": 25.22
+     }
+    ]
+   },
+   {
+    "start": 25.22,
+    "end": 26.82,
+    "words": [
+     {
+      "w": "الخطوة",
+      "start": 25.22,
+      "end": 26.38
+     },
+     {
+      "w": "3",
+      "start": 26.38,
+      "end": 26.82
+     }
+    ]
+   },
+   {
+    "start": 26.82,
+    "end": 28.38,
+    "words": [
+     {
+      "w": "كليك",
+      "start": 26.82,
+      "end": 27.42
+     },
+     {
+      "w": "يمين",
+      "start": 27.42,
+      "end": 27.8
+     },
+     {
+      "w": "على",
+      "start": 27.8,
+      "end": 27.9
+     },
+     {
+      "w": "البرنامج",
+      "start": 27.9,
+      "end": 28.38
+     }
+    ]
+   },
+   {
+    "start": 28.38,
+    "end": 29.2,
+    "words": [
+     {
+      "w": "اللي",
+      "start": 28.38,
+      "end": 28.54
+     },
+     {
+      "w": "ما",
+      "start": 28.54,
+      "end": 28.62
+     },
+     {
+      "w": "تحتاجه",
+      "start": 28.62,
+      "end": 29.2
+     }
+    ]
+   },
+   {
+    "start": 29.2,
+    "end": 30.54,
+    "words": [
+     {
+      "w": "واختر",
+      "start": 29.2,
+      "end": 30.1
+     },
+     {
+      "w": "Disable",
+      "start": 30.1,
+      "end": 30.54
+     }
+    ]
+   },
+   {
+    "start": 30.54,
+    "end": 33.36,
+    "words": [
+     {
+      "w": "بس",
+      "start": 30.54,
+      "end": 31.78
+     },
+     {
+      "w": "لا",
+      "start": 31.78,
+      "end": 32.12
+     },
+     {
+      "w": "تعطّل",
+      "start": 32.12,
+      "end": 32.52
+     },
+     {
+      "w": "برامج",
+      "start": 32.52,
+      "end": 32.88
+     },
+     {
+      "w": "الحماية",
+      "start": 32.88,
+      "end": 33.36
+     }
+    ]
+   },
+   {
+    "start": 33.36,
+    "end": 35.06,
+    "words": [
+     {
+      "w": "ولا",
+      "start": 33.36,
+      "end": 33.74
+     },
+     {
+      "w": "تعريفات",
+      "start": 33.74,
+      "end": 34.36
+     },
+     {
+      "w": "القطع",
+      "start": 34.36,
+      "end": 34.76
+     },
+     {
+      "w": "مثل",
+      "start": 34.76,
+      "end": 35.06
+     }
+    ]
+   },
+   {
+    "start": 35.06,
+    "end": 37.278,
+    "words": [
+     {
+      "w": "الصوت",
+      "start": 35.06,
+      "end": 35.56
+     },
+     {
+      "w": "والكرت",
+      "start": 35.56,
+      "end": 36.12
+     },
+     {
+      "w": "والتاتش",
+      "start": 36.12,
+      "end": 36.857
+     },
+     {
+      "w": "باد",
+      "start": 36.857,
+      "end": 37.278
+     }
+    ]
+   },
+   {
+    "start": 37.278,
+    "end": 38.78,
+    "words": [
+     {
+      "w": "ومو",
+      "start": 37.278,
+      "end": 37.594
+     },
+     {
+      "w": "متأكد",
+      "start": 37.594,
+      "end": 38.12
+     },
+     {
+      "w": "من",
+      "start": 38.12,
+      "end": 38.22
+     },
+     {
+      "w": "برنامج؟",
+      "start": 38.22,
+      "end": 38.78
+     }
+    ]
+   },
+   {
+    "start": 38.78,
+    "end": 39.84,
+    "words": [
+     {
+      "w": "كليك",
+      "start": 38.78,
+      "end": 39.38
+     },
+     {
+      "w": "يمين",
+      "start": 39.38,
+      "end": 39.84
+     }
+    ]
+   },
+   {
+    "start": 39.84,
+    "end": 40.92,
+    "words": [
+     {
+      "w": "واختر",
+      "start": 39.84,
+      "end": 40.4
+     },
+     {
+      "w": "Search",
+      "start": 40.4,
+      "end": 40.68
+     },
+     {
+      "w": "online",
+      "start": 40.68,
+      "end": 40.92
+     }
+    ]
+   },
+   {
+    "start": 40.92,
+    "end": 43.54,
+    "words": [
+     {
+      "w": "والتعطيل",
+      "start": 40.92,
+      "end": 42.14
+     },
+     {
+      "w": "بس",
+      "start": 42.14,
+      "end": 42.44
+     },
+     {
+      "w": "يمنعه",
+      "start": 42.44,
+      "end": 42.84
+     },
+     {
+      "w": "يشتغل",
+      "start": 42.84,
+      "end": 43.1
+     },
+     {
+      "w": "لحاله",
+      "start": 43.1,
+      "end": 43.54
+     }
+    ]
+   },
+   {
+    "start": 43.54,
+    "end": 45.5,
+    "words": [
+     {
+      "w": "ولو",
+      "start": 43.54,
+      "end": 44.02
+     },
+     {
+      "w": "احتجته",
+      "start": 44.02,
+      "end": 44.48
+     },
+     {
+      "w": "رجّع",
+      "start": 44.48,
+      "end": 45.24
+     },
+     {
+      "w": "Enable",
+      "start": 45.24,
+      "end": 45.5
+     }
+    ]
+   },
+   {
+    "start": 45.5,
+    "end": 47.9,
+    "words": [
+     {
+      "w": "ونفس",
+      "start": 45.5,
+      "end": 46.82
+     },
+     {
+      "w": "القائمة",
+      "start": 46.82,
+      "end": 47.32
+     },
+     {
+      "w": "تلقاها",
+      "start": 47.32,
+      "end": 47.72
+     },
+     {
+      "w": "في",
+      "start": 47.72,
+      "end": 47.9
+     }
+    ]
+   },
+   {
+    "start": 47.9,
+    "end": 50.68,
+    "words": [
+     {
+      "w": "Settings",
+      "start": 47.9,
+      "end": 48.36
+     },
+     {
+      "w": "ثم",
+      "start": 48.36,
+      "end": 49.16
+     },
+     {
+      "w": "Apps",
+      "start": 49.16,
+      "end": 49.62
+     },
+     {
+      "w": "ثم",
+      "start": 49.62,
+      "end": 50.32
+     },
+     {
+      "w": "Startup",
+      "start": 50.32,
+      "end": 50.68
+     }
+    ]
+   },
+   {
+    "start": 50.68,
+    "end": 53.4,
+    "words": [
+     {
+      "w": "بعدها",
+      "start": 50.68,
+      "end": 51.92
+     },
+     {
+      "w": "أعد",
+      "start": 51.92,
+      "end": 52.5
+     },
+     {
+      "w": "تشغيل",
+      "start": 52.5,
+      "end": 52.86
+     },
+     {
+      "w": "الجهاز",
+      "start": 52.86,
+      "end": 53.4
+     }
+    ]
+   },
+   {
+    "start": 53.4,
+    "end": 54.08,
+    "words": [
+     {
+      "w": "وشوف",
+      "start": 53.4,
+      "end": 53.74
+     },
+     {
+      "w": "الفرق",
+      "start": 53.74,
+      "end": 54.08
+     }
+    ]
+   },
+   {
+    "start": 54.08,
+    "end": 56.38,
+    "words": [
+     {
+      "w": "تابع",
+      "start": 54.08,
+      "end": 55.12
+     },
+     {
+      "w": "تيربو",
+      "start": 55.12,
+      "end": 55.48
+     },
+     {
+      "w": "عشان",
+      "start": 55.48,
+      "end": 55.9
+     },
+     {
+      "w": "ما",
+      "start": 55.9,
+      "end": 56.04
+     },
+     {
+      "w": "يفوتك",
+      "start": 56.04,
+      "end": 56.38
+     }
+    ]
+   },
+   {
+    "start": 56.38,
+    "end": 56.86,
+    "words": [
+     {
+      "w": "الحل",
+      "start": 56.38,
+      "end": 56.6
+     },
+     {
+      "w": "الجاي",
+      "start": 56.6,
+      "end": 56.86
+     }
+    ]
+   }
+  ]
+ },
+ "loop": {
+  "start": 58.876,
+  "dur": 1.0
+ },
+ "events": [
+  {
+   "el": "E01",
+   "start": 0.0,
+   "end": 1.96,
+   "params": {}
+  },
+  {
+   "el": "X01",
+   "start": 0.0,
+   "end": 1.96,
+   "params": {
+    "mode": "text",
+    "text": "Loading",
+    "size": 0.13,
+    "color": "problem",
+    "pulse": true,
+    "sfx": false
+   }
+  },
+  {
+   "el": "E15",
+   "start": 0.0,
+   "end": 1.96,
+   "params": {
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 1.96,
+   "end": 5.28,
+   "params": {
+    "mode": "spec_table",
+    "title": "Startup apps",
+    "rows": [
+     [
+      "Auto Updater",
+      "Enabled",
+      "problem"
+     ],
+     [
+      "Cloud Sync",
+      "Enabled",
+      "problem"
+     ],
+     [
+      "Game Launcher",
+      "Enabled",
+      "problem"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 1.96,
+   "end": 5.28,
+   "params": {
+    "chip": "من الأسباب",
+    "main": "برامج تشتغل ++لحالها++",
+    "desc": "مع الويندوز",
+    "desc_at": 4.7
+   }
+  },
+  {
+   "el": "X01",
+   "start": 5.28,
+   "end": 9.18,
+   "params": {
+    "mode": "text",
+    "text": "Boot",
+    "size": 0.15,
+    "color": "problem",
+    "pulse": true,
+    "sub": "شغل في الخلفية",
+    "cam": "wide",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 5.28,
+   "end": 9.18,
+   "params": {
+    "main": "ممكن !!تبطّئ الإقلاع!!",
+    "desc": "وتزيد الشغل في الخلفية",
+    "desc_at": 7.84
+   }
+  },
+  {
+   "el": "E03",
+   "start": 10.056,
+   "end": 13.736,
+   "params": {
+    "index": 1,
+    "title": "افتح ++Startup apps++",
+    "keys": [
+     "Ctrl",
+     "Shift",
+     "Esc"
+    ],
+    "key_times": [
+     11.72,
+     12.54,
+     12.987
+    ],
+    "fix_at": 14.14,
+    "cam": "desk"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 10.056,
+   "end": 13.736,
+   "params": {
+    "mode": "desktop",
+    "state": "problem",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 13.736,
+   "end": 14.76,
+   "params": {
+    "mode": "settings_nav",
+    "title": "Task Manager",
+    "items": [
+     "Task Manager",
+     "Startup apps"
+    ],
+    "times": [
+     13.736,
+     14.14
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "E03",
+   "start": 15.797,
+   "end": 18.58,
+   "params": {
+    "index": 2,
+    "title": "عمود ++Startup impact++",
+    "fix_at": 17.54,
+    "cam": "wide"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 16.78,
+   "end": 18.58,
+   "params": {
+    "mode": "spec_table",
+    "title": "Startup impact",
+    "rows": [
+     [
+      "Auto Updater",
+      "High",
+      "problem"
+     ],
+     [
+      "Cloud Sync",
+      "Medium"
+     ],
+     [
+      "Chat App",
+      "Low"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 19.358,
+   "end": 25.22,
+   "params": {
+    "mode": "spec_table",
+    "title": "High impact",
+    "rows": [
+     [
+      "CPU time",
+      "More than 1 s",
+      "problem"
+     ],
+     [
+      "Disk usage",
+      "More than 3MB",
+      "problem"
+     ]
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 19.358,
+   "end": 25.22,
+   "params": {
+    "main": "!!High!! يعني",
+    "desc": "أكثر من 1 ثانية معالج، أو أكثر من 3MB قرص",
+    "desc_at": 21.16
+   }
+  },
+  {
+   "el": "E03",
+   "start": 25.22,
+   "end": 30.54,
+   "params": {
+    "index": 3,
+    "title": "عطّل ++اللي ما تحتاجه++",
+    "fix_at": 30.1,
+    "cam": "wide"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 26.82,
+   "end": 30.54,
+   "params": {
+    "mode": "input_menu",
+    "title": "Auto Updater",
+    "items": [
+     "Disable",
+     "Open file location",
+     "Search online"
+    ],
+    "from": 0,
+    "to": 0,
+    "pick_at": 30.1,
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 30.54,
+   "end": 33.36,
+   "params": {
+    "mode": "spec_table",
+    "title": "Keep enabled",
+    "rows": [
+     [
+      "Security app",
+      "Keep on",
+      "fix"
+     ]
+    ],
+    "state": "problem",
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 30.54,
+   "end": 33.36,
+   "params": {
+    "main": "لا تعطّل !!برامج الحماية!!"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 33.36,
+   "end": 37.278,
+   "params": {
+    "mode": "spec_table",
+    "title": "Keep enabled",
+    "rows": [
+     [
+      "Audio driver",
+      "Keep on",
+      "fix"
+     ],
+     [
+      "Graphics driver",
+      "Keep on",
+      "fix"
+     ],
+     [
+      "Touchpad driver",
+      "Keep on",
+      "fix"
+     ]
+    ],
+    "state": "problem",
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 33.36,
+   "end": 37.278,
+   "params": {
+    "main": "ولا !!تعريفات القطع!!",
+    "desc": "الصوت والكرت والتاتش باد",
+    "desc_at": 35.06
+   }
+  },
+  {
+   "el": "E15",
+   "start": 37.278,
+   "end": 38.78,
+   "params": {
+    "sfx": false
+   }
+  },
+  {
+   "el": "X01",
+   "start": 37.278,
+   "end": 40.92,
+   "params": {
+    "mode": "input_menu",
+    "title": "Unknown app",
+    "items": [
+     "Disable",
+     "Open file location",
+     "Search online"
+    ],
+    "from": 0,
+    "to": 2,
+    "pick_at": 40.4,
+    "cam": "wide",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 37.278,
+   "end": 40.92,
+   "params": {
+    "main": "مو متأكد من ++برنامج؟++",
+    "desc": "كليك يمين واختر Search online",
+    "desc_at": 38.78
+   }
+  },
+  {
+   "el": "X01",
+   "start": 40.92,
+   "end": 43.54,
+   "params": {
+    "mode": "text",
+    "text": "Disabled",
+    "size": 0.12,
+    "color": "problem",
+    "sub": "ما يشتغل لحاله",
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 40.92,
+   "end": 43.54,
+   "params": {
+    "main": "التعطيل ++يمنعه يشتغل لحاله++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 43.54,
+   "end": 45.5,
+   "params": {
+    "mode": "text",
+    "text": "Enable",
+    "size": 0.13,
+    "color": "fix",
+    "ring": true,
+    "state": "fix",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 43.54,
+   "end": 45.5,
+   "params": {
+    "main": "ولو احتجته رجّع ++Enable++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 45.5,
+   "end": 50.68,
+   "params": {
+    "mode": "settings_nav",
+    "items": [
+     "Settings",
+     "Apps",
+     "Startup"
+    ],
+    "times": [
+     47.9,
+     49.16,
+     50.32
+    ],
+    "cam": "monitor",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 45.5,
+   "end": 50.68,
+   "params": {
+    "main": "نفس القائمة في ++Settings++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 50.68,
+   "end": 52.5,
+   "params": {
+    "mode": "off",
+    "cam": "wide",
+    "sfx": false
+   }
+  },
+  {
+   "el": "T",
+   "start": 50.68,
+   "end": 54.08,
+   "params": {
+    "main": "أعد التشغيل و++شوف الفرق++"
+   }
+  },
+  {
+   "el": "X01",
+   "start": 52.5,
+   "end": 54.08,
+   "params": {
+    "mode": "cursor_back",
+    "state": "fix",
+    "sfx": false
+   }
+  },
+  {
+   "el": "E16",
+   "start": 54.08,
+   "end": 56.86,
+   "params": {
+    "title": "تابع **تيربو**",
+    "desc": "عشان ما يفوتك الحل الجاي",
+    "text": "تابع تيربو"
+   }
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.05,
+   "name": "gs_error5"
+  },
+  {
+   "t": 0.1,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 10.056,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 11.72,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 12.54,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 12.987,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 14.14,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 14.19,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 15.797,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 17.54,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 17.59,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 25.22,
+   "name": "gs_swipe_grass2"
+  },
+  {
+   "t": 30.1,
+   "name": "gs_selection12_fwd"
+  },
+  {
+   "t": 30.15,
+   "name": "gs_item_pickup4"
+  },
+  {
+   "t": 31.78,
+   "name": "gs_error5"
+  },
+  {
+   "t": 47.9,
+   "name": "gs_soft_keyboard",
+   "dur": 0.22
+  },
+  {
+   "t": 54.08,
+   "name": "gs_notification2"
+  },
+  {
+   "t": 56.976,
+   "name": "gs_swipe2"
+  },
+  {
+   "t": 57.526,
+   "name": "gs_notification2"
+  }
+ ]
+}
